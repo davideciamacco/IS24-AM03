@@ -24,7 +24,7 @@ public class Player {
         this.objective = objective;
     }
     public void setStartingCard(StartingCard startingCard) {
-
+            this.startingCard=startingCard;
     }
     public void setWinner(boolean winner) {
         this.winner = winner;

@@ -8,6 +8,7 @@ public class PlayerBoard {
     private static final int MAX_COLS = 81;
     private Player player;
     private PlayableCard[][] board;
+    //la mappa serve per accedere in modo comodo al contenuto degli oggetti presenti sul tavolo del giocatore
     private Map<CornerItem, Integer> availableItems;
 
     // Costruttore con i parametri
@@ -19,6 +20,7 @@ public class PlayerBoard {
             availableItems.put(item, 0); // Inizializza il conteggio di ogni oggetto a 0
         }
     }
+    //metodo che facilità l implementazione di place card controllando se le sovrapposizioni degli angoli sono permesse
     private void checkCornerVisibility(int x, int y,int corner) {
         if (board[x][y] != null) {
             if (board[x][y].getFace()==true) {
@@ -32,6 +34,7 @@ public class PlayerBoard {
             }
         }
     }
+    //nel momento in cui vado ad aggiungere una carta sul tavolo da gioco aggiungo alla mappa i nuovi oggetti che compaiono
     private void increaseItemCount(PlayableCard card) {
         // Aggiorna il conteggio di ciascun oggetto negli angoli o sul retro della carta
         if(card.getFace==true){
@@ -44,7 +47,7 @@ public class PlayerBoard {
             availableItems.put(item, availableItems.get(item) + 1);
         }
     }
-
+// al contrario di increaseItemCount, questo metodo è incaricato di eliminare dalla mappa gli oggetti che vengono coperti in seguito al piazzamento di una card
     private void updateItemCount(int i,int j){
         if(board[i+1][j+1]!=null){
             if(board[i+1][j+1].getFace()==true){
@@ -79,7 +82,7 @@ public class PlayerBoard {
             }
         }
     }
-
+// metodo chiamato in presenza dello schieramento di una goldCard ,atto a verificarne i requisiti
     public boolean checkRequirements(ArrayList<Resources> cardRequirements)
     {
         Map<Resources, Integer> itemRequired = new HashMap<Resources, Integer>();
@@ -94,7 +97,7 @@ public class PlayerBoard {
         }
         return true;
     }
-
+//in base al tipo di  carta giocata risorsa/oro , attribuisce in base ai vincoli i punti al giocatore
     public void giveCardPoints(PlayableCard c, int i, int j){
         if(c instanceof ResorceCard)
             player.addPoints(c.getPoints());
@@ -119,7 +122,6 @@ public class PlayerBoard {
             }
         }
     }
-
     // Metodo per posizionare una carta sulla board
     public int placeCard(PlayableCard c, int i, int j, boolean face) {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
