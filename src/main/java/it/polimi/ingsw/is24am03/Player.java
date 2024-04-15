@@ -25,7 +25,7 @@ public class Player {
         this.objective =null;
         this.startingCard = null;
         this.winner = false;
-        this.firstPlayer =null;
+        this.firstPlayer =false;
         this.points = 0;
         this.numObj = 0;
         this.playerBoard = null;
@@ -115,4 +115,10 @@ public class Player {
         this.firstPlayer=firstPlayer;
     }
 
+    public playerBoard getPlayerBoard() {
+        return PlayerBoard;
+    }
+    public int getNumObj(){
+        return numObj;
+    }
 }
