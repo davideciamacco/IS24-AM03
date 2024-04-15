@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 /**
  * Represents the board of a player in the game.
-
+ ok
  */
 
 public class PlayerBoard {
@@ -13,7 +13,6 @@ public class PlayerBoard {
     private static final int MAX_COLS = 81;
     private Player player;
     private PlayableCard[][] board;
-    //la mappa serve per accedere in modo comodo al contenuto degli oggetti presenti sul tavolo del giocatore
     private Map<CornerItem, Integer> availableItems;
     /**
      * Constructs a player board with the given player.
@@ -25,7 +24,7 @@ public class PlayerBoard {
         this.board =null;
         this.availableItems = new HashMap<CornerItem, Integer>();
         for (CornerItem item : CornerItem.values()) {
-            availableItems.put(item, 0); // Inizializza il conteggio di ogni oggetto a 0
+            availableItems.put(item, 0);
         }
     }
     /**
@@ -57,7 +56,6 @@ public class PlayerBoard {
      * @param card The card being placed.
      */
     private void increaseItemCount(PlayableCard card) {
-        // Aggiorna il conteggio di ciascun oggetto negli angoli o sul retro della carta
         if(card.getFace==true){
             for (int i=0;i<=3;i++) {
                 CornerItem item = card.getFrontCorners(i).getItem();
@@ -165,34 +163,25 @@ public class PlayerBoard {
      * @param ob The objective to check.
      * @return The number of times the objective has been completed.
      */
-    public int checkObjectiveList(List ob){
+    public int checkObjectiveList(ObjectiveList ob){
         int ris=0,n=0,min,mRis;
-        //caso di carta obbiettivo che richiede 2 oggetti uguali
+
         if(ob.getType()==1){
             n=availableItems.get(ob.getRequirement())/2;
             return n;
         }else if(ob.getType()==2){
-            //caso di carta obbiettivo che richiede tutti e 3 gli oggetti QUILL,INKWELL,MANUSCRIPT
+
             min=availableItems.get(CornerItem.QUILL);
-                if(availableItems.get(CornerItem.INKWELL)<min){
-                    min=availableItems.get(CornerItem.INKWELL);
-                }
-                if(availableItems.get(CornerItem.MANUSCRIPT)<min) {
-                    min=availableItems.get(CornerItem.MANUSCRIPT);
-                }
+            if(availableItems.get(CornerItem.INKWELL)<min){
+                min=availableItems.get(CornerItem.INKWELL);
+            }
+            if(availableItems.get(CornerItem.MANUSCRIPT)<min) {
+                min=availableItems.get(CornerItem.MANUSCRIPT);
+            }
             return min;
         }else{
             //caso di carta obbiettivo che richiede una risorsa 3 volte
-            mRis=availableItems.get(CornerItem.PLANT);
-            if(availableItems.get(CornerItem.ANIMAL)<mRis){
-                mRis=availableItems.get(CornerItem.ANIMAL);
-            }
-            if(availableItems.get(CornerItem.FUNGI)<mRis) {
-                mRis=availableItems.get(CornerItem.FUNGI);
-            }
-            if(availableItems.get(CornerItem.INSECT)<mRis) {
-                mRis=availableItems.get(CornerItem.INSECT);
-            }
+            mRis=availableItems.get(ob.getRequirement())/3;
             return mRis;
         }
 
@@ -221,7 +210,7 @@ public class PlayerBoard {
                         counter=1;
                         for(z=1;z<=2;z++){
                             if(i-z>=0 && j+z<MAX_COLS){
-                                if(board[i][j].getKindomsType().equals(ob.getKindomsType()) && verifica[i-z][j+z]!=1){
+                                if(board[i-z][j+z].getKindomsType().equals(ob.getKindomsType()) && verifica[i-z][j+z]!=1){
                                     counter++;
                                 }
                             }
@@ -245,7 +234,7 @@ public class PlayerBoard {
                         counter=1;
                         for(z=1;z<=2;z++){
                             if(i+z>MAX_ROWS && j+z>MAX_COLS){
-                                if(board[i][j].getKindomsType().equals(ob.getKindomsType()) && verifica[i+z][j+z]!=1){
+                                if(board[i+z][j+z].getKindomsType().equals(ob.getKindomsType()) && verifica[i+z][j+z]!=1){
                                     counter++;
                                 }
                             }
@@ -281,12 +270,12 @@ public class PlayerBoard {
             for(j=0;j<MAX_COLS;j++){
                 Iiniz=i;
                 Jiniz=j;
-                if(board[i][j].getKindomsType().equals(ob.getFirstColor()) && verifica[i][j]!=1){
+                if(board[i][j].getKindomsType().equals(ob.getSecondColor()) && verifica[i][j]!=1){
                     counter=1;
                     if(ob.getCorner()==0){
                         for(z=1;z<=2;z++){
                             if(i-z>=0 && j-1>=0) {
-                                if (board[i - z][j - 1].getKindomsType().equals(ob.getSecondColor())) {
+                                if (board[i - z][j - 1].getKindomsType().equals(ob.getKindomsType())) {
                                     counter++;
                                 }
                             }
@@ -300,7 +289,7 @@ public class PlayerBoard {
                     }else if(ob.getCorner()==1){
                         for(z=1;z<=2;z++){
                             if(i-z>=0 && j+1<MAX_COLS) {
-                                if (board[i - z][j - 1].getKindomsType().equals(ob.getSecondColor())) {
+                                if (board[i - z][j + 1].getKindomsType().equals(ob.getKindomsType())) {
                                     counter++;
                                 }
                             }
@@ -308,13 +297,13 @@ public class PlayerBoard {
                         if(counter==3){
                             nvoltecompletato++;
                             verifica[Iiniz][Jiniz]=1;
-                            verifica[Iiniz-1][Jiniz-1]=1;
-                            verifica[Iiniz-2][Jiniz-1]=1;
+                            verifica[Iiniz-1][Jiniz+1]=1;
+                            verifica[Iiniz-2][Jiniz+1]=1;
                         }
                     }else if(ob.getCorner()==2){
                         for(z=1;z<=2;z++){
                             if(i+z<MAX_ROWS && j+1<MAX_COLS) {
-                                if (board[i + z][j + 1].getKindomsType().equals(ob.getSecondColor())) {
+                                if (board[i + z][j + 1].getKindomsType().equals(ob.getKindomsType())) {
                                     counter++;
                                 }
                             }
@@ -328,7 +317,7 @@ public class PlayerBoard {
                     }else{
                         for(z=1;z<=2;z++){
                             if(i+z<MAX_ROWS && j-1>=0) {
-                                if (board[i + z][j - 1].getKindomsType().equals(ob.getSecondColor())) {
+                                if (board[i + z][j - 1].getKindomsType().equals(ob.getKindomsType())) {
                                     counter++;
                                 }
                             }
