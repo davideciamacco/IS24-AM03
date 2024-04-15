@@ -25,7 +25,7 @@ public class Player {
         this.objective =null;
         this.startingCard = null;
         this.winner = false;
-        this.firstPlayer = firstPlayer;
+        this.firstPlayer =null;
         this.points = 0;
         this.numObj = 0;
         this.playerBoard = null;
@@ -46,7 +46,7 @@ public class Player {
      *
      */
     public void setStartingCard(StartingCard startingCard) {
-            this.startingCard=startingCard;
+        this.startingCard=startingCard;
     }
     /**
      * Sets whether the player is the winner.
@@ -97,4 +97,22 @@ public class Player {
     public int getPoints() {
         return points;
     }
+    /**
+     * Removes a card from the player's hand.
+     *
+     * @param card The card to remove from the hand.
+     */
+    public void removeCard(PlayerBoard card){
+        hand.remove(card);
+    }
+    public boolean isFirstPlayer() {
+        return firstPlayer;
+    }
+    public String getNickname() {
+        return nickname;
+    }
+    public void setFirstPlayer(boolean firstPlayer){
+        this.firstPlayer=firstPlayer;
+    }
+
 }

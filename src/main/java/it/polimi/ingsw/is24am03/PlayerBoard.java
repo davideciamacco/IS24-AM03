@@ -13,6 +13,7 @@ public class PlayerBoard {
     private static final int MAX_COLS = 81;
     private Player player;
     private PlayableCard[][] board;
+    //la mappa serve per accedere in modo comodo al contenuto degli oggetti presenti sul tavolo del giocatore
     private Map<CornerItem, Integer> availableItems;
     /**
      * Constructs a player board with the given player.
@@ -24,7 +25,7 @@ public class PlayerBoard {
         this.board =null;
         this.availableItems = new HashMap<CornerItem, Integer>();
         for (CornerItem item : CornerItem.values()) {
-            availableItems.put(item, 0);
+            availableItems.put(item, 0); // Inizializza il conteggio di ogni oggetto a 0
         }
     }
     /**
@@ -56,6 +57,7 @@ public class PlayerBoard {
      * @param card The card being placed.
      */
     private void increaseItemCount(PlayableCard card) {
+        // Aggiorna il conteggio di ciascun oggetto negli angoli o sul retro della carta
         if(card.getFace==true){
             for (int i=0;i<=3;i++) {
                 CornerItem item = card.getFrontCorners(i).getItem();
