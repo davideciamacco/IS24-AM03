@@ -99,7 +99,7 @@ public class Player {
     }
     /**
      * Removes a card from the player's hand.
-     *
+     *ok
      * @param card The card to remove from the hand.
      */
     public void removeCard(PlayerBoard card){

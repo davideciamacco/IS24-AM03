@@ -254,7 +254,6 @@ public class PlayerBoard {
         return nvoltecompletato;
     }
     /**
-     * ok
      * Checks how many times the L-shaped objective has been completed.
      *
      * @param ob The L-shaped objective to check.
@@ -352,8 +351,6 @@ public class PlayerBoard {
             throw new IllegalArgumentException("Coordinates out of board limits");
 
         }
-        // se siamo arrivati fin qui, la posizione della carta sulla board è ammissibile
-        //controlliamo ora che si possa effettivamente giocarla in quella posizione
         if(board[i][j] != null ||board[i+1][j]!=null || board[i-1][j]!=null || board[i][j+1]!=null || board[i][j-1]!=null){
             throw new IllegalArgumentException("Position already occupied/unavailable");
 
