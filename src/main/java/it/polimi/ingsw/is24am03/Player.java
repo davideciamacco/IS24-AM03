@@ -28,7 +28,7 @@ public class Player {
         this.firstPlayer =false;
         this.points = 0;
         this.numObj = 0;
-        this.playerBoard = null;
+        this.PlayerBoard = null;
     }
     /**
      * Sets the player's objective card.
@@ -114,10 +114,10 @@ public class Player {
     public void setFirstPlayer(boolean firstPlayer){
         this.firstPlayer=firstPlayer;
     }
-
-    public playerBoard getPlayerBoard() {
+    public PlayerBoard getPlayerBoard() {
         return PlayerBoard;
     }
+
     public int getNumObj(){
         return numObj;
     }

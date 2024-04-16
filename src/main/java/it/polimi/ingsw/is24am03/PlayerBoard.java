@@ -13,7 +13,6 @@ public class PlayerBoard {
     private static final int MAX_COLS = 81;
     private Player player;
     private PlayableCard[][] board;
-    //la mappa serve per accedere in modo comodo al contenuto degli oggetti presenti sul tavolo del giocatore
     private Map<CornerItem, Integer> availableItems;
     /**
      * Constructs a player board with the given player.
@@ -22,10 +21,10 @@ public class PlayerBoard {
      */
     public PlayerBoard(Player player) {
         this.player = player;
-        this.board =null;
+        this.board =new PlayableCard[MAX_ROWS][MAX_COLS];
         this.availableItems = new HashMap<CornerItem, Integer>();
         for (CornerItem item : CornerItem.values()) {
-            availableItems.put(item, 0); // Inizializza il conteggio di ogni oggetto a 0
+            availableItems.put(item, 0);
         }
     }
     /**
@@ -57,7 +56,6 @@ public class PlayerBoard {
      * @param card The card being placed.
      */
     private void increaseItemCount(PlayableCard card) {
-        // Aggiorna il conteggio di ciascun oggetto negli angoli o sul retro della carta
         if(card.getFace==true){
             for (int i=0;i<=3;i++) {
                 CornerItem item = card.getFrontCorners(i).getItem();
@@ -202,7 +200,7 @@ public class PlayerBoard {
                 verifica[i][j]=0;
             }
         }
-        //si sviluppa in alto a destra
+
         if(ob.getDirection()==true){
             for(i=0;i<MAX_ROWS;i++){
                 for(j=0;j<MAX_COLS;j++){
@@ -227,7 +225,6 @@ public class PlayerBoard {
                 }
             }
         }else{
-            //si sviluppa in basso a destra
             for(i=0;i<MAX_ROWS;i++){
                 for(j=0;j<MAX_COLS;j++){
                     Iiniz=i;
@@ -378,6 +375,12 @@ public class PlayerBoard {
         updateItemCount(i, j);
         giveCardPoints(c, i, j);
         return 0; // return 0 if the operation has been done
+    }
+    public Player getPlayer(){
+        return player;
+    }
+    public PlayableCard[][] getBoard() {
+        return board;
     }
 }
 
