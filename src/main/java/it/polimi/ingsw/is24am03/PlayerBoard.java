@@ -382,5 +382,9 @@ public class PlayerBoard {
     public PlayableCard[][] getBoard() {
         return board;
     }
+    public Map<CornerItem, Integer> getAvailableItems() {
+        return availableItems;
+    }
+
 }
 
