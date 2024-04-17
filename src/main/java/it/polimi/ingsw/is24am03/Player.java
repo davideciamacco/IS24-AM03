@@ -1,16 +1,21 @@
 package it.polimi.ingsw.is24am03;
+
+
+import java.util.ArrayList;
+
 /**
  * Represents a player in the game.
  */
 public class Player {
-    private String nickname;
+    private final String nickname;
     private Color pawncolor;
-    private ArrayList<PlayableCard> hand;
+    private final ArrayList<PlayableCard> hand;
     private ObjectiveCard objective;
     private StartingCard startingCard;
     private boolean winner,firstPlayer;
-    private int points,numObj;
-    private playerBoard PlayerBoard;
+    private int points;
+    private int numObj;
+    private PlayerBoard playerBoard;
     /**
      * Constructs a new player with the given parameters.
      *
@@ -28,14 +33,14 @@ public class Player {
         this.firstPlayer =false;
         this.points = 0;
         this.numObj = 0;
-        this.PlayerBoard = null;
+        this.playerBoard = null;
     }
     /**
      * Sets the player's objective card.
-     * ok
      *
      * @param objective The objective card to set.
      */
+
     public void setObjective(ObjectiveCard objective) {
         this.objective = objective;
     }
@@ -70,6 +75,7 @@ public class Player {
      * @param c The card to add to the hand.
      */
     public void addCard(PlayableCard c) {
+        assert hand != null;
         hand.add(c);
     }
     /**
@@ -99,10 +105,11 @@ public class Player {
     }
     /**
      * Removes a card from the player's hand.
-     *ok
+     *
      * @param card The card to remove from the hand.
      */
-    public void removeCard(PlayerBoard card){
+    public void removeCard(PlayableCard card){
+        assert hand != null;
         hand.remove(card);
     }
     public boolean isFirstPlayer() {
@@ -115,10 +122,19 @@ public class Player {
         this.firstPlayer=firstPlayer;
     }
     public PlayerBoard getPlayerBoard() {
-        return PlayerBoard;
+        return playerBoard;
     }
-
     public int getNumObj(){
         return numObj;
+    }
+    public ObjectiveCard getObjectiveCard(){
+        return objective;
+    }
+    public void setPoints(int p){
+        this.points=p;
+    }
+
+    public void increaseNumObjective(int n){
+        numObj=numObj+n;
     }
 }
