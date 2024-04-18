@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 /**
  * Represents the board of a player in the game.
- ok
  */
 
 public class PlayerBoard {
@@ -136,14 +135,14 @@ public class PlayerBoard {
      * @param j The y-coordinate of the card placement.
      */
     public void giveCardPoints(PlayableCard c, int i, int j){
-        int type,scorringType,n=0;
+        int type,scoringType,n=0;
         type= c.getType();
         if(type==1){
             //resource card
             player.addPoints(c);
         }else{
-            scorringType=c.getScoringType();
-            if(scorringType==0){
+            scoringType=c.getScoringType();
+            if(scoringType==0){
                 n=availableItems.get(c.getObject());
                 for(i=0; i<n; i++)
                     player.addPoints(c);
@@ -247,22 +246,36 @@ public class PlayerBoard {
                 return nvoltecompletato;
 
         }else{
+
                 for(i=0;i<MAX_ROWS;i++){
                     for(j=0;j<MAX_COLS;j++){
                         verify[i][j]=0;
                     }
                 }
-
-                if(ob.getDirection()==true){
-                    for(i=0;i<MAX_ROWS;i++){
-                        for(j=0;j<MAX_COLS;j++){
-                            Iiniz=i;
-                            Jiniz=j;
-                            if(board[i][j].getKingdomsType().equals(ob.getKingdomsType()) && verify[i][j]!=1){
-                                counter=1;
+                for(i=0;i<MAX_ROWS;i++){
+                    for(j=0;j<MAX_COLS;j++){
+                        Iiniz=i;
+                        Jiniz=j;
+                        if(board[i][j].getKingdomsType().equals(ob.getSecondColor()) && verify[i][j]!=1){
+                            counter=1;
+                            if(ob.getCorner()==0){
                                 for(z=1;z<=2;z++){
-                                    if(i-z>=0 && j+z<MAX_COLS){
-                                        if(board[i-z][j+z].getKingdomsType().equals(ob.getKingdomsType()) && verify[i-z][j+z]!=1){
+                                    if(i-z>=0 && j-1>=0) {
+                                        if (board[i - z][j - 1].getKingdomsType().equals(ob.getKingdomsType())) {
+                                            counter++;
+                                        }
+                                    }
+                                }
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz-1][Jiniz-1]=1;
+                                    verify[Iiniz-2][Jiniz-1]=1;
+                                }
+                            }else if(ob.getCorner()==1){
+                                for(z=1;z<=2;z++){
+                                    if(i-z>=0 && j+1<MAX_COLS) {
+                                        if (board[i - z][j + 1].getKingdomsType().equals(ob.getKingdomsType())) {
                                             counter++;
                                         }
                                     }
@@ -271,21 +284,12 @@ public class PlayerBoard {
                                     nvoltecompletato++;
                                     verify[Iiniz][Jiniz]=1;
                                     verify[Iiniz-1][Jiniz+1]=1;
-                                    verify[Iiniz-2][Jiniz+2]=1;
+                                    verify[Iiniz-2][Jiniz+1]=1;
                                 }
-                            }
-                        }
-                    }
-                }else{
-                    for(i=0;i<MAX_ROWS;i++){
-                        for(j=0;j<MAX_COLS;j++){
-                            Iiniz=i;
-                            Jiniz=j;
-                            if(board[i][j].getKingdomsType().equals(ob.getKingdomsType()) && verify[i][j]!=1){
-                                counter=1;
+                            }else if(ob.getCorner()==2){
                                 for(z=1;z<=2;z++){
-                                    if(i+z<MAX_ROWS && j+z<MAX_COLS){
-                                        if(board[i+z][j+z].getKingdomsType().equals(ob.getKingdomsType()) && verify[i+z][j+z]!=1){
+                                    if(i+z<MAX_ROWS && j+1<MAX_COLS) {
+                                        if (board[i + z][j + 1].getKingdomsType().equals(ob.getKingdomsType())) {
                                             counter++;
                                         }
                                     }
@@ -294,7 +298,21 @@ public class PlayerBoard {
                                     nvoltecompletato++;
                                     verify[Iiniz][Jiniz]=1;
                                     verify[Iiniz+1][Jiniz+1]=1;
-                                    verify[Iiniz+2][Jiniz+2]=1;
+                                    verify[Iiniz+2][Jiniz+1]=1;
+                                }
+                            }else{
+                                for(z=1;z<=2;z++){
+                                    if(i+z<MAX_ROWS && j-1>=0) {
+                                        if (board[i + z][j - 1].getKingdomsType().equals(ob.getKingdomsType())) {
+                                            counter++;
+                                        }
+                                    }
+                                }
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz+1][Jiniz-1]=1;
+                                    verify[Iiniz+2][Jiniz-1]=1;
                                 }
                             }
                         }
