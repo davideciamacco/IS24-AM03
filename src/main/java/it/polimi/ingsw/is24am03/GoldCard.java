@@ -8,14 +8,21 @@ public class GoldCard extends ResourceCard{
     private CornerItem object;
 
     public ArrayList<Resources> getRequirementsList(){
-        return requiremnetsList;
+        return requirementsList;
     }
 
     public int getScoringType(){
         return scoringType;
     }
 
+    @Override
+    public int getType(){
+        return -1;
+    }
+
+    @Override
     public CornerItem getObject(){
         return object;
     }
+
 }
