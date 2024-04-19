@@ -1,8 +1,12 @@
 package it.polimi.ingsw.is24am03;
 
 public class ObjectiveList extends ObjectiveCard{
-    private int type;
-    public int getType() {
-        return type;
+    private final int typeL;
+    public ObjectiveList(int id, int points, CornerItem requirements, ObjectiveType type,Resources kingdomType,int typeL){
+        super(id,points,requirements,type,kingdomType);
+        this.typeL=typeL;
+    }
+    public int getTypeList() {
+        return typeL;
     }
 }

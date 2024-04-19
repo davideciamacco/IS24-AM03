@@ -44,7 +44,15 @@ public abstract class PlayableCard extends Card{
     public void rotate(){
         face = !face;
     }
-
+    public void setCoverage(int corner){
+        if(face){
+            Pair<Corner, Boolean> pair = frontCorners.get(corner);
+            frontCorners.set(corner, new Pair<>(pair.getKey(),true));
+        } else {
+            Pair<Corner, Boolean> pair = backCorners.get(corner);
+            backCorners.set(corner, new Pair<>(pair.getKey(), true));
+        }
+    }
     public void setCardAlreadyPlaced(){
         cardAlreadyPlaced=true;
     }
@@ -52,4 +60,7 @@ public abstract class PlayableCard extends Card{
     public abstract int getType();
 
     public abstract CornerItem getObject();
+    public abstract int  getScoringType();
+    public abstract CornerItem getKingdomsType();
+    public abstract ArrayList<Resources> getRequirements();
 }
