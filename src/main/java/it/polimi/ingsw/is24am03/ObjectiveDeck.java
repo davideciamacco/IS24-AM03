@@ -12,7 +12,7 @@ public class ObjectiveDeck extends Deck {
     /**
      * This field contains a list of all Objective cards.
      */
-    private ArrayList<ObjectiveCard> cards;
+    private final ArrayList<ObjectiveCard> cards;
 
     /**
      * Class' constructor.
