@@ -112,14 +112,14 @@ public class PlayerBoard {
      * @param cardRequirements The requirements of the card to be played.
      * @return True if the player meets the requirements, false otherwise.
      */
-    public boolean checkRequirements(ArrayList<Resources> cardRequirements)
+    public boolean checkRequirements(ArrayList<CornerItem> cardRequirements)
     {
-        Map<Resources, Integer> itemRequired = new HashMap<Resources, Integer>();
-        for(Resources item: Resources.values())
+        Map<CornerItem, Integer> itemRequired = new HashMap<CornerItem, Integer>();
+        for(CornerItem item: CornerItem.values())
             itemRequired.put(item, 0);
-        for(Resources item: cardRequirements)
+        for(CornerItem item: cardRequirements)
             itemRequired.put(item, itemRequired.get(item) + 1);
-        for(Resources item: itemRequired.keySet())
+        for(CornerItem item: itemRequired.keySet())
         {
             if(availableItems.get(item)<itemRequired.get(item))
                 return false;
