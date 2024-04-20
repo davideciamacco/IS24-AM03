@@ -8,14 +8,14 @@ import java.util.ArrayList;
  */
 public class Player {
     private final String nickname;
-    private Color pawncolor;
+    private final  Color pawncolor;
     private final ArrayList<PlayableCard> hand;
-    private ObjectiveCard objective;
-    private StartingCard startingCard;
+    private  ObjectiveCard objective;
+    private  StartingCard startingCard;
     private boolean winner,firstPlayer;
     private int points;
     private int numObj;
-    private PlayerBoard playerBoard;
+    private  PlayerBoard playerBoard;
     /**
      * Constructs a new player with the given parameters.
      *
@@ -133,7 +133,6 @@ public class Player {
     public void setPoints(int p){
         this.points=p;
     }
-
     public void increaseNumObjective(int n){
         numObj=numObj+n;
     }
