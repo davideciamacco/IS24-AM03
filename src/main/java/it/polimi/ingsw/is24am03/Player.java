@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Player {
     private final String nickname;
-    private Color pawncolor;
+    private final Color pawncolor;
     private final ArrayList<PlayableCard> hand;
     private ObjectiveCard objective;
     private StartingCard startingCard;

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is24am03;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 /**
  * Represents the board of a player in the game.
@@ -10,9 +9,9 @@ import java.util.Map;
 public class PlayerBoard {
     private static final int MAX_ROWS = 81;
     private static final int MAX_COLS = 81;
-    private Player player;
-    private PlayableCard[][] board;
-    private Map<CornerItem, Integer> availableItems;
+    private final Player player;
+    private final PlayableCard[][] board;
+    private final Map<CornerItem, Integer> availableItems;
     /**
      * Constructs a player board with the given player.
      *
@@ -39,12 +38,12 @@ public class PlayerBoard {
         if (board[x][y] != null) {
             if (board[x][y].getFace()==true) {
                 if (board[x][y].getFrontCorner(corner).isVisible()==false) {
-                    throw new IllegalArgumentException("Corner not visible");
+                    throw new CornerNotVisibleException();
 
                 }
             } else {
                 if (board[x][y].getBackCorner(corner).isVisible()==false) {
-                    throw new IllegalArgumentException("Corner not visible");
+                    throw new CornerNotVisibleException();
 
                 }
             }
@@ -166,13 +165,12 @@ public class PlayerBoard {
      * @param ob The objective card to check.
      * @return The number of times the objective has been completed.
      */
-    public int checkObjective(ObjctiveCard ob){
+    public int checkObjective(ObjectiveCard ob){
         int n;
         int[][] verify = new int[MAX_ROWS][MAX_COLS];
-        int i,j,z,nvoltecompletato=0,counter=1, Iiniz,Jiniz;
+        int i,j,z,nvoltecompletato=0,counter, Iiniz,Jiniz;
         if(ob.getType().equals(ObjectiveType.ITEM)){
                 if(ob.getTypeList()==1){
-                    //GET REQUIREMENT VA MESSO A OBJECTIVE CARD INSIEME AL ATTRIBUTO requirements
                     n=availableItems.get(ob.getRequirement())/2;
                     return n;
                 }else if(ob.getTypeList()==2){
@@ -185,7 +183,6 @@ public class PlayerBoard {
                     }
                     return n;
                 }else{
-                    //caso di carta obbiettivo che richiede una risorsa 3 volte
                     n=availableItems.get(ob.getRequirement())/3;
                     return n;
                 }
@@ -196,7 +193,7 @@ public class PlayerBoard {
                         verify[i][j]=0;
                     }
                 }
-                if(ob.getDirection()==true){
+                if(ob.getDirection()==0){
                     for(i=0;i<MAX_ROWS;i++){
                         for(j=0;j<MAX_COLS;j++){
                             Iiniz=i;
@@ -219,7 +216,7 @@ public class PlayerBoard {
                             }
                         }
                     }
-                }else{
+                }else if(ob.getDirection()==1){
                     for(i=0;i<MAX_ROWS;i++){
                         for(j=0;j<MAX_COLS;j++){
                             Iiniz=i;
@@ -334,16 +331,15 @@ public class PlayerBoard {
      */
     public int placeCard(PlayableCard c, int i, int j, boolean face) {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
-            throw new IllegalArgumentException("Coordinates out of board limits");
+            throw new CoordinatesOutOfBoundsException();
 
         }
         if(board[i][j] != null ||board[i+1][j]!=null || board[i-1][j]!=null || board[i][j+1]!=null || board[i][j-1]!=null){
-            throw new IllegalArgumentException("Position already occupied/unavailable");
+            throw new PositionOccupiedException();
 
         }
-        //almeno una carta ad angolo deve essere presente
         if(board[i+1][j+1]==null && board[i+1][j-1]==null && board[i-1][j+1]==null && board[i-1][j-1]==null ){
-            throw new IllegalArgumentException("There are no cards available to attach to");
+            throw new NoCardsAvailableException();
 
         }
         checkCornerVisibility(i + 1, j + 1,0);
@@ -352,9 +348,9 @@ public class PlayerBoard {
         checkCornerVisibility(i - 1, j - 1,2);
 
         if(!checkRequirements(c.getRequirements()))
-            throw new IllegalArgumentException("Requirements not met");
+            throw new RequirementsNotMetException();
 
-        if (face==false) {
+        if (!face) {
             c.rotate();
         }
         board[i][j] = c;

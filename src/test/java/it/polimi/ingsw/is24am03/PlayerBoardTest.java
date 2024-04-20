@@ -1,10 +1,7 @@
 package it.polimi.ingsw.is24am03;
-import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 class PlayerBoardTest {
     private PlayerBoard playerBoard;
@@ -20,46 +17,43 @@ class PlayerBoardTest {
         assertNotNull(playerBoard);
         assertEquals(player, playerBoard.getPlayer());
         assertNotNull(playerBoard.getBoard());
-        assertEquals(81, playerBoard.getBoard().length);
-        assertEquals(81, playerBoard.getBoard()[0].length);
-        // Check that every index of availableItems has been initialized with value 0
         Map<CornerItem, Integer> availableItems = playerBoard.getAvailableItems();
         assertNotNull(availableItems);
         for (Integer value : availableItems.values()) {
             assertEquals(0, (int) value);
         }
     }
+
     @Test
-    public void testCheckFrontCornerVisibilityNotVisible() {
+    public void testCheckCornerVisibilityWhitoutCard() {
         Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         player.setPlayerBoard(playerBoard);
-        Corner corn= new Corner();
-        PlayableCard card = new PlayableCard();
+        // Verifica che il metodo lanci correttamente un'eccezione quando il corner non è visibile
+        assertThrows(IllegalArgumentException.class, () -> {
+            playerBoard.checkCornerVisibility(0, 0, 0);
+        })
+        //verifica angolo sul fronte non visibile
+        Corner corner1= new Corner();
+        PlayableCard card1 = new PlayableCard();
         //setto come corner 0 il corner creato FRONT per la carta e lo imposto non visibile
-        playerBoard.getBoard()[0][0] = card;
+        playerBoard.getBoard()[0][0] = card1;
         //la face della carta dev essere impostata true
-
         // Verifica che il metodo lanci correttamente un'eccezione quando il corner non è visibile
         assertThrows(IllegalArgumentException.class, () -> {
             playerBoard.checkCornerVisibility(0, 0, 0);
         });
-    }
-    @Test
-    public void testCheckBackCornerVisibilityNotVisible() {
-        Player player = new Player("TestPlayer");
-        PlayerBoard playerBoard = new PlayerBoard(player);
-        player.setPlayerBoard(playerBoard);
-        Corner corn= new Corner();
-        PlayableCard card = new PlayableCard();
+        Corner corner2= new Corner();
+        PlayableCard card2 = new PlayableCard();
         //setto come corner 0 il corner BACK creato per la carta e lo imposto non visibile
-        playerBoard.getBoard()[0][0] = card;
+        playerBoard.getBoard()[2][2] = card2;
         //la face della carta dev essere impostata true
 
         // Verifica che il metodo lanci correttamente un'eccezione quando il corner non è visibile
         assertThrows(IllegalArgumentException.class, () -> {
-            playerBoard.checkCornerVisibility(0, 0, 0);
+            playerBoard.checkCornerVisibility(2, 2, 0);
         });
+
     }
     public void testIncreaseItemCount() {
         Player player = new Player("TestPlayer");
@@ -69,12 +63,13 @@ class PlayerBoardTest {
         assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.QUILL));
         assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.INKWELL));
         assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.MANUSCRIPT));
-        assertEquals(0, playerBoard.getAvailableItems().get(Resources.INSECT));
-        assertEquals(0, playerBoard.getAvailableItems().get(Resources.FINGI));
-        assertEquals(0, playerBoard.getAvailableItems().get(Resources.PLANT));
-        assertEquals(0, playerBoard.getAvailableItems().get(Resources.ANIMAL));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.INSECT));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.FUNGI));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.PLANT));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.ANIMAL));
         PlayableCard card = new PlayableCard();
-        // Aggiungi la carta al tavolo del giocatore
+        Corner corner1= new Corner();
+        // Aggiungi la carta risorsa al tavolo del giocatore con il corner su cui è presente un oggetto di tipo pianta
         playerBoard.getBoard()[0][0] = card;
         playerBoard.increaseItemCount(card);
         //SUPPONGO DI AVER AGGIUNTO UNA CARTA CON SOLO UN OGGETTO SU UN CORNER DI TIPO PLANT
@@ -82,10 +77,25 @@ class PlayerBoardTest {
         assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.QUILL));
         assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.INKWELL));
         assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.MANUSCRIPT));
-        assertEquals(0, playerBoard.getAvailableItems().get(Resources.INSECT));
-        assertEquals(0, playerBoard.getAvailableItems().get(Resources.FINGI));
-        assertEquals(1, playerBoard.getAvailableItems().get(Resources.PLANT));
-        assertEquals(0, playerBoard.getAvailableItems().get(Resources.ANIMAL));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.INSECT));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.FUNGI));
+        assertEquals(1, playerBoard.getAvailableItems().get(CornerItem.PLANT));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.ANIMAL));
+        PlayableCard card2 = new PlayableCard();
+        //carta oro giocata di retro
+        Corner corner2= new Corner();
+        //corner con oggetto di tipo PLANT
+        playerBoard.getBoard()[2][2] = card2;
+        playerBoard.increaseItemCount(card2);
+        //SUPPONGO DI AVER AGGIUNTO UNA CARTA CON SOLO UN OGGETTO SU UN CORNER DI TIPO PLANT
+        // Verifica che il conteggio degli oggetti disponibili sia aumentato correttamente dopo l'aggiunta della carta
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.QUILL));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.INKWELL));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.MANUSCRIPT));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.INSECT));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.FUNGI));
+        assertEquals(2, playerBoard.getAvailableItems().get(CornerItem.PLANT));
+        assertEquals(0, playerBoard.getAvailableItems().get(CornerItem.ANIMAL));
     }
     @Test
     public void testUpdateItemCount() {
