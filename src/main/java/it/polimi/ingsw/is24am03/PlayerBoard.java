@@ -145,7 +145,7 @@ public class PlayerBoard {
                 n=availableItems.get(c.getObject());
                 for(i=0; i<n; i++)
                     player.addPoints(c);
-            }else{
+            }else if(scoringType==1){
                 if(board[i-1][j-1]!=null)
                     n++;
                 if(board[i+1][j+1]!=null)
@@ -156,6 +156,8 @@ public class PlayerBoard {
                     n++;
                 for(i=0; i<n; i++)
                     player.addPoints(c);
+            }else if(scoringType==2){
+                player.addPoints(c);
             }
         }
     }
