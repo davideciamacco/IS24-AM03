@@ -6,7 +6,8 @@ package it.polimi.ingsw.is24am03;
 
 public enum ObjectiveType {
     ITEM,
-    PATTERN,
+    PATTERNDIAGONAL,
+    PATTERNL
 
 }
 
