@@ -36,13 +36,13 @@ public class PlayerBoard {
      */
     private void checkCornerVisibility(int x, int y,int corner) {
         if (board[x][y] != null) {
-            if (board[x][y].getFace()==true) {
-                if (board[x][y].getFrontCorner(corner).isVisible()==false) {
+            if (board[x][y].getFace()) {
+                if (!board[x][y].getFrontCorner(corner).isVisible()) {
                     throw new CornerNotVisibleException();
 
                 }
             } else {
-                if (board[x][y].getBackCorner(corner).isVisible()==false) {
+                if (!board[x][y].getBackCorner(corner).isVisible()) {
                     throw new CornerNotVisibleException();
 
                 }
@@ -55,7 +55,7 @@ public class PlayerBoard {
      * @param card The card being placed.
      */
     private void increaseItemCount(PlayableCard card) {
-        if(card.getFace()==true){
+        if(card.getFace()){
             for (int i=0;i<=3;i++) {
                 CornerItem item = card.getFrontCorner(i).getItem();
                 availableItems.put(item, availableItems.get(item) + 1);
@@ -73,38 +73,47 @@ public class PlayerBoard {
      * @param j The y-coordinate of the card placement.
      */
     private void updateItemCount(int i,int j){
-        if(board[i+1][j+1]!=null){
-            if(board[i+1][j+1].getFace()==true){
-                if(!board[i+1][j+1].getFrontCorner(0).isEmpty()){
-                    CornerItem item = board[i+1][j+1].getFrontCorner(0).getItem();
-                    availableItems.put(item, availableItems.get(item) -1);
+        if(i+1<MAX_ROWS && j+1<MAX_COLS){
+            if(board[i+1][j+1]!=null){
+                if(board[i+1][j+1].getFace()){
+                    if(!board[i+1][j+1].getFrontCorner(0).isEmpty()){
+                        CornerItem item = board[i+1][j+1].getFrontCorner(0).getItem();
+                        availableItems.put(item, availableItems.get(item) -1);
+                    }
                 }
             }
         }
-        if(board[i-1][j-1]!=null){
-            if(board[i-1][j-1].getFace()==true){
-                if(!board[i-1][j-1].getFrontCorner(2).isEmpty()){
-                    CornerItem item = board[i-1][j-1].getFrontCorner(2).getItem();
-                    availableItems.put(item, availableItems.get(item) -1);
+        if(i-1>=0 && j-1>=0){
+            if(board[i-1][j-1]!=null){
+                if(board[i-1][j-1].getFace()){
+                    if(!board[i-1][j-1].getFrontCorner(2).isEmpty()){
+                        CornerItem item = board[i-1][j-1].getFrontCorner(2).getItem();
+                        availableItems.put(item, availableItems.get(item) -1);
+                    }
                 }
             }
         }
-        if(board[i-1][j+1]!=null){
-            if(board[i-1][j+1].getFace()==true){
-                if(!board[i-1][j+1].getFrontCorner(3).isEmpty()){
-                    CornerItem item = board[i-1][j+1].getFrontCorner(3).getItem();
-                    availableItems.put(item, availableItems.get(item) -1);
+        if(i-1>=0 && j+1<MAX_COLS){
+            if(board[i-1][j+1]!=null){
+                if(board[i-1][j+1].getFace()){
+                    if(!board[i-1][j+1].getFrontCorner(3).isEmpty()){
+                        CornerItem item = board[i-1][j+1].getFrontCorner(3).getItem();
+                        availableItems.put(item, availableItems.get(item) -1);
+                    }
                 }
             }
         }
-        if(board[i+1][j-1]!=null){
-            if(board[i+1][j-1].getFace()==true){
-                if(!board[i+1][j-1].getFrontCorner(1).isEmpty()){
-                    CornerItem item = board[i+1][j-1].getFrontCorner(1).getItem();
-                    availableItems.put(item, availableItems.get(item) -1);
+        if(i+1<MAX_ROWS && j+1>=0){
+            if(board[i+1][j-1]!=null){
+                if(board[i+1][j-1].getFace()){
+                    if(!board[i+1][j-1].getFrontCorner(1).isEmpty()){
+                        CornerItem item = board[i+1][j-1].getFrontCorner(1).getItem();
+                        availableItems.put(item, availableItems.get(item) -1);
+                    }
                 }
             }
         }
+
     }
     /**
      * Checks if the player meets the requirements to play a card.
@@ -145,7 +154,7 @@ public class PlayerBoard {
                 n=availableItems.get(c.getObject());
                 for(i=0; i<n; i++)
                     player.addPoints(c);
-            }else if(scoringType==1){
+            }else{
                 if(board[i-1][j-1]!=null)
                     n++;
                 if(board[i+1][j+1]!=null)
@@ -156,8 +165,6 @@ public class PlayerBoard {
                     n++;
                 for(i=0; i<n; i++)
                     player.addPoints(c);
-            }else if(scoringType==2){
-                player.addPoints(c);
             }
         }
     }
@@ -200,20 +207,25 @@ public class PlayerBoard {
                     for(j=0;j<MAX_COLS;j++){
                         Iiniz=i;
                         Jiniz=j;
-                        if(board[i][j].getKingdomsType().equals(ob.getKingdomsType()) && verify[i][j]!=1){
-                            counter=1;
-                            for(z=1;z<=2;z++){
-                                if(i-z>=0 && j+z<MAX_COLS){
-                                    if(board[i-z][j+z].getKingdomsType().equals(ob.getKingdomsType()) && verify[i-z][j+z]!=1){
-                                        counter++;
+                        if(board[i][j]!=null){
+                            if(board[i][j].getKingdomsType().equals(ob.getKingdomsType()) && verify[i][j]!=1){
+                                counter=1;
+                                for(z=1;z<=2;z++){
+                                    if(i-z>=0 && j+z<MAX_COLS){
+                                        if(board[i-z][j+z]!=null){
+                                            if(board[i-z][j+z].getKingdomsType().equals(ob.getKingdomsType()) && verify[i-z][j+z]!=1){
+                                                counter++;
+                                            }
+
+                                        }
                                     }
                                 }
-                            }
-                            if(counter==3){
-                                nvoltecompletato++;
-                                verify[Iiniz][Jiniz]=1;
-                                verify[Iiniz-1][Jiniz+1]=1;
-                                verify[Iiniz-2][Jiniz+2]=1;
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz-1][Jiniz+1]=1;
+                                    verify[Iiniz-2][Jiniz+2]=1;
+                                }
                             }
                         }
                     }
@@ -223,20 +235,24 @@ public class PlayerBoard {
                     for(j=0;j<MAX_COLS;j++){
                         Iiniz=i;
                         Jiniz=j;
-                        if(board[i][j].getKingdomsType().equals(ob.getKingdomsType()) && verify[i][j]!=1){
-                            counter=1;
-                            for(z=1;z<=2;z++){
-                                if(i+z<MAX_ROWS && j+z<MAX_COLS){
-                                    if(board[i+z][j+z].getKingdomsType().equals(ob.getKingdomsType()) && verify[i+z][j+z]!=1){
-                                        counter++;
+                        if(board[i][j]!=null ){
+                            if(board[i][j].getKingdomsType().equals(ob.getKingdomsType()) && verify[i][j]!=1){
+                                counter=1;
+                                for(z=1;z<=2;z++){
+                                    if(i+z<MAX_ROWS && j+z<MAX_COLS){
+                                        if(board[i+z][j+z]!=null){
+                                            if(board[i+z][j+z].getKingdomsType().equals(ob.getKingdomsType()) && verify[i+z][j+z]!=1){
+                                                counter++;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            if(counter==3){
-                                nvoltecompletato++;
-                                verify[Iiniz][Jiniz]=1;
-                                verify[Iiniz+1][Jiniz+1]=1;
-                                verify[Iiniz+2][Jiniz+2]=1;
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz+1][Jiniz+1]=1;
+                                    verify[Iiniz+2][Jiniz+2]=1;
+                                }
                             }
                         }
                     }
@@ -255,63 +271,73 @@ public class PlayerBoard {
                 for(j=0;j<MAX_COLS;j++){
                     Iiniz=i;
                     Jiniz=j;
-                    if(board[i][j].getKingdomsType().equals(ob.getSecondColor()) && verify[i][j]!=1){
-                        counter=1;
-                        if(ob.getCorner()==0){
-                            for(z=1;z<=2;z++){
-                                if(i-z>=0 && j-1>=0) {
-                                    if (board[i - z][j - 1].getKingdomsType().equals(ob.getKingdomsType())) {
-                                        counter++;
+                    if( board[i][j]!=null){
+                        if(board[i][j].getKingdomsType().equals(ob.getSecondColor()) && verify[i][j]!=1){
+                            counter=1;
+                            if(ob.getCorner()==0){
+                                for(z=1;z<=3;z++){
+                                    if(i-z>=0 && j-1>=0  && z!=2) {
+                                        if (board[i-z][j-1]!=null) {
+                                            if( board[i - z][j - 1].getKingdomsType().equals(ob.getKingdomsType())){
+                                                counter++;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            if(counter==3){
-                                nvoltecompletato++;
-                                verify[Iiniz][Jiniz]=1;
-                                verify[Iiniz-1][Jiniz-1]=1;
-                                verify[Iiniz-2][Jiniz-1]=1;
-                            }
-                        }else if(ob.getCorner()==1){
-                            for(z=1;z<=2;z++){
-                                if(i-z>=0 && j+1<MAX_COLS) {
-                                    if (board[i - z][j + 1].getKingdomsType().equals(ob.getKingdomsType())) {
-                                        counter++;
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz-1][Jiniz-1]=1;
+                                    verify[Iiniz-2][Jiniz-1]=1;
+                                }
+                            }else if(ob.getCorner()==1){
+                                for(z=1;z<=3;z++){
+                                    if(i-z>=0 && j+1<MAX_COLS  && z!=2) {
+                                        if (board[i-z][j+1]!=null) {
+                                            if(board[i - z][j + 1].getKingdomsType().equals(ob.getKingdomsType())){
+                                                counter++;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            if(counter==3){
-                                nvoltecompletato++;
-                                verify[Iiniz][Jiniz]=1;
-                                verify[Iiniz-1][Jiniz+1]=1;
-                                verify[Iiniz-2][Jiniz+1]=1;
-                            }
-                        }else if(ob.getCorner()==2){
-                            for(z=1;z<=2;z++){
-                                if(i+z<MAX_ROWS && j+1<MAX_COLS) {
-                                    if (board[i + z][j + 1].getKingdomsType().equals(ob.getKingdomsType())) {
-                                        counter++;
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz-1][Jiniz+1]=1;
+                                    verify[Iiniz-2][Jiniz+1]=1;
+                                }
+                            }else if(ob.getCorner()==2){
+                                for(z=1;z<=3;z++){
+                                    if(i+z<MAX_ROWS && j+1<MAX_COLS && z!=2) {
+                                        if ( board[i+z][j+1]!=null) {
+                                            if( board[i + z][j + 1].getKingdomsType().equals(ob.getKingdomsType())){
+                                                counter++;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            if(counter==3){
-                                nvoltecompletato++;
-                                verify[Iiniz][Jiniz]=1;
-                                verify[Iiniz+1][Jiniz+1]=1;
-                                verify[Iiniz+2][Jiniz+1]=1;
-                            }
-                        }else{
-                            for(z=1;z<=2;z++){
-                                if(i+z<MAX_ROWS && j-1>=0) {
-                                    if (board[i + z][j - 1].getKingdomsType().equals(ob.getKingdomsType())) {
-                                        counter++;
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz+1][Jiniz+1]=1;
+                                    verify[Iiniz+2][Jiniz+1]=1;
+                                }
+                            }else{
+                                for(z=1;z<=3;z++){
+                                    if(i+z<MAX_ROWS && j-1>=0  && z!=2) {
+                                        if (board[i+z][j-1]!=null) {
+                                            if( board[i + z][j - 1].getKingdomsType().equals(ob.getKingdomsType())){
+                                                counter++;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            if(counter==3){
-                                nvoltecompletato++;
-                                verify[Iiniz][Jiniz]=1;
-                                verify[Iiniz+1][Jiniz-1]=1;
-                                verify[Iiniz+2][Jiniz-1]=1;
+                                if(counter==3){
+                                    nvoltecompletato++;
+                                    verify[Iiniz][Jiniz]=1;
+                                    verify[Iiniz+1][Jiniz-1]=1;
+                                    verify[Iiniz+2][Jiniz-1]=1;
+                                }
                             }
                         }
                     }
@@ -331,23 +357,75 @@ public class PlayerBoard {
      * @throws IllegalArgumentException If the coordinates are out of bounds, the position is already occupied,
      *                                  there are no cards to attach to, or if the card requirements are not met.
      */
-    public int placeCard(PlayableCard c, int i, int j, boolean face) {
+    public void placeStartingCard(StartingCard c,int i,int j,boolean face){
+        board[i][j] = c;
+        increaseItemCount(c);
+    }
+    public void placeCard(PlayableCard c, int i, int j, boolean face) {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
             throw new CoordinatesOutOfBoundsException();
 
         }
-        if(board[i][j] != null ||board[i+1][j]!=null || board[i-1][j]!=null || board[i][j+1]!=null || board[i][j-1]!=null){
+    /*    if(board[i][j] != null ||board[i+1][j]!=null || board[i-1][j]!=null || board[i][j+1]!=null || board[i][j-1]!=null){
             throw new PositionOccupiedException();
 
         }
-        if(board[i+1][j+1]==null && board[i+1][j-1]==null && board[i-1][j+1]==null && board[i-1][j-1]==null ){
-            throw new NoCardsAvailableException();
 
+     */
+        if(board[i][j] != null){
+            throw new PositionOccupiedException();
         }
-        checkCornerVisibility(i + 1, j + 1,0);
-        checkCornerVisibility(i + 1, j - 1,1);
-        checkCornerVisibility(i - 1, j + 1,3);
-        checkCornerVisibility(i - 1, j - 1,2);
+        if(i+1<MAX_ROWS){
+            if(board[i+1][j]!=null)
+                throw new PositionOccupiedException();
+        }
+        if(i-1>=0){
+            if(board[i-1][j]!=null)
+                throw new PositionOccupiedException();
+        }
+        if(j+1<MAX_COLS){
+            if(board[i][j+1]!=null)
+                throw new PositionOccupiedException();
+        }
+        if(j-1<MAX_ROWS){
+            if(board[i][j-1]!=null)
+                throw new PositionOccupiedException();
+        }
+        int check=0;
+        //    if((board[i+1][j+1]==null && board[i+1][j-1]==null && board[i-1][j+1]==null && board[i-1][j-1]==null ){
+        //        throw new NoCardsAvailableException();
+        //    }
+        if(i+1<MAX_ROWS && j+1<MAX_COLS){
+            checkCornerVisibility(i + 1, j + 1,0);
+            if(board[i+1][j+1]!=null){
+                check=1;
+            }
+        }
+        if(i+1<MAX_ROWS && j-1>=0){
+            checkCornerVisibility(i + 1, j - 1,1);
+            if(board[i+1][j-1]!=null){
+                check=1;
+            }
+        }
+        if(i-1>=0 && j+1<MAX_COLS){
+            checkCornerVisibility(i - 1, j + 1,3);
+            if(board[i-1][j+1]!=null){
+                check=1;
+            }
+        }
+        if(i-1>=0 && j-1>=0){
+            checkCornerVisibility(i - 1, j - 1,2);
+            if(board[i-1][j-1]!=null){
+                check=1;
+            }
+        }
+        if(check==0){
+            throw new NoCardsAvailableException();
+        }
+//        checkCornerVisibility(i + 1, j + 1,0);
+//        checkCornerVisibility(i + 1, j - 1,1);
+//        checkCornerVisibility(i - 1, j + 1,3);
+//        checkCornerVisibility(i - 1, j - 1,2);
 
         if(!checkRequirements(c.getRequirements()))
             throw new RequirementsNotMetException();
@@ -359,7 +437,6 @@ public class PlayerBoard {
         increaseItemCount(c);
         updateItemCount(i, j);
         giveCardPoints(c, i, j);
-        return 0; // return 0 if the operation has been done
     }
     public Player getPlayer(){
         return player;

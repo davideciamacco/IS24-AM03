@@ -21,16 +21,14 @@ public class Player {
      *
      * @param nickname     The player's nickname.
      * @param pawncolor    The color of the player's pawn.
-     * @param firstPlayer  Indicates if the player is the first player.
      */
-    public Player(String nickname, Color pawncolor,boolean firstPlayer) {
+    public Player(String nickname, Color pawncolor) {
         this.nickname = nickname;
         this.pawncolor = pawncolor;
-        this.hand = null;
+        this.hand = new ArrayList<>();
         this.objective =null;
         this.startingCard = null;
         this.winner = false;
-        this.firstPlayer =false;
         this.points = 0;
         this.numObj = 0;
         this.playerBoard = null;
@@ -75,7 +73,6 @@ public class Player {
      * @param c The card to add to the hand.
      */
     public void addCard(PlayableCard c) {
-        assert hand != null;
         hand.add(c);
     }
     /**
@@ -135,5 +132,8 @@ public class Player {
     }
     public void increaseNumObjective(int n){
         numObj=numObj+n;
+    }
+    public PlayableCard getStartingCard(){
+        return startingCard;
     }
 }
