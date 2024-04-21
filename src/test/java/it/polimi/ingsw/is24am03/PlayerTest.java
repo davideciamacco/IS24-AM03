@@ -1,88 +1,73 @@
 package it.polimi.ingsw.is24am03;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PlayerTest {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+class PlayerTest {
+
     private Player player;
-    private ObjectiveCard objectiveCard;
-    private StartingCard startingCard;
-    private PlayableCard playableCard;
 
     @BeforeEach
-    public void setUp() {
-        player = new Player("TestPlayer", Color.RED, false);
-        objectiveCard = new ObjectiveCard();
-        startingCard = new StartingCard();
-        playableCard = new PlayableCard();
+    void setUp() {
+        player = new Player("TestPlayer", Color.RED);
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assertEquals("TestPlayer", player.getNickname());
-        assertFalse(player.isFirstPlayer());
-        assertFalse(player.isWinner());
         assertEquals(0, player.getPoints());
         assertEquals(0, player.getNumObj());
+        assertNull(player.getObjectiveCard());
         assertNull(player.getPlayerBoard());
-        assertNull(player.getObjective());
-        assertNull(player.getStartingCard());
-        assertNull(player.getHand());
     }
 
     @Test
-    public void testSetObjective() {
-        player.setObjective(objectiveCard);
-        assertEquals(objectiveCard, player.getObjective());
+    void testAddCard() {
+        PlayableCard card = new ResourceCard(0,"R",0,null,null,null,null,null,null,null,null);
+        player.addCard(card);
+        ArrayList<PlayableCard> hand = player.getHand();
+        assertTrue(hand.contains(card));
     }
-
     @Test
-    public void testSetStartingCard() {
+    void testRemoveCard() {
+        PlayableCard card = new ResourceCard(0,"R",0,null,null,null,null,null,null,null,null);
+        player.addCard(card);
+        assertTrue(player.getHand().contains(card));
+
+        player.removeCard(card);
+        assertFalse(player.getHand().contains(card));
+    }
+    @Test
+    void testAddPoints() {
+        PlayableCard card = new ResourceCard(0,"R",5,null,null,null,null,null,null,null,null); // Carta che aggiunge 5 punti
+        player.addPoints(card);
+        assertEquals(5, player.getPoints());
+    }
+    @Test
+    void testSetStartingCard() {
+        ArrayList<CornerItem> kingdomList=new ArrayList<CornerItem>();
+        StartingCard startingCard = new StartingCard(80,0,null,null,null,null,null,null,null,null, kingdomList);
         player.setStartingCard(startingCard);
         assertEquals(startingCard, player.getStartingCard());
     }
-
     @Test
-    public void testSetWinner() {
-        player.setWinner(true);
-        assertTrue(player.isWinner());
-    }
-
-    @Test
-    public void testSetPlayerBoard() {
+    void testSetPlayerBoard() {
+        assertNull(player.getPlayerBoard());
         PlayerBoard playerBoard = new PlayerBoard(player);
         player.setPlayerBoard(playerBoard);
         assertEquals(playerBoard, player.getPlayerBoard());
     }
-
     @Test
-    public void testAddCard() {
-        player.addCard(playableCard);
-        assertTrue(player.getHand().contains(playableCard));
-    }
-
-    @Test
-    public void testAddPoints() {
-        player.addPoints(playableCard);
-        assertEquals(3, player.getPoints());
-    }
-
-    @Test
-    public void testRemoveCard() {
-        player.addCard(playableCard);
-        player.removeCard(playableCard);
-        assertFalse(player.getHand().contains(playableCard));
-    }
-
-    @Test
-    public void testSetFirstPlayer() {
-        player.setFirstPlayer(false);
-        assertFalse(player.isFirstPlayer());
-    }
-
-    @Test
-    public void testGetNumObj() {
+    void testIncreaseNumObjective() {
         assertEquals(0, player.getNumObj());
+        int n = 5;
+        player.increaseNumObjective(n);
+        assertEquals(n, player.getNumObj());
     }
+
+
 }
