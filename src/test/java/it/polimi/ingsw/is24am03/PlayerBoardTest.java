@@ -148,7 +148,7 @@ class PlayerBoardTest {
         playerBoard.placeCard(card_4,43,43,true);
         playerBoard.placeCard(card_4,44,42,true);
         playerBoard.checkObjective(card_90);
-        assertEquals(1,playerBoard.checkObjective(card_90));
+        assertEquals(3,playerBoard.checkObjective(card_90));
 
 
     }
@@ -169,13 +169,13 @@ class PlayerBoardTest {
         ObjectiveCard card_94 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         playerBoard.getAvailableItems().put(CornerItem.FUNGI, 3);
         playerBoard.checkObjective(card_94);
-        assertEquals(1,playerBoard.checkObjective(card_94));
+        assertEquals(2,playerBoard.checkObjective(card_94));
         ObjectiveCard card_98 = new ObjectiveList(98,3,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,2);
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 5);
         playerBoard.getAvailableItems().put(CornerItem.INKWELL, 4);
         playerBoard.getAvailableItems().put(CornerItem.QUILL, 3);
         playerBoard.checkObjective(card_98);
-        assertEquals(3,playerBoard.checkObjective(card_98));
+        assertEquals(9,playerBoard.checkObjective(card_98));
         //     ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,1);
     }
     @Test
@@ -270,7 +270,7 @@ class PlayerBoardTest {
         assertEquals(card_6,playerBoard.getBoard()[39][41]);
         assertEquals(card_7,playerBoard.getBoard()[38][42]);
         assertEquals(card_8,playerBoard.getBoard()[37][43]);
-        assertEquals(1,playerBoard.checkObjective(card_87));
+        assertEquals(2,playerBoard.checkObjective(card_87));
     }
     @Test
     void testSingleDiagonal(){
@@ -314,7 +314,7 @@ class PlayerBoardTest {
         assertEquals(card_10,playerBoard.getBoard()[35][45]);
         assertEquals(card_11,playerBoard.getBoard()[34][46]);
         assertEquals(card_12,playerBoard.getBoard()[33][47]);
-        assertEquals(2,playerBoard.checkObjective(card_87));
+        assertEquals(4,playerBoard.checkObjective(card_87));
     }
     @Test
     void testGivePoints(){
