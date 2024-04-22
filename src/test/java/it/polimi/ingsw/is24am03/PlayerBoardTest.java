@@ -25,6 +25,8 @@ class PlayerBoardTest {
         requirementsList2.add(CornerItem.MANUSCRIPT);
         PlayableCard card2 = new GoldCard(42, "R", 1, null, null, null, null, null, null, null, null,requirementsList2, 0, CornerItem.MANUSCRIPT);
         assertFalse(playerBoard.checkRequirements(card2.getRequirements()));
+        requirementsList2.clear();
+
     }
 
     @Test
@@ -122,7 +124,16 @@ class PlayerBoardTest {
 
         playerBoard.placeCard(card_5,80,80,true);
         assertEquals(card_5,playerBoard.getBoard()[80][80]);
-
+        PlayableCard card_6 = new ResourceCard(2,"R",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        assertThrows(PositionOccupiedException.class, () -> {
+            playerBoard.placeCard(card_6,80,80,false);
+        });
+        assertThrows(CoordinatesOutOfBoundsException.class, () -> {
+            playerBoard.placeCard(card_6,81,81,false);
+        });
+        assertThrows(NoCardsAvailableException.class, () -> {
+            playerBoard.placeCard(card_6,21,21,false);
+        });
 
     }
 
@@ -392,7 +403,7 @@ class PlayerBoardTest {
         playerBoard.placeStartingCard(card_80,40,40,false);
         PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
         assertThrows(CornerNotVisibleException.class, () -> {
-
+            // Qui chiamiamo la funzione che dovrebbe lanciare l'eccezione
             playerBoard.placeCard(card_6,39,41,false);
         });
 
