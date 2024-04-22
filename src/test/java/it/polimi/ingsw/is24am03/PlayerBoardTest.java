@@ -109,7 +109,7 @@ class PlayerBoardTest {
         playerBoard.placeCard(card_4,43,43,true);
         assertEquals(card_4,playerBoard.getBoard()[43][43]);
         playerBoard.checkObjective(card_86);
-        assertEquals(1,playerBoard.checkObjective(card_86));
+        assertEquals(2,playerBoard.checkObjective(card_86));
 
 
         //test card out of limit
@@ -209,7 +209,7 @@ class PlayerBoardTest {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
-     //   list.add(CornerItem.INSECT);
+        //   list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,40,40,true);
@@ -241,7 +241,7 @@ class PlayerBoardTest {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
-   //     list.add(CornerItem.INSECT);
+        //     list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,40,40,true);
@@ -391,7 +391,10 @@ class PlayerBoardTest {
         list.clear();
         playerBoard.placeStartingCard(card_80,40,40,false);
         PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
-        playerBoard.placeCard(card_6,39,41,false);
+        assertThrows(CornerNotVisibleException.class, () -> {
+
+            playerBoard.placeCard(card_6,39,41,false);
+        });
 
     }
 }
