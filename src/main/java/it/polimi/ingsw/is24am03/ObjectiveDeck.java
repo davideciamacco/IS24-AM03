@@ -35,9 +35,9 @@ public class ObjectiveDeck extends Deck {
         ObjectiveCard card_96 = new ObjectiveList(96,2,CornerItem.ANIMAL,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_97 = new ObjectiveList(97,2,CornerItem.INSECT,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_98 = new ObjectiveList(98,3,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,2);
-        ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,1);
-        ObjectiveCard card_100 = new ObjectiveList(100,2,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,1);
-        ObjectiveCard card_101 = new ObjectiveList(101,2,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,1);
+        ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.MANUSCRIPT,ObjectiveType.ITEM,CornerItem.EMPTY,1);
+        ObjectiveCard card_100 = new ObjectiveList(100,2,CornerItem.INKWELL,ObjectiveType.ITEM,CornerItem.EMPTY,1);
+        ObjectiveCard card_101 = new ObjectiveList(101,2,CornerItem.QUILL,ObjectiveType.ITEM,CornerItem.EMPTY,1);
 
         cards.add(card_86);
         cards.add(card_87);
