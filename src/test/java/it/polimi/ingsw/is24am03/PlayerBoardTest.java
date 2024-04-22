@@ -14,10 +14,10 @@ class PlayerBoardTest {
         PlayerBoard playerBoard = new PlayerBoard(player);
 
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 1);
-
         ArrayList<CornerItem> requirementsList= new ArrayList<CornerItem>();
         requirementsList.add(CornerItem.MANUSCRIPT);
         PlayableCard card = new GoldCard(42, "R", 1, null, null, null, null, null, null, null, null,requirementsList, 0, CornerItem.MANUSCRIPT);
+
 
         assertTrue(playerBoard.checkRequirements(card.getRequirements()));
         ArrayList<CornerItem> requirementsList2= new ArrayList<CornerItem>();
@@ -44,21 +44,27 @@ class PlayerBoardTest {
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
         ArrayList<CornerItem> list = new ArrayList<>();
-        list.add(CornerItem.INSECT);
         StartingCard card2= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card2,40,40,true);
         assertEquals(card2,playerBoard.getBoard()[40][40]);
+
+
         PlayableCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
         playerBoard.placeCard(card0, 41, 41, true);
         assertEquals(card0,playerBoard.getBoard()[41][41]);
         assertEquals(3, player.getPoints());
+
+
         list.add(CornerItem.MANUSCRIPT);
         PlayableCard card40 = new GoldCard(40,"R",1,notVisible,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL);
         list.clear();
         playerBoard.placeCard(card40, 40, 42, true);
         assertEquals(card40,playerBoard.getBoard()[40][42]);
         assertEquals(4, player.getPoints());
+
+
+
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.ANIMAL);
@@ -82,6 +88,8 @@ class PlayerBoardTest {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
+
+
         ObjectiveCard card_86 = new Dshaped(86,2,CornerItem.FUNGI,ObjectiveType.PATTERNDIAGONAL,CornerItem.FUNGI,1);
         player.setObjective(card_86);
         assertEquals(card_86,player.getObjectiveCard());
@@ -103,6 +111,8 @@ class PlayerBoardTest {
         playerBoard.checkObjective(card_86);
         assertEquals(1,playerBoard.checkObjective(card_86));
 
+
+        //test card out of limit
         list.add(CornerItem.INSECT);
         StartingCard card_81= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
@@ -131,6 +141,9 @@ class PlayerBoardTest {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
+
+
+
         ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,2,CornerItem.PLANT);
         player.setObjective(card_90);
         assertEquals(card_90,player.getObjectiveCard());
@@ -166,10 +179,14 @@ class PlayerBoardTest {
         Corner notVisible =new Corner("X");
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
+
         ObjectiveCard card_94 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         playerBoard.getAvailableItems().put(CornerItem.FUNGI, 3);
         playerBoard.checkObjective(card_94);
         assertEquals(2,playerBoard.checkObjective(card_94));
+
+
+
         ObjectiveCard card_98 = new ObjectiveList(98,3,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,2);
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 5);
         playerBoard.getAvailableItems().put(CornerItem.INKWELL, 4);
@@ -179,7 +196,7 @@ class PlayerBoardTest {
         //     ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,1);
     }
     @Test
-    void testgivepoints(){
+    void testgivepoints1(){
         Corner animal = new Corner("A");
         Corner fungi =new Corner("F");
         Corner insect =new Corner("I");
@@ -192,7 +209,7 @@ class PlayerBoardTest {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
-        list.add(CornerItem.INSECT);
+     //   list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,40,40,true);
@@ -201,6 +218,8 @@ class PlayerBoardTest {
         list.add(CornerItem.ANIMAL);
         playerBoard.getAvailableItems().put(CornerItem.FUNGI, 2);
         playerBoard.getAvailableItems().put(CornerItem.ANIMAL, 1);
+
+
 
         PlayableCard card_40 = new GoldCard(40,"R",1,empty,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL);
 
@@ -222,7 +241,7 @@ class PlayerBoardTest {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
-        list.add(CornerItem.INSECT);
+   //     list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,40,40,true);
@@ -273,7 +292,7 @@ class PlayerBoardTest {
         assertEquals(2,playerBoard.checkObjective(card_87));
     }
     @Test
-    void testSingleDiagonal(){
+    void testSingleandDoubleDiagonal(){
         Corner animal = new Corner("A");
         Corner fungi =new Corner("F");
         Corner insect =new Corner("I");
@@ -317,7 +336,7 @@ class PlayerBoardTest {
         assertEquals(4,playerBoard.checkObjective(card_87));
     }
     @Test
-    void testGivePoints(){
+    void testGivePoints2(){
         Corner animal = new Corner("A");
         Corner fungi =new Corner("F");
         Corner insect =new Corner("I");
