@@ -80,7 +80,7 @@ public class Player {
      *
      * @param card The card from which points are to be added.
      */
-    public void addPoints(PlayableCard card) {
+    public void addPoints(Card card) {
         int pointsToAdd = card.getPoints();
         points=points+pointsToAdd;
     }

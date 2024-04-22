@@ -154,7 +154,7 @@ public class PlayerBoard {
                 n=availableItems.get(c.getObject());
                 for(i=0; i<n; i++)
                     player.addPoints(c);
-            }else{
+            }else if(scoringType==1){
                 if(board[i-1][j-1]!=null)
                     n++;
                 if(board[i+1][j+1]!=null)
@@ -165,6 +165,8 @@ public class PlayerBoard {
                     n++;
                 for(i=0; i<n; i++)
                     player.addPoints(c);
+            }else if(scoringType==2){
+                player.addPoints(c);
             }
         }
     }
@@ -181,7 +183,7 @@ public class PlayerBoard {
         if(ob.getType().equals(ObjectiveType.ITEM)){
             if(ob.getTypeList()==1){
                 n=availableItems.get(ob.getRequirement())/2;
-                return n;
+                return n*(ob.getPoints());
             }else if(ob.getTypeList()==2){
                 n=availableItems.get(CornerItem.QUILL);
                 if(availableItems.get(CornerItem.INKWELL)<n){
@@ -190,10 +192,10 @@ public class PlayerBoard {
                 if(availableItems.get(CornerItem.MANUSCRIPT)<n) {
                     n=availableItems.get(CornerItem.MANUSCRIPT);
                 }
-                return n;
+                return n*(ob.getPoints());
             }else{
                 n=availableItems.get(ob.getRequirement())/3;
-                return n;
+                return n*(ob.getPoints());
             }
         }
         else if(ob.getType().equals(ObjectiveType.PATTERNDIAGONAL)){
@@ -258,7 +260,7 @@ public class PlayerBoard {
                     }
                 }
             }
-            return nvoltecompletato;
+            return nvoltecompletato*(ob.getPoints());
 
         }else{
 
@@ -343,7 +345,8 @@ public class PlayerBoard {
                     }
                 }
             }
-            return nvoltecompletato;
+
+            return nvoltecompletato*(ob.getPoints());
         }
     }
     /**
@@ -358,8 +361,12 @@ public class PlayerBoard {
      *                                  there are no cards to attach to, or if the card requirements are not met.
      */
     public void placeStartingCard(StartingCard c,int i,int j,boolean face){
+        if (!face) {
+            c.rotate();
+        }
         board[i][j] = c;
         increaseItemCount(c);
+
     }
     public void placeCard(PlayableCard c, int i, int j, boolean face) {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
@@ -390,6 +397,10 @@ public class PlayerBoard {
         if(j-1<MAX_ROWS){
             if(board[i][j-1]!=null)
                 throw new PositionOccupiedException();
+        }
+
+        if (!face) {
+            c.rotate();
         }
         int check=0;
         //    if((board[i+1][j+1]==null && board[i+1][j-1]==null && board[i-1][j+1]==null && board[i-1][j-1]==null ){
@@ -422,17 +433,11 @@ public class PlayerBoard {
         if(check==0){
             throw new NoCardsAvailableException();
         }
-//        checkCornerVisibility(i + 1, j + 1,0);
-//        checkCornerVisibility(i + 1, j - 1,1);
-//        checkCornerVisibility(i - 1, j + 1,3);
-//        checkCornerVisibility(i - 1, j - 1,2);
+
 
         if(!checkRequirements(c.getRequirements()))
             throw new RequirementsNotMetException();
 
-        if (!face) {
-            c.rotate();
-        }
         board[i][j] = c;
         increaseItemCount(c);
         updateItemCount(i, j);
