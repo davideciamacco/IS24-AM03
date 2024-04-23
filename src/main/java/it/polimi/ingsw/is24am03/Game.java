@@ -7,11 +7,17 @@ import java.util.List;
  * This class is used to handle the main logic of a Game
  */
 public class Game implements GameInterface {
-    /**
-     * The identification number of the game
-     */
 
-    private int gameId;
+    /**
+     * Index of the current player in the ArrayList
+     */
+    private int currentPlayer;
+
+    /**
+     * Number of rounds completed
+     */
+    private int roundNumber;
+
     /**
      * The list of all the player that have joined the game
      */
@@ -28,24 +34,24 @@ public class Game implements GameInterface {
     private GoldDeck goldDeck;
 
     /**
-     * The reference to the resource deck to draw resources cards
+     * The reference to the resource deck
      */
     private ResourceDeck resourceDeck;
 
     /**
-     * The reference to the starting deck to draw starting cards
+     * The reference to the starting deck
      */
     private StartingDeck startingDeck;
 
     /**
-     * The reference to the objective deck to draw objective cards
+     * The reference to the objective deck
      */
     private ObjectiveDeck objectiveDeck;
 
     /**
      * List of the cards revealed on the table (max 4)
      */
-    private ArrayList<ResourceCard> tableCards;
+    private ArrayList<PlayableCard> tableCards;
 
     /**
      * List containing the common objective card for the game
@@ -53,41 +59,55 @@ public class Game implements GameInterface {
     private ArrayList<ObjectiveCard> commonObjective;
 
     /**
-     * List of the colors that can be picked by the players
+     * State of the game
      */
-    private ArrayList<Color> availableColors;
-    private RoundManager round;
     private State gameState;
 
     /**
+     * Boolean which becomes true when a player reaches 20 or more points or both gold and resource decks don't contain
+     * more cards
+     */
+    private boolean ending;
+
+    /**
+     * Boolean that becomes true when the last round begins
+     */
+    private boolean lastRound;
+
+    private ArrayList<Color> availableColors;
+
+    /**
      * Constructor of the Game objects, it initializes all the attributes and add the host to the game
-     * @param gId is the identification number of the game
      * @param nPlayers is the total number of the players for the game
      * @param host is the Player that have created the game
      */
-    public Game(int gId, int nPlayers, Player host) {
-        this.gameId = gId;
+    public Game(int nPlayers, String host) {
+        this.lastRound = false;
+        this.ending = false;
+        this.roundNumber=0;
+        this.currentPlayer = -1;
         this.gameState = State.WAITING;
         this.numPlayers = nPlayers;
-        this.tableCards = new ArrayList<ResourceCard>();
+        this.tableCards = new ArrayList<PlayableCard>();
         this.resourceDeck = new ResourceDeck();
         this.goldDeck = new GoldDeck();
         this.startingDeck = new StartingDeck();
         this.objectiveDeck = new ObjectiveDeck();
         this.players = new ArrayList<Player>();
-        this.availableColors = new ArrayList<Color>(List.of(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW));
         this.commonObjective = new ArrayList<ObjectiveCard>();
-
+        this.availableColors = new ArrayList<Color>(List.of(Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW));
         addPlayer(host);
     }
 
     /**
      * This method is used to start the game, it chooses randomly a starting player, distributes the cards to the players,
-     * initializes the common objective cards, shuffles the decks and unreveal the first four cards on the table
+     * initializes the common objective cards, shuffles the decks and reveals the first four cards on the table
      */
-    public void startGame() {
-        this.gameState = State.PREPARATION;
+    public void startGame() throws NotAllPlayersHaveJoinedException {
+        if(players.size()!=numPlayers)
+            throw new NotAllPlayersHaveJoinedException();
         setOrder();
+        this.gameState = State.PREPARATION_1;
         startingDeck.shuffle();
         objectiveDeck.shuffle();
         goldDeck.shuffle();
@@ -95,8 +115,7 @@ public class Game implements GameInterface {
         setCommonObjective();
         initializeTable();
         distributeCards();
-        this.round = new RoundManager(players);
-        this.gameState = State.PLAYING;
+        nextTurn();
     }
 
 
@@ -114,20 +133,22 @@ public class Game implements GameInterface {
         return numPlayers;
     }
 
+
     /**
      * Method used to return the available colors
      * @return the list of color that can be picked
      */
+    /*
     public ArrayList<Color> getAvailableColors() {
         return availableColors;
-    }
+    }*/
 
     /**
      * This method set the two common cards of the game
      */
     public void setCommonObjective() {
-        commonObjective.add(objectiveDeck.draw());
-        commonObjective.add(objectiveDeck.draw());
+        commonObjective.add(objectiveDeck.drawCard());
+        commonObjective.add(objectiveDeck.drawCard());
     }
 
     /**
@@ -135,10 +156,10 @@ public class Game implements GameInterface {
      */
     public void distributeCards() {
         for (Player p : players) {
-            p.addCard(resourceDeck.draw());
-            p.addCard(resourceDeck.draw());
-            p.addCard(goldDeck.draw());
-            p.setStartingCard(startingDeck.draw());
+            p.addCard(resourceDeck.drawCard());
+            p.addCard(resourceDeck.drawCard());
+            p.addCard(goldDeck.drawCard());
+            p.setStartingCard(startingDeck.drawCard());
         }
     }
 
@@ -146,10 +167,10 @@ public class Game implements GameInterface {
      * Method that set the first four cards revealed on the table
      */
     public void initializeTable() {
-        tableCards.add(resourceDeck.draw());
-        tableCards.add(resourceDeck.draw());
-        tableCards.add(goldDeck.draw());
-        tableCards.add(goldDeck.draw());
+        tableCards.add(resourceDeck.drawCard());
+        tableCards.add(resourceDeck.drawCard());
+        tableCards.add(goldDeck.drawCard());
+        tableCards.add(goldDeck.drawCard());
     }
 
     /**
@@ -175,24 +196,25 @@ public class Game implements GameInterface {
             if (w.getNumObj() < maxObjective)
                 winners.remove(w);
             else
-                w.setWinner();
+                w.setWinner(true);
         }
         return winners;
     }
 
     /**
      * This method allow to add a player to the game
-     * @param P represent the player to be added
+     * @param player represent the player to be added
      */
-    public void addPlayer(Player P) {
-        players.add(P);
-        if(players.size()==numPlayers)
-            startGame();
+    public void addPlayer(String player) {
+        Player playerToAdd = new Player(player, availableColors.remove(0));
+        players.add(playerToAdd);
+        if (players.size() == numPlayers) {
+            try {
+                startGame();
+            } catch (NotAllPlayersHaveJoinedException e) {
+            }
+        }
     }
-
-    /*public void removePlayer(Player P){
-        players.remove(P);
-    }*/
 
     /**
      * This method calculates the number of objective card realized by each player and gives to them the
@@ -203,7 +225,7 @@ public class Game implements GameInterface {
         for (Player p : players) {
             flag = p.getPlayerBoard().checkObjective(p.getObjectiveCard());
             p.increaseNumObjective(flag);
-            p.addPoints(p.getObjectiveCard().getPoints());
+            p.addPoints(p.getObjectiveCard());
             for (ObjectiveCard oc : commonObjective) {
                 flag = p.getPlayerBoard().checkObjective(oc);
                 p.increaseNumObjective(flag);
@@ -214,93 +236,106 @@ public class Game implements GameInterface {
 
     /**
      * Add a resource card to the selected player
-     * @param P represents the player who is drawing
-     * @param RD consists of the resource deck from which the player is drawing
+     * @param player represents the player who is drawing
      */
-    public void drawResources(Player P, ResourcesDeck RD) {
-        if(RD.isEmpty())
-            throw new EmptyDeckException();
-        P.addCard(RD.draw());
-        if(!round.nextTurn())
-            endGame();
-        //return???
+    public void drawResources(String player) throws EmptyDeckException{
+        if(resourceDeck.isEmpty())
+            throw new EmptyDeckException("There aren't other cards in the selected deck");
+        getPlayers().get(currentPlayer).addCard(resourceDeck.drawCard());
+        if(resourceDeck.isEmpty() && goldDeck.isEmpty())
+            ending=true;
+        nextTurn();
     }
 
     /**
      * Add a gold card to the selected player
-     * @param P represents the player who is drawing
-     * @param GD consists of the gold deck from which the player is drawing
+     * @param player represents the player who is drawing
      */
-    public void drawGold(Player P, GoldDeck GD) {
-        P.addCard(GD.draw());
-        //return???
+    public void drawGold(String player) throws EmptyDeckException {
+        if(goldDeck.isEmpty())
+            throw new EmptyDeckException("There aren't other cards in the selected deck");
+        getPlayers().get(currentPlayer).addCard(resourceDeck.drawCard());
+        if(resourceDeck.isEmpty() && goldDeck.isEmpty())
+            ending=true;
+        nextTurn();
     }
 
     /**
      * This method lets the player drawing from the table selecting one of the four
      * unrevealed cards
-     * @param P represents the player who is drawing
+     * @param player represents the player who is drawing
      * @param choice consists of the card chosen among the four cards on the table
      */
-    public void drawTable(Player P, int choice) {
+    public void drawTable(String player, int choice) throws NullCardSelectedException {
         if (tableCards.get(choice) == null)
-            return;
+            throw new NullCardSelectedException();
+        Player p = players.get(currentPlayer);
         switch (choice) {
             case 0:
-                P.addCard(tableCards.get(0));
+                p.addCard(tableCards.get(0));
                 if (!resourceDeck.isEmpty())
-                    tableCards.set(0, resourceDeck.draw());
+                    tableCards.set(0, resourceDeck.drawCard());
                 else if (!goldDeck.isEmpty())
-                    tableCards.set(0, goldDeck.draw());
+                    tableCards.set(0, goldDeck.drawCard());
                 else
                     tableCards.set(0, null);
                 break;
 
             case 1:
-                P.addCard(tableCards.get(1));
+                p.addCard(tableCards.get(1));
                 if (!resourceDeck.isEmpty())
-                    tableCards.set(1, resourceDeck.draw());
+                    tableCards.set(1, resourceDeck.drawCard());
                 else if (!goldDeck.isEmpty())
-                    tableCards.set(1, goldDeck.draw());
+                    tableCards.set(1, goldDeck.drawCard());
                 else
                     tableCards.set(1, null);
                 break;
 
             case 2:
-                P.addCard(tableCards.get(2));
+                p.addCard(tableCards.get(2));
                 if (!goldDeck.isEmpty())
-                    tableCards.set(2, goldDeck.draw());
+                    tableCards.set(2, goldDeck.drawCard());
                 else if (!resourceDeck.isEmpty())
-                    tableCards.set(2, resourceDeck.draw());
+                    tableCards.set(2, resourceDeck.drawCard());
                 else
                     tableCards.set(2, null);
                 break;
 
             case 3:
-                P.addCard(tableCards.get(3));
+                p.addCard(tableCards.get(3));
                 if (!resourceDeck.isEmpty())
-                    tableCards.set(3, resourceDeck.draw());
+                    tableCards.set(3, resourceDeck.drawCard());
                 else if (!goldDeck.isEmpty())
-                    tableCards.set(3, goldDeck.draw());
+                    tableCards.set(3, goldDeck.drawCard());
                 else
                     tableCards.set(3, null);
                 break;
         }
-        round.nextTurn();
+        nextTurn();
     }
 
     /**
      * This method allows to place a card
-     * @param P consists of the player who is placing
-     * @param c consists of the card to be placed
+     * @param player consists of the player who is placing
+     * @param choice consists of the card to be placed
      * @param i consists of the vertical position in the player's board
      * @param j consists of the horizontal position in the player's board
      * @param face consists of the face of the card chosen by the player
      */
 
-    public void placeCard(Player P, PlayableCard c, int i, int j, boolean face) {
-        P.getPlayerBoard().placeCard(c, i, j, face);
-        this.gameState = State.DRAWING;
+    public void placeCard(String player, int choice, int i, int j, boolean face) {
+        Player p = players.get(currentPlayer);
+        p.getPlayerBoard().placeCard(p.getHand().get(choice), i, j, face);
+        if(p.getPoints()>=20)
+            ending=true;
+        if(!lastRound)
+            this.gameState = State.DRAWING;
+        else{
+            if(currentPlayer==numPlayers-1)
+                endGame();
+            else
+                nextTurn();
+        }
     }
 
     /*
@@ -325,8 +360,90 @@ public class Game implements GameInterface {
         return gameState;
     }
 
-    public ArrayList<Player> getPlayers()
+
+    public void selectStartingFace(String player, boolean face)
     {
+        Player p = players.get(currentPlayer);
+        p.getPlayerBoard().placeStartingCard(p.getStartingCard(), 39, 39, face);
+        nextTurn();
+    }
+
+    public void setObjectiveCard(String player, int choice) {
+        //players.get(currentPlayer).setObjective(choice);
+        nextTurn();
+    }
+
+    public ArrayList<Player> getPlayers() {
         return players;
     }
+
+    /**
+     * Method used to change the current player to the next one
+     */
+    public void nextTurn(){
+        if(currentPlayer==numPlayers-1){
+            if(ending && lastRound)
+                endGame();
+            else if(gameState.equals(State.DRAWING))
+                roundNumber++;
+            else if(gameState.equals(State.PREPARATION_1))
+                gameState = State.PREPARATION_2;
+            else if(gameState.equals(State.PREPARATION_2))
+                gameState = State.PLAYING;
+            if(ending)
+                lastRound = true;
+        }
+        if(gameState.equals(State.DRAWING))
+            gameState = State.PLAYING;
+        currentPlayer = (currentPlayer+1)%(numPlayers);
+    }
+
+    public int getCurrentPlayer(){
+        return currentPlayer;
+    }
+
+    public void setEnding(){
+        this.ending=true;
+    }
+
+    public GoldDeck getGoldDeck() {
+        return goldDeck;
+    }
+
+    public ResourceDeck getResourceDeck() {
+        return resourceDeck;
+    }
+
+    public StartingDeck getStartingDeck() {
+        return startingDeck;
+    }
+
+    public ObjectiveDeck getObjectiveDeck() {
+        return objectiveDeck;
+    }
+
+    public ArrayList<PlayableCard> getTableCards() {
+        return tableCards;
+    }
+
+    public ArrayList<ObjectiveCard> getCommonObjective() {
+        return commonObjective;
+    }
+
+    public boolean isEnding() {
+        return ending;
+    }
+
+    public boolean isLastRound() {
+        return lastRound;
+    }
+
+    public void setGameState(State state){
+        this.gameState = state;
+    }
+
+    /*
+    public ObjectiveCard drawObjectiveOptions(){
+        return objectiveDeck.drawCard();
+    }*/
 }
