@@ -12,23 +12,91 @@ class PlayerBoardTest {
     void checkRequirements() {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
-
+        Corner animal = new Corner("A");
+        Corner fungi =new Corner("F");
+        Corner insect =new Corner("I");
+        Corner plant =new Corner("P");
+        Corner inkwell =new Corner("K");
+        Corner manuscript =new Corner("M");
+        Corner quill =new Corner("Q");
+        Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
+        ArrayList<CornerItem> list = new ArrayList<>();
+        StartingCard card22= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
+        list.clear();
+        playerBoard.placeStartingCard(card22,40,40,true);
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 1);
         ArrayList<CornerItem> requirementsList= new ArrayList<CornerItem>();
         requirementsList.add(CornerItem.MANUSCRIPT);
-        PlayableCard card = new GoldCard(42, "R", 1, null, null, null, null, null, null, null, null,requirementsList, 0, CornerItem.MANUSCRIPT);
-
+        PlayableCard card = new GoldCard(42, "R", 1, empty, empty, empty, empty, null, null, null, null,requirementsList, 0, CornerItem.MANUSCRIPT);
 
         assertTrue(playerBoard.checkRequirements(card.getRequirements()));
         ArrayList<CornerItem> requirementsList2= new ArrayList<CornerItem>();
-        requirementsList2.add(CornerItem.MANUSCRIPT);
-        requirementsList2.add(CornerItem.MANUSCRIPT);
-        PlayableCard card2 = new GoldCard(42, "R", 1, null, null, null, null, null, null, null, null,requirementsList2, 0, CornerItem.MANUSCRIPT);
+        requirementsList2.add(CornerItem.INKWELL);
+        requirementsList2.add(CornerItem.INKWELL);
+        PlayableCard card2 = new GoldCard(42, "R", 1, empty, empty, empty, empty, null, null, null, null,requirementsList2, 0, CornerItem.INKWELL);
+        playerBoard.getAvailableItems().put(CornerItem.INKWELL, 0);
         assertFalse(playerBoard.checkRequirements(card2.getRequirements()));
-        requirementsList2.clear();
+        //    playerBoard.placeCard(card2,41,41,true);
+        //     assertEquals(card2,playerBoard.getBoard()[41][41]);
+        assertThrows(RequirementsNotMetException.class, () -> {
+            playerBoard.placeCard(card2,41,41,true);
+        });
+
 
     }
+    @Test
+    void checkOb1(){
+        Corner animal = new Corner("A");
+        Corner fungi =new Corner("F");
+        Corner insect =new Corner("I");
+        Corner plant =new Corner("P");
+        Corner inkwell =new Corner("K");
+        Corner manuscript =new Corner("M");
+        Corner quill =new Corner("Q");
+        Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
+        Player player = new Player("TestPlayer", Color.RED);
+        PlayerBoard playerBoard = new PlayerBoard(player);
 
+        ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.MANUSCRIPT,ObjectiveType.ITEM,CornerItem.EMPTY,1);
+        ArrayList<CornerItem> list = new ArrayList<>();
+        StartingCard card2= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
+        list.clear();
+        playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 4);
+        playerBoard.placeStartingCard(card2,40,40,true);
+        assertEquals(4,playerBoard.checkObjective(card_99));
+    }
+    @Test
+    void getPlayer(){
+        Player player = new Player("TestPlayer", Color.RED);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        assertEquals(player,playerBoard.getPlayer());
+    }
+    @Test
+    void UpdateItem2(){
+        Player player = new Player("TestPlayer", Color.RED);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 1);
+        ArrayList<CornerItem> requirementsList = new ArrayList<>();
+        requirementsList.add(CornerItem.MANUSCRIPT);
+        Corner animal = new Corner("A");
+        Corner fungi =new Corner("F");
+        Corner insect =new Corner("I");
+        Corner plant =new Corner("P");
+        Corner inkwell =new Corner("K");
+        Corner manuscript =new Corner("M");
+        Corner quill =new Corner("Q");
+        Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
+        ArrayList<CornerItem> list = new ArrayList<>();
+        StartingCard card2= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
+        list.clear();
+        playerBoard.placeStartingCard(card2,40,40,true);
+        assertEquals(card2,playerBoard.getBoard()[40][40]);
+        PlayableCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
+        playerBoard.placeCard(card0, 39, 39, true);
+    }
     @Test
     void testgiveCardPointsAndPlaceCard() {
         Player player = new Player("TestPlayer", Color.RED);
@@ -176,7 +244,120 @@ class PlayerBoardTest {
 
 
     }
+    @Test
+    void testPatternL2() {
+        Corner animal = new Corner("A");
+        Corner fungi =new Corner("F");
+        Corner insect =new Corner("I");
+        Corner plant =new Corner("P");
+        Corner inkwell =new Corner("K");
+        Corner manuscript =new Corner("M");
+        Corner quill =new Corner("Q");
+        Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
+        Player player = new Player("TestPlayer", Color.RED);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
+
+
+        ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,1,CornerItem.PLANT);
+        player.setObjective(card_90);
+        assertEquals(card_90,player.getObjectiveCard());
+        ArrayList<CornerItem> list = new ArrayList<>();
+        list.add(CornerItem.INSECT);
+        StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
+        list.clear();
+        playerBoard.placeStartingCard(card_80,40,40,true);
+        PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
+        PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        PlayableCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        playerBoard.placeCard(card_2,41,41,true);
+        playerBoard.placeCard(card_3,40,42,true);
+        playerBoard.placeCard(card_4,39,43,true);
+        playerBoard.placeCard(card_4,38,42,true);
+        playerBoard.checkObjective(card_90);
+        assertEquals(3,playerBoard.checkObjective(card_90));
+
+
+    }
+    @Test
+    void testPatternL3() {
+        Corner animal = new Corner("A");
+        Corner fungi =new Corner("F");
+        Corner insect =new Corner("I");
+        Corner plant =new Corner("P");
+        Corner inkwell =new Corner("K");
+        Corner manuscript =new Corner("M");
+        Corner quill =new Corner("Q");
+        Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
+        Player player = new Player("TestPlayer", Color.RED);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        ArrayList<ObjectiveCard> cards = new ArrayList<>();
+
+
+
+        ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,0,CornerItem.PLANT);
+        player.setObjective(card_90);
+        assertEquals(card_90,player.getObjectiveCard());
+        ArrayList<CornerItem> list = new ArrayList<>();
+        list.add(CornerItem.INSECT);
+        StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
+        list.clear();
+        playerBoard.placeStartingCard(card_80,40,40,true);
+        PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
+        PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        PlayableCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        playerBoard.placeCard(card_2,39,39,true);
+        playerBoard.placeCard(card_3,38,38,true);
+        playerBoard.placeCard(card_4,37,39,true);
+        playerBoard.placeCard(card_4,36,38,true);
+        playerBoard.checkObjective(card_90);
+        assertEquals(3,playerBoard.checkObjective(card_90));
+
+
+    }
+    @Test
+    void testPatternL4() {
+        Corner animal = new Corner("A");
+        Corner fungi =new Corner("F");
+        Corner insect =new Corner("I");
+        Corner plant =new Corner("P");
+        Corner inkwell =new Corner("K");
+        Corner manuscript =new Corner("M");
+        Corner quill =new Corner("Q");
+        Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
+        Player player = new Player("TestPlayer", Color.RED);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        ArrayList<ObjectiveCard> cards = new ArrayList<>();
+
+
+
+        ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,3,CornerItem.PLANT);
+        player.setObjective(card_90);
+        assertEquals(card_90,player.getObjectiveCard());
+        ArrayList<CornerItem> list = new ArrayList<>();
+        list.add(CornerItem.INSECT);
+        StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
+        list.clear();
+        playerBoard.placeStartingCard(card_80,40,40,true);
+        PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
+        PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        PlayableCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        playerBoard.placeCard(card_2,41,39,true);
+        playerBoard.placeCard(card_3,42,38,true);
+        playerBoard.placeCard(card_4,43,39,true);
+        playerBoard.placeCard(card_4,44,38,true);
+        playerBoard.checkObjective(card_90);
+        assertEquals(3,playerBoard.checkObjective(card_90));
+
+
+    }
     @Test
     void testcheckObjectiveITEM() {
         Corner animal = new Corner("A");
@@ -406,6 +587,33 @@ class PlayerBoardTest {
             // Qui chiamiamo la funzione che dovrebbe lanciare l'eccezione
             playerBoard.placeCard(card_6,39,41,false);
         });
+    }
+    @Test
+    void givePointType2(){
+        Corner animal = new Corner("A");
+        Corner fungi =new Corner("F");
+        Corner insect =new Corner("I");
+        Corner plant =new Corner("P");
+        Corner inkwell =new Corner("K");
+        Corner manuscript =new Corner("M");
+        Corner quill =new Corner("Q");
+        Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
+        Player player = new Player("TestPlayer", Color.RED);
+        PlayerBoard playerBoard = new PlayerBoard(player);
+        ArrayList<CornerItem> list = new ArrayList<>();
+        list.add(CornerItem.INSECT);
+        StartingCard card_80= new StartingCard(80,0,fungi,empty,animal,insect,notVisible,notVisible,notVisible,notVisible,list);
+        list.clear();
+        playerBoard.placeStartingCard(card_80,40,40,true);
+        list.add(CornerItem.FUNGI);
+        list.add(CornerItem.FUNGI);
+        list.add(CornerItem.FUNGI);
+        PlayableCard card_47 = new GoldCard(47,"R",3,quill,empty,empty,empty,empty,empty,empty,empty,list,2,CornerItem.EMPTY);
+        list.clear();
+        playerBoard.placeCard(card_47,41,41,true);
+
 
     }
+
 }
