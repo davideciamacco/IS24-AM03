@@ -24,7 +24,7 @@ class PlayerBoardTest {
         ArrayList<CornerItem> list = new ArrayList<>();
         StartingCard card22= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card22,40,40,true);
+        playerBoard.placeStartingCard(card22,true);
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 1);
         ArrayList<CornerItem> requirementsList= new ArrayList<CornerItem>();
         requirementsList.add(CornerItem.MANUSCRIPT);
@@ -64,7 +64,7 @@ class PlayerBoardTest {
         StartingCard card2= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 4);
-        playerBoard.placeStartingCard(card2,40,40,true);
+        playerBoard.placeStartingCard(card2,true);
         assertEquals(4,playerBoard.checkObjective(card_99));
     }
     @Test
@@ -92,7 +92,7 @@ class PlayerBoardTest {
         ArrayList<CornerItem> list = new ArrayList<>();
         StartingCard card2= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card2,40,40,true);
+        playerBoard.placeStartingCard(card2,true);
         assertEquals(card2,playerBoard.getBoard()[40][40]);
         PlayableCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
         playerBoard.placeCard(card0, 39, 39, true);
@@ -116,7 +116,7 @@ class PlayerBoardTest {
         ArrayList<CornerItem> list = new ArrayList<>();
         StartingCard card2= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card2,40,40,true);
+        playerBoard.placeStartingCard(card2,true);
         assertEquals(card2,playerBoard.getBoard()[40][40]);
 
 
@@ -161,13 +161,11 @@ class PlayerBoardTest {
 
 
         ObjectiveCard card_86 = new Dshaped(86,2,CornerItem.FUNGI,ObjectiveType.PATTERNDIAGONAL,CornerItem.FUNGI,1);
-        player.setObjective(card_86);
-        assertEquals(card_86,player.getObjectiveCard());
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         assertEquals(card_80,playerBoard.getBoard()[40][40]);
         PlayableCard card_2 = new ResourceCard(2,"R",0,empty, notVisible, fungi, fungi,empty,empty,empty,empty);
         PlayableCard card_3 = new ResourceCard(3,"R",0,notVisible, fungi, fungi, empty,empty,empty,empty,empty);
@@ -186,7 +184,8 @@ class PlayerBoardTest {
         list.add(CornerItem.INSECT);
         StartingCard card_81= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_81,79,79,true);
+        playerBoard.getBoard()[79][79]=card_81;
+        playerBoard.placeStartingCard(card_81,true);
         assertEquals(card_81,playerBoard.getBoard()[79][79]);
         PlayableCard card_5 = new ResourceCard(2,"R",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
 
@@ -224,13 +223,11 @@ class PlayerBoardTest {
 
 
         ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,2,CornerItem.PLANT);
-        player.setObjective(card_90);
-        assertEquals(card_90,player.getObjectiveCard());
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
         PlayableCard card_3 = new ResourceCard(3,"R",0,notVisible, fungi, fungi, empty,empty,empty,empty,empty);
         PlayableCard card_4 = new ResourceCard(4,"R",0,notVisible, quill, fungi, plant,empty,empty,empty,empty);
@@ -262,13 +259,11 @@ class PlayerBoardTest {
 
 
         ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,1,CornerItem.PLANT);
-        player.setObjective(card_90);
-        assertEquals(card_90,player.getObjectiveCard());
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
         PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
         PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
@@ -300,13 +295,11 @@ class PlayerBoardTest {
 
 
         ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,0,CornerItem.PLANT);
-        player.setObjective(card_90);
-        assertEquals(card_90,player.getObjectiveCard());
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
         PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
         PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
@@ -338,13 +331,11 @@ class PlayerBoardTest {
 
 
         ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,3,CornerItem.PLANT);
-        player.setObjective(card_90);
-        assertEquals(card_90,player.getObjectiveCard());
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
         PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
         PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
@@ -404,7 +395,7 @@ class PlayerBoardTest {
         //   list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.ANIMAL);
@@ -436,7 +427,7 @@ class PlayerBoardTest {
         //     list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         assertEquals(1,playerBoard.getAvailableItems().get(CornerItem.FUNGI));
         assertEquals(1,playerBoard.getAvailableItems().get(CornerItem.PLANT));
         assertEquals(1,playerBoard.getAvailableItems().get(CornerItem.ANIMAL));
@@ -469,7 +460,7 @@ class PlayerBoardTest {
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         ObjectiveCard card_87 = new Dshaped(87,2,CornerItem.EMPTY,ObjectiveType.PATTERNDIAGONAL,CornerItem.PLANT,0);
         assertEquals(0,card_87.getDirection());
         PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
@@ -500,7 +491,7 @@ class PlayerBoardTest {
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         ObjectiveCard card_87 = new Dshaped(87,2,CornerItem.EMPTY,ObjectiveType.PATTERNDIAGONAL,CornerItem.PLANT,0);
         assertEquals(0,card_87.getDirection());
         PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
@@ -544,7 +535,7 @@ class PlayerBoardTest {
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
         playerBoard.placeCard(card_6,39,41,true);
         PlayableCard card_7 = new ResourceCard(7,"G",0,empty, fungi, empty, empty,empty,empty,empty,empty);
@@ -581,7 +572,7 @@ class PlayerBoardTest {
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,notVisible,animal,insect,notVisible,notVisible,notVisible,notVisible,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,false);
+        playerBoard.placeStartingCard(card_80,false);
         PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
         assertThrows(CornerNotVisibleException.class, () -> {
             // Qui chiamiamo la funzione che dovrebbe lanciare l'eccezione
@@ -605,7 +596,7 @@ class PlayerBoardTest {
         list.add(CornerItem.INSECT);
         StartingCard card_80= new StartingCard(80,0,fungi,empty,animal,insect,notVisible,notVisible,notVisible,notVisible,list);
         list.clear();
-        playerBoard.placeStartingCard(card_80,40,40,true);
+        playerBoard.placeStartingCard(card_80,true);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);

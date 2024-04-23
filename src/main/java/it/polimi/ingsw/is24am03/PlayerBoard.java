@@ -360,11 +360,11 @@ public class PlayerBoard {
      * @throws IllegalArgumentException If the coordinates are out of bounds, the position is already occupied,
      *                                  there are no cards to attach to, or if the card requirements are not met.
      */
-    public void placeStartingCard(StartingCard c,int i,int j,boolean face){
+    public void placeStartingCard(StartingCard c,boolean face){
         if (!face) {
             c.rotate();
         }
-        board[i][j] = c;
+        board[40][40] = c;
         increaseItemCount(c);
 
     }
@@ -442,6 +442,7 @@ public class PlayerBoard {
         increaseItemCount(c);
         updateItemCount(i, j);
         giveCardPoints(c, i, j);
+        player.removeCard(c);
     }
     public Player getPlayer(){
         return player;

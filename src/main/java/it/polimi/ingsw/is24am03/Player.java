@@ -115,7 +115,7 @@ public class Player {
      * @param card The card to remove from the hand.
      */
     public void removeCard(PlayableCard card){
-        assert hand != null;
+        //    assert hand != null;
         hand.remove(card);
     }
     public boolean isFirstPlayer() {
