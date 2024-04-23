@@ -438,6 +438,7 @@ public class PlayerBoard {
         if(!checkRequirements(c.getRequirements()))
             throw new RequirementsNotMetException();
 
+
         board[i][j] = c;
         increaseItemCount(c);
         updateItemCount(i, j);
