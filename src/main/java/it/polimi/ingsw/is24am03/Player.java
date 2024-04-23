@@ -10,10 +10,12 @@ public class Player {
     private final String nickname;
     private final  Color pawncolor;
     private final ArrayList<PlayableCard> hand;
-    private  ObjectiveCard objective;
+    private  ObjectiveCard objective1;
+    private  ObjectiveCard objective2;
     private  StartingCard startingCard;
     private boolean winner,firstPlayer;
     private int points;
+    private int objectivechoose;
     private int numObj;
     private  PlayerBoard playerBoard;
     /**
@@ -26,21 +28,28 @@ public class Player {
         this.nickname = nickname;
         this.pawncolor = pawncolor;
         this.hand = new ArrayList<>();
-        this.objective =null;
+        this.objective1 =null;
+        this.objective2 =null;
         this.startingCard = null;
         this.winner = false;
         this.points = 0;
         this.numObj = 0;
         this.playerBoard = null;
     }
+    public boolean isWinner(){
+        return this.winner;
+    }
     /**
      * Sets the player's objective card.
      *
-     * @param objective The objective card to set.
+     * @param o1 and o2 The objective card to set.
      */
-
-    public void setObjective(ObjectiveCard objective) {
-        this.objective = objective;
+    public void setObjectiveCard12(ObjectiveCard o1,ObjectiveCard o2){
+        this.objective1=o1;
+        this.objective2=o2;
+    }
+    public void setObjective(int choose) {
+        this.objectivechoose = choose;
     }
     /**
      * Sets the player's starting card.
@@ -124,8 +133,14 @@ public class Player {
     public int getNumObj(){
         return numObj;
     }
-    public ObjectiveCard getObjectiveCard(){
-        return objective;
+    public int getObjectiveCard(){
+        return objectivechoose;
+    }
+    public ObjectiveCard getObjective1(){
+        return objective1;
+    }
+    public ObjectiveCard getObjective2(){
+        return objective2;
     }
     public void setPoints(int p){
         this.points=p;

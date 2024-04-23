@@ -1,3 +1,4 @@
+
 package it.polimi.ingsw.is24am03;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,13 +16,30 @@ class PlayerTest {
     void setUp() {
         player = new Player("TestPlayer", Color.RED);
     }
+    @Test
+    void testSetFirst(){
+        player.setFirstPlayer(true);
+        assertEquals(true,player.isFirstPlayer());
+    }
+    @Test
+    void testSetWinner(){
+        player.setWinner(true);
+        assertEquals(true,player.isWinner());
+    }
+    @Test
+    void testSetObjective(){
 
+        ObjectiveCard card_94 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
+        ObjectiveCard card_95 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
+        player.setObjectiveCard12(card_94,card_95);
+        assertEquals(card_94,player.getObjective1());
+        assertEquals(card_95,player.getObjective2());
+    }
     @Test
     void testConstructor() {
         assertEquals("TestPlayer", player.getNickname());
         assertEquals(0, player.getPoints());
         assertEquals(0, player.getNumObj());
-        assertNull(player.getObjectiveCard());
         assertNull(player.getPlayerBoard());
     }
 
