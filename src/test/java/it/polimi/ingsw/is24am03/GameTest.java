@@ -149,7 +149,7 @@ class GameTest {
         assertEquals(0, game4.getCurrentPlayer());
         assertEquals(2, game4.getCommonObjective().size());
         assertEquals(36, game4.getGoldDeck().getCards().size());
-        assertEquals(14, game4.getObjectiveDeck().getCards().size());
+        assertEquals(10, game4.getObjectiveDeck().getCards().size());
         assertEquals(4, game4.getStartingDeck().getCards().size());
     }
 
