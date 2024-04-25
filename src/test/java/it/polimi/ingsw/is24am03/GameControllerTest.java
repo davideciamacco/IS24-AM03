@@ -136,19 +136,27 @@ class GameControllerTest {
         assertThrows(FullLobbyException.class, () -> gc3.addPlayer("Giulia"));
     }
 
-    /*
+
     @Test
     void placeCard() {
         GameController gc6 = new GameController();
         gc6.createGame(2, "Player1");
         assertDoesNotThrow(() -> gc6.addPlayer("Player2"));
+        Player currentPlayer2;
+        Player currentPlayer1 = gc6.getGameModel().getPlayers().get(gc6.getGameModel().getCurrentPlayer());
+        if(currentPlayer1.equals(gc6.getGameModel().getPlayers().get(0)))
+            currentPlayer2 = gc6.getGameModel().getPlayers().get(1);
+        else
+            currentPlayer2 = gc6.getGameModel().getPlayers().get(0);
+        currentPlayer1.setPlayerBoard(new PlayerBoard(currentPlayer1));
+        currentPlayer1.getPlayerBoard().placeStartingCard(currentPlayer1.getStartingCard(), true);
+
+        assertThrows(InvalidStateException.class, () -> gc6.placeCard(currentPlayer1.getNickname(), 1, 41,41,true));
+
         gc6.getGameModel().setGameState(State.PLAYING);
 
-        Player currentPlayer1 = gc6.getGameModel().getPlayers().get(gc6.getGameModel().getCurrentPlayer());
-        currentPlayer1.setPlayerBoard(new PlayerBoard(currentPlayer1));
-
-        //assertDoesNotThrow(() -> gc6.placeCard(currentPlayer1.getNickname(), 2, 1,1, true));
-
-
-    }*/
+        assertThrows(PlayerNotInTurnException.class, () -> gc6.placeCard(currentPlayer2.getNickname(), 1, 41,41,true));
+        assertThrows(IllegalArgumentException.class, () -> gc6.placeCard(currentPlayer1.getNickname(), 0, 41,41,true));
+        assertDoesNotThrow(() -> gc6.placeCard(currentPlayer1.getNickname(), 1, 41,41,true));
+    }
 }

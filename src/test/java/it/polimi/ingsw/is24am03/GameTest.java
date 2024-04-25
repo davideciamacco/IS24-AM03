@@ -265,9 +265,17 @@ class GameTest {
 
     }
 
+    /*
     @Test
     void placeCard() {
-    }
+        Game game = new Game(2, "Player1");
+        game.addPlayer("Player2");
+        game.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game.getPlayers().get(0)));
+        game.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game.getPlayers().get(1)));
+        Player currentPlayer = game.getPlayers().get(game.getCurrentPlayer());
+        game.selectStartingFace(currentPlayer.getNickname(), true);
+        assertDoesNotThrow(()->game.placeCard(currentPlayer.getNickname(), 1, 41, 41, true));
+    }*/
 
     @Test
     void selectStartingFace() {
