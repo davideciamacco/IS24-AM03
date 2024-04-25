@@ -5,7 +5,9 @@ package it.polimi.ingsw.is24am03;
  */
 
 public enum State {
-    PREPARATION,
+    WAITING,
+    PREPARATION_1,
+    PREPARATION_2,
     DRAWING,
     PLAYING,
     ENDING

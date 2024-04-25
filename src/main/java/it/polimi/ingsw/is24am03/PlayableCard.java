@@ -3,7 +3,7 @@ package it.polimi.ingsw.is24am03;
 import javafx.util.Pair;
 import java.util.ArrayList;
 
-public abstract class PlayableCard extends Card{
+public abstract class PlayableCard extends Card {
     private final ArrayList<Pair<Corner, Boolean>> backCorners;
     private final ArrayList<Pair<Corner, Boolean>> frontCorners;
     private boolean face;
@@ -62,4 +62,18 @@ public abstract class PlayableCard extends Card{
     public abstract int  getScoringType();
     public abstract CornerItem getKingdomsType();
     public abstract ArrayList<CornerItem> getRequirements();
+
+    public boolean getCardAlreadyPlaced(){
+        return cardAlreadyPlaced;
+    }
+    //classes for test cases only
+    public ArrayList<Pair<Corner, Boolean>> getBack(){
+        return backCorners;
+
+    }
+
+    public ArrayList<Pair<Corner, Boolean>> getFront(){
+        return frontCorners;
+
+    }
 }

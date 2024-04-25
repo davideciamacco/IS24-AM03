@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is24am03;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -7,7 +8,7 @@ import java.util.Random;
 /**
  * Class employed to manage the deck which contains all Resource cards.
  */
-public class ResourceDeck extends Deck{
+public class ResourceDeck extends Deck {
 
     /**
      * This field contains a list of all Resource Cards.
@@ -138,5 +139,13 @@ public class ResourceDeck extends Deck{
     @Override
     public boolean isEmpty(){
         return cards.isEmpty();
+    }
+
+    public ArrayList<PlayableCard> getCards(){
+        return cards;
+    }
+
+    public void setEmpty(){
+        cards.clear();
     }
 }

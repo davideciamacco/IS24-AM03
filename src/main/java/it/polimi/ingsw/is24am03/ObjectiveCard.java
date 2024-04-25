@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is24am03;
 
-public class ObjectiveCard extends Card{
+
+
+public class ObjectiveCard extends Card {
     private final ObjectiveType type;
     private final CornerItem kingdomType;
     private final CornerItem requirements;

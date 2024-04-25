@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is24am03;
 
-
 /**
  *Class employed to manage the decks of the game, which are GoldDeck, ResourceDeck,
  *ObjectiveDeck and StartingDeck.
@@ -9,7 +8,7 @@ public abstract class Deck {
     /**
      * This method allows us to shuffle a deck of cards.
      */
-    public void shuffle() {}
+    public abstract void shuffle();
 
     /**
      * This method allows drawing a card from one of the decks.
@@ -22,5 +21,6 @@ public abstract class Deck {
      * @return true is the deck is empty,otherwise false.
      */
     public abstract boolean isEmpty();
+
 
 }

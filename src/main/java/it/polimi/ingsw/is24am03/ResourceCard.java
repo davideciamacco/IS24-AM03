@@ -1,8 +1,9 @@
 package it.polimi.ingsw.is24am03;
 
+
 import java.util.ArrayList;
 
-public class ResourceCard extends PlayableCard{
+public class ResourceCard extends PlayableCard {
     private final CornerItem kingdomType;
 
     public ResourceCard(int id, String color, int points, Corner corner0, Corner corner1, Corner corner2, Corner corner3, Corner back0, Corner back1, Corner back2, Corner back3){
@@ -34,9 +35,11 @@ public class ResourceCard extends PlayableCard{
     public int getType(){
         return 1;
     }
+    @Override
     public int getScoringType(){
         return -1;
     }
+    @Override
     public CornerItem getKingdomsType(){
         return kingdomType;
     }
@@ -44,7 +47,10 @@ public class ResourceCard extends PlayableCard{
     public CornerItem getObject(){
         return CornerItem.EMPTY;
     }
+
+    @Override
     public ArrayList<CornerItem> getRequirements(){
-        return null;
+        ArrayList<CornerItem> a= new ArrayList<>();
+        return a;
     }
 }

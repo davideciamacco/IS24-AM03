@@ -20,7 +20,7 @@ public class ObjectiveDeck extends Deck {
     public ObjectiveDeck(){
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
-        ObjectiveCard card_86 = new Dshaped(86,2,CornerItem.FUNGI,ObjectiveType.PATTERNDIAGONAL,CornerItem.FUNGI,1);
+        ObjectiveCard card_86 = new Dshaped(86,2, CornerItem.FUNGI, ObjectiveType.PATTERNDIAGONAL,CornerItem.FUNGI,1);
         ObjectiveCard card_87 = new Dshaped(87,2,CornerItem.PLANT,ObjectiveType.PATTERNDIAGONAL,CornerItem.PLANT,0);
         ObjectiveCard card_88 = new Dshaped(88,2,CornerItem.ANIMAL,ObjectiveType.PATTERNDIAGONAL,CornerItem.ANIMAL,1);
         ObjectiveCard card_89 = new Dshaped(89,2,CornerItem.INSECT,ObjectiveType.PATTERNDIAGONAL,CornerItem.INSECT,0);
@@ -34,7 +34,7 @@ public class ObjectiveDeck extends Deck {
         ObjectiveCard card_95 = new ObjectiveList(95,2,CornerItem.PLANT,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_96 = new ObjectiveList(96,2,CornerItem.ANIMAL,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_97 = new ObjectiveList(97,2,CornerItem.INSECT,ObjectiveType.ITEM,CornerItem.EMPTY,3);
-        ObjectiveCard card_98 = new ObjectiveList(98,3,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,2);
+        ObjectiveCard card_98 = new ObjectiveList(98,3,CornerItem.EMPTY,ObjectiveType.ITEM,CornerItem.EMPTY,2); //carta con tutti e tre gli oggetti
         ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.MANUSCRIPT,ObjectiveType.ITEM,CornerItem.EMPTY,1);
         ObjectiveCard card_100 = new ObjectiveList(100,2,CornerItem.INKWELL,ObjectiveType.ITEM,CornerItem.EMPTY,1);
         ObjectiveCard card_101 = new ObjectiveList(101,2,CornerItem.QUILL,ObjectiveType.ITEM,CornerItem.EMPTY,1);
@@ -82,4 +82,6 @@ public class ObjectiveDeck extends Deck {
     public boolean isEmpty(){
         return cards.isEmpty();
     }
+
+    public ArrayList<ObjectiveCard> getCards(){ return cards;}
 }
