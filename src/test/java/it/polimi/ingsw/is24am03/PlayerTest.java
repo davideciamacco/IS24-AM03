@@ -62,7 +62,7 @@ class PlayerTest {
     @Test
     void testAddPoints() {
         PlayableCard card = new ResourceCard(0,"R",5,null,null,null,null,null,null,null,null); // Carta che aggiunge 5 punti
-        player.addPoints(card);
+        player.addPoints(card.getPoints());
         assertEquals(5, player.getPoints());
     }
     @Test

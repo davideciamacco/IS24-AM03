@@ -147,13 +147,13 @@ public class PlayerBoard {
         type= c.getType();
         if(type==1){
             //resource card
-            player.addPoints(c);
+            player.addPoints(c.getPoints());
         }else{
             scoringType=c.getScoringType();
             if(scoringType==0){
                 n=availableItems.get(c.getObject());
                 for(i=0; i<n; i++)
-                    player.addPoints(c);
+                    player.addPoints(c.getPoints());
             }else if(scoringType==1){
                 if(board[i-1][j-1]!=null)
                     n++;
@@ -164,9 +164,9 @@ public class PlayerBoard {
                 if(board[i+1][j-1]!=null)
                     n++;
                 for(i=0; i<n; i++)
-                    player.addPoints(c);
+                    player.addPoints(c.getPoints());
             }else if(scoringType==2){
-                player.addPoints(c);
+                player.addPoints(c.getPoints());
             }
         }
     }

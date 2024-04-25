@@ -88,10 +88,9 @@ public class Player {
     /**
      * Adds points to the player based on a playable card.
      *
-     * @param card The card from which points are to be added.
+     * @param pointsToAdd represents the points that need to be added.
      */
-    public void addPoints(Card card) {
-        int pointsToAdd = card.getPoints();
+    public void addPoints(int pointsToAdd) {
         points=points+pointsToAdd;
     }
     /**

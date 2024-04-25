@@ -226,11 +226,11 @@ public class Game implements GameInterface {
         for (Player p : players) {
             flag = p.getPlayerBoard().checkObjective(p.getObjectiveCard());
             p.increaseNumObjective(flag);
-            p.addPoints(p.getObjectiveCard());
+            p.addPoints(flag);
             for (ObjectiveCard oc : commonObjective) {
                 flag = p.getPlayerBoard().checkObjective(oc);
                 p.increaseNumObjective(flag);
-                p.addPoints(oc);
+                p.addPoints(flag);
             }
         }
     }

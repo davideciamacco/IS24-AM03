@@ -166,7 +166,7 @@ class GameTest {
         assertEquals(State.ENDING, game.getGameState());
     }*/
 
-    /*
+
     @Test
     void giveObjectivePoints() {
         Game game = new Game(2, "Player1");
@@ -182,7 +182,7 @@ class GameTest {
         assertEquals(0, game.getPlayers().get(0).getNumObj());
         assertEquals(0, game.getPlayers().get(1).getNumObj());
     }
-*/
+
     @Test
     void drawResources() {
         Corner animal = new Corner("A");
