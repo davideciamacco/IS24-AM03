@@ -10,7 +10,7 @@ class ResourceDeckTest {
     public void removeTest() {
         // controllo che la prima carta sia quella che è effettivamente la prima
         ResourceDeck s = new ResourceDeck();
-        PlayableCard p = s.getCards().getFirst();
+        PlayableCard p = s.getCards().get(0);
         assertEquals(p, s.drawCard());
     }
 

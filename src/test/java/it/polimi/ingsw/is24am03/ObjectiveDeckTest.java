@@ -9,7 +9,7 @@ class ObjectiveDeckTest {
     public void removeTest(){
         // controllo che la prima carta sia quella che è effettivamente la prima
         ObjectiveDeck s= new ObjectiveDeck();
-        ObjectiveCard p =s.getCards().getFirst();
+        ObjectiveCard p =s.getCards().get(0);
         assertEquals(p,s.drawCard());
     }
 

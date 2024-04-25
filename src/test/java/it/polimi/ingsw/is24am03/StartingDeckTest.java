@@ -12,7 +12,7 @@ class StartingDeckTest {
     public void removeTest() {
         // controllo che la prima carta sia quella che è effettivamente la prima
         StartingDeck s = new StartingDeck();
-        StartingCard sc = s.getCards().getFirst();
+        StartingCard sc = s.getCards().get(0);
         assertEquals(sc, s.drawCard());
     }
 

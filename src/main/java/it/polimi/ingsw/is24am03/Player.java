@@ -28,6 +28,7 @@ public class Player {
         this.nickname = nickname;
         this.pawncolor = pawncolor;
         this.hand = new ArrayList<>();
+        this.objectivechoose=0;
         this.objective1 =null;
         this.objective2 =null;
         this.startingCard = null;
@@ -44,7 +45,7 @@ public class Player {
      *
      * @param o1 and o2 The objective card to set.
      */
-    public void setObjectiveCard12(ObjectiveCard o1,ObjectiveCard o2){
+    public void setObjectiveCard(ObjectiveCard o1,ObjectiveCard o2){
         this.objective1=o1;
         this.objective2=o2;
     }
@@ -133,8 +134,15 @@ public class Player {
     public int getNumObj(){
         return numObj;
     }
-    public int getObjectiveCard(){
-        return objectivechoose;
+    public ObjectiveCard getObjectiveCard(){
+        if(objectivechoose==1){
+            return objective1;
+        }else{
+            return objective2;
+        }
+    }
+    public void setObjectiveChoice(int objectivechoose){
+        this.objectivechoose=objectivechoose;
     }
     public ObjectiveCard getObjective1(){
         return objective1;
@@ -148,7 +156,7 @@ public class Player {
     public void increaseNumObjective(int n){
         numObj=numObj+n;
     }
-    public PlayableCard getStartingCard(){
+    public StartingCard getStartingCard(){
         return startingCard;
     }
 

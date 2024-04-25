@@ -160,6 +160,7 @@ public class Game implements GameInterface {
             p.addCard(resourceDeck.drawCard());
             p.addCard(goldDeck.drawCard());
             p.setStartingCard(startingDeck.drawCard());
+            p.setObjectiveCard(objectiveDeck.drawCard(),objectiveDeck.drawCard());
         }
     }
 
@@ -364,12 +365,13 @@ public class Game implements GameInterface {
     public void selectStartingFace(String player, boolean face)
     {
         Player p = players.get(currentPlayer);
-        p.getPlayerBoard().placeStartingCard(p.getStartingCard(), 39, 39, face);
+        p.getPlayerBoard().placeStartingCard(p.getStartingCard(), face);
         nextTurn();
     }
 
     public void setObjectiveCard(String player, int choice) {
-        //players.get(currentPlayer).setObjective(choice);
+        Player p = players.get(currentPlayer);
+        p.setObjectiveChoice(choice);
         nextTurn();
     }
 

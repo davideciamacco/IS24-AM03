@@ -8,7 +8,7 @@ class GoldDeckTest {
     public void removeTest(){
         // controllo che la prima carta sia quella che è effettivamente la prima
         GoldDeck s= new GoldDeck();
-        PlayableCard p =s.getCards().getFirst();
+        PlayableCard p =s.getCards().get(0);
         assertEquals(p,s.drawCard());
     }
 

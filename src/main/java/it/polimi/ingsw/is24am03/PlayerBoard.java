@@ -353,8 +353,8 @@ public class PlayerBoard {
      * Places a card on the board.
      *
      * @param c    The card to be placed.
-     * @param i    The row index where the card will be placed.
-     * @param j    The column index where the card will be placed.
+
+
      * @param face The orientation of the card (true if face up, false if face down).
      * @return 0 if the operation is successful.
      * @throws IllegalArgumentException If the coordinates are out of bounds, the position is already occupied,

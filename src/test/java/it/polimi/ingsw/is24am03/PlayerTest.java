@@ -31,7 +31,7 @@ class PlayerTest {
 
         ObjectiveCard card_94 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_95 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
-        player.setObjectiveCard12(card_94,card_95);
+        player.setObjectiveCard(card_94,card_95);
         assertEquals(card_94,player.getObjective1());
         assertEquals(card_95,player.getObjective2());
     }
