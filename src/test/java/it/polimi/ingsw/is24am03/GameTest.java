@@ -153,18 +153,18 @@ class GameTest {
         assertEquals(4, game4.getStartingDeck().getCards().size());
     }
 
-    /*
+
     @Test
     void endGame() {
         Game game = new Game(2, "Player1");
         game.addPlayer("Player2");
-        game.endGame();
-
         game.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game.getPlayers().get(0)));
         game.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game.getPlayers().get(1)));
 
+        game.endGame();
+
         assertEquals(State.ENDING, game.getGameState());
-    }*/
+    }
 
 
     @Test
@@ -267,5 +267,30 @@ class GameTest {
 
     @Test
     void placeCard() {
+    }
+
+    @Test
+    void selectStartingFace() {
+        Game game = new Game(2, "Player1");
+        game.addPlayer("Player2");
+
+        game.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game.getPlayers().get(0)));
+        game.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game.getPlayers().get(1)));
+
+        Player currentPlayer = game.getPlayers().get(game.getCurrentPlayer());
+        game.selectStartingFace(currentPlayer.getNickname(), true);
+
+        assertEquals(currentPlayer.getStartingCard(), currentPlayer.getPlayerBoard().getBoard()[40][40]);
+        assertEquals(currentPlayer.getStartingCard().getFace(), true);
+
+        assertNotEquals(currentPlayer, game.getPlayers().get(game.getCurrentPlayer()));
+    }
+
+    @Test
+    void setObjectiveCard() {
+        Game game = new Game(2, "Player1");
+        game.addPlayer("Player2");
+
+
     }
 }
