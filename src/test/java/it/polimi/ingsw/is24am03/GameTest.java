@@ -290,7 +290,18 @@ class GameTest {
     void setObjectiveCard() {
         Game game = new Game(2, "Player1");
         game.addPlayer("Player2");
+        Player currentPlayer = game.getPlayers().get(game.getCurrentPlayer());
+        game.setObjectiveCard(currentPlayer.getNickname(), 1);
 
+        assertNotNull(currentPlayer.getObjective1());
+        assertNotNull(currentPlayer.getObjective2());
+        assertEquals(currentPlayer.getObjective1(), currentPlayer.getObjectiveCard());
 
+        currentPlayer = game.getPlayers().get(game.getCurrentPlayer());
+        game.setObjectiveCard(currentPlayer.getNickname(), 2);
+
+        assertNotNull(currentPlayer.getObjective1());
+        assertNotNull(currentPlayer.getObjective2());
+        assertEquals(currentPlayer.getObjective2(), currentPlayer.getObjectiveCard());
     }
 }
