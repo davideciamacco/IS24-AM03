@@ -255,7 +255,7 @@ public class Game implements GameInterface {
     public void drawGold(String player) throws EmptyDeckException {
         if(goldDeck.isEmpty())
             throw new EmptyDeckException("There aren't other cards in the selected deck");
-        getPlayers().get(currentPlayer).addCard(resourceDeck.drawCard());
+        getPlayers().get(currentPlayer).addCard(goldDeck.drawCard());
         if(resourceDeck.isEmpty() && goldDeck.isEmpty())
             ending=true;
         nextTurn();

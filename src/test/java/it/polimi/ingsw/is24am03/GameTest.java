@@ -166,10 +166,23 @@ class GameTest {
         assertEquals(State.ENDING, game.getGameState());
     }*/
 
+    /*
     @Test
     void giveObjectivePoints() {
-    }
+        Game game = new Game(2, "Player1");
+        game.addPlayer("Player2");
 
+        game.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game.getPlayers().get(0)));
+        game.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game.getPlayers().get(1)));
+
+        game.giveObjectivePoints();
+
+        assertEquals(0, game.getPlayers().get(0).getPoints());
+        assertEquals(0, game.getPlayers().get(1).getPoints());
+        assertEquals(0, game.getPlayers().get(0).getNumObj());
+        assertEquals(0, game.getPlayers().get(1).getNumObj());
+    }
+*/
     @Test
     void drawResources() {
         Corner animal = new Corner("A");
@@ -219,16 +232,16 @@ class GameTest {
         game5.addPlayer("Marco");
 
         game5.setGameState(State.DRAWING);
-        assertDoesNotThrow(()->game5.drawResources(game5.getPlayers().get(0).getNickname()));
+        assertDoesNotThrow(()->game5.drawGold(game5.getPlayers().get(0).getNickname()));
         assertEquals(4, game5.getPlayers().get(0).getHand().size());
 
         game5.getGoldDeck().setEmpty();
         game5.getResourceDeck().setEmpty();
         game5.getGoldDeck().getCards().add(new GoldCard(40,"R",1,notVisible,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL));
 
-        //assertDoesNotThrow(() -> game5.drawGold(game5.getPlayers().get(1).getNickname()));
-        /*assertEquals(true, game1.isEnding());
-        assertThrows(EmptyDeckException.class, () -> game1.drawGold(game1.getPlayers().get(1).getNickname()));*/
+        assertDoesNotThrow(() -> game5.drawGold(game5.getPlayers().get(1).getNickname()));
+        assertEquals(true, game5.isEnding());
+        assertThrows(EmptyDeckException.class, () -> game5.drawGold(game5.getPlayers().get(1).getNickname()));
     }
 
     @Test
