@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.server.model.cards.Corner;
+import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

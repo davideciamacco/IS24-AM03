@@ -1,4 +1,8 @@
 package it.polimi.ingsw.is24am03;
+import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
+import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
+import it.polimi.ingsw.is24am03.server.model.decks.ObjectiveDeck;
+import it.polimi.ingsw.is24am03.server.model.enums.ObjectiveType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

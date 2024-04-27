@@ -1,5 +1,17 @@
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.server.model.cards.Corner;
+import it.polimi.ingsw.is24am03.server.model.cards.GoldCard;
+import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
+import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
+import it.polimi.ingsw.is24am03.server.model.enums.State;
+import it.polimi.ingsw.is24am03.server.model.exceptions.EmptyDeckException;
+import it.polimi.ingsw.is24am03.server.model.exceptions.NotAllPlayersHaveJoinedException;
+import it.polimi.ingsw.is24am03.server.model.exceptions.NullCardSelectedException;
+import it.polimi.ingsw.is24am03.server.model.game.Game;
+import it.polimi.ingsw.is24am03.server.model.player.Player;
+import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

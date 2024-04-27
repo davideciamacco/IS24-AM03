@@ -1,4 +1,7 @@
 package it.polimi.ingsw.is24am03;
+import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
+import it.polimi.ingsw.is24am03.server.model.decks.GoldDeck;
+import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;

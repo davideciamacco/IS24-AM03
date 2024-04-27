@@ -1,9 +1,16 @@
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.server.model.cards.*;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
+import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
+import it.polimi.ingsw.is24am03.server.model.enums.ObjectiveType;
+import it.polimi.ingsw.is24am03.server.model.exceptions.*;
+import it.polimi.ingsw.is24am03.server.model.player.Player;
+import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerBoardTest {
@@ -59,7 +66,7 @@ class PlayerBoardTest {
         Player player = new Player("TestPlayer", Color.RED);
         PlayerBoard playerBoard = new PlayerBoard(player);
 
-        ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.MANUSCRIPT,ObjectiveType.ITEM,CornerItem.EMPTY,1);
+        ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.MANUSCRIPT, ObjectiveType.ITEM,CornerItem.EMPTY,1);
         ArrayList<CornerItem> list = new ArrayList<>();
         StartingCard card2= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();

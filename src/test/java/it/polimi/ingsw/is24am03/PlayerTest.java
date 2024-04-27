@@ -3,6 +3,12 @@ package it.polimi.ingsw.is24am03;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.is24am03.server.model.cards.*;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
+import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
+import it.polimi.ingsw.is24am03.server.model.enums.ObjectiveType;
+import it.polimi.ingsw.is24am03.server.model.player.Player;
+import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +35,7 @@ class PlayerTest {
     @Test
     void testSetObjective(){
 
-        ObjectiveCard card_94 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
+        ObjectiveCard card_94 = new ObjectiveList(94,2, CornerItem.FUNGI, ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_95 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         player.setObjectiveCard(card_94,card_95);
         assertEquals(card_94,player.getObjective1());

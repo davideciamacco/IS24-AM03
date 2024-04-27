@@ -1,0 +1,17 @@
+package it.polimi.ingsw.is24am03.server.model.cards;
+
+import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
+import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
+import it.polimi.ingsw.is24am03.server.model.enums.ObjectiveType;
+
+public class Dshaped extends ObjectiveCard {
+    private final  int direction;
+    public Dshaped(int id, int points, CornerItem requirements, ObjectiveType type, CornerItem kingdomType, int direction){
+        super(id,points,requirements,type,kingdomType);
+        this.direction=direction;
+
+    }
+    public int getDirection() {
+        return direction;
+    }
+}
