@@ -32,24 +32,6 @@ public class ServerMain {
         ExecutorService executor = Executors.newCachedThreadPool();
 
         ServerSocket serverSocket;
-       // logger.info("Server started!");
-
-
-        /* RMI INITIALIZATION */
-        /*
-        Registry registry;
-        try {
-            System.setProperty("java.rmi.server.hostname",this.hostName);
-            registry = LocateRegistry.createRegistry(rmiPortNumber);
-            registry.bind("lobby_controller", lobbyController);
-        } catch (RemoteException | AlreadyBoundException e) {
-            executor.shutdownNow();
-            logger.info("Server Failed to Launch RMI Server");
-            System.exit(0);
-            return;
-        }
-        */
-        /* server socket initialization */
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -58,8 +40,6 @@ public class ServerMain {
             return;
         }
 
-  //      logger.info("Server ready! host: "+hostName+ " port (TCP): " + port + " port(RMI): "+rmiPortNumber);
-
         /* SOCKET TCP */
         while (true) {
             try {
@@ -67,7 +47,7 @@ public class ServerMain {
          //       logger.info("Client connected");
                 executor.execute(new ClientTCPHandler(socket, gameController));
             } catch(IOException e) {
-                break; // Entrerei qui se serverSocket venisse chiuso
+                break;
             }
         }
         executor.shutdown();
@@ -88,13 +68,7 @@ public class ServerMain {
             }
             ServerMain echoServer = new ServerMain(hostName, portNumber, rmiPortNumber);
             echoServer.startServer();
-        } /*else {
-                Gson gson = new Gson();
-                JsonObject job = gson.fromJson(new InputStreamReader(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("HostAndPort.json"))), JsonObject.class);
-                portNumber = gson.fromJson(job.get("portNumber"), Integer.class);
-                hostName = gson.fromJson(job.get("hostName"), String.class);
-                rmiPortNumber = gson.fromJson(job.get("rmiPortNumber"), Integer.class);
-            }*/
+        }
         else {
             System.exit(0);
         }

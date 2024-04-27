@@ -11,7 +11,6 @@ import java.util.concurrent.Executors;
 
 public class ClientTCPHandler implements Runnable {
     private final Socket socket;
-    private boolean closeConnectionFlag;
     private GameController gameController;
     private String username;
     private final ObjectInputStream inputStream;
@@ -27,7 +26,6 @@ public class ClientTCPHandler implements Runnable {
         this.username = "";
         this.gameController = gameController;
         this.lastReceivedMessages = new ArrayDeque<>();
-        closeConnectionFlag = false;
         try {
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
@@ -58,7 +56,7 @@ public class ClientTCPHandler implements Runnable {
                     try {
                         response = this.messageParser(lastReceivedMessages.poll());
                         sendUpdate(response);
-                    } //catch (RemoteException ignored) {}
+                    }
                     finally{
 
                     }
@@ -67,17 +65,14 @@ public class ClientTCPHandler implements Runnable {
     }
     private void messagesHopper()  {
         parseExecutors.execute( () -> {
-//            timer.schedule(this::handleCrash, timerDelay);
             while(true) {
                 synchronized (lastReceivedMessages) {
                     try {
                         Message incomingMessage = (Message) inputStream.readObject();
                         lastReceivedMessages.add(incomingMessage);
-                        //timer.reschedule(timerDelay);
                         lastReceivedMessages.notifyAll();
                         lastReceivedMessages.wait(1);
                     } catch ( ClassNotFoundException | InterruptedException e) {
-                        //logger.info("Hopper has been stopped on connection with" + this.username);
                         break;
                     } catch ( IOException ignored){
 
@@ -100,24 +95,10 @@ public class ClientTCPHandler implements Runnable {
         boolean result=false;
         String errorType = "";
         String desc = "";
-        /*
-        if( checkGameIsSet() ){
-            return new ConfirmGameMessage(false, Notifications.ERR_INVALID_ACTION.getTitle(), Notifications.ERR_INVALID_ACTION.getDescription(), false);
-        }*/
         try {
             gameController.createGame(createGameMessage.getPlayerNumber(), username);
             result = true;
-            //logger.info("Game CREATED Successfully");
-            //this.subscribeToAllListeners();
-        } /*catch (InvalidPlayerException e) {
-            result = false;
-            errorType = Notifications.ERR_PLAYER_NO_JOINED_IN_LOBBY.getTitle();
-            desc = Notifications.ERR_PLAYER_NO_JOINED_IN_LOBBY.getDescription();
-        } catch (PlayersNumberOutOfRange e) {
-            result = false;
-            errorType = Notifications.ERR_GAME_N_PLAYER_OUT_OF_RANGE.getTitle();
-            desc = Notifications.ERR_GAME_N_PLAYER_OUT_OF_RANGE.getDescription();
-        }*/
+        }
         finally {
             return new ConfirmGameMessage(result, errorType, desc, false);
         }
@@ -126,7 +107,6 @@ public class ClientTCPHandler implements Runnable {
     private void sendUpdate(Message update){
         synchronized (outputStream) {
             try {
-          //      logger.info("SENDING..." + update.getMessageType()+ " to "+this.username );
                 outputStream.writeObject(update);
                 outputStream.flush();
                 outputStream.reset();
