@@ -4,15 +4,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * Abstract structure of a NetMessage
+ * Abstract structure of a Message
  */
 public abstract class Message implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1592537124969459098L;
     private final MessageType messageType;
 
     /**
-     * Constructor of a NetMessage
+     * Constructor of a Message
      * @param messageType type of the message
      */
     public Message(MessageType messageType) {

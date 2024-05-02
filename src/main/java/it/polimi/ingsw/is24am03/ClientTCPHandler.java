@@ -1,3 +1,4 @@
+
 package it.polimi.ingsw.is24am03;
 
 import it.polimi.ingsw.is24am03.messages.ConfirmGameMessage;
@@ -15,52 +16,54 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ClientTCPHandler implements Runnable {
-    private final Socket socket;
+    private  Socket socket;
     private GameController gameController;
-    private String username;
-    private final ObjectInputStream inputStream;
-    private final ObjectOutputStream outputStream;
+    private  ObjectInputStream inputStream;
+    private  ObjectOutputStream outputStream;
 
-    private final Queue<Message> lastReceivedMessages;
+    private  Queue<Message> queueMessages;
 
-    private final ExecutorService parseExecutors = Executors.newCachedThreadPool();
+    private  ExecutorService parseExecutors = Executors.newCachedThreadPool();
 
 
     public ClientTCPHandler(Socket socket, GameController gameController) {
         this.socket = socket;
-        this.username = "";
         this.gameController = gameController;
-        this.lastReceivedMessages = new ArrayDeque<>();
+        this.queueMessages = new ArrayDeque<>();
         try {
+
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException("Connection with client failed over TCP");
         }
+
+
     }
 
 
     public void run() {
-        this.startParserAgent();
-        this.messagesHopper();
+        this.ParserAgent();
+        this.messagesReceiver();
     }
 
-    private void startParserAgent(){
+    private void ParserAgent(){
         parseExecutors.execute( () -> {
             Message response;
             parserLoop:
             while (true)
-                synchronized (lastReceivedMessages) {
-                    while (lastReceivedMessages.isEmpty()) {
+                synchronized (queueMessages) {
+                    while (queueMessages.isEmpty()) {
                         try {
-                            lastReceivedMessages.wait();
+                            queueMessages.wait();
                         } catch (InterruptedException e) {
                             break parserLoop;
                         }
                     }
                     try {
-                        response = this.messageParser(lastReceivedMessages.poll());
-                        sendUpdate(response);
+                        response = this.messageParser(queueMessages.poll());
+                        System.out.println("Sending server response");
+                        sendMessage(response);
                     }
                     finally{
 
@@ -68,15 +71,15 @@ public class ClientTCPHandler implements Runnable {
                 }
         });
     }
-    private void messagesHopper()  {
+    private void messagesReceiver()  {
         parseExecutors.execute( () -> {
             while(true) {
-                synchronized (lastReceivedMessages) {
+                synchronized (queueMessages) {
                     try {
                         Message incomingMessage = (Message) inputStream.readObject();
-                        lastReceivedMessages.add(incomingMessage);
-                        lastReceivedMessages.notifyAll();
-                        lastReceivedMessages.wait(1);
+                        queueMessages.add(incomingMessage);
+                        queueMessages.notifyAll();
+                        queueMessages.wait(1);
                     } catch ( ClassNotFoundException | InterruptedException e) {
                         break;
                     } catch ( IOException ignored){
@@ -97,22 +100,29 @@ public class ClientTCPHandler implements Runnable {
     }
 
     private Message parse(CreateGameMessage createGameMessage){
-        boolean result=false;
-        String errorType = "";
-        String desc = "";
+        boolean result;
+        String description = "";
         try {
-            gameController.createGame(createGameMessage.getPlayerNumber(), username);
+            gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname());
             result = true;
         }
-        finally {
-            return new ConfirmGameMessage(result, errorType, desc, false);
+        catch(IllegalArgumentException e)
+        {
+            result=false;
+            description = "Invalid arguments";
         }
+        catch(RuntimeException e)
+        {
+            result=false;
+            description = "Game already created";
+        }
+        return new ConfirmGameMessage(result, description);
     }
 
-    private void sendUpdate(Message update){
+    private void sendMessage(Message message){
         synchronized (outputStream) {
             try {
-                outputStream.writeObject(update);
+                outputStream.writeObject(message);
                 outputStream.flush();
                 outputStream.reset();
             } catch (IOException e) {

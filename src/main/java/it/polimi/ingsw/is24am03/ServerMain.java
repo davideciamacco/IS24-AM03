@@ -8,12 +8,8 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-/**
- * This is the main class of the Server, it launches both RMI and TCP Services to accept clients' requests.
- */
 public class ServerMain {
- //   public final static Logger logger = Logger.getLogger(ServerMain.class.getName());
+    //   public final static Logger logger = Logger.getLogger(ServerMain.class.getName());
 //    private final int rmiPortNumber;
 
     private final int port;
@@ -34,6 +30,7 @@ public class ServerMain {
         ServerSocket serverSocket;
         try {
             serverSocket = new ServerSocket(port);
+            System.out.println("Server started. Waiting for clients...");
         } catch (IOException e) {
             System.err.println(e.getMessage()); // Porta non disponibile
             System.exit(0);
@@ -44,7 +41,8 @@ public class ServerMain {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-         //       logger.info("Client connected");
+                System.out.println("Client connected: " + socket.getInetAddress());
+                //       logger.info("Client connected");
                 executor.execute(new ClientTCPHandler(socket, gameController));
             } catch(IOException e) {
                 break;
@@ -78,3 +76,7 @@ public class ServerMain {
 
 
 }
+
+
+//
+//

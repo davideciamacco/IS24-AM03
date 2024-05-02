@@ -18,7 +18,7 @@ public class GameController implements GameInterface {
     /**
      * Using the GameInterface type for gameModel allows flexibility.
      */
-    private Game gameModel;
+    private Game gameModel = null;
 
     /**
      * Constructs a GameController with the specified game.
@@ -30,10 +30,10 @@ public class GameController implements GameInterface {
     }
 
 
-    public void createGame(int numPlayers, String nickname)
-    {
+    public void createGame(int numPlayers, String nickname){
         synchronized (gameLock) {
             if(nickname.isBlank() || numPlayers<2 || numPlayers>4) throw new IllegalArgumentException();
+            if(gameModel!=null) throw new RuntimeException();
             gameModel = new Game(numPlayers, nickname);
         }
     }
