@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class ClientSocket{
+public class ClientSocket implements Client{
 
     private final String ip;
     private final int port;

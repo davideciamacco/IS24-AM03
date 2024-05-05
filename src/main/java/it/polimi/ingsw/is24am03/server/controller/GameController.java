@@ -3,13 +3,16 @@ package it.polimi.ingsw.is24am03.server.controller;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.Game;
-import it.polimi.ingsw.is24am03.server.model.game.GameInterface;
+import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * the game controller ensures the communication through client controller and server model
  */
-public class GameController implements GameInterface {
+public class GameController extends UnicastRemoteObject implements RemoteGameController {
     /**
      * locks used for thread synchronization
      */
@@ -25,7 +28,7 @@ public class GameController implements GameInterface {
      *
      //* @param game the game model to be associated with this controller
      */
-    public GameController(){
+    public GameController() throws RemoteException {
         gameLock= new Object();
     }
 

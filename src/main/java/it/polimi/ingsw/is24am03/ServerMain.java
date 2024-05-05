@@ -1,26 +1,31 @@
 package it.polimi.ingsw.is24am03;
 
 import it.polimi.ingsw.is24am03.server.controller.GameController;
+import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
-public class ServerMain {
+
+public class ServerMain{
     //   public final static Logger logger = Logger.getLogger(ServerMain.class.getName());
-//    private final int rmiPortNumber;
 
     private final int port;
     private final String hostName;
-
+    private final int rmiPortNumber;
     private final GameController gameController;
 
-    public ServerMain(String hostName,int port, int rmiPortNumber){
+    public ServerMain(String hostName,int port, int rmiPortNumber) throws RemoteException{
         this.port = port;
         this.hostName = hostName;
-        //this.rmiPortNumber = rmiPortNumber;
+        this.rmiPortNumber = rmiPortNumber;
         this.gameController = new GameController();
     }
 
@@ -32,12 +37,23 @@ public class ServerMain {
             serverSocket = new ServerSocket(port);
             System.out.println("Server started. Waiting for clients...");
         } catch (IOException e) {
-            System.err.println(e.getMessage()); // Porta non disponibile
+            System.err.println(e.getMessage());
             System.exit(0);
             return;
         }
 
-        /* SOCKET TCP */
+        Registry registry;
+        try {
+            System.setProperty("java.rmi.server.hostname",this.hostName);
+            registry = LocateRegistry.createRegistry(rmiPortNumber);
+            registry.bind("game_controller", gameController);
+        } catch (RemoteException | AlreadyBoundException e) {
+            executor.shutdownNow();
+            System.exit(0);
+            return;
+        }
+
+
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
@@ -55,6 +71,7 @@ public class ServerMain {
         String hostName;
         int portNumber = 0;
         int rmiPortNumber = 0;
+        RemoteGameController stub=null;
         String rmiHostName;
         if (args.length == 3) {
             hostName = args[0];
@@ -64,19 +81,17 @@ public class ServerMain {
             }catch(NumberFormatException e){
                 System.exit(-1);
             }
-            ServerMain echoServer = new ServerMain(hostName, portNumber, rmiPortNumber);
-            echoServer.startServer();
+            try {
+                ServerMain echoServer = new ServerMain(hostName, portNumber, rmiPortNumber);
+                echoServer.startServer();
+            }
+            catch(RemoteException e){}
         }
         else {
             System.exit(0);
         }
 
     }
-
-
-
 }
-
-
 //
 //

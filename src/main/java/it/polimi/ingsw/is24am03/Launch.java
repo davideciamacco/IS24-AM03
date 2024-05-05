@@ -5,7 +5,7 @@ public class Launch
 
     public static void main( String[] args )
     {
-        if (args.length == 3) {
+        if (args.length == 4) {
             String[] newArgs = new String[args.length - 1];
             for (int j = 0; j < args.length - 1; j++) {
                 newArgs[j] = args[j + 1];
@@ -13,8 +13,8 @@ public class Launch
 
             if (args[0].equals("--CLI"))
                 CliView.main(newArgs);
-            else
-                ServerMain.main(args);
         }
+        else
+            ServerMain.main(args);
     }
 }

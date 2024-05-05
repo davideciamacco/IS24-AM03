@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * This class is used to handle the main logic of a Game
  */
-public class Game implements GameInterface {
+public class Game{
 
     /**
      * Index of the current player in the ArrayList
