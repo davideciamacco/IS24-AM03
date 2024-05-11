@@ -10,12 +10,14 @@ import it.polimi.ingsw.is24am03.server.model.player.Player;
 import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameControllerTest {
 
     @Test
-    void createGame() {
+    void createGame() throws  RemoteException{
         GameController gc1 = new GameController();
         assertDoesNotThrow(() -> gc1.createGame(3, "HostPlayer"));
         assertNotNull(gc1.getGameModel());
@@ -35,11 +37,11 @@ class GameControllerTest {
     }
 
     @Test
-    void selectStartingFace() {
+    void selectStartingFace() throws RemoteException{
         GameController gc5 = new GameController();
-        gc5.createGame(2, "Player1");
+        assertDoesNotThrow(()->gc5.createGame(2, "Player1"));
         assertDoesNotThrow(() -> gc5.addPlayer("Player2"));
-        gc5.getGameModel().setGameState(State.PREPARATION_1);
+        gc5.getGameModel().setGameState(State.STARTING);
 
         Player currentPlayer1 = gc5.getGameModel().getPlayers().get(gc5.getGameModel().getCurrentPlayer());
         currentPlayer1.setPlayerBoard(new PlayerBoard(currentPlayer1));
@@ -50,11 +52,11 @@ class GameControllerTest {
     }
 
     @Test
-    void setObjectiveCard() {
+    void setObjectiveCard() throws RemoteException{
         GameController gc5 = new GameController();
-        gc5.createGame(2, "Player1");
+        assertDoesNotThrow(()->gc5.createGame(2, "Player1"));
         assertDoesNotThrow(() -> gc5.addPlayer("Player2"));
-        gc5.getGameModel().setGameState(State.PREPARATION_2);
+        gc5.getGameModel().setGameState(State.OBJECTIVE);
 
         Player currentPlayer1 = gc5.getGameModel().getPlayers().get(gc5.getGameModel().getCurrentPlayer());
         assertDoesNotThrow(() -> gc5.setObjectiveCard(currentPlayer1.getNickname(), 1));
@@ -67,9 +69,9 @@ class GameControllerTest {
     }
 
     @Test
-    void drawResources() {
+    void drawResources() throws RemoteException{
         GameController gc4 = new GameController();
-        gc4.createGame(2, "Player1");
+        assertDoesNotThrow(()->gc4.createGame(2, "Player1"));
         assertDoesNotThrow(() -> gc4.addPlayer("Player2"));
         gc4.getGameModel().setGameState(State.DRAWING);
 
@@ -86,9 +88,9 @@ class GameControllerTest {
     }
 
     @Test
-    void drawGold() {
+    void drawGold() throws RemoteException{
         GameController gc4 = new GameController();
-        gc4.createGame(2, "Player1");
+        assertDoesNotThrow(()->gc4.createGame(2, "Player1"));
         assertDoesNotThrow(() -> gc4.addPlayer("Player2"));
         gc4.getGameModel().setGameState(State.DRAWING);
 
@@ -106,9 +108,9 @@ class GameControllerTest {
     }
 
     @Test
-    void drawTable() {
+    void drawTable() throws RemoteException{
         GameController gc7 = new GameController();
-        gc7.createGame(2, "Player1");
+        assertDoesNotThrow(()->gc7.createGame(2, "Player1"));
         assertDoesNotThrow(() -> gc7.addPlayer("Player2"));
         gc7.getGameModel().setGameState(State.DRAWING);
 
@@ -127,9 +129,9 @@ class GameControllerTest {
     }
 
     @Test
-    void addPlayer() {
+    void addPlayer() throws RemoteException{
         GameController gc3 = new GameController();
-        gc3.createGame(3, "Giorgio");
+        assertDoesNotThrow(()->gc3.createGame(3, "Giorgio"));
         assertEquals(1, gc3.getGameModel().getPlayers().size());
 
         assertDoesNotThrow(() -> gc3.addPlayer("Andrea"));
@@ -146,9 +148,9 @@ class GameControllerTest {
 
 
     @Test
-    void placeCard() {
+    void placeCard() throws RemoteException {
         GameController gc6 = new GameController();
-        gc6.createGame(2, "Player1");
+        assertDoesNotThrow(()->gc6.createGame(2, "Player1"));
         assertDoesNotThrow(() -> gc6.addPlayer("Player2"));
         Player currentPlayer2;
         Player currentPlayer1 = gc6.getGameModel().getPlayers().get(gc6.getGameModel().getCurrentPlayer());

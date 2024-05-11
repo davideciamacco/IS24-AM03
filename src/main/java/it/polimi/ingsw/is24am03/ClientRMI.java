@@ -105,6 +105,9 @@ public class ClientRMI implements Client{
             System.out.println("Action not allowed in this state");
         } catch (ColorAlreadyPickedException e) {
             System.out.println("Color not available");
+        } catch (RemoteException e)
+        {
+
         }
         System.out.flush();
     }
