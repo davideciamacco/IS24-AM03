@@ -91,8 +91,30 @@ public class ClientTCPHandler implements Runnable {
         switch (inputMessage.getMessageType()) {
             case CREATE_GAME -> outputMessage = this.parse((CreateGameMessage) inputMessage);
             case JOIN_GAME -> outputMessage = this.parse((JoinGameMessage) inputMessage);
+            case PICK_COLOR -> outputMessage = this.parse((PickColorMessage) inputMessage);
         }
         return outputMessage;
+    }
+
+
+    private Message parse(CreateGameMessage createGameMessage){
+        boolean result;
+        String description = "";
+        try {
+            gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname());
+            result = true;
+        }
+        catch(IllegalArgumentException e)
+        {
+            result=false;
+            description = "Invalid arguments";
+        }
+        catch(GameAlreadyCreatedException e)
+        {
+            result=false;
+            description = "Game already created";
+        }
+        return new ConfirmGameMessage(result, description);
     }
 
     private Message parse(JoinGameMessage joinGameMessage){
@@ -133,24 +155,29 @@ public class ClientTCPHandler implements Runnable {
         return new ConfirmJoinGameMessage(result, description);
     }
 
-    private Message parse(CreateGameMessage createGameMessage){
+    private Message parse(PickColorMessage pickColorMessage) {
         boolean result;
         String description = "";
         try {
-            gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname());
+            gameController.pickColor(pickColorMessage.getNickname(), pickColorMessage.getColor());
             result = true;
-        }
-        catch(IllegalArgumentException e)
+
+        } catch (ColorAlreadyPickedException e)
         {
             result=false;
-            description = "Invalid arguments";
+            description="Color not available";
         }
-        catch(RuntimeException e)
+        catch (PlayerNotInTurnException e)
         {
             result=false;
-            description = "Game already created";
+            description="Not your turn";
         }
-        return new ConfirmGameMessage(result, description);
+        catch (InvalidStateException e)
+        {
+            result=false;
+            description="Action not allowed in this state";
+        }
+        return new ConfirmPickColorMessage(result, description);
     }
 
     private void sendMessage(Message message){

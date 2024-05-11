@@ -17,7 +17,7 @@ class PlayerBoardTest {
 
     @Test
     void checkRequirements() {
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         Corner animal = new Corner("A");
         Corner fungi =new Corner("F");
@@ -63,7 +63,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
 
         ObjectiveCard card_99 = new ObjectiveList(99,2,CornerItem.MANUSCRIPT, ObjectiveType.ITEM,CornerItem.EMPTY,1);
@@ -76,13 +76,13 @@ class PlayerBoardTest {
     }
     @Test
     void getPlayer(){
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         assertEquals(player,playerBoard.getPlayer());
     }
     @Test
     void UpdateItem2(){
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 1);
         ArrayList<CornerItem> requirementsList = new ArrayList<>();
@@ -106,7 +106,7 @@ class PlayerBoardTest {
     }
     @Test
     void testgiveCardPointsAndPlaceCard() {
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         playerBoard.getAvailableItems().put(CornerItem.MANUSCRIPT, 1);
         ArrayList<CornerItem> requirementsList = new ArrayList<>();
@@ -162,7 +162,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
@@ -223,7 +223,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
@@ -259,7 +259,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
@@ -295,7 +295,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
@@ -331,7 +331,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
@@ -367,7 +367,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
 
         ObjectiveCard card_94 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
@@ -396,7 +396,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
         //   list.add(CornerItem.INSECT);
@@ -428,7 +428,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
         //     list.add(CornerItem.INSECT);
@@ -461,7 +461,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
@@ -492,7 +492,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
@@ -536,7 +536,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
@@ -573,7 +573,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);
@@ -597,7 +597,7 @@ class PlayerBoardTest {
         Corner quill =new Corner("Q");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-        Player player = new Player("TestPlayer", Color.RED);
+        Player player = new Player("TestPlayer");
         PlayerBoard playerBoard = new PlayerBoard(player);
         ArrayList<CornerItem> list = new ArrayList<>();
         list.add(CornerItem.INSECT);

@@ -1,8 +1,6 @@
 package it.polimi.ingsw.is24am03;
 
-import it.polimi.ingsw.is24am03.server.model.exceptions.FullLobbyException;
-import it.polimi.ingsw.is24am03.server.model.exceptions.InvalidStateException;
-import it.polimi.ingsw.is24am03.server.model.exceptions.NicknameAlreadyUsedException;
+import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 
 import java.rmi.NotBoundException;
@@ -20,6 +18,7 @@ public class ClientRMI implements Client{
     private final int port;
 
     private boolean connectionClosed;
+    private String nickname;
 
     public ClientRMI(String hostName, int portNumber, CliView view) {
         boolean connected = false;
@@ -50,10 +49,11 @@ public class ClientRMI implements Client{
         try {
             this.gameController.createGame(nPlayers, nickname);
             System.out.println("Game created successfully");
+            this.nickname = nickname;
             hasJoined=true;
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
-        } catch (RuntimeException e) {
+        } catch (GameAlreadyCreatedException e) {
             System.out.println("Game already created");
         } catch (RemoteException e){
 
@@ -66,6 +66,7 @@ public class ClientRMI implements Client{
             this.gameController.addPlayer(nickname);
             System.out.println("Joined successfully");
             hasJoined=true;
+            this.nickname=nickname;
         }
         catch(IllegalArgumentException e)
         {
@@ -88,6 +89,23 @@ public class ClientRMI implements Client{
 
         }
         System.out.flush();
+    }
 
+    public void PickColor(String color)
+    {
+        try {
+            this.gameController.pickColor(nickname, color);
+            System.out.println("Color picked successfully");
+            hasJoined=true;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid arguments");
+        } catch (PlayerNotInTurnException e) {
+            System.out.println("Not your turn");
+        } catch (InvalidStateException e){
+            System.out.println("Action not allowed in this state");
+        } catch (ColorAlreadyPickedException e) {
+            System.out.println("Color not available");
+        }
+        System.out.flush();
     }
 }

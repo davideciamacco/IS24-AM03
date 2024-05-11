@@ -20,7 +20,7 @@ class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        player = new Player("TestPlayer", Color.RED);
+        player = new Player("TestPlayer");
     }
     @Test
     void testSetFirst(){

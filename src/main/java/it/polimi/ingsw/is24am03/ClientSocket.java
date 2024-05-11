@@ -21,6 +21,8 @@ public class ClientSocket implements Client{
     private final ExecutorService threadManager;
     private final CliView view;
 
+    private String nickname;
+
     public ClientSocket(String ip, int port, CliView view) {
         this.ip = ip;
         this.port = port;
@@ -42,12 +44,20 @@ public class ClientSocket implements Client{
 
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
+        this.nickname = nickname;
         this.sendMessage(requestMessage);
     }
 
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
+        this.nickname = nickname;
         this.sendMessage(joinMessage);
+    }
+
+    @Override
+    public void PickColor(String color) {
+        PickColorMessage colorMessage = new PickColorMessage(nickname, color);
+        this.sendMessage(colorMessage);
     }
 
     private void messagesReceiver()  {
@@ -93,6 +103,7 @@ public class ClientSocket implements Client{
         switch (responseMessage.getMessageType()){
             case CONFIRM_GAME -> this.parse((ConfirmGameMessage) responseMessage);
             case CONFIRM_JOIN -> this.parse((ConfirmJoinGameMessage) responseMessage);
+            case CONFIRM_PICK -> this.parse((ConfirmPickColorMessage) responseMessage);
             default -> {
             }
 
@@ -114,6 +125,15 @@ public class ClientSocket implements Client{
         if(message.getConfirmJoin()) {
             System.out.println("Joined successfully");
             hasJoined = true;
+        }
+        else
+            System.out.println(message.getDetails());
+        System.out.flush();
+    }
+
+    private void parse(ConfirmPickColorMessage message) {
+        if (message.getConfirmPickColor()){
+            System.out.println("Color picked successfully");
         }
         else
             System.out.println(message.getDetails());

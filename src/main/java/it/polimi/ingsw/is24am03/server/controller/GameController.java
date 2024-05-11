@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is24am03.server.controller;
 
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.Game;
@@ -33,10 +34,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
 
-    public void createGame(int numPlayers, String nickname){
+    public void createGame(int numPlayers, String nickname) throws GameAlreadyCreatedException {
         synchronized (gameLock) {
             if(nickname.isBlank() || numPlayers<2 || numPlayers>4) throw new IllegalArgumentException();
-            if(gameModel!=null) throw new RuntimeException();
+            if(gameModel!=null) throw new GameAlreadyCreatedException();
             gameModel = new Game(numPlayers, nickname);
         }
     }
@@ -46,7 +47,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
-            if (!gameModel.getGameState().equals(State.PREPARATION_1))
+            if (!gameModel.getGameState().equals(State.STARTING))
                 throw new InvalidStateException("Action not allowed in this state");
             gameModel.selectStartingFace(player, face);
         }
@@ -214,6 +215,44 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             //catch(){};
         }
     }
+
+    public void pickColor(String player, String color) throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException {
+        Color chosenColor;
+        boolean flag=false;
+        synchronized (gameLock)
+        {
+            if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
+                throw new PlayerNotInTurnException();
+            }
+            if(!gameModel.getGameState().equals(State.COLOR)) throw new InvalidStateException("Action not allowed in this state");
+            switch(color)
+            {
+                case "RED":
+                    chosenColor= Color.RED;
+                    break;
+                case "BLUE":
+                    chosenColor= Color.BLUE;
+                    break;
+                case "GREEN":
+                    chosenColor= Color.GREEN;
+                    break;
+                case "YELLOW":
+                    chosenColor= Color.YELLOW;
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+            for(int i=0; i<gameModel.getAvailableColors().size(); i++){
+                if(chosenColor.equals(gameModel.getAvailableColors().get(i)))
+                    flag=true;
+            }
+            if(flag)
+                gameModel.setColor(chosenColor);
+            else
+                throw new ColorAlreadyPickedException();
+        }
+    }
+
 
     public Game getGameModel() {
         return gameModel;

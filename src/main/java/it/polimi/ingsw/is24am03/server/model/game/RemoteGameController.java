@@ -5,7 +5,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RemoteGameController extends Remote{
-    public void createGame(int numPlayers, String nickname) throws RemoteException;
+    public void createGame(int numPlayers, String nickname) throws RemoteException, GameAlreadyCreatedException;
     public void drawResources(String player) throws EmptyDeckException, PlayerNotInTurnException, InvalidStateException, RemoteException;
     public void drawGold(String player) throws PlayerNotInTurnException, InvalidStateException, EmptyDeckException, RemoteException;
     public void drawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, NullCardSelectedException, RemoteException;
@@ -15,5 +15,6 @@ public interface RemoteGameController extends Remote{
 
     public void selectStartingFace(String player, boolean face) throws PlayerNotInTurnException, InvalidStateException, RemoteException;
 
+    void pickColor(String nickname, String color) throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException;
 }
 

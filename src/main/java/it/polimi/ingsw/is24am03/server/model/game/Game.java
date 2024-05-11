@@ -121,7 +121,7 @@ public class Game{
         if(players.size()!=numPlayers)
             throw new NotAllPlayersHaveJoinedException();
         setOrder();
-        this.gameState = State.PREPARATION_1;
+        this.gameState = State.STARTING;
         startingDeck.shuffle();
         objectiveDeck.shuffle();
         goldDeck.shuffle();
@@ -221,7 +221,7 @@ public class Game{
      * @param player represent the player to be added
      */
     public void addPlayer(String player) {
-        Player playerToAdd = new Player(player, availableColors.remove(0));
+        Player playerToAdd = new Player(player);
         players.add(playerToAdd);
         if (players.size() == numPlayers) {
             try {
@@ -389,6 +389,15 @@ public class Game{
         nextTurn();
     }
 
+    public void setColor(Color color){
+        Player p = players.get(currentPlayer);
+        p.setPawncolor(color);
+        for(int i=0; i<availableColors.size(); i++)
+            if(availableColors.get(i).equals(color))
+                availableColors.remove(i);
+        nextTurn();
+    }
+
     public ArrayList<Player> getPlayers() {
         return players;
     }
@@ -402,9 +411,11 @@ public class Game{
                 endGame();
             else if(gameState.equals(State.DRAWING))
                 roundNumber++;
-            else if(gameState.equals(State.PREPARATION_1))
-                gameState = State.PREPARATION_2;
-            else if(gameState.equals(State.PREPARATION_2))
+            else if(gameState.equals(State.STARTING))
+                gameState = State.COLOR;
+            else if(gameState.equals(State.COLOR))
+                gameState = State.OBJECTIVE;
+            else if(gameState.equals(State.OBJECTIVE))
                 gameState = State.PLAYING;
             if(ending)
                 lastRound = true;
@@ -412,6 +423,10 @@ public class Game{
         if(gameState.equals(State.DRAWING))
             gameState = State.PLAYING;
         currentPlayer = (currentPlayer+1)%(numPlayers);
+    }
+
+    public ArrayList<Color> getAvailableColors(){
+        return availableColors;
     }
 
     public int getCurrentPlayer(){

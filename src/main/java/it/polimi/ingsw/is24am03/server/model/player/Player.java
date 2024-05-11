@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Player {
     private final String nickname;
-    private final Color pawncolor;
+    private Color pawncolor;
     private final ArrayList<PlayableCard> hand;
     private ObjectiveCard objective1;
     private  ObjectiveCard objective2;
@@ -27,11 +27,9 @@ public class Player {
      * Constructs a new player with the given parameters.
      *
      * @param nickname     The player's nickname.
-     * @param pawncolor    The color of the player's pawn.
      */
-    public Player(String nickname, Color pawncolor) {
+    public Player(String nickname) {
         this.nickname = nickname;
-        this.pawncolor = pawncolor;
         this.hand = new ArrayList<>();
         this.objectivechoose=0;
         this.objective1 =null;
@@ -81,6 +79,10 @@ public class Player {
      */
     public void setPlayerBoard(PlayerBoard playerBoard) {
         this.playerBoard = playerBoard;
+    }
+
+    public void setPawncolor(Color color){
+        this.pawncolor=color;
     }
     /**
      * Adds a card to the player's hand.

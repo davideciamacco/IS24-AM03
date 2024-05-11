@@ -128,13 +128,13 @@ class GameTest {
         game1.addPlayer("Player2");
 
         game1.nextTurn();
-        assertEquals(State.PREPARATION_1, game1.getGameState());
+        assertEquals(State.STARTING, game1.getGameState());
 
         game1.nextTurn();
-        assertEquals(State.PREPARATION_2, game1.getGameState());
+        assertEquals(State.OBJECTIVE, game1.getGameState());
 
         game1.nextTurn();
-        assertEquals(State.PREPARATION_2, game1.getGameState());
+        assertEquals(State.OBJECTIVE, game1.getGameState());
 
         game1.nextTurn();
         assertEquals(State.PLAYING, game1.getGameState());
@@ -146,12 +146,12 @@ class GameTest {
 
         assertThrows(NotAllPlayersHaveJoinedException.class, ()->{game4.startGame();});
 
-        Player p2 = new Player("Marco", Color.BLUE);
+        Player p2 = new Player("Marco");
         game4.getPlayers().add(p2);
         assertEquals(2, game4.getPlayers().size());
         assertDoesNotThrow(()->{game4.startGame();});
 
-        assertEquals(game4.getGameState(), State.PREPARATION_1);
+        assertEquals(game4.getGameState(), State.STARTING);
         for(Player player: game4.getPlayers()) {
             assertEquals(3, player.getHand().size());
             //assertNotNull(player.getObjectiveCard());

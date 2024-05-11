@@ -82,6 +82,13 @@ public class CliView {
                     System.out.println("Missing arguments");
                 }
             }
+            case "PickColor" -> {
+                try{
+                    client.PickColor(inputArray[1]);
+                } catch (Exception ignored) {
+                    System.out.println("Missing arguments");
+                }
+            }
             default -> {
                 System.out.println("Invalid Command");
             }
