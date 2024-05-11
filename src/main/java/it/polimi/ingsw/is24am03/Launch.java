@@ -11,8 +11,9 @@ public class Launch
                 newArgs[j] = args[j + 1];
             }
 
-            if (args[0].equals("--CLI"))
+            if (args[0].equals("--CLI")) {
                 CliView.main(newArgs);
+            }
         }
         else
             ServerMain.main(args);

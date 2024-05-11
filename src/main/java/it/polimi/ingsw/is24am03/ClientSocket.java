@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class ClientSocket implements Client{
-
+    private boolean hasJoined;
     private final String ip;
     private final int port;
     private final Socket connection;
@@ -27,7 +27,7 @@ public class ClientSocket implements Client{
         this.queueMessages = new ArrayDeque<>();
         this.threadManager = Executors.newCachedThreadPool();
         this.view = view;
-
+        this.hasJoined = false;
 
         try {
             this.connection = new Socket(ip, port);
@@ -43,6 +43,11 @@ public class ClientSocket implements Client{
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
         this.sendMessage(requestMessage);
+    }
+
+    public void JoinGame(String nickname){
+        JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
+        this.sendMessage(joinMessage);
     }
 
     private void messagesReceiver()  {
@@ -70,10 +75,12 @@ public class ClientSocket implements Client{
                 synchronized (queueMessages){
                     while(queueMessages.isEmpty()){
                         try {
+                            queueMessages.notifyAll();
                             queueMessages.wait();
                         } catch (InterruptedException ignored) {}
                     }
                     this.parse(queueMessages.poll());
+                    //System.out.println("Client riceve da server");
                 }
             }
         });
@@ -85,6 +92,7 @@ public class ClientSocket implements Client{
 
         switch (responseMessage.getMessageType()){
             case CONFIRM_GAME -> this.parse((ConfirmGameMessage) responseMessage);
+            case CONFIRM_JOIN -> this.parse((ConfirmJoinGameMessage) responseMessage);
             default -> {
             }
 
@@ -92,11 +100,24 @@ public class ClientSocket implements Client{
     }
 
 
-    private void parse(ConfirmGameMessage message){
-        if(message.getConfirmGameCreation())
+    private void parse(ConfirmGameMessage message) {
+        if (message.getConfirmGameCreation()){
             System.out.println("Game created successfully");
+            hasJoined = true;
+        }
         else
             System.out.println(message.getDetails());
+        System.out.flush();
+    }
+
+    private void parse(ConfirmJoinGameMessage message){
+        if(message.getConfirmJoin()) {
+            System.out.println("Joined successfully");
+            hasJoined = true;
+        }
+        else
+            System.out.println(message.getDetails());
+        System.out.flush();
     }
 
     private void sendMessage(Message message) {
@@ -105,6 +126,7 @@ public class ClientSocket implements Client{
                 outputStream.writeObject(message);
                 outputStream.flush();
                 outputStream.reset();
+                //System.out.println("Client invia a server");
             } catch (IOException ignored) {
             }
         }

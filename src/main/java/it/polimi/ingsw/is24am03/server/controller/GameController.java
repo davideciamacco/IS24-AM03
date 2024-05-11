@@ -166,10 +166,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * @throws FullLobbyException if the lobby is already full
      * @throws NicknameAlreadyUsedException if the provided nickname is already used by another player
      */
-    public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException {
+    public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException, IllegalArgumentException, InvalidStateException {
         synchronized (gameLock)
         {
+            if(gameModel==null) throw new InvalidStateException("");
             if(gameModel.getPlayers().size()==gameModel.getNumPlayers()) throw new FullLobbyException();
+            if(player.isBlank() || player.equals("ALL")) throw new IllegalArgumentException();
             for(Player p: gameModel.getPlayers())
                 if(p.getNickname().equals(player)) throw new NicknameAlreadyUsedException();
             gameModel.addPlayer(player);

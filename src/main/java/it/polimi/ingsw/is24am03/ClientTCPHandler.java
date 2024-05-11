@@ -1,9 +1,7 @@
 
 package it.polimi.ingsw.is24am03;
 
-import it.polimi.ingsw.is24am03.messages.ConfirmGameMessage;
-import it.polimi.ingsw.is24am03.messages.CreateGameMessage;
-import it.polimi.ingsw.is24am03.messages.Message;
+import it.polimi.ingsw.is24am03.messages.*;
 import it.polimi.ingsw.is24am03.server.controller.GameController;
 
 import java.io.IOException;
@@ -60,14 +58,11 @@ public class ClientTCPHandler implements Runnable {
                             break parserLoop;
                         }
                     }
-                    try {
-                        response = this.messageParser(queueMessages.poll());
-                        System.out.println("Sending server response");
-                        sendMessage(response);
-                    }
-                    finally{
+                    response = this.messageParser(queueMessages.poll());
+                    //System.out.println("Server riceve da client");
+                    sendMessage(response);
 
-                    }
+
                 }
         });
     }
@@ -95,8 +90,47 @@ public class ClientTCPHandler implements Runnable {
 
         switch (inputMessage.getMessageType()) {
             case CREATE_GAME -> outputMessage = this.parse((CreateGameMessage) inputMessage);
+            case JOIN_GAME -> outputMessage = this.parse((JoinGameMessage) inputMessage);
         }
         return outputMessage;
+    }
+
+    private Message parse(JoinGameMessage joinGameMessage){
+        boolean result;
+        String description = "";
+        try {
+            if(!joinGameMessage.getHasJoined()) {
+                gameController.addPlayer(joinGameMessage.getNickname());
+                result = true;
+            }
+            else
+            {
+                result = false;
+                description = "Already joined";
+            }
+        }
+        catch (NicknameAlreadyUsedException e)
+        {
+            result = false;
+            description = "Nickname already used";
+        }
+        catch (FullLobbyException e)
+        {
+            result = false;
+            description = "Lobby is full";
+
+        }
+        catch (IllegalArgumentException e)
+        {
+            result = false;
+            description = "Nickname not allowed";
+        }
+        catch(InvalidStateException e )
+        {
+            result = false;
+            description = "Game not existing";
+        }
+        return new ConfirmJoinGameMessage(result, description);
     }
 
     private Message parse(CreateGameMessage createGameMessage){
@@ -125,8 +159,10 @@ public class ClientTCPHandler implements Runnable {
                 outputStream.writeObject(message);
                 outputStream.flush();
                 outputStream.reset();
+                System.out.println("Server invia a client");
             } catch (IOException e) {
                 try {
+                    System.out.println("IOException");
                     socket.close();
                 } catch (IOException ignored) {}
             }

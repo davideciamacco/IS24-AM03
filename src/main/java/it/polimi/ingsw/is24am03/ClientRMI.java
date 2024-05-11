@@ -1,5 +1,8 @@
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.server.model.exceptions.FullLobbyException;
+import it.polimi.ingsw.is24am03.server.model.exceptions.InvalidStateException;
+import it.polimi.ingsw.is24am03.server.model.exceptions.NicknameAlreadyUsedException;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 
 import java.rmi.NotBoundException;
@@ -47,6 +50,7 @@ public class ClientRMI implements Client{
         try {
             this.gameController.createGame(nPlayers, nickname);
             System.out.println("Game created successfully");
+            hasJoined=true;
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
         } catch (RuntimeException e) {
@@ -54,8 +58,36 @@ public class ClientRMI implements Client{
         } catch (RemoteException e){
 
         }
-
-
+        System.out.flush();
     }
 
+    public void JoinGame(String nickname){
+        try{
+            this.gameController.addPlayer(nickname);
+            System.out.println("Joined successfully");
+            hasJoined=true;
+        }
+        catch(IllegalArgumentException e)
+        {
+            System.out.println("Nickname not allowed");
+        }
+        catch(FullLobbyException e)
+        {
+            System.out.println("Lobby is full");
+        }
+        catch(NicknameAlreadyUsedException e)
+        {
+            System.out.println("Nickname already used");
+        }
+        catch(InvalidStateException e )
+        {
+            System.out.println("Game not existing");
+        }
+        catch (RemoteException e)
+        {
+
+        }
+        System.out.flush();
+
+    }
 }
