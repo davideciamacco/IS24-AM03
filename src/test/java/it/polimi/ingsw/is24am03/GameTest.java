@@ -131,6 +131,12 @@ class GameTest {
         assertEquals(State.STARTING, game1.getGameState());
 
         game1.nextTurn();
+        assertEquals(State.COLOR, game1.getGameState());
+
+        game1.nextTurn();
+        assertEquals(State.COLOR, game1.getGameState());
+
+        game1.nextTurn();
         assertEquals(State.OBJECTIVE, game1.getGameState());
 
         game1.nextTurn();
@@ -288,6 +294,17 @@ class GameTest {
         game.selectStartingFace(currentPlayer.getNickname(), true);
         assertDoesNotThrow(()->game.placeCard(currentPlayer.getNickname(), 1, 41, 41, true));
     }*/
+
+    void setColor()
+    {
+        Game game = new Game(2, "Player1");
+        game.addPlayer("Player2");
+
+        Player currentPlayer = game.getPlayers().get(game.getCurrentPlayer());
+        game.setColor(Color.RED);
+        assertEquals(Color.RED, currentPlayer.getPawncolor());
+        assertEquals(3, game.getAvailableColors().size());
+    }
 
     @Test
     void selectStartingFace() {
