@@ -84,6 +84,11 @@ public class Player {
     public void setPawncolor(Color color){
         this.pawncolor=color;
     }
+
+    public Color getPawncolor() {
+        return pawncolor;
+    }
+
     /**
      * Adds a card to the player's hand.
      *
