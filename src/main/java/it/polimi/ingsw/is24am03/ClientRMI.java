@@ -16,13 +16,14 @@ public class ClientRMI implements Client{
     //private Game gameModel;
     private final String ip;
     private final int port;
-
+    private boolean hasJoined;
     private boolean connectionClosed;
     private String nickname;
 
     public ClientRMI(String hostName, int portNumber, CliView view) {
         boolean connected = false;
         this.connectionClosed = false;
+        this.hasJoined=false;
         RemoteGameController temp = null;
         this.ip = hostName;
         this.port = portNumber;
@@ -80,7 +81,7 @@ public class ClientRMI implements Client{
         {
             System.out.println("Nickname already used");
         }
-        catch(InvalidStateException e )
+        catch(GameNotExistingException e )
         {
             System.out.println("Game not existing");
         }
@@ -107,6 +108,105 @@ public class ClientRMI implements Client{
             System.out.println("Color not available");
         } catch (RemoteException e)
         {
+
+        } catch (GameNotExistingException e) {
+            System.out.println("Game not existing");
+        }
+        System.out.flush();
+    }
+    public void ChooseStartingCardSide(String face)
+    {
+        try {
+            this.gameController.selectStartingFace(nickname,face);
+            System.out.println("Starting card side chosen successfully");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid arguments");
+        } catch (PlayerNotInTurnException e) {
+            System.out.println("Not your turn");
+        } catch (InvalidStateException e){
+            System.out.println("Action not allowed in this state");
+        } catch (GameNotExistingException e) {
+            System.out.println("GameNotExists exception");
+        } catch (RemoteException e)
+        {
+
+        }
+        System.out.flush();
+    }
+    public void PlaceCard(int choice,int i,int j,String face){
+        try {
+            this.gameController.placeCard(nickname,choice,i,j,face);
+            System.out.println("Card placed successfully");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid arguments");
+        } catch (PlayerNotInTurnException e) {
+            System.out.println("Not your turn");
+        } catch (InvalidStateException e){
+            System.out.println("Action not allowed in this state");
+        } catch (GameNotExistingException e) {
+            System.out.println("GameNotExists exception");
+        } catch (RemoteException e)
+        {
+
+        }
+        System.out.flush();
+    }
+    public void DrawGold(){
+        try {
+            this.gameController.drawGold(nickname);
+            System.out.println("Gold card drawn successfully");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid arguments");
+        } catch (PlayerNotInTurnException e) {
+            System.out.println("Not your turn");
+        } catch (InvalidStateException e){
+            System.out.println("Action not allowed in this state");
+        } catch (GameNotExistingException e) {
+            System.out.println("GameNotExists exception");
+        }  catch (EmptyDeckException e) {
+            System.out.println("Empty deck exception");
+        }catch (RemoteException e){
+
+        }
+        System.out.flush();
+    }
+    public void DrawResource(){
+        try {
+            this.gameController.drawResources(nickname);
+            System.out.println("Resource card drawn successfully");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid arguments");
+        } catch (PlayerNotInTurnException e) {
+            System.out.println("Not your turn");
+        } catch (InvalidStateException e){
+            System.out.println("Action not allowed in this state");
+        } catch (GameNotExistingException e) {
+            System.out.println("GameNotExists exception");
+        }  catch (EmptyDeckException e) {
+            System.out.println("Empty deck exception");
+        }catch (RemoteException e){
+
+        }
+        System.out.flush();
+    }
+
+    public void DrawTable(int choice){
+        try {
+            this.gameController.drawTable(nickname,choice);
+            System.out.println("Card drawn successfully");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid arguments");
+        } catch (PlayerNotInTurnException e) {
+            System.out.println("Not your turn");
+        } catch (InvalidStateException e){
+            System.out.println("Action not allowed in this state");
+        } catch (GameNotExistingException e) {
+            System.out.println("GameNotExists exception");
+        }  catch (NullCardSelectedException e) {
+            System.out.println("NullCardSelectedException exception");
+        }catch (RemoteException e){
 
         }
         System.out.flush();

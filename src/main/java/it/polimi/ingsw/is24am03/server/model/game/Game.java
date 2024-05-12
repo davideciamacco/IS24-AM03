@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is24am03.server.model.game;
 
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
-import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
+import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.decks.GoldDeck;
 import it.polimi.ingsw.is24am03.server.model.decks.ObjectiveDeck;
 import it.polimi.ingsw.is24am03.server.model.decks.ResourceDeck;
@@ -65,7 +65,7 @@ public class Game{
     /**
      * List of the cards revealed on the table (max 4)
      */
-    private ArrayList<PlayableCard> tableCards;
+    private ArrayList<ResourceCard> tableCards;
 
     /**
      * List containing the common objective card for the game
@@ -102,7 +102,7 @@ public class Game{
         this.currentPlayer = -1;
         this.gameState = State.WAITING;
         this.numPlayers = nPlayers;
-        this.tableCards = new ArrayList<PlayableCard>();
+        this.tableCards = new ArrayList<ResourceCard>();
         this.resourceDeck = new ResourceDeck();
         this.goldDeck = new GoldDeck();
         this.startingDeck = new StartingDeck();
@@ -453,7 +453,7 @@ public class Game{
         return objectiveDeck;
     }
 
-    public ArrayList<PlayableCard> getTableCards() {
+    public ArrayList<ResourceCard> getTableCards() {
         return tableCards;
     }
 

@@ -8,7 +8,6 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class ClientSocket implements Client{
     private boolean hasJoined;
@@ -60,6 +59,31 @@ public class ClientSocket implements Client{
         this.sendMessage(colorMessage);
     }
 
+    public void ChooseStartingCardSide(String face){
+        ChooseStartingMessage startingMessage= new ChooseStartingMessage(nickname,face);
+        this.sendMessage(startingMessage);
+    }
+
+    public void PlaceCard(int choice, int i, int j, String face){
+        PlaceCardMessage placeCardMessage = new PlaceCardMessage(nickname, choice, i, j, face);
+        this.sendMessage(placeCardMessage);
+    }
+
+    public void DrawGold(){
+        DrawGoldMessage drawGoldMessage = new DrawGoldMessage(nickname);
+        this.sendMessage(drawGoldMessage);
+    }
+
+    public void DrawResource(){
+        DrawResourceMessage drawResourceMessage = new DrawResourceMessage(nickname);
+        this.sendMessage(drawResourceMessage);
+    }
+
+    public void DrawTable(int choice){
+        DrawTableMessage drawTableMessage = new DrawTableMessage(nickname, choice);
+        this.sendMessage(drawTableMessage);
+    }
+
     private void messagesReceiver()  {
         threadManager.execute( () -> {
             boolean active = true;
@@ -107,19 +131,30 @@ public class ClientSocket implements Client{
             case CONFIRM_CHOOSE_SIDE -> this.parse((ConfirmStartingCardMessage) responseMessage);
             case CONFIRM_CHOOSE_OBJECTIVE -> this.parse((ConfirmChooseObjectiveMessage) responseMessage);
             case CONFIRM_PLACE -> this.parse((ConfirmPlaceMessage) responseMessage);
+            case CONFIRM_DRAW -> this.parse((ConfirmDrawMessage) responseMessage);
             default -> {
             }
 
         }
     }
-    private void parse(ConfirmPlaceMessage message) {
-        if (message.getConfirmPlace()){
-            System.out.println("Game created successfully");
+
+    private void parse(ConfirmDrawMessage message) {
+        if (message.getconfirmdraw()){
+            System.out.println("Card drawn successfully");
         }
         else
             System.out.println(message.getDetails());
         System.out.flush();
     }
+    private void parse(ConfirmPlaceMessage message) {
+        if (message.getConfirmPlace()){
+            System.out.println("Card placed successfully");
+        }
+        else
+            System.out.println(message.getDetails());
+        System.out.flush();
+    }
+
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
             System.out.println("Game created successfully");
@@ -131,7 +166,7 @@ public class ClientSocket implements Client{
     }
     private void parse(ConfirmChooseObjectiveMessage message) {
         if (message.getConfirmChoose()){
-            System.out.println("ConfirmChooseObjective successfully");
+            System.out.println("Objective card  successfully");
         }
         else
             System.out.println(message.getDetails());
@@ -155,14 +190,16 @@ public class ClientSocket implements Client{
             System.out.println(message.getDetails());
         System.out.flush();
     }
+
     private void parse(ConfirmStartingCardMessage message) {
         if (message.getConfirmStarting()){
-            System.out.println("Color picked successfully");
+            System.out.println("startingCard choose successfully");
         }
         else
             System.out.println(message.getDetails());
         System.out.flush();
     }
+
     private void sendMessage(Message message) {
         synchronized (outputStream) {
             try {

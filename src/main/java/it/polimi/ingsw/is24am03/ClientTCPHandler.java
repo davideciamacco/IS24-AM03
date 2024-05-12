@@ -94,11 +94,63 @@ public class ClientTCPHandler implements Runnable {
             case JOIN_GAME -> outputMessage = this.parse((JoinGameMessage) inputMessage);
             case PICK_COLOR -> outputMessage = this.parse((PickColorMessage) inputMessage);
             case CHOOSE_STARTING_CARD_SIDE -> outputMessage = this.parse((ChooseStartingMessage) inputMessage);
-            case CHOOSE_OBJECTIVE -> outputMessage= this.parse((ChooseObjectiveMessage) inputMessage);
-            case PLACE_CARD -> outputMessage= this.parse((PlaceCardMessage) inputMessage);
+            case CHOOSE_OBJECTIVE -> outputMessage = this.parse((ChooseObjectiveMessage) inputMessage);
+            case PLACE_CARD -> outputMessage = this.parse((PlaceCardMessage) inputMessage);
+            case DRAW_GOLD -> outputMessage =this.parse((DrawGoldMessage) inputMessage);
+            case DRAW_RESOURCE -> outputMessage = this.parse((DrawResourceMessage) inputMessage);
+            case DRAW_TABLE -> outputMessage = this.parse((DrawTableMessage) inputMessage);
+      //      case REJOIN_GAME -> outputMessage=this.parse((RejoinGameMessage) inputMessage);
+
         }
         return outputMessage;
     }
+    private Message parse(DrawTableMessage DrawTableMessage){
+        boolean result;
+        String description = "";
+        try {
+            gameController.drawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
+            result = true;
+        }
+        catch (PlayerNotInTurnException e)
+        {
+            result=false;
+            description="Not your turn";
+        }
+        catch(InvalidStateException e )
+        {
+            result = false;
+            description = "Action not allowed in this state";
+        }
+        catch(GameNotExistingException e )
+        {
+            result = false;
+            description = "Game not existing";
+        }
+
+        return new ConfirmDrawMessage(result, description);
+    }
+/*
+    private Message parse(RejoinGameMessage RejoinGameMessage){
+        boolean result;
+        String description = "";
+        try {
+            gameController.rejoinPLayer();
+            result = true;
+        }
+        catch (PlayerNotInTurnException e)
+        {
+            result=false;
+            description="Not your turn";
+        }
+        catch(InvalidStateException e )
+        {
+            result = false;
+            description = "Game not existing";
+        }
+
+        return new ConfirmPlaceMessage(result, description);
+    }
+    */
     private Message parse(PlaceCardMessage placeCardMessage){
         boolean result;
         String description = "";
@@ -114,6 +166,11 @@ public class ClientTCPHandler implements Runnable {
         catch(InvalidStateException e )
         {
             result = false;
+            description = "Action not allowed in this state";
+        }
+        catch(GameNotExistingException e)
+        {
+            result=false;
             description = "Game not existing";
         }
 
@@ -135,6 +192,12 @@ public class ClientTCPHandler implements Runnable {
         {
             result=false;
             description="Not your turn";
+        }
+
+        catch(GameNotExistingException e)
+        {
+            result=false;
+            description = "Game not existing";
         }
         return new ConfirmChooseObjectiveMessage(result, description);
     }
@@ -189,9 +252,10 @@ public class ClientTCPHandler implements Runnable {
             result = false;
             description = "Nickname not allowed";
         }
-        catch(InvalidStateException e )
+
+        catch(GameNotExistingException e)
         {
-            result = false;
+            result=false;
             description = "Game not existing";
         }
         return new ConfirmJoinGameMessage(result, description);
@@ -219,15 +283,20 @@ public class ClientTCPHandler implements Runnable {
             result=false;
             description="Action not allowed in this state";
         }
+        catch(GameNotExistingException e)
+        {
+            result=false;
+            description = "Game not existing";
+        }
         return new ConfirmPickColorMessage(result, description);
     }
+
     private Message parse(ChooseStartingMessage chooseStartingMessage) {
         boolean result;
         String description = "";
         try {
             gameController.selectStartingFace(chooseStartingMessage.getPlayer(), chooseStartingMessage.getFace());
             result = true;
-
         }
         catch (PlayerNotInTurnException e)
         {
@@ -244,7 +313,60 @@ public class ClientTCPHandler implements Runnable {
             result=false;
             description="input not valid";
         }
+        catch(GameNotExistingException e)
+        {
+            result=false;
+            description = "Game not existing";
+        }
         return new ConfirmStartingCardMessage(result, description);
+    }
+    private Message parse(DrawResourceMessage DrawResourceMessage){
+        boolean result;
+        String description = "";
+        try {
+            gameController.drawGold(DrawResourceMessage.getNickname());
+            result = true;
+        }
+        catch(PlayerNotInTurnException e)
+        {
+            result=false;
+            description = "Not your turn";
+        }
+        catch(InvalidStateException e)
+        {
+            result=false;
+            description = "Action not allowed in this state";
+        }
+        catch(GameNotExistingException e)
+        {
+            result=false;
+            description = "Game not existing";
+        }
+        return new ConfirmDrawMessage(result, description);
+    }
+    private Message parse(DrawGoldMessage drawGoldMessage){
+        boolean result;
+        String description = "";
+        try {
+            gameController.drawGold(drawGoldMessage.getNickname());
+            result = true;
+        }
+        catch(PlayerNotInTurnException e)
+        {
+            result=false;
+            description = "Not your turn";
+        }
+        catch(InvalidStateException e)
+        {
+            result=false;
+            description = "Action not allowed in this state";
+        }
+        catch(GameNotExistingException e)
+        {
+            result=false;
+            description = "Game not existing";
+        }
+        return new ConfirmDrawMessage(result, description);
     }
 
     private void sendMessage(Message message){

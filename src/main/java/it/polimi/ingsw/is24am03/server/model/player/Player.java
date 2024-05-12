@@ -3,6 +3,7 @@ package it.polimi.ingsw.is24am03.server.model.player;
 
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
+import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 public class Player {
     private final String nickname;
     private Color pawncolor;
-    private final ArrayList<PlayableCard> hand;
+    private final ArrayList<ResourceCard> hand;
     private ObjectiveCard objective1;
     private  ObjectiveCard objective2;
     private StartingCard startingCard;
@@ -38,7 +39,7 @@ public class Player {
         this.winner = false;
         this.points = 0;
         this.numObj = 0;
-        this.playerBoard = null;
+        this.playerBoard = new PlayerBoard(this);
     }
     public boolean isWinner(){
         return this.winner;
@@ -94,7 +95,7 @@ public class Player {
      *
      * @param c The card to add to the hand.
      */
-    public void addCard(PlayableCard c) {
+    public void addCard(ResourceCard c) {
         hand.add(c);
     }
     /**
@@ -110,7 +111,7 @@ public class Player {
      *
      * @return The player's hand.
      */
-    public ArrayList<PlayableCard> getHand() {
+    public ArrayList<ResourceCard> getHand() {
         return hand;
     }
     /**
