@@ -2,6 +2,7 @@ package it.polimi.ingsw.is24am03.server.model.player;
 
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
+import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
 import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import it.polimi.ingsw.is24am03.server.model.enums.ObjectiveType;
@@ -77,7 +78,7 @@ public class PlayerBoard {
     /**
      * Decreases the count of each item when a card is placed over them.
      *
-     * @param i The x-coordinate of the card placement.
+     * @param i The x-coorupdatedinate of the card placement.
      * @param j The y-coordinate of the card placement.
      */
     private void updateItemCount(int i,int j){
@@ -87,6 +88,7 @@ public class PlayerBoard {
                     if(!board[i+1][j+1].getFrontCorner(0).isEmpty()){
                         CornerItem item = board[i+1][j+1].getFrontCorner(0).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
+           //             board[i + 1][j + 1].setCornerCoverage(0, true);
                     }
                 }
             }
@@ -97,6 +99,7 @@ public class PlayerBoard {
                     if(!board[i-1][j-1].getFrontCorner(2).isEmpty()){
                         CornerItem item = board[i-1][j-1].getFrontCorner(2).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
+         //               board[i - 1][j - 1].setCornerCoverage(2, true);
                     }
                 }
             }
@@ -107,6 +110,7 @@ public class PlayerBoard {
                     if(!board[i-1][j+1].getFrontCorner(3).isEmpty()){
                         CornerItem item = board[i-1][j+1].getFrontCorner(3).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
+          //              board[i - 1][j + 1].setCornerCoverage(3, true);
                     }
                 }
             }
@@ -117,6 +121,7 @@ public class PlayerBoard {
                     if(!board[i+1][j-1].getFrontCorner(1).isEmpty()){
                         CornerItem item = board[i+1][j-1].getFrontCorner(1).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
+          //              board[i + 1][j - 1].setCornerCoverage(1, true);
                     }
                 }
             }
@@ -376,7 +381,7 @@ public class PlayerBoard {
         increaseItemCount(c);
 
     }
-    public void placeCard(PlayableCard c, int i, int j, boolean face) {
+    public void placeCard(ResourceCard c, int i, int j, boolean face) {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
             throw new CoordinatesOutOfBoundsException();
 
@@ -450,8 +455,24 @@ public class PlayerBoard {
         board[i][j] = c;
         increaseItemCount(c);
         updateItemCount(i, j);
+        updateAdjacentCornerCoverage(i, j);
         giveCardPoints(c, i, j);
         player.removeCard(c);
+    }
+    private void updateAdjacentCornerCoverage(int i, int j) {
+
+        if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && board[i + 1][j + 1] != null) {
+            board[i + 1][j + 1].setCornerCoverage(0, true); // Imposta come coperto l'angolo 0 della carta adiacente in basso a destra
+        }
+        if (i + 1 < MAX_ROWS && j - 1 >= 0 && board[i + 1][j - 1] != null) {
+            board[i + 1][j - 1].setCornerCoverage(1, true); // Imposta come coperto l'angolo 1 della carta adiacente in basso a sinistra
+        }
+        if (i - 1 >= 0 && j + 1 < MAX_COLS && board[i - 1][j + 1] != null) {
+            board[i - 1][j + 1].setCornerCoverage(3, true); // Imposta come coperto l'angolo 3 della carta adiacente in alto a destra
+        }
+        if (i - 1 >= 0 && j - 1 >= 0 && board[i - 1][j - 1] != null) {
+            board[i - 1][j - 1].setCornerCoverage(2, true); // Imposta come coperto l'angolo 2 della carta adiacente in alto a sinistra
+        }
     }
     public Player getPlayer(){
         return player;

@@ -3,6 +3,7 @@ package it.polimi.ingsw.is24am03;
 
 import it.polimi.ingsw.is24am03.messages.*;
 import it.polimi.ingsw.is24am03.server.controller.GameController;
+import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -92,10 +93,51 @@ public class ClientTCPHandler implements Runnable {
             case CREATE_GAME -> outputMessage = this.parse((CreateGameMessage) inputMessage);
             case JOIN_GAME -> outputMessage = this.parse((JoinGameMessage) inputMessage);
             case PICK_COLOR -> outputMessage = this.parse((PickColorMessage) inputMessage);
+            case CHOOSE_STARTING_CARD_SIDE -> outputMessage = this.parse((ChooseStartingMessage) inputMessage);
+            case CHOOSE_OBJECTIVE -> outputMessage= this.parse((ChooseObjectiveMessage) inputMessage);
+            case PLACE_CARD -> outputMessage= this.parse((PlaceCardMessage) inputMessage);
         }
         return outputMessage;
     }
+    private Message parse(PlaceCardMessage placeCardMessage){
+        boolean result;
+        String description = "";
+        try {
+            gameController.placeCard(placeCardMessage.getPlayer(),placeCardMessage.getChoice(),placeCardMessage.getI(),placeCardMessage.getJ(),placeCardMessage.getFace());
+            result = true;
+        }
+        catch (PlayerNotInTurnException e)
+        {
+            result=false;
+            description="Not your turn";
+        }
+        catch(InvalidStateException e )
+        {
+            result = false;
+            description = "Game not existing";
+        }
 
+        return new ConfirmPlaceMessage(result, description);
+    }
+    private Message parse(ChooseObjectiveMessage ChooseObjectiveMessage){
+        boolean result;
+        String description = "";
+        try {
+            gameController.setObjectiveCard(ChooseObjectiveMessage.getPlayer(), ChooseObjectiveMessage.getChoose());
+            result = true;
+        }
+        catch(IllegalArgumentException e)
+        {
+            result=false;
+            description = "Invalid arguments";
+        }
+        catch (PlayerNotInTurnException e)
+        {
+            result=false;
+            description="Not your turn";
+        }
+        return new ConfirmChooseObjectiveMessage(result, description);
+    }
 
     private Message parse(CreateGameMessage createGameMessage){
         boolean result;
@@ -178,6 +220,31 @@ public class ClientTCPHandler implements Runnable {
             description="Action not allowed in this state";
         }
         return new ConfirmPickColorMessage(result, description);
+    }
+    private Message parse(ChooseStartingMessage chooseStartingMessage) {
+        boolean result;
+        String description = "";
+        try {
+            gameController.selectStartingFace(chooseStartingMessage.getPlayer(), chooseStartingMessage.getFace());
+            result = true;
+
+        }
+        catch (PlayerNotInTurnException e)
+        {
+            result=false;
+            description="Not your turn";
+        }
+        catch (InvalidStateException e)
+        {
+            result=false;
+            description="Action not allowed in this state";
+        }
+        catch (IllegalArgumentException e)
+        {
+            result=false;
+            description="input not valid";
+        }
+        return new ConfirmStartingCardMessage(result, description);
     }
 
     private void sendMessage(Message message){

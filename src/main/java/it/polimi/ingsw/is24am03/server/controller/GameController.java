@@ -42,14 +42,23 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void selectStartingFace(String player, boolean face) throws PlayerNotInTurnException, InvalidStateException {
+    public void selectStartingFace(String player, String face) throws PlayerNotInTurnException, InvalidStateException {
+        boolean faceBoolean;
         synchronized(gameLock) {
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
             if (!gameModel.getGameState().equals(State.STARTING))
                 throw new InvalidStateException("Action not allowed in this state");
-            gameModel.selectStartingFace(player, face);
+            if(face.equals("FRONT"))
+                faceBoolean=true;
+            else if (face.equals("BACK")) {
+                faceBoolean=false;
+            }
+            else{
+                throw new IllegalArgumentException();
+            }
+            gameModel.selectStartingFace(player, faceBoolean);
         }
     }
 

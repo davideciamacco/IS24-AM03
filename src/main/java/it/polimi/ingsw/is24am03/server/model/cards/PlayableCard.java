@@ -72,7 +72,15 @@ public abstract class PlayableCard extends Card {
         return backCorners;
 
     }
-
+    public void setCornerCoverage(int cornerIndex, boolean covered) {
+        if (face) {
+            Pair<Corner, Boolean> pair = frontCorners.get(cornerIndex);
+            frontCorners.set(cornerIndex, new Pair<>(pair.getKey(), covered));
+        } else {
+            Pair<Corner, Boolean> pair = backCorners.get(cornerIndex);
+            backCorners.set(cornerIndex, new Pair<>(pair.getKey(), covered));
+        }
+    }
     public ArrayList<Pair<Corner, Boolean>> getFront(){
         return frontCorners;
 

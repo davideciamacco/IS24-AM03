@@ -104,13 +104,22 @@ public class ClientSocket implements Client{
             case CONFIRM_GAME -> this.parse((ConfirmGameMessage) responseMessage);
             case CONFIRM_JOIN -> this.parse((ConfirmJoinGameMessage) responseMessage);
             case CONFIRM_PICK -> this.parse((ConfirmPickColorMessage) responseMessage);
+            case CONFIRM_CHOOSE_SIDE -> this.parse((ConfirmStartingCardMessage) responseMessage);
+            case CONFIRM_CHOOSE_OBJECTIVE -> this.parse((ConfirmChooseObjectiveMessage) responseMessage);
+            case CONFIRM_PLACE -> this.parse((ConfirmPlaceMessage) responseMessage);
             default -> {
             }
 
         }
     }
-
-
+    private void parse(ConfirmPlaceMessage message) {
+        if (message.getConfirmPlace()){
+            System.out.println("Game created successfully");
+        }
+        else
+            System.out.println(message.getDetails());
+        System.out.flush();
+    }
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
             System.out.println("Game created successfully");
@@ -120,7 +129,14 @@ public class ClientSocket implements Client{
             System.out.println(message.getDetails());
         System.out.flush();
     }
-
+    private void parse(ConfirmChooseObjectiveMessage message) {
+        if (message.getConfirmChoose()){
+            System.out.println("ConfirmChooseObjective successfully");
+        }
+        else
+            System.out.println(message.getDetails());
+        System.out.flush();
+    }
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             System.out.println("Joined successfully");
@@ -139,7 +155,14 @@ public class ClientSocket implements Client{
             System.out.println(message.getDetails());
         System.out.flush();
     }
-
+    private void parse(ConfirmStartingCardMessage message) {
+        if (message.getConfirmStarting()){
+            System.out.println("Color picked successfully");
+        }
+        else
+            System.out.println(message.getDetails());
+        System.out.flush();
+    }
     private void sendMessage(Message message) {
         synchronized (outputStream) {
             try {
