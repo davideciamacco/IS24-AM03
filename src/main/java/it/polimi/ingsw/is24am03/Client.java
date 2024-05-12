@@ -10,4 +10,6 @@ public interface Client {
     public void PlaceCard(int choice, int i, int j, String face);
     public void ChooseStartingCardSide(String face);
 
+    public void ChooseObjectiveCard(int choice);
+
 }

@@ -80,6 +80,14 @@ public class CliView {
                 }
             }
 
+            case "ChooseObjectiveCard" ->{
+                try{
+                    client.ChooseObjectiveCard(Integer.parseInt(inputArray[1]));
+                } catch (Exception ignored) {
+                    System.out.println("Missing arguments");
+                }
+            }
+
             case "PlaceCard" -> {
                 try {
                     client.PlaceCard(Integer.parseInt(inputArray[1]), Integer.parseInt(inputArray[2]), Integer.parseInt(inputArray[3]), inputArray[4]);

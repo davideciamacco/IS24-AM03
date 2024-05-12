@@ -203,12 +203,28 @@ public class ClientRMI implements Client{
         } catch (InvalidStateException e){
             System.out.println("Action not allowed in this state");
         } catch (GameNotExistingException e) {
-            System.out.println("GameNotExists exception");
+            System.out.println("Game not existing exception");
         }  catch (NullCardSelectedException e) {
             System.out.println("NullCardSelectedException exception");
         }catch (RemoteException e){
 
         }
         System.out.flush();
+    }
+
+    public void ChooseObjectiveCard(int choice){
+        try{
+            this.gameController.setObjectiveCard(nickname, choice);
+            System.out.println("Objective card selected successfully");
+        } catch (GameNotExistingException e) {
+            System.out.println("Game not existing");
+        } catch (PlayerNotInTurnException e) {
+            System.out.println("Not your turn");
+        }
+        catch(IllegalArgumentException e){
+            System.out.println("Invalid arguments");
+        } catch(RemoteException e) {
+
+        }
     }
 }

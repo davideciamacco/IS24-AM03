@@ -84,6 +84,11 @@ public class ClientSocket implements Client{
         this.sendMessage(drawTableMessage);
     }
 
+    public void ChooseObjectiveCard(int choice){
+        ChooseObjectiveMessage chooseObjectiveMessage = new ChooseObjectiveMessage(nickname, choice);
+        this.sendMessage(chooseObjectiveMessage);
+    }
+
     private void messagesReceiver()  {
         threadManager.execute( () -> {
             boolean active = true;
@@ -166,7 +171,7 @@ public class ClientSocket implements Client{
     }
     private void parse(ConfirmChooseObjectiveMessage message) {
         if (message.getConfirmChoose()){
-            System.out.println("Objective card  successfully");
+            System.out.println("Objective card selected successfully");
         }
         else
             System.out.println(message.getDetails());
@@ -193,7 +198,7 @@ public class ClientSocket implements Client{
 
     private void parse(ConfirmStartingCardMessage message) {
         if (message.getConfirmStarting()){
-            System.out.println("startingCard choose successfully");
+            System.out.println("Starting card side chosen successfully");
         }
         else
             System.out.println(message.getDetails());
