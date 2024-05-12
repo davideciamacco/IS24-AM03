@@ -31,23 +31,6 @@ public class CliView {
         else {
             client = new ClientRMI(ip, port, this);
         }
-        /*
-        ArrayList<CornerItem> list = new ArrayList<CornerItem>();
-        list.add(CornerItem.INSECT);
-        PlayableCard[][] test = new PlayableCard[81][81];
-        PlayableCard card_40 = new GoldCard(40,"R",1,new Corner("X"),new Corner("E"),new Corner("Q"),new Corner("E"),new Corner("E"),new Corner("E"),new Corner("E"),new Corner("E"),list,0,CornerItem.QUILL);
-        PlayableCard card_0 = new ResourceCard(0,"R",0,new Corner("F"), new Corner("E"), new Corner("F"), new Corner("F"),new Corner("E"),new Corner("E"),new Corner("E"),new Corner("E"));
-        StartingCard card_80= new StartingCard(80,0,new Corner("F"),new Corner("P"),new Corner("A"),new Corner("I"), new Corner("E"),new Corner("P"),new Corner("E"),new Corner("I"),list);
-        test[41][41]=card_80;
-        test[42][42]=card_0;
-        test[40][42]=card_0;
-        test[39][43]=card_0;
-        test[38][42]=card_0;
-        test[37][43]=card_0;
-        //test[37][41]=card_40;
-        //test[42][40]=card_0;
-        //test[37][43]=card_0;
-        drawBoard(test);*/
         inputReader.execute(() -> {
             String cliInput;
             synchronized (inputScan) {
@@ -463,6 +446,141 @@ public class CliView {
                 System.out.println("|       |      |   I   |");
                 System.out.println("└-IIIII-┘      O-------O");
             }
+        }
+    }
+
+    public void drawStarting(StartingCard startCard){
+            System.out.println("FRONT:         BACK:");
+            System.out.println("\n");
+            for (int i = 0; i < 3; i++) {
+                if (startCard.getId() == 80) {
+                    System.out.println("O-------P      F-------A");
+                    System.out.println("|   F   |      |       |");
+                    System.out.println("I---S---O      I---S---A");
+                    System.out.println("\n");
+                } else if (startCard.getId() == 81) {
+                    System.out.println("A-------O      P-------A");
+                    System.out.println("|   F   |      |       |");
+                    System.out.println("O---S---F      F---S---I");
+                    System.out.println("\n");
+                } else if (startCard.getId() == 82) {
+                    System.out.println("O-------O      I-------A");
+                    System.out.println("|  P F  |      |       |");
+                    System.out.println("O---S---O      F---S---P");
+                    System.out.println("\n");
+                } else if (startCard.getId() == 83) {
+                    System.out.println("O-------O      P-------I");
+                    System.out.println("|  A I  |      |       |");
+                    System.out.println("O---S---O      A---S---F");
+                    System.out.println("\n");
+                } else if (startCard.getId() == 84) {
+                    System.out.println("O-------O      I-------F");
+                    System.out.println("|  AIP  |      |       |");
+                    System.out.println("└---S---┘      P---S---A");
+                    System.out.println("\n");
+                } else {
+                    System.out.println("O-------O      F-------A");
+                    System.out.println("|  PAF  |      |       |");
+                    System.out.println("└---S---┘      P---S---I");
+                    System.out.println("\n");
+                }
+            }
+        }
+
+    public void drawObjective(ObjectiveCard obj){
+        if(obj.getId()==86){
+            System.out.println("2 points for each group of 3 cards of the fungi kingdom placed diagonally as follows:");
+            System.out.println("                ┌-------┐");
+            System.out.println("                |   F   |");
+            System.out.println("        ┌-------+-------┘");
+            System.out.println("        |   F   |");
+            System.out.println("┌-------+-------┘");
+            System.out.println("|   F   |");
+            System.out.println("└-------┘");
+        } else if(obj.getId()==87) {
+            System.out.println("2 points for each group of 3 cards of the plant kingdom placed diagonally as follows:");
+            System.out.println("┌-------┐");
+            System.out.println("|   P   |");
+            System.out.println("└-------+-------┐");
+            System.out.println("        |   P   |");
+            System.out.println("        └-------+-------┐");
+            System.out.println("                |   P   |");
+            System.out.println("                └-------┘");
+        } else if(obj.getId()==88) {
+            System.out.println("2 points for each group of 3 cards of the animal kingdom placed diagonally as follows:");
+            System.out.println("                ┌-------┐");
+            System.out.println("                |   A   |");
+            System.out.println("        ┌-------+-------┘");
+            System.out.println("        |   A   |");
+            System.out.println("┌-------+-------┘");
+            System.out.println("|   A   |");
+            System.out.println("└-------┘");
+        } else if(obj.getId()==89) {
+            System.out.println("2 points for each group of 3 cards of the insect kingdom placed diagonally as follows:");
+            System.out.println("┌-------┐");
+            System.out.println("|   I   |");
+            System.out.println("└-------+-------┐");
+            System.out.println("        |   I   |");
+            System.out.println("        └-------+-------┐");
+            System.out.println("                |   I   |");
+            System.out.println("                └-------┘");
+        } else if(obj.getId()==90) {
+            System.out.println("3 points for each group of cards placed as follows:");
+            System.out.println("┌-------┐");
+            System.out.println("|   F   |");
+            System.out.println("└-------┘");
+            System.out.println("┌-------┐");
+            System.out.println("|   F   |");
+            System.out.println("└-------+-------┐");
+            System.out.println("        |   P   |");
+            System.out.println("        └-------┘");;
+        } else if(obj.getId()==91) {
+            System.out.println("3 points for each group of cards placed as follows:");
+            System.out.println("        ┌-------┐");
+            System.out.println("        |   P   |");
+            System.out.println("        └-------┘");
+            System.out.println("        ┌-------┐");
+            System.out.println("        |   P   |");
+            System.out.println("┌-------+-------┘");
+            System.out.println("|   I   |");
+            System.out.println("└-------┘");;
+        } else if(obj.getId()==92) {
+            System.out.println("3 points for each group of cards placed as follows:");
+            System.out.println("        ┌-------┐");
+            System.out.println("        |   F   |");
+            System.out.println("┌-------+-------┘");
+            System.out.println("|   P   |");
+            System.out.println("└-------┘");
+            System.out.println("┌-------┐");
+            System.out.println("|   I   |");
+            System.out.println("└-------┘");;
+        } else if(obj.getId()==93) {
+            System.out.println("3 points for each group of cards placed as follows:");
+            System.out.println("");
+            System.out.println("┌-------┐");
+            System.out.println("|   A   |");
+            System.out.println("└-------+-------┐");
+            System.out.println("        |   I   |");
+            System.out.println("        └-------┘");
+            System.out.println("        ┌-------┐");
+            System.out.println("        |   I   |");
+            System.out.println("        └-------┘");;
+        } else if(obj.getId()==94) {
+            System.out.println("2 points for each set of 3 fungi-type resources.");
+        } else if(obj.getId()==95) {
+            System.out.println("2 points for each set of 3 plant-type resources.");
+        } else if(obj.getId()==96) {
+            System.out.println("2 points for each set of 3 animal-type resources.");
+        } else if(obj.getId()==97) {
+            System.out.println("2 points for each set of 3 insect-type resources.");
+        } else if(obj.getId()==98) {
+            System.out.println("3 points for each set of 3 different objects visible in the playing area.");
+        } else if(obj.getId()==99) {
+            System.out.println("2 points for each pair of manuscripts.");
+        } else if(obj.getId()==100) {
+            System.out.println("2 points for each pair of inkwells.");
+        } else if(obj.getId()==101) {
+            System.out.println("2 points for each pair of quills.");
         }
     }
 
