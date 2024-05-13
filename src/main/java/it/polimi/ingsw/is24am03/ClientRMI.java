@@ -139,7 +139,10 @@ public class ClientRMI implements Client{
             this.gameController.placeCard(nickname,choice,i,j,face);
             System.out.println("Card placed successfully");
 
-        } catch (IllegalArgumentException e) {
+        }
+        catch(PositionOccupiedException e){
+            System.out.println("Position is not empty");
+        }catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
             System.out.println("Not your turn");

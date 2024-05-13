@@ -227,7 +227,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 faceBoolean = false;
             else
                 throw new IllegalArgumentException();
-            gameModel.placeCard(player, choice, i, j, faceBoolean);
+            try {
+                gameModel.placeCard(player, choice, i, j, faceBoolean);
+            }
+            catch(Exception e) {
+                throw e;
+            }
         }
     }
 

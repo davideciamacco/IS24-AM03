@@ -120,6 +120,90 @@ public class CliView {
         }
     }
 
+    private void drawRequirements(ResourceCard card){
+        if (card.getId() == 40)
+            System.outcardFA--");
+        else if (card.getId() == 41) {
+            System.out.print("--FFP--");
+        } else if (card.getId() == 42) {
+            System.out.print("--FFI--");
+        } else if (card.getId() == 43) {
+            System.out.print("-FF-FA-");
+        } else if (card.getId() == 44) {
+            System.out.print("-FF-FP-");
+        } else if (card.getId() == 45) {
+            System.out.print("-FF-FI-");
+        } else if (card.getId() == 46) {
+            System.out.print("--FFF--");
+        } else if (card.getId() == 47) {
+            System.out.print("--FFF--");
+        } else if (card.getId() == 48) {
+            System.out.print("--FFF--");
+        } else if (card.getId() == 49) {
+            System.out.print("-FFFFF-");
+        } else if (card.getId() == 50) {
+            System.out.print("--PPI--");
+        } else if (card.getId() == 51) {
+            System.out.print("--PPF--");
+        } else if (card.getId() == 52) {
+            System.out.print("--PPA--");
+        } else if (card.getId() == 53) {
+            System.out.print("-PP-PI--)";
+        } else if (card.getId() == 54) {
+            System.out.print("-PP-PA-");
+        } else if (card.getId() == 55) {
+            System.out.print("-PP-PF--)";
+        } else if (card.getId() == 56) {
+            System.out.print("--PPP--");
+        } else if (card.getId() == 57) {
+            System.out.print("--PPP--");
+        } else if (card.getId() == 58) {
+            System.out.print("--PPP--");
+        } else if (card.getId() == 59) {
+            System.out.print("-PPPPP-");
+        } else if (card.getId() == 60) {
+            System.out.print("--AAI--");
+        } else if (card.getId() == 61) {
+            System.out.print("--AAP--");
+        } else if (card.getId() == 62) {
+            System.out.print("--AAF--");
+        } else if (card.getId() == 63) {
+            System.out.print("-AA-AI-");
+        } else if (card.getId() == 64) {
+            System.out.print("-AA-AF-");
+        } else if (card.getId() == 65) {
+            System.out.print("-AA-AP-");
+        } else if (card.getId() == 66) {
+            System.out.print("--AAA--");
+        } else if (card.getId() == 67) {
+            System.out.print("--AAA--");
+        } else if (card.getId() == 68) {
+            System.out.print("--AAA--");
+        } else if (card.getId() == 69) {
+            System.out.print("-AAAAA-");
+        } else if (card.getId() == 70) {
+            System.out.print("--IIP--");
+        } else if (card.getId() == 71) {
+            System.out.print("--IIA--");
+        } else if (card.getId() == 72) {
+            System.out.print("--IIF--");
+        } else if (card.getId() == 73) {
+            System.out.print("-II-IA-");
+        } else if (card.getId() == 74) {
+            System.out.print("-II-IP-");
+        } else if (card.getId() == 75) {
+            System.out.print("-II-IF-");
+        } else if (card.getId() == 76) {
+            System.out.print("--III--");
+        } else if (card.getId() == 77) {
+            System.out.print("--III--");
+        } else if (card.getId() == 78) {
+            System.out.print("--III--");
+        } else if (card.getId() == 79) {
+            System.out.print("-IIIII-");
+        }
+    }
+
     private void drawHand(ArrayList<ResourceCard> hand) {
         System.out.println("FRONT:         BACK:");
         System.out.println("\n");
@@ -489,6 +573,307 @@ public class CliView {
                 System.out.println("└-IIIII-┘      O-------O");
             }
         }
+    }
+
+    public void drawTable(HashMap<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4){
+        if(topResDeck==null)
+            System.out.print("  ┌-------┐  ");
+        else
+            System.out.print("  O-------O  ");
+        if(tableCard1==null)
+            System.out.print("  ┌-------┐  ");
+        else {
+            if(tableCard1.getFrontCorner(0).getItem().equals(CornerItem.FUNGI)){
+                System.out.print("┌--");
+            }
+            else if (tableCard1.getFrontCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                System.out.print("F--");
+            } else if (tableCard1.getFrontCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                System.out.print("A--");
+            } else if (tableCard1.getFrontCorner(0).getItem().equals(CornerItem.INSECT)) {
+                System.out.print("I--");
+            } else if (tableCard1.getFrontCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                System.out.print("M--");
+            } else if (tableCard1.getFrontCorner(0).getItem().equals(CornerItem.QUILL)) {
+                System.out.print("Q--");
+            } else if (tableCard1.getFrontCorner(0).getItem().equals(CornerItem.INKWELL)) {
+                System.out.print("B--");
+            } else {
+                System.out.print("O--");
+            }
+            if(tableCard1.getType()==1){
+                System.out.print("-----");
+            }
+            else{
+                if(tableCard1.getScoringType()==1){
+                    System.out.print("2-C--");
+                }
+                else if(tableCard1.getScoringType()==2){
+                    if(tableCard1.getPoints()==3)
+                        System.out.print("-3---");
+                    else
+                        System.out.print("-5---");
+                }
+                else{
+                    if(tableCard1.getObject().equals(CornerItem.QUILL))
+                        System.out.print("1-Q--");
+                    else if (tableCard1.getObject().equals(CornerItem.MANUSCRIPT)) {
+                        System.out.print("1-M--");
+                    }
+                    else{
+                        System.out.print("1-B--");
+                    }
+                }
+            }
+            if(tableCard1.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)){
+                System.out.print("┐  ");
+            }
+            else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                System.out.print("F  ");
+            } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                System.out.print("A  ");
+            } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.INSECT)) {
+                System.out.print("I  ");
+            } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                System.out.print("M  ");
+            } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.QUILL)) {
+                System.out.print("Q  ");
+            } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.INKWELL)) {
+                System.out.print("B  ");
+            } else {
+                System.out.print("O  ");
+            }
+
+        }
+        if(tableCard2==null)
+            System.out.print("┌-------┐  ");
+        else {
+            if(tableCard2.getFrontCorner(0).getItem().equals(CornerItem.FUNGI)){
+                System.out.print("┌--");
+            }
+            else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                System.out.print("F--");
+            } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                System.out.print("A--");
+            } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.INSECT)) {
+                System.out.print("I--");
+            } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                System.out.print("M--");
+            } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.QUILL)) {
+                System.out.print("Q--");
+            } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.INKWELL)) {
+                System.out.print("B--");
+            } else {
+                System.out.print("O--");
+            }
+            if(tableCard2.getType()==1){
+                System.out.print("-----");
+            }
+            else{
+                if(tableCard2.getScoringType()==1){
+                    System.out.print("2-C--");
+                }
+                else if(tableCard2.getScoringType()==2){
+                    if(tableCard2.getPoints()==3)
+                        System.out.print("-3---");
+                    else
+                        System.out.print("-5---");
+                }
+                else{
+                    if(tableCard2.getObject().equals(CornerItem.QUILL))
+                        System.out.print("1-Q--");
+                    else if (tableCard2.getObject().equals(CornerItem.MANUSCRIPT)) {
+                        System.out.print("1-M--");
+                    }
+                    else{
+                        System.out.print("1-B--");
+                    }
+                }
+            }
+            if(tableCard2.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)){
+                System.out.print("┐");
+            }
+            else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                System.out.print("F");
+            } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                System.out.print("A");
+            } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.INSECT)) {
+                System.out.print("I");
+            } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                System.out.print("M");
+            } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.QUILL)) {
+                System.out.print("Q");
+            } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.INKWELL)) {
+                System.out.print("B");
+            } else {
+                System.out.print("O");
+            }
+
+        }
+        System.out.print("\n");
+        if(topResDeck==null){
+            System.out.print("  | empty |  ");
+        }
+        else {
+            if (topResDeck.getKingdomsType().equals(CornerItem.FUNGI)) {
+                System.out.print("|   F   |  ");
+            } else if (topResDeck.getKingdomsType().equals(CornerItem.PLANT)) {
+                System.out.print("|   P   |  ");
+            } else if (topResDeck.getKingdomsType().equals(CornerItem.INSECT)) {
+                System.out.print("|   I   |  ");
+            } else {
+                System.out.print("|   A   |  ");
+            }
+        }
+        if(tableCard1==null){
+            System.out.print("| empty |  ");
+        }
+        else{
+            System.out.print("|       |  ");
+        }
+        if(tableCard2==null){
+            System.out.print("| empty |");
+        }
+        else{
+            System.out.print("|       |");
+        }
+
+        if(topResDeck==null)
+            System.out.print("  └-------┘  ");
+        else
+                System.out.print("  O-------O  ");
+        if(tableCard1==null)
+            System.out.print("  └-------┘  ");
+        else {
+        if(tableCard1.getFrontCorner(3).getItem().equals(CornerItem.FUNGI)){
+            System.out.print("└");
+        }
+        else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.FUNGI)) {
+            System.out.print("F");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.ANIMAL)) {
+            System.out.print("A");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.INSECT)) {
+            System.out.print("I");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.MANUSCRIPT)) {
+            System.out.print("M");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.QUILL)) {
+            System.out.print("Q");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.INKWELL)) {
+            System.out.print("B");
+        } else {
+            System.out.print("O");
+        }
+        if(tableCard1.getType()==1){
+            System.out.print("-------");
+        }
+        else{
+            drawRequirements(tableCard1);
+        }
+        if(tableCard1.getFrontCorner(2).getItem().equals(CornerItem.FUNGI)){
+            System.out.print("└");
+        }
+        else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.FUNGI)) {
+            System.out.print("F");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.ANIMAL)) {
+            System.out.print("A");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.INSECT)) {
+            System.out.print("I");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.MANUSCRIPT)) {
+            System.out.print("M");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.QUILL)) {
+            System.out.print("Q");
+        } else if (tableCard1.getFrontCorner(3).getItem().equals(CornerItem.INKWELL)) {
+            System.out.print("B");
+        } else {
+            System.out.print("O");
+        }
+        if(tableCard1.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)){
+            System.out.print("┐  ");
+        }
+        else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)) {
+            System.out.print("F  ");
+        } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+            System.out.print("A  ");
+        } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.INSECT)) {
+            System.out.print("I  ");
+        } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+            System.out.print("M  ");
+        } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.QUILL)) {
+            System.out.print("Q  ");
+        } else if (tableCard1.getFrontCorner(1).getItem().equals(CornerItem.INKWELL)) {
+            System.out.print("B  ");
+        } else {
+            System.out.print("O  ");
+        }
+
+    }
+        if(tableCard2==null)
+            System.out.print("┌-------┐  ");
+        else {
+        if(tableCard2.getFrontCorner(0).getItem().equals(CornerItem.FUNGI)){
+            System.out.print("┌--");
+        }
+        else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.FUNGI)) {
+            System.out.print("F--");
+        } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+            System.out.print("A--");
+        } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.INSECT)) {
+            System.out.print("I--");
+        } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+            System.out.print("M--");
+        } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.QUILL)) {
+            System.out.print("Q--");
+        } else if (tableCard2.getFrontCorner(0).getItem().equals(CornerItem.INKWELL)) {
+            System.out.print("B--");
+        } else {
+            System.out.print("O--");
+        }
+        if(tableCard2.getType()==1){
+            System.out.print("-----");
+        }
+        else{
+            if(tableCard2.getScoringType()==1){
+                System.out.print("2-C--");
+            }
+            else if(tableCard2.getScoringType()==2){
+                if(tableCard2.getPoints()==3)
+                    System.out.print("-3---");
+                else
+                    System.out.print("-5---");
+            }
+            else{
+                if(tableCard2.getObject().equals(CornerItem.QUILL))
+                    System.out.print("1-Q--");
+                else if (tableCard2.getObject().equals(CornerItem.MANUSCRIPT)) {
+                    System.out.print("1-M--");
+                }
+                else{
+                    System.out.print("1-B--");
+                }
+            }
+        }
+        if(tableCard2.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)){
+            System.out.print("┐");
+        }
+        else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.FUNGI)) {
+            System.out.print("F");
+        } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+            System.out.print("A");
+        } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.INSECT)) {
+            System.out.print("I");
+        } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+            System.out.print("M");
+        } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.QUILL)) {
+            System.out.print("Q");
+        } else if (tableCard2.getFrontCorner(1).getItem().equals(CornerItem.INKWELL)) {
+            System.out.print("B");
+        } else {
+            System.out.print("O");
+        }
+
+    }
+
+
     }
 
     public void drawStarting(StartingCard startCard){
@@ -1177,14 +1562,14 @@ public class CliView {
                     }
                     if(flag1 && flag2)
                     {
-                        if (down < 10 && j < 10)
-                            System.out.print("  (" + down + "," + j + ")  ");
-                        else if (down < 10 && j > 9) {
-                            System.out.print(" (" + down + "," + j + ")  ");
-                        } else if (down > 9 && j < 10) {
-                            System.out.print(" (" + down + "," + j + ")  ");
+                        if (down+1 < 10 && j < 10)
+                            System.out.print("  (" + (down+1) + "," + j + ")  ");
+                        else if (down+1 < 10 && j > 9) {
+                            System.out.print(" (" + (down+1) + "," + j + ")  ");
+                        } else if (down+1 > 9 && j < 10) {
+                            System.out.print(" (" + (down + +1)+ "," + j + ")  ");
                         } else {
-                            System.out.print(" (" + down + "," + j + ") ");
+                            System.out.print(" (" + (down+1) + "," + j + ") ");
                         }
                     } else {
                         System.out.print("         ");

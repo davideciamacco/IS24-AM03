@@ -596,7 +596,12 @@ public class Game{
 
     public void placeCard(String player, int choice, int i, int j, boolean face) {
         Player p = players.get(currentPlayer);
-        p.getPlayerBoard().placeCard(p.getHand().get(choice), i, j, face);
+        try {
+            p.getPlayerBoard().placeCard(p.getHand().get(choice), i, j, face);
+        }
+        catch(Exception e){
+            throw e;
+        }
         //notifico tutti i sub della playerboard di p che player ha piazzato una carta
         p.getPlayerBoard().notifyChangePlayerBoard(player,p.getPlayerBoard().getBoard()[i][j],i,j);
         //notifico a tutti i sub del player che ha appena giocato l'update dei punti
