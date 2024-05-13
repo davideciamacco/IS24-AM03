@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is24am03.messages;
 
+//message sent from client to server
 public class PickColorMessage extends Message{
     private final String nickname;
     private final String color;

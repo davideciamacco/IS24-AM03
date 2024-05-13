@@ -227,4 +227,26 @@ public class ClientRMI implements Client{
 
         }
     }
+
+    //metodi per gestire invio messaggio chat
+    public void sendGroupText(String sender, String text){
+        try {
+            this.gameController.sendGroupText(this.nickname, text);
+            System.out.println("Group text sent successfully");
+        } catch (BadTextException | InvalidStateException e1) {
+            System.out.println(e1.getMessage());
+        } catch(RemoteException ignored){}
+
+
+    }
+    public void sendPrivateText(String sender, String receiver, String text){
+        try{
+            this.gameController.sendPrivateText(this.nickname, receiver,text);
+            System.out.println("Private text sent successfully");
+        } catch (BadTextException | InvalidStateException | PlayerAbsentException | ParametersException e) {
+            System.out.println(e.getMessage());
+        } catch(RemoteException ignored){}
+    }
 }
+
+

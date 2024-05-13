@@ -89,6 +89,18 @@ public class ClientSocket implements Client{
         this.sendMessage(chooseObjectiveMessage);
     }
 
+    @Override
+    public void sendGroupText(String sender, String text) {
+        GroupChatMessage groupChatMessage= new GroupChatMessage(sender, text);
+        this.sendMessage(groupChatMessage);
+    }
+
+    @Override
+    public void sendPrivateText(String sender, String receiver, String text) {
+        PrivateChatMessage privateChatMessage= new PrivateChatMessage(sender, receiver, text);
+        this.sendMessage(privateChatMessage);
+    }
+
     private void messagesReceiver()  {
         threadManager.execute( () -> {
             boolean active = true;
@@ -130,6 +142,8 @@ public class ClientSocket implements Client{
     //    if(responseMessage == null) return;
 
         switch (responseMessage.getMessageType()){
+
+            //MESSAGGI DI CONFERMA
             case CONFIRM_GAME -> this.parse((ConfirmGameMessage) responseMessage);
             case CONFIRM_JOIN -> this.parse((ConfirmJoinGameMessage) responseMessage);
             case CONFIRM_PICK -> this.parse((ConfirmPickColorMessage) responseMessage);
@@ -137,11 +151,61 @@ public class ClientSocket implements Client{
             case CONFIRM_CHOOSE_OBJECTIVE -> this.parse((ConfirmChooseObjectiveMessage) responseMessage);
             case CONFIRM_PLACE -> this.parse((ConfirmPlaceMessage) responseMessage);
             case CONFIRM_DRAW -> this.parse((ConfirmDrawMessage) responseMessage);
+
+            ///////
+
+            //MESSAGGI UPDATE DEL GIOCO (INTESO COME COMMON TABLE, STATI ETC)
+            //TUTTI I MESSAGGI DI UPDATE DI GAME SONO BROADCAST
+            case UPDATE_COMMON_TABLE -> this.parse((NotifyCommonTableMessage)responseMessage);
+            case COMMON_OBJECTIVE-> this.parse((CommonObjectiveMessage) responseMessage);
+            case NOTIFY_WINNERS-> this.parse((WinnersMessage) responseMessage);
+            case JOINED_PLAYER-> this.parse((JoinedPlayerMessage) responseMessage);
+            case REJOINED_PLAYER-> this.parse((RejoinedPlayerMessage) responseMessage);
+            case NOTIFY_CURRENT_PLAYER -> this.parse((CurrentPlayerMessage) responseMessage);
+            case TURN_ORDER-> this.parse((TurnOrderMessage) responseMessage);
+            case GAME_STATE-> this.parse((ChangeStateMessage) responseMessage);
+            case CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
+
+
+            ////////
+
+            //MESSAGGI DI UPDATE RIGUARDANTI UN GIOCATORE
+
+            //BROADCAST MESSAGE//
+            case UPDATE_POINTS-> this.parse((UpdatePointsMessage) responseMessage);
+
+
+            //PRIVATE MESSAGES//
+            case UPDATE_PERSONAL_CARDS-> this.parse((PersonalCardsMessage) responseMessage);
+            //message choice objective is sent after the player chose his secret objective
+            case CHOICE_OBJECTIVE-> this.parse((ChoiceObjectiveMessage) responseMessage);
+            //first-hand message contains first hand of the player + objective cards+ starting card
+            case FIRST_HAND-> this.parse((FirstHandMessage) responseMessage);
+            //MESSAGGIO DI UPDATE PER IL PLAYER CRASHATO RITORNATO IN GIOCO//
+            case UPDATE_CRASHED_PLAYER -> this.parse((UpdateCrashedPlayerMessage)responseMessage);
+
+            ////////
+
+            //PLAYER BOARD MESSAGE, E' UN MESSAGGIO BROADCAST//
+            case UPDATE_PLAYER_BOARD-> this.parse((PlayerBoardMessage) responseMessage);
+
+            ////////
+
+
+            //CHAT//
+            case GROUP_CHAT-> this.parse((GroupChatMessage) responseMessage);
+            case PRIVATE_CHAT-> this.parse((PrivateChatMessage) responseMessage);
+            case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
+
+            ////////
             default -> {
             }
 
         }
     }
+
+    //TUTTE LE NOTIFICHE DI UPDATE VERRANNO POI GESTITE CON METODI CHIAMATI SUL LOCAL MODEL /
+
 
     private void parse(ConfirmDrawMessage message) {
         if (message.getconfirmdraw()){
@@ -204,6 +268,8 @@ public class ClientSocket implements Client{
             System.out.println(message.getDetails());
         System.out.flush();
     }
+
+
 
     private void sendMessage(Message message) {
         synchronized (outputStream) {

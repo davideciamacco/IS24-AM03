@@ -7,7 +7,6 @@ package it.polimi.ingsw.is24am03.server.model.enums;
 public enum State {
     WAITING,
     STARTING,
-
     COLOR,
     OBJECTIVE,
     DRAWING,

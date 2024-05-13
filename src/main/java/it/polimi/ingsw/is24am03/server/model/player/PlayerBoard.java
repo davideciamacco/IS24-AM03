@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is24am03.server.model.player;
 
+import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import it.polimi.ingsw.is24am03.server.model.enums.ObjectiveType;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class PlayerBoard {
         for (CornerItem item : CornerItem.values()) {
             availableItems.put(item, 0);
         }
+        this.playerBoardSubs=new ArrayList<>();
     }
     //
     /**
@@ -484,4 +487,27 @@ public class PlayerBoard {
         return availableItems;
     }
 
+
+    //METODI PER LISTENERS//
+
+    public ArrayList<PlayerBoardSub> getPlayerBoardSubs() {
+        return playerBoardSubs;
+    }
+
+    private ArrayList<PlayerBoardSub> playerBoardSubs;
+   // private void addSub(PlayerBoardSub playerBoardSub){
+      //  this.playerBoardSubs.add(playerBoardSub);
+   // }
+
+    //metodo che notifica tutti i sub di una certa player board
+    public void notifyChangePlayerBoard(String player, PlayableCard p, int i ,int j) {
+        for (PlayerBoardSub playerBoardSub : getPlayerBoardSubs()) {
+            try {
+                playerBoardSub.notifyChangePlayerBoard(player, p, i, j);
+            } catch (RemoteException ignored) {
+            }
+        }
+    }
+
 }
+

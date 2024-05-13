@@ -1,12 +1,14 @@
 package it.polimi.ingsw.is24am03.server.model.player;
 
 
+import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +26,9 @@ public class Player {
     private int objectivechoose;
     private int numObj;
     private  PlayerBoard playerBoard;
+
+    private ArrayList<PlayerSub> playerSubs;
+
     /**
      * Constructs a new player with the given parameters.
      *
@@ -40,6 +45,7 @@ public class Player {
         this.points = 0;
         this.numObj = 0;
         this.playerBoard = new PlayerBoard(this);
+        this.playerSubs=new ArrayList<>();
     }
     public boolean isWinner(){
         return this.winner;
@@ -171,5 +177,14 @@ public class Player {
     public StartingCard getStartingCard(){
         return startingCard;
     }
+    public int getObjectivechoose() {
+        return objectivechoose;
+    }
+
+    public ArrayList<PlayerSub> getPlayerSubs() {
+        return playerSubs;
+    }
+
+
 
 }

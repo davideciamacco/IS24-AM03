@@ -12,4 +12,8 @@ public interface Client {
 
     public void ChooseObjectiveCard(int choice);
 
+    public void sendGroupText(String sender, String text);
+
+    public void sendPrivateText(String sender, String Receiver, String text);
+
 }

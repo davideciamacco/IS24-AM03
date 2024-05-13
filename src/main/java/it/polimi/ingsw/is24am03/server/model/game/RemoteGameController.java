@@ -1,5 +1,9 @@
 package it.polimi.ingsw.is24am03.server.model.game;
 
+import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
+import it.polimi.ingsw.is24am03.Subscribers.GameSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -16,5 +20,22 @@ public interface RemoteGameController extends Remote{
     public void selectStartingFace(String player, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException;
 
     void pickColor(String nickname, String color) throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException, RemoteException, GameNotExistingException;
+
+    public void sendPrivateText(String nickname, String receiver, String text) throws PlayerAbsentException,BadTextException,InvalidStateException,ParametersException, RemoteException;
+
+    public void sendGroupText(String nickname, String text) throws BadTextException, InvalidStateException, RemoteException;
+
+    public void addToObserver(GameSub gameSub);
+    public void addToObserver(PlayerSub gameSub);
+    public void addToObserver(PlayerBoardSub gameSub);
+    public void addToObserver(ChatSub gameSub);
+    public void removeSub(GameSub gameSub);
+    public void removeSub(PlayerSub gameSub);
+    public void removeSub(PlayerBoardSub gameSub);
+    public void removeSub(ChatSub gameSub);
+
+
+
+
 }
 

@@ -59,6 +59,11 @@ public class Chat {
         }
     }
     //return messages sent to a player - broadcast messages
+
+    /**
+     * Method used to retrieve group chat messages; it is used to update the player's chat after crashing
+     *
+     */
     public ArrayList<Text> getGroupChat(String player){
         ArrayList<Text> groupChat= new ArrayList<>();
         for(Text t: getTexts()){
@@ -69,7 +74,10 @@ public class Chat {
         return groupChat;
     }
 
-    //return messages sent by a player from another player (only private messages)
+    /**
+     * Method used to retrieve private chat messages; it's used to update the player's private chats after crashing
+     *
+     */
     public ArrayList<Text> getPrivateChat(String receiver, String sender){
         ArrayList<Text> privateChat= new ArrayList<>();
         for(Text t: getTexts()){
@@ -78,7 +86,6 @@ public class Chat {
             }
         }
         return privateChat;
-
     }
 
     public ArrayList<Text> getTexts() {
