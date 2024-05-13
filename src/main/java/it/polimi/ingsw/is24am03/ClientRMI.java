@@ -147,10 +147,14 @@ public class ClientRMI implements Client{
             System.out.println("Action not allowed in this state");
         } catch (GameNotExistingException e) {
             System.out.println("GameNotExists exception");
-        } catch (RemoteException e)
-        {
-
+        } catch (CoordinatesOutOfBoundsException e) {
+            System.out.println("Coordinates out of bound");
+        } catch (NoCardsAvailableException e){
+            System.out.println("Card can't be placed in these coordinates");
+        } catch (RequirementsNotMetException e){
+            System.out.println("Gold card requirements not satisfied");
         }
+
         System.out.flush();
     }
     public void DrawGold(){

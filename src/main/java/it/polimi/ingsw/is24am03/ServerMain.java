@@ -71,14 +71,15 @@ public class ServerMain{
         String hostName;
         int portNumber = 0;
         int rmiPortNumber = 0;
-        RemoteGameController stub=null;
-        String rmiHostName;
+        //RemoteGameController stub=null;
+        //String rmiHostName;
         if (args.length == 3) {
             hostName = args[0];
             try{
                 portNumber = Integer.parseInt(args[1]);
                 rmiPortNumber = Integer.parseInt(args[2]);
             }catch(NumberFormatException e){
+                System.out.println("Invalid format for port number.");
                 System.exit(-1);
             }
             try {

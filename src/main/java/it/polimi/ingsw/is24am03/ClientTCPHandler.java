@@ -172,6 +172,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.placeCard(placeCardMessage.getPlayer(),placeCardMessage.getChoice(),placeCardMessage.getI(),placeCardMessage.getJ(),placeCardMessage.getFace());
             result = true;
         }
+        catch(CoordinatesOutOfBoundsException e){
+            result = false;
+            description = "Coordinates out of bounds";
+        }
         catch (PlayerNotInTurnException e)
         {
             result=false;

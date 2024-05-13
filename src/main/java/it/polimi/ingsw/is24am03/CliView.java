@@ -7,6 +7,7 @@ import it.polimi.ingsw.is24am03.server.model.cards.*;
 import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
 
+
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,8 +20,13 @@ public class CliView {
     private Map<String, String> commands;
 
     public static void main(String[] args) {
-        CliView view;
-        view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
+        try{
+            CliView view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
+        }
+        catch (NumberFormatException e){
+            System.out.println("Expected an integer in arguments 2 and 3.");
+            System.exit(-1);
+        }
     }
 
     public CliView(String ip, int port, String connectionType) {
@@ -40,7 +46,6 @@ public class CliView {
                     inputReader.execute(() -> this.handle(finalCliInput));
                 }
             }
-
         });
     }
 
