@@ -160,11 +160,11 @@ public class ClientSocket implements Client{
             case COMMON_OBJECTIVE-> this.parse((CommonObjectiveMessage) responseMessage);
             case NOTIFY_WINNERS-> this.parse((WinnersMessage) responseMessage);
             case JOINED_PLAYER-> this.parse((JoinedPlayerMessage) responseMessage);
-            case REJOINED_PLAYER-> this.parse((RejoinedPlayerMessage) responseMessage);
+            case NOTIFY_REJOINED_PLAYER-> this.parse((RejoinedPlayerMessage) responseMessage);
             case NOTIFY_CURRENT_PLAYER -> this.parse((CurrentPlayerMessage) responseMessage);
             case TURN_ORDER-> this.parse((TurnOrderMessage) responseMessage);
             case GAME_STATE-> this.parse((ChangeStateMessage) responseMessage);
-            case CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
+            case NOTIFY_CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
 
 
             ////////
