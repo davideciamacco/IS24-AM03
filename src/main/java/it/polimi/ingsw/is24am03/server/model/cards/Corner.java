@@ -3,7 +3,10 @@ package it.polimi.ingsw.is24am03.server.model.cards;
 
 import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 
-public class Corner {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Corner implements Serializable {
     private boolean isVisible;
     private boolean isEmpty;
     private CornerItem item;

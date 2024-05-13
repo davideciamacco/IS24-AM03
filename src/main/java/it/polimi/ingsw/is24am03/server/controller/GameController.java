@@ -40,6 +40,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         chatLock=new Object();
     }
 
+    public void canStart(){
+        if(gameModel.getPlayers().size()== gameModel.getNumPlayers()) {
+                gameModel.startGame();
+        }
+    }
 
     public void createGame(int numPlayers, String nickname) throws GameAlreadyCreatedException {
         synchronized (gameLock) {

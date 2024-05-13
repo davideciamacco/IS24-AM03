@@ -241,23 +241,16 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     private Message parse(JoinGameMessage joinGameMessage){
         boolean result;
         String description = "";
+        System.out.println("prova");
         try {
             if(!joinGameMessage.getHasJoined()) {
                 //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
-
-                if(gameController.getGameModel()==null){
-                    result=false;
-                    description = "Game not existing";
-                    return new ConfirmChatMessage(result,description);
-
-                }
-                else {
                     //posso iscrivere il sub al gioco
                     this.nickname = joinGameMessage.getNickname();
-                    this.subscribeToObservers();
                     gameController.addPlayer(joinGameMessage.getNickname());
+                    this.subscribeToObservers();
+                    gameController.canStart();
                     result = true;
-                }
             }
             else
             {
@@ -268,20 +261,20 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         catch (NicknameAlreadyUsedException e)
         {
             result = false;
-            this.removeFromObservers();
+            //this.removeFromObservers();
             description = "Nickname already used";
         }
         catch (FullLobbyException e)
         {
             result = false;
-            this.removeFromObservers();
+            //this.removeFromObservers();
             description = "Lobby is full";
 
         }
         catch (IllegalArgumentException e)
         {
             result = false;
-            this.removeFromObservers();
+            //this.removeFromObservers();
             description = "Nickname not allowed";
         }
 
@@ -410,7 +403,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 System.out.println("Server invia a client");
             } catch (IOException e) {
                 try {
-                    System.out.println("IOException");
+                    e.printStackTrace();
                     socket.close();
                 } catch (IOException ignored) {}
             }

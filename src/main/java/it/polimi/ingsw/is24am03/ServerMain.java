@@ -85,7 +85,9 @@ public class ServerMain{
                 ServerMain echoServer = new ServerMain(hostName, portNumber, rmiPortNumber);
                 echoServer.startServer();
             }
-            catch(RemoteException e){}
+            catch(RemoteException e){
+                e.printStackTrace();
+            }
         }
         else {
             System.exit(0);

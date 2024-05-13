@@ -156,6 +156,7 @@ public class ClientSocket implements Client{
 
             //MESSAGGI UPDATE DEL GIOCO (INTESO COME COMMON TABLE, STATI ETC)
             //TUTTI I MESSAGGI DI UPDATE DI GAME SONO BROADCAST
+            /*
             case UPDATE_COMMON_TABLE -> this.parse((NotifyCommonTableMessage)responseMessage);
             case COMMON_OBJECTIVE-> this.parse((CommonObjectiveMessage) responseMessage);
             case NOTIFY_WINNERS-> this.parse((WinnersMessage) responseMessage);
@@ -165,13 +166,14 @@ public class ClientSocket implements Client{
             case TURN_ORDER-> this.parse((TurnOrderMessage) responseMessage);
             case GAME_STATE-> this.parse((ChangeStateMessage) responseMessage);
             case NOTIFY_CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
-
+*/
 
             ////////
 
             //MESSAGGI DI UPDATE RIGUARDANTI UN GIOCATORE
 
             //BROADCAST MESSAGE//
+            /*
             case UPDATE_POINTS-> this.parse((UpdatePointsMessage) responseMessage);
 
 
@@ -200,7 +202,7 @@ public class ClientSocket implements Client{
             ////////
             default -> {
             }
-
+*/
         }
     }
 

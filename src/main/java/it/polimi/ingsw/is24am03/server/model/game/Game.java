@@ -130,12 +130,11 @@ public class Game{
      * This method is used to start the game, it chooses randomly a starting player, distributes the cards to the players,
      * initializes the common objective cards, shuffles the decks and reveals the first four cards on the table
      */
-    public void startGame() throws NotAllPlayersHaveJoinedException {
-        if(players.size()!=numPlayers)
-            throw new NotAllPlayersHaveJoinedException();
+    public void startGame(){
         setOrder();
         //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
         //l'ultimo player entrato è già iscritto al gioco
+        /*
         for(GameSub gameSub: gameSubs){
             try{
                 gameSub.NotifyNumbersOfPlayersReached();
@@ -152,14 +151,15 @@ public class Game{
             } catch (RemoteException ignored) {
             }
         }
-        this.gameState = State.STARTING;
+
         //NOTIFY CHANGE STATE
         for (GameSub gameSub : gameSubs) {
             try {
                 gameSub.notifyChangeState(gameState);
             } catch (RemoteException ignored) {
             }
-        }
+        }*/
+        this.gameState = State.STARTING;
         startingDeck.shuffle();
         objectiveDeck.shuffle();
         goldDeck.shuffle();
@@ -169,6 +169,7 @@ public class Game{
         //NOFITY COMMON CARDS//
 
         //WE NOTIFY FIRST ON THE FIRST CARD IN RESOURCE DECK AND IN GOLD DECK
+        /*
         for(GameSub gameSub: gameSubs){
             try {
                 gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
@@ -202,7 +203,7 @@ public class Game{
             }catch(RemoteException ignored){}
 
 
-        }
+        }*/
         //DONE
 
         distributeCards();
@@ -272,9 +273,12 @@ public class Game{
             p.setObjectiveCard(objectiveDeck.drawCard(),objectiveDeck.drawCard());
             //NOTIFY FIRST HAND, comprende anche la starting card e le due objetive cards//
             //trovo il sub corrispondente al player a cui devo notificare le proprie carte
+            /*
             try {
                 findSub(p).notifyFirstHand(p.getNickname(),p.getHand().get(0), p.getHand().get(1), p.getHand().get(2), p.getStartingCard(),p.getObjective1(),p.getObjective2());
             }catch (RemoteException ignored){}
+
+             */
         }
     }
 
@@ -336,13 +340,6 @@ public class Game{
                         gameSub.notifyJoinedPlayer(p1);}
                 } catch (RemoteException ignored) {
                 }
-            }
-        }
-        if (players.size() == numPlayers) {
-            try {
-                startGame();
-
-            } catch (NotAllPlayersHaveJoinedException e) {
             }
         }
     }
@@ -777,12 +774,13 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
+        /*
         for (GameSub gameSub : gameSubs) {
             try {
                 gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
             } catch (RemoteException ignored) {
             }
-        }
+        }*/
     }
 
     public ArrayList<Color> getAvailableColors(){

@@ -25,14 +25,6 @@ public interface RemoteGameController extends Remote{
 
     public void sendGroupText(String nickname, String text) throws BadTextException, InvalidStateException, RemoteException;
 
-    public void addToObserver(GameSub gameSub);
-    public void addToObserver(PlayerSub gameSub);
-    public void addToObserver(PlayerBoardSub gameSub);
-    public void addToObserver(ChatSub gameSub);
-    public void removeSub(GameSub gameSub);
-    public void removeSub(PlayerSub gameSub);
-    public void removeSub(PlayerBoardSub gameSub);
-    public void removeSub(ChatSub gameSub);
 
 
 
