@@ -1,11 +1,16 @@
 package it.polimi.ingsw.is24am03.server.controller;
 
+import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
+import it.polimi.ingsw.is24am03.Subscribers.GameSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.Game;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
+import org.controlsfx.control.spreadsheet.SpreadsheetCellEditor;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -18,6 +23,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * locks used for thread synchronization
      */
     private final Object gameLock;
+    private final Object chatLock;
 
     /**
      * Using the GameInterface type for gameModel allows flexibility.
@@ -31,6 +37,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      */
     public GameController() throws RemoteException {
         gameLock= new Object();
+        chatLock=new Object();
     }
 
 
@@ -260,5 +267,26 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     public Game getGameModel() {
         return gameModel;
+    }
+
+    //UPDATE OBSERVERS LOGIC//
+    public void addToObserver(GameSub gameSub){ synchronized (gameLock){gameModel.addSub(gameSub);}}
+    public void addToObserver(PlayerSub playerSub){  synchronized (gameLock){gameModel.addSub(playerSub);}}
+    public void addToObserver(ChatSub chatSub){ synchronized (gameLock){gameModel.addSub(chatSub);}}
+    public void addToObserver(PlayerBoardSub playerBoardSub) { synchronized (gameLock){gameModel.addSub(playerBoardSub);}}
+
+    public void removeSub(GameSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
+    public void removeSub(PlayerSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
+    public void removeSub(PlayerBoardSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
+    public void removeSub(ChatSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
+    public void sendGroupText(String sender, String text) throws BadTextException,InvalidStateException{
+        synchronized (chatLock){
+            gameModel.sendGroupMessage(sender, text);
+        }
+    }
+    public void sendPrivateText(String sender, String receiver, String text) throws PlayerAbsentException, BadTextException, InvalidStateException, ParametersException{
+        synchronized (chatLock){
+            gameModel.sendPrivateMessage(sender, receiver,text);
+        }
     }
 }

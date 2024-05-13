@@ -1,8 +1,18 @@
 
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
+import it.polimi.ingsw.is24am03.Subscribers.GameSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
 import it.polimi.ingsw.is24am03.messages.*;
 import it.polimi.ingsw.is24am03.server.controller.GameController;
+import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
+import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
+import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
+import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
+import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 
 import java.io.IOException;
@@ -10,16 +20,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 //import java.rmi.RemoteException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ClientTCPHandler implements Runnable {
+public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, PlayerBoardSub{
     private  Socket socket;
     private GameController gameController;
     private  ObjectInputStream inputStream;
     private  ObjectOutputStream outputStream;
 
+    private String nickname;
     private  Queue<Message> queueMessages;
 
     private  ExecutorService parseExecutors = Executors.newCachedThreadPool();
@@ -100,6 +112,8 @@ public class ClientTCPHandler implements Runnable {
             case DRAW_RESOURCE -> outputMessage = this.parse((DrawResourceMessage) inputMessage);
             case DRAW_TABLE -> outputMessage = this.parse((DrawTableMessage) inputMessage);
       //      case REJOIN_GAME -> outputMessage=this.parse((RejoinGameMessage) inputMessage);
+            case GROUP_CHAT -> outputMessage=this.parse((GroupChatMessage)inputMessage);
+            case PRIVATE_CHAT -> outputMessage=this.parse((PrivateChatMessage) inputMessage);
 
         }
         return outputMessage;
@@ -207,6 +221,8 @@ public class ClientTCPHandler implements Runnable {
         String description = "";
         try {
             gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname());
+            this.nickname=createGameMessage.getNickname();
+            this.subscribeToObservers();
             result = true;
         }
         catch(IllegalArgumentException e)
@@ -227,8 +243,21 @@ public class ClientTCPHandler implements Runnable {
         String description = "";
         try {
             if(!joinGameMessage.getHasJoined()) {
-                gameController.addPlayer(joinGameMessage.getNickname());
-                result = true;
+                //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
+
+                if(gameController.getGameModel()==null){
+                    result=false;
+                    description = "Game not existing";
+                    return new ConfirmChatMessage(result,description);
+
+                }
+                else {
+                    //posso iscrivere il sub al gioco
+                    this.nickname = joinGameMessage.getNickname();
+                    this.subscribeToObservers();
+                    gameController.addPlayer(joinGameMessage.getNickname());
+                    result = true;
+                }
             }
             else
             {
@@ -239,17 +268,20 @@ public class ClientTCPHandler implements Runnable {
         catch (NicknameAlreadyUsedException e)
         {
             result = false;
+            this.removeFromObservers();
             description = "Nickname already used";
         }
         catch (FullLobbyException e)
         {
             result = false;
+            this.removeFromObservers();
             description = "Lobby is full";
 
         }
         catch (IllegalArgumentException e)
         {
             result = false;
+            this.removeFromObservers();
             description = "Nickname not allowed";
         }
 
@@ -384,5 +416,169 @@ public class ClientTCPHandler implements Runnable {
             }
         }
     }
+
+    @Override
+    public void notifyJoinedPlayer(ArrayList<String> joinedPlayer) throws RemoteException {
+        JoinedPlayerMessage joinedPlayerMessage=new JoinedPlayerMessage(joinedPlayer);
+        this.sendMessage(joinedPlayerMessage);
+    }
+
+    @Override
+    public void notifyWinners(ArrayList<String> winners) throws RemoteException {
+        WinnersMessage winnersMessage=new WinnersMessage(winners);
+        this.sendMessage(winnersMessage);
+    }
+
+    @Override
+    public void notifyTurnOrder(ArrayList<String> order) throws RemoteException {
+        TurnOrderMessage turnOrderMessage=new TurnOrderMessage(order);
+        this.sendMessage(turnOrderMessage);
+    }
+
+    @Override
+    public void notifyCurrentPlayer(String current) throws RemoteException {
+        CurrentPlayerMessage currentPlayerMessage=new CurrentPlayerMessage(current);
+        this.sendMessage(currentPlayerMessage);
+    }
+
+    @Override
+    public void notifyCrashedPlayer(String username) throws RemoteException {
+        CrashedPlayerMessage crashedPlayerMessage=new CrashedPlayerMessage(username);
+        this.sendMessage(crashedPlayerMessage);
+    }
+
+    @Override
+    public void notifyChangeState(State gameState) throws RemoteException {
+        ChangeStateMessage changeStateMessage=new ChangeStateMessage(gameState);
+        this.sendMessage(changeStateMessage);
+    }
+
+    @Override
+    public void notifyRejoinedPlayer(String rejoinedPlayer) throws RemoteException {
+        RejoinedPlayerMessage rejoinedPlayerMessage=new RejoinedPlayerMessage(rejoinedPlayer);
+        this.sendMessage(rejoinedPlayerMessage);
+    }
+
+    @Override
+    public void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException {
+        PlayerBoardMessage playerBoardMessage=new PlayerBoardMessage(player,p,i,j);
+        this.sendMessage(playerBoardMessage);
+    }
+
+    @Override
+    public void ReceiveUpdateOnPoints(String player, int points) {
+        UpdatePointsMessage updatePointsMessage=new UpdatePointsMessage(player,points);
+        this.sendMessage(updatePointsMessage);
+    }
+
+    @Override
+    public void NotifyChangePersonalCards(String Player, ArrayList<ResourceCard> hand) throws RemoteException {
+        PersonalCardsMessage personalCardsMessage=new PersonalCardsMessage(Player,hand);
+        this.sendMessage(personalCardsMessage);
+    }
+
+    @Override
+    public void notifyChoiceObjective(String player, ObjectiveCard o) throws RemoteException {
+        ChoiceObjectiveMessage choiceObjectiveMessage=new ChoiceObjectiveMessage(player,o);
+        this.sendMessage(choiceObjectiveMessage);
+    }
+
+    @Override
+    public String getSub() throws RemoteException {
+        return this.nickname;
+    }
+
+    @Override
+    public void notifyFirstHand(String player, ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) throws RemoteException {
+        FirstHandMessage firstHandMessage=new FirstHandMessage(p1,p2,p3,startingCard, o1,o2);
+        this.sendMessage(firstHandMessage);
+    }
+
+    @Override
+    public void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) throws RemoteException {
+        CommonObjectiveMessage commonObjectiveMessage=new CommonObjectiveMessage(objectiveCard1,objectiveCard2);
+        this.sendMessage(commonObjectiveMessage);
+    }
+
+    @Override
+    public void updateCommonTable(ResourceCard resourceCard, int index) throws RemoteException {
+        NotifyCommonTableMessage notifyCommonTableMessage=new NotifyCommonTableMessage(resourceCard,index);
+        this.sendMessage(notifyCommonTableMessage);
+    }
+
+    @Override
+    public void NotifyNumbersOfPlayersReached() throws RemoteException {
+        NotifyNumPlayersReachedMessage notifyNumPlayersReachedMessage=new NotifyNumPlayersReachedMessage();
+        this.sendMessage(notifyNumPlayersReachedMessage);
+    }
+
+    @Override
+    public void NotifyLastRound() throws RemoteException {
+        LastRoundMessage lastRoundMessage=new LastRoundMessage();
+        this.sendMessage(lastRoundMessage);
+    }
+
+    @Override
+    public void notifyAvailableColors(ArrayList<Color> colors) throws RemoteException {
+        AvailableColorMessage availableColorMessage= new AvailableColorMessage(colors);
+        this.sendMessage(availableColorMessage);
+    }
+
+    @Override
+    public void notifyFinalColors(Map<String, Color> colors) throws RemoteException {
+        FinalColorsMessage finalColorsMessage=new FinalColorsMessage(colors);
+        this.sendMessage(finalColorsMessage);
+    }
+
+    @Override
+    public void ReceiveGroupText(String sender, String text) throws RemoteException {
+        GroupChatMessage groupChatMessage=new GroupChatMessage(sender, text);
+        this.sendMessage(groupChatMessage);
+
+    }
+
+    @Override
+    public void ReceivePrivateText(String sender, String receiver, String text) throws RemoteException {
+        PrivateChatMessage privateChatMessage=new PrivateChatMessage(sender, receiver,text);
+        this.sendMessage(privateChatMessage);
+    }
+
+    private void subscribeToObservers(){
+        gameController.addToObserver((GameSub) this);
+        gameController.addToObserver((ChatSub) this);
+        gameController.addToObserver((PlayerSub) this);
+        gameController.addToObserver((PlayerBoardSub) this);
+    }
+
+    private void removeFromObservers(){
+        gameController.removeSub((ChatSub)this);
+        gameController.removeSub((PlayerSub) this);
+        gameController.removeSub((PlayerBoardSub) this);
+        gameController.removeSub((GameSub) this);
+
+    }
+    private Message parse(GroupChatMessage groupChatMessage){
+        boolean result=true;
+        String description = "";
+        try {
+            gameController.sendGroupText(groupChatMessage.getSender(), groupChatMessage.getText());
+        } catch ( BadTextException | InvalidStateException e) {
+            result = false;
+            description = description + e.getMessage();
+        }
+        return new ConfirmChatMessage(result, description);
+    }
+    private Message parse(PrivateChatMessage privateChatMessage){
+        boolean result=true;
+        String description="";
+        try{
+            gameController.sendPrivateText(privateChatMessage.getSender(),privateChatMessage.getRecipient(),privateChatMessage.getText());
+        }catch (PlayerAbsentException | BadTextException | InvalidStateException | ParametersException e){
+            result=false;
+            description=description+e.getMessage();
+        }
+        return new ConfirmChatMessage(result,description);
+    }
+
 
 }

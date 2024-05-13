@@ -1,21 +1,22 @@
 package it.polimi.ingsw.is24am03.server.model.game;
 
+import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
+import it.polimi.ingsw.is24am03.Subscribers.GameSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
-import it.polimi.ingsw.is24am03.server.model.decks.GoldDeck;
-import it.polimi.ingsw.is24am03.server.model.decks.ObjectiveDeck;
-import it.polimi.ingsw.is24am03.server.model.decks.ResourceDeck;
-import it.polimi.ingsw.is24am03.server.model.decks.StartingDeck;
+import it.polimi.ingsw.is24am03.server.model.chat.Chat;
+import it.polimi.ingsw.is24am03.server.model.chat.Text;
+import it.polimi.ingsw.is24am03.server.model.decks.*;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
-import it.polimi.ingsw.is24am03.server.model.exceptions.EmptyDeckException;
-import it.polimi.ingsw.is24am03.server.model.exceptions.NotAllPlayersHaveJoinedException;
-import it.polimi.ingsw.is24am03.server.model.exceptions.NullCardSelectedException;
+import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.rmi.RemoteException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to handle the main logic of a Game
@@ -91,6 +92,16 @@ public class Game{
     private ArrayList<Color> availableColors;
 
     /**
+     * Reference to Chat
+     */
+    private Chat chat;
+
+    /**
+     * ArrayList which contains all GameSubs. Used to implement Observer Pattern
+     */
+    private ArrayList<GameSub> gameSubs;
+
+    /**
      * Constructor of the Game objects, it initializes all the attributes and add the host to the game
      * @param nPlayers is the total number of the players for the game
      * @param host is the Player that have created the game
@@ -110,6 +121,8 @@ public class Game{
         this.players = new ArrayList<Player>();
         this.commonObjective = new ArrayList<ObjectiveCard>();
         this.availableColors = new ArrayList<Color>(List.of(Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW));
+        this.chat=new Chat();
+        this.gameSubs=new ArrayList<>();
         addPlayer(host);
     }
 
@@ -121,13 +134,77 @@ public class Game{
         if(players.size()!=numPlayers)
             throw new NotAllPlayersHaveJoinedException();
         setOrder();
+        //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
+        //l'ultimo player entrato è già iscritto al gioco
+        for(GameSub gameSub: gameSubs){
+            try{
+                gameSub.NotifyNumbersOfPlayersReached();
+            }catch (RemoteException ignored){}
+        }
+        //notify turn order//
+        ArrayList<String> order = new ArrayList<>();
+        for (Player p : players) {
+            order.add(p.getNickname());
+        }
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.notifyTurnOrder(order);
+            } catch (RemoteException ignored) {
+            }
+        }
         this.gameState = State.STARTING;
+        //NOTIFY CHANGE STATE
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.notifyChangeState(gameState);
+            } catch (RemoteException ignored) {
+            }
+        }
         startingDeck.shuffle();
         objectiveDeck.shuffle();
         goldDeck.shuffle();
         resourceDeck.shuffle();
         setCommonObjective();
         initializeTable();
+        //NOFITY COMMON CARDS//
+
+        //WE NOTIFY FIRST ON THE FIRST CARD IN RESOURCE DECK AND IN GOLD DECK
+        for(GameSub gameSub: gameSubs){
+            try {
+                gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
+                gameSub.updateCommonTable(goldDeck.getCards().get(0),1);
+            }catch (RemoteException ignored){}
+        }
+        //notify on the four common cards
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.updateCommonTable(tableCards.get(0),2);
+            } catch (RemoteException ignored) {
+            }
+            try {
+                gameSub.updateCommonTable(tableCards.get(1),3);
+            } catch (RemoteException ignored) {
+            }
+            try {
+                gameSub.updateCommonTable(tableCards.get(2),4);
+            } catch (RemoteException ignored) {
+            }
+            try {
+                gameSub.updateCommonTable(tableCards.get(3),5);
+            } catch (RemoteException ignored) {}
+        }
+        //DONE
+
+        //NOTIFY ON COMMON OBJECTIVE
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.notifyCommonObjective(commonObjective.get(0), commonObjective.get(1));
+            }catch(RemoteException ignored){}
+
+
+        }
+        //DONE
+
         distributeCards();
         nextTurn();
     }
@@ -139,8 +216,26 @@ public class Game{
      */
     public void endGame() {
         gameState = State.ENDING;
+        //NOTIFY ON CHANGE STATE
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.notifyChangeState(gameState);
+            } catch (RemoteException ignored) {
+            }
+        }
+        //DONE
         giveObjectivePoints();
-        checkWinner();
+        //SALVO RISULTATO DI CHECK WINNER E LO NOTIFICO//
+        List<String> winners= checkWinner().stream().map(Player::getNickname).toList();
+        ArrayList<String> def= new ArrayList<>(winners);
+        //NOTIFY ON WINNERS//
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.notifyWinners(def);
+            } catch (RemoteException ignored) {
+            }
+        }
+        //DONE
     }
 
     public int getNumPlayers() {
@@ -175,8 +270,15 @@ public class Game{
             p.addCard(goldDeck.drawCard());
             p.setStartingCard(startingDeck.drawCard());
             p.setObjectiveCard(objectiveDeck.drawCard(),objectiveDeck.drawCard());
+            //NOTIFY FIRST HAND, comprende anche la starting card e le due objetive cards//
+            //trovo il sub corrispondente al player a cui devo notificare le proprie carte
+            try {
+                findSub(p).notifyFirstHand(p.getNickname(),p.getHand().get(0), p.getHand().get(1), p.getHand().get(2), p.getStartingCard(),p.getObjective1(),p.getObjective2());
+            }catch (RemoteException ignored){}
         }
     }
+
+
 
     /**
      * Method that set the first four cards revealed on the table
@@ -223,9 +325,23 @@ public class Game{
     public void addPlayer(String player) {
         Player playerToAdd = new Player(player);
         players.add(playerToAdd);
+        //se questo è il primo giocatore allora non devo notificare
+        if(players.size()>1){
+            //NOTIFY ON JOINED PLAYER, notifico a tutti tranne il player appena entrato
+            for (GameSub gameSub : gameSubs) {
+                try {
+                    if(!gameSub.getSub().equals(player)){
+                        List<String> p= players.stream().map(Player::getNickname).toList();
+                        ArrayList<String> p1=new ArrayList<>(p);
+                        gameSub.notifyJoinedPlayer(p1);}
+                } catch (RemoteException ignored) {
+                }
+            }
+        }
         if (players.size() == numPlayers) {
             try {
                 startGame();
+
             } catch (NotAllPlayersHaveJoinedException e) {
             }
         }
@@ -257,6 +373,32 @@ public class Game{
         if(resourceDeck.isEmpty())
             throw new EmptyDeckException("There aren't other cards in the selected deck");
         getPlayers().get(currentPlayer).addCard(resourceDeck.drawCard());
+        //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
+        try {
+            findSub(player).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+        }catch (RemoteException ignored){}
+
+        //SE IL DECK RISORSA è EMPTY NOTIFY ON EMPTY DECK
+        if(resourceDeck.isEmpty()){
+            for (GameSub gameSub : gameSubs) {
+                try {
+                    gameSub.updateCommonTable(null,0);
+                } catch (RemoteException ignored) {
+                }
+            }
+        }
+        //DONE
+        if(!resourceDeck.isEmpty()){
+            //DOPO PESCA HO NOTIFY_RESOURCE_DECK CHE MI AGGIORNA LA CARTA PRESENTE NEL MAZZO RESOURCE
+            for(GameSub gameSub: gameSubs){
+                try {
+                    gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
+                }catch (RemoteException ignored){}
+            }
+        }
+
+        //DONE
+
         if(resourceDeck.isEmpty() && goldDeck.isEmpty())
             ending=true;
         nextTurn();
@@ -270,6 +412,30 @@ public class Game{
         if(goldDeck.isEmpty())
             throw new EmptyDeckException("There aren't other cards in the selected deck");
         getPlayers().get(currentPlayer).addCard(goldDeck.drawCard());
+        //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
+        try {
+            findSub(player).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+        }catch (RemoteException ignored){}
+
+        //SE IL DECK GOLD è EMPTY NOTIFY ON EMPTY DECK
+        if(goldDeck.isEmpty()){
+            for(GameSub gameSub: gameSubs){
+                try {
+                    gameSub.updateCommonTable(null,1);
+                }catch (RemoteException ignored){}
+            }
+        }
+        //DONE
+
+        //SE DOPO PESCA GOLD DECK NON è VUOTO ALLORA AGGIORNO GOLD DECK
+        if(!goldDeck.isEmpty()){
+            for(GameSub gameSub: gameSubs){
+                try {
+                    gameSub.updateCommonTable(goldDeck.getCards().get(0),1);
+                }catch (RemoteException ignored){}
+            }
+        }
+        //DONE
         if(resourceDeck.isEmpty() && goldDeck.isEmpty())
             ending=true;
         nextTurn();
@@ -288,46 +454,139 @@ public class Game{
         switch (choice) {
             case 0:
                 p.addCard(tableCards.get(0));
-                if (!resourceDeck.isEmpty())
+                try {
+                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                } catch (RemoteException ignored) {
+                }
+                if (!resourceDeck.isEmpty()) {
                     tableCards.set(0, resourceDeck.drawCard());
-                else if (!goldDeck.isEmpty())
+                    handledrawTable(resourceDeck, tableCards.get(0), 2, 0);
+                }
+                else if (!goldDeck.isEmpty()) {
                     tableCards.set(0, goldDeck.drawCard());
-                else
+                    handledrawTable(goldDeck, tableCards.get(0), 2, 1);
+                }
+                else {
                     tableCards.set(0, null);
+                    for (GameSub gameSub : gameSubs) {
+                        try {
+                            gameSub.updateCommonTable(null, 2);
+                        } catch (RemoteException ignored) {
+                        }
+
+                    }
+                }
                 break;
 
             case 1:
                 p.addCard(tableCards.get(1));
-                if (!resourceDeck.isEmpty())
+                try {
+                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                } catch (RemoteException ignored) {
+                }
+                if (!resourceDeck.isEmpty()) {
                     tableCards.set(1, resourceDeck.drawCard());
-                else if (!goldDeck.isEmpty())
+                    handledrawTable(resourceDeck, tableCards.get(1), 3, 0);
+                }
+                else if (!goldDeck.isEmpty()) {
                     tableCards.set(1, goldDeck.drawCard());
-                else
+                    handledrawTable(goldDeck, tableCards.get(1), 3, 1);
+                }
+                else {
                     tableCards.set(1, null);
+                    for (GameSub gameSub : gameSubs) {
+                        try {
+                            gameSub.updateCommonTable(null, 3);
+                        } catch (RemoteException ignored) {
+                        }
+
+                    }
+                }
                 break;
 
             case 2:
                 p.addCard(tableCards.get(2));
-                if (!goldDeck.isEmpty())
+                try {
+                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                } catch (RemoteException ignored) {
+                }
+                if (!goldDeck.isEmpty()) {
                     tableCards.set(2, goldDeck.drawCard());
-                else if (!resourceDeck.isEmpty())
+                    handledrawTable(goldDeck, tableCards.get(2), 4, 1);
+                }
+                else if (!resourceDeck.isEmpty()) {
                     tableCards.set(2, resourceDeck.drawCard());
-                else
+                    handledrawTable(resourceDeck, tableCards.get(2), 4, 0);
+                }
+                else {
                     tableCards.set(2, null);
+                    for (GameSub gameSub : gameSubs) {
+                        try {
+                            gameSub.updateCommonTable(null, 4);
+                        } catch (RemoteException ignored) {
+                        }
+
+                    }
+                }
                 break;
 
             case 3:
                 p.addCard(tableCards.get(3));
-                if (!resourceDeck.isEmpty())
+                try {
+                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                } catch (RemoteException ignored) {
+                }
+                if (!resourceDeck.isEmpty()) {
                     tableCards.set(3, resourceDeck.drawCard());
-                else if (!goldDeck.isEmpty())
+                    handledrawTable(resourceDeck, tableCards.get(3), 5, 0);
+                }
+                else if (!goldDeck.isEmpty()) {
                     tableCards.set(3, goldDeck.drawCard());
-                else
+                    handledrawTable(goldDeck, tableCards.get(3), 5, 1);
+                }
+                else {
                     tableCards.set(3, null);
+                    for (GameSub gameSub : gameSubs) {
+                        try {
+                            gameSub.updateCommonTable(null, 5);
+                        } catch (RemoteException ignored) {
+                        }
+
+                    }
+                }
                 break;
         }
         nextTurn();
     }
+
+    public void handledrawTable(Deck d, ResourceCard resourceCard, int index, int deck) {
+        //notify common cards, notifico i sub di game che c'è una nuova carta in posizione index (0,1,2,3)
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.updateCommonTable(resourceCard,index);
+            } catch (RemoteException ignored) {
+            }
+        }
+
+        //check che il deck corrispondente sia vuoto o meno
+        if (d.isEmpty()) {
+            for (GameSub gameSub : gameSubs) {
+                try {
+                    gameSub.updateCommonTable(null,deck);
+                } catch (RemoteException ignored) {
+                }
+            }
+        } else {
+            for(GameSub gameSub: gameSubs){
+                try {
+                        gameSub.updateCommonTable(resourceDeck.getCards().getFirst(), deck);
+
+                }catch (RemoteException ignored){}
+            }
+        }
+
+    }
+
 
     /**
      * This method allows to place a card
@@ -341,15 +600,42 @@ public class Game{
     public void placeCard(String player, int choice, int i, int j, boolean face) {
         Player p = players.get(currentPlayer);
         p.getPlayerBoard().placeCard(p.getHand().get(choice), i, j, face);
+        //notifico tutti i sub della playerboard di p che player ha piazzato una carta
+        p.getPlayerBoard().notifyChangePlayerBoard(player,p.getPlayerBoard().getBoard()[i][j],i,j);
+        //notifico a tutti i sub del player che ha appena giocato l'update dei punti
+        for(PlayerSub playerSub: p.getPlayerSubs()){
+            try{
+                playerSub.ReceiveUpdateOnPoints(player,p.getPoints());
+            }catch (RemoteException ignored){}
+        }
         if(p.getPoints()>=20)
             ending=true;
-        if(!lastRound)
+        if(!lastRound) {
             this.gameState = State.DRAWING;
+            //notifico a tutti il cambiamento dello stato
+            for (GameSub gameSub : gameSubs) {
+                try {
+                    gameSub.notifyChangeState(gameState);
+                } catch (RemoteException ignored) {
+                }
+            }
+
+        }
         else{
-            if(currentPlayer==numPlayers-1)
+            if(currentPlayer==numPlayers-1) {
+                try {
+                    findSub(player).NotifyChangePersonalCards(player, p.getHand());
+                }catch (RemoteException ignored){}
+                //notifico a quello che ha pescato il cambiamento delle sue carte, ora sono solo due
                 endGame();
-            else
+            }
+            else {
+                try {
+                    findSub(player).NotifyChangePersonalCards(player, p.getHand());
+                }catch (RemoteException ignored){}
+
                 nextTurn();
+            }
         }
     }
 
@@ -370,32 +656,46 @@ public class Game{
         Collections.shuffle(players);
     }
 
-    public State getGameState()
-    {
-        return gameState;
-    }
+    public State getGameState() {return gameState;}
 
 
     public void selectStartingFace(String player, boolean face)
     {
         Player p = players.get(currentPlayer);
         p.getPlayerBoard().placeStartingCard(p.getStartingCard(), face);
+        //notifico tutti i sub della playerboard di p che ha piazzato una carta
+        p.getPlayerBoard().notifyChangePlayerBoard(player, p.getPlayerBoard().getBoard()[40][40], 40,40);
+
         nextTurn();
     }
 
     public void setObjectiveCard(String player, int choice) {
         Player p = players.get(currentPlayer);
         p.setObjectiveChoice(choice);
+        try{
+            findSub(player).notifyChoiceObjective(player, p.getObjectiveCard());
+        }catch (RemoteException ignored){}
+
         nextTurn();
     }
 
     public void setColor(Color color){
         Player p = players.get(currentPlayer);
         p.setPawncolor(color);
-        for(int i=0; i<availableColors.size(); i++)
-            if(availableColors.get(i).equals(color))
+        for(int i=0; i<availableColors.size(); i++) {
+            if (availableColors.get(i).equals(color))
                 availableColors.remove(i);
+        }
+        //NOTIFICO IL PROSSIMO PLAYER DEI COLORI RIMASTI
+
         nextTurn();
+        //se lo stato è cambiato significa che ho finito, se è ancora color mando al current player la notifica dei colori disponibili
+        if(gameState==State.COLOR){
+            try {
+                findSub(players.get(currentPlayer).getNickname()).notifyAvailableColors(availableColors);
+            }catch (RemoteException ignored){}
+
+        }
     }
 
     public ArrayList<Player> getPlayers() {
@@ -411,18 +711,78 @@ public class Game{
                 endGame();
             else if(gameState.equals(State.DRAWING))
                 roundNumber++;
-            else if(gameState.equals(State.STARTING))
+            else if(gameState.equals(State.STARTING)) {
                 gameState = State.COLOR;
-            else if(gameState.equals(State.COLOR))
+                //NOTIFICO A TUTTI CHE SIAMO NELLO STATO DI SCELTA DEL COLORE
+                for (GameSub gameSub : gameSubs) {
+                    try {
+                        gameSub.notifyChangeState(gameState);
+                    } catch (RemoteException ignored) {
+                    }
+                }
+                //notifico solo al primo client i colori disponibili, ovvero tutti i colori
+                try {
+                    findSub(players.getFirst()).notifyAvailableColors(availableColors);
+                }catch (RemoteException ignored){}
+            }
+            else if(gameState.equals(State.COLOR)) {
+                //qui notifico a tutti dei colori dei giocatori
+                //creo mappa stringa nome, colore
+                Map<String, Color> colors=new HashMap<>();
+                for(Player p: players){
+                    colors.put(p.getNickname(),p.getPawncolor());
+
+                }
+                for(GameSub gameSub: gameSubs){
+                    try{
+                        gameSub.notifyFinalColors(colors);
+                    }catch (RemoteException ignored){}
+                }
+
                 gameState = State.OBJECTIVE;
-            else if(gameState.equals(State.OBJECTIVE))
+                for (GameSub gameSub : gameSubs) {
+                    try {
+                        gameSub.notifyChangeState(gameState);
+                    } catch (RemoteException ignored) {
+                    }
+                }
+            }
+            else if(gameState.equals(State.OBJECTIVE)) {
                 gameState = State.PLAYING;
-            if(ending)
+                for (GameSub gameSub : gameSubs) {
+                    try {
+                        gameSub.notifyChangeState(gameState);
+                    } catch (RemoteException ignored) {
+                    }
+                }
+            }
+            if(ending) {
                 lastRound = true;
+                for (GameSub gameSub : gameSubs) {
+                    try {
+                        gameSub.NotifyLastRound();
+                    } catch (RemoteException ignored) {
+                    }
+                }
+            }
+
         }
-        if(gameState.equals(State.DRAWING))
+        if(gameState.equals(State.DRAWING)) {
             gameState = State.PLAYING;
+            for (GameSub gameSub : gameSubs) {
+                try {
+                    gameSub.notifyChangeState(gameState);
+                } catch (RemoteException ignored) {
+                }
+            }
+        }
         currentPlayer = (currentPlayer+1)%(numPlayers);
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
+            } catch (RemoteException ignored) {
+            }
+        }
     }
 
     public ArrayList<Color> getAvailableColors(){
@@ -473,8 +833,134 @@ public class Game{
         this.gameState = state;
     }
 
+    //UPDATES FOR OBSERVERS//
+    public void addSub(GameSub gameSub){
+        gameSubs.add(gameSub);
+    }
+    public void removeSub(GameSub gameSub){
+        gameSubs.remove(gameSub);
+    }
+    public void addSub(PlayerSub playerSub){
+        for(Player p: getPlayers()){
+            p.getPlayerSubs().add(playerSub);
+
+        }
+        PlayerSub first =findSub(players.getFirst());
+        for(int i=1; i<players.size(); i++) {
+            players.get(i).getPlayerSubs().add(first);
+        }
+    }
+    public void removeSub(PlayerSub playerSub){
+        for(Player p: getPlayers()){
+            p.getPlayerSubs().remove(playerSub);
+        }
+    }
+    public void addSub(ChatSub chatSub){
+        chat.getChatSubs().add(chatSub);
+    }
+    public void removeSub(ChatSub chatSub){
+        chat.getChatSubs().remove(chatSub);
+    }
+    public void addSub(PlayerBoardSub playerBoardSub){
+        for(Player p: getPlayers()){
+            p.getPlayerBoard().getPlayerBoardSubs().add(playerBoardSub);
+        }
+        //ho ottenuto il sub della playerboard del primo giocatore
+        PlayerBoardSub first = players.getFirst().getPlayerBoard().getPlayerBoardSubs().getFirst();
+        for(int i=1; i<players.size(); i++) {
+            players.get(i).getPlayerBoard().getPlayerBoardSubs().add(first);
+        }
+
+    }
+    public void removeSub(PlayerBoardSub playerBoardSub){
+        for(Player p: getPlayers()){
+            p.getPlayerBoard().getPlayerBoardSubs().remove(playerBoardSub);
+        }
+    }
+    public void sendPrivateMessage(String sender, String receiver, String message) throws PlayerAbsentException, BadTextException, InvalidStateException,ParametersException{
+        //controllo su stato del gioco
+        if(gameState==State.WAITING || gameState==State.ENDING){
+            throw new InvalidStateException("You cannot send a text during this state");
+        }
+        List<String> player= players.stream().map(Player::getNickname).toList();
+        player=new ArrayList<>(player);
+        if(!player.contains(receiver)){
+            throw new PlayerAbsentException("Receiver isn't part of the game");
+        }
+        //se il player è crashato non posso mandare messaggio
+        //
+        //controllo su sender==null receiver==null  oppure sono vuoti, bad text exception
+        if(sender.isEmpty() || receiver.isEmpty() || message.isEmpty()){
+            throw new BadTextException("receiver or text are empty,try again");
+        }
+        if(sender.equals(receiver)){
+            throw new ParametersException("You cannot send a message to yourself");
+        }
+
+        Text t=new Text(sender, receiver,message);
+        chat.NotifyChat(t);
+    }
+    //nel game faccio tutti i controlli sul messaggio
+    public void sendGroupMessage(String sender, String message) throws BadTextException, InvalidStateException{
+        if(gameState==State.WAITING || gameState==State.ENDING){
+            throw new InvalidStateException("You cannot send a text during this state");
+        }
+        if(sender.isEmpty() || message.isEmpty()){
+            throw  new BadTextException("Sender or text can't be empty");
+        }
+
+        Text t=new Text(sender, "", message);
+        chat.NotifyChat(t);
+    }
     /*
     public ObjectiveCard drawObjectiveOptions(){
         return objectiveDeck.drawCard();
     }*/
+
+    //METHODS USED TO HELP FINDING THE RIGHT OBSERVER//
+    //trovo sub corrispondente a un certo player
+    public PlayerSub findSub(Player p) {
+        PlayerSub player=null;
+        for (PlayerSub playerSub : p.getPlayerSubs()) {
+            try {
+                if (playerSub.getSub().equals(p.getNickname())) {
+                    player=playerSub;
+                }
+            } catch (RemoteException ignored) {
+            }
+        }
+        return player;
+    }
+   /* public Player findPlayer(String nickname){
+        Player x=null;
+        for(Player p: players){
+            if(p.getNickname().equals(nickname)){
+                x=p;
+            }
+        }
+        return x;
+    }
+    */
+
+
+    public PlayerSub findSub(String nickname){
+        //cerco nella lista dei giocatori il giocatore corrispondente
+        Player x=null;
+        for(Player p: players){
+            if(p.getNickname().equals(nickname)){
+                x=p;
+                break;
+            }
+        }
+        PlayerSub ps=null;
+        //una volta trovato il giocatore ritorno il sub corrispondente a esso
+        for(PlayerSub playerSub: x.getPlayerSubs()){
+            try{
+                if(playerSub.getSub().equals(x.getNickname())){
+                    ps=playerSub;
+                }
+            }catch (RemoteException ignored){}
+        }
+        return ps;
+    }
 }
