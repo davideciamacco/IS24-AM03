@@ -4,6 +4,7 @@ import it.polimi.ingsw.is24am03.client.ConnectionType;
 import java.io.IOException;
 //import java.rmi.RemoteException;
 import it.polimi.ingsw.is24am03.server.model.cards.*;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
 
@@ -866,6 +867,24 @@ public class CliView {
 
         }
 
+
+    public void drawAvailableColors(ArrayList<Color> colors)
+    {
+        System.out.println("Choose a color from the available ones:");
+        for(int i=0; i<colors.size(); i++){
+            if(colors.get(i).equals(Color.RED))
+                System.out.print("RED  ");
+            else if (colors.get(i).equals(Color.BLUE)) {
+                System.out.print("BLUE  ");
+            }
+            else if (colors.get(i).equals(Color.BLUE)) {
+                System.out.print("GREEN  ");
+            }
+            else {
+                System.out.print("YELLOW  ");
+            }
+        }
+    }
 
     public void drawStarting(StartingCard startCard){
             System.out.println("FRONT:         BACK:");
