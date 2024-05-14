@@ -173,6 +173,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.placeCard(placeCardMessage.getPlayer(),placeCardMessage.getChoice(),placeCardMessage.getI(),placeCardMessage.getJ(),placeCardMessage.getFace());
             result = true;
         }
+        catch(CoordinatesOutOfBoundsException e){
+            result = false;
+            description = "Coordinates out of bounds";
+        }
         catch (PlayerNotInTurnException e)
         {
             result=false;
@@ -188,7 +192,18 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
-
+        catch(PositionOccupiedException e){
+            result=false;
+            description= "Position is not empty";
+        }
+        catch(NoCardsAvailableException e){
+            result = false;
+            description = "Card can't be placed in these coordinates";
+        }
+        catch (RequirementsNotMetException e){
+            result = false;
+            description = "Gold card requirements not satisfied";
+        }
         return new ConfirmPlaceMessage(result, description);
     }
     private Message parse(ChooseObjectiveMessage ChooseObjectiveMessage){

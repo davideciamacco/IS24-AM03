@@ -3,6 +3,9 @@ package it.polimi.ingsw.is24am03;
 public class Launch
 {
 
+    /*public void print(){
+        System.out.println("\uD83C\uDF44\u200D\uD83D\uDFEB");
+    }*/
     public static void main( String[] args )
     {
         if (args.length == 4) {
@@ -15,7 +18,8 @@ public class Launch
                 CliView.main(newArgs);
             }
         }
-        else
-            ServerMain.main(args);
+        else{
+            System.out.println("\uD83C\uDF44\u200D\uD83D\uDFEB");
+            ServerMain.main(args);}
     }
 }

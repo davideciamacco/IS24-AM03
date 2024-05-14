@@ -387,7 +387,6 @@ public class PlayerBoard {
     public void placeCard(ResourceCard c, int i, int j, boolean face) {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
             throw new CoordinatesOutOfBoundsException();
-
         }
     /*    if(board[i][j] != null ||board[i+1][j]!=null || board[i-1][j]!=null || board[i][j+1]!=null || board[i][j-1]!=null){
             throw new PositionOccupiedException();
@@ -410,7 +409,7 @@ public class PlayerBoard {
             if(board[i][j+1]!=null)
                 throw new PositionOccupiedException();
         }
-        if(j-1<MAX_ROWS){
+        if(j-1>=0){
             if(board[i][j-1]!=null)
                 throw new PositionOccupiedException();
         }
@@ -449,8 +448,6 @@ public class PlayerBoard {
         if(check==0){
             throw new NoCardsAvailableException();
         }
-
-
         if(!checkRequirements(c.getRequirements()))
             throw new RequirementsNotMetException();
 

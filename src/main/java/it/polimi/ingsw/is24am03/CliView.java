@@ -4,8 +4,10 @@ import it.polimi.ingsw.is24am03.client.ConnectionType;
 import java.io.IOException;
 //import java.rmi.RemoteException;
 import it.polimi.ingsw.is24am03.server.model.cards.*;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
+
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -19,8 +21,13 @@ public class CliView {
     private Map<String, String> commands;
 
     public static void main(String[] args) {
-        CliView view;
-        view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
+        try{
+            CliView view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
+        }
+        catch (NumberFormatException e){
+            System.out.println("Expected an integer in arguments 2 and 3.");
+            System.exit(-1);
+        }
     }
 
     public CliView(String ip, int port, String connectionType) {
@@ -40,7 +47,6 @@ public class CliView {
                     inputReader.execute(() -> this.handle(finalCliInput));
                 }
             }
-
         });
     }
 
@@ -112,6 +118,154 @@ public class CliView {
             default -> {
                 System.out.println("Invalid Command");
             }
+        }
+    }
+
+    private void drawRequirements(ResourceCard card){
+        if (card.getId() == 40)
+            System.out.print("--FFA--");
+        else if (card.getId() == 41) {
+            System.out.print("--FFP--");
+        } else if (card.getId() == 42) {
+            System.out.print("--FFI--");
+        } else if (card.getId() == 43) {
+            System.out.print("-FF-FA-");
+        } else if (card.getId() == 44) {
+            System.out.print("-FF-FP-");
+        } else if (card.getId() == 45) {
+            System.out.print("-FF-FI-");
+        } else if (card.getId() == 46) {
+            System.out.print("--FFF--");
+        } else if (card.getId() == 47) {
+            System.out.print("--FFF--");
+        } else if (card.getId() == 48) {
+            System.out.print("--FFF--");
+        } else if (card.getId() == 49) {
+            System.out.print("-FFFFF-");
+        } else if (card.getId() == 50) {
+            System.out.print("--PPI--");
+        } else if (card.getId() == 51) {
+            System.out.print("--PPF--");
+        } else if (card.getId() == 52) {
+            System.out.print("--PPA--");
+        } else if (card.getId() == 53) {
+            System.out.print("-PP-PI--");
+        } else if (card.getId() == 54) {
+            System.out.print("-PP-PA-");
+        } else if (card.getId() == 55) {
+            System.out.print("-PP-PF--");
+        } else if (card.getId() == 56) {
+            System.out.print("--PPP--");
+        } else if (card.getId() == 57) {
+            System.out.print("--PPP--");
+        } else if (card.getId() == 58) {
+            System.out.print("--PPP--");
+        } else if (card.getId() == 59) {
+            System.out.print("-PPPPP-");
+        } else if (card.getId() == 60) {
+            System.out.print("--AAI--");
+        } else if (card.getId() == 61) {
+            System.out.print("--AAP--");
+        } else if (card.getId() == 62) {
+            System.out.print("--AAF--");
+        } else if (card.getId() == 63) {
+            System.out.print("-AA-AI-");
+        } else if (card.getId() == 64) {
+            System.out.print("-AA-AF-");
+        } else if (card.getId() == 65) {
+            System.out.print("-AA-AP-");
+        } else if (card.getId() == 66) {
+            System.out.print("--AAA--");
+        } else if (card.getId() == 67) {
+            System.out.print("--AAA--");
+        } else if (card.getId() == 68) {
+            System.out.print("--AAA--");
+        } else if (card.getId() == 69) {
+            System.out.print("-AAAAA-");
+        } else if (card.getId() == 70) {
+            System.out.print("--IIP--");
+        } else if (card.getId() == 71) {
+            System.out.print("--IIA--");
+        } else if (card.getId() == 72) {
+            System.out.print("--IIF--");
+        } else if (card.getId() == 73) {
+            System.out.print("-II-IA-");
+        } else if (card.getId() == 74) {
+            System.out.print("-II-IP-");
+        } else if (card.getId() == 75) {
+            System.out.print("-II-IF-");
+        } else if (card.getId() == 76) {
+            System.out.print("--III--");
+        } else if (card.getId() == 77) {
+            System.out.print("--III--");
+        } else if (card.getId() == 78) {
+            System.out.print("--III--");
+        } else if (card.getId() == 79) {
+            System.out.print("-IIIII-");
+        }
+    }
+
+    private void drawCorner(PlayableCard card, int corner, boolean face)
+    {
+        if(face){
+            if(!card.getFrontCorner(corner).isVisible()){
+                if(corner==0)
+                    System.out.print("┌");
+                else if (corner==1) {
+                    System.out.print("┐");
+                }
+                else if (corner==1) {
+                    System.out.print("┘");
+                }
+                else
+                    System.out.print("└");
+            }
+            else if(card.getFrontCorner(corner).getItem().equals(CornerItem.FUNGI))
+                System.out.print("F");
+            else if(card.getFrontCorner(corner).getItem().equals(CornerItem.ANIMAL))
+                System.out.print("A");
+            else if(card.getFrontCorner(corner).getItem().equals(CornerItem.INSECT))
+                System.out.print("I");
+            else if(card.getFrontCorner(corner).getItem().equals(CornerItem.PLANT))
+                System.out.print("P");
+            else if(card.getFrontCorner(corner).getItem().equals(CornerItem.MANUSCRIPT))
+                System.out.print("M");
+            else if(card.getFrontCorner(corner).getItem().equals(CornerItem.INKWELL))
+                System.out.print("B");
+            else if(card.getFrontCorner(corner).getItem().equals(CornerItem.QUILL))
+                System.out.print("Q");
+            else
+                System.out.print("O");
+        }
+        else{
+            if(!card.getBackCorner(corner).isVisible()){
+                if(corner==0)
+                    System.out.print("┌");
+                else if (corner==1) {
+                    System.out.print("┐");
+                }
+                else if (corner==1) {
+                    System.out.print("┘");
+                }
+                else
+                    System.out.print("└");
+            }
+            else if(card.getBackCorner(corner).getItem().equals(CornerItem.FUNGI))
+                System.out.print("F");
+            else if(card.getBackCorner(corner).getItem().equals(CornerItem.ANIMAL))
+                System.out.print("A");
+            else if(card.getBackCorner(corner).getItem().equals(CornerItem.INSECT))
+                System.out.print("I");
+            else if(card.getBackCorner(corner).getItem().equals(CornerItem.PLANT))
+                System.out.print("P");
+            else if(card.getBackCorner(corner).getItem().equals(CornerItem.MANUSCRIPT))
+                System.out.print("M");
+            else if(card.getBackCorner(corner).getItem().equals(CornerItem.INKWELL))
+                System.out.print("B");
+            else if(card.getBackCorner(corner).getItem().equals(CornerItem.QUILL))
+                System.out.print("Q");
+            else
+                System.out.print("O");
         }
     }
 
@@ -482,6 +636,252 @@ public class CliView {
                 System.out.println("O---5---O      O-------O");
                 System.out.println("|       |      |   I   |");
                 System.out.println("└-IIIII-┘      O-------O");
+            }
+        }
+    }
+
+    public void drawTable(HashMap<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
+        if (topResDeck == null)
+            System.out.print("  ┌-------┐  ");
+        else
+            System.out.print("  O-------O  ");
+        if (tableCard1 == null)
+            System.out.print("┌-------┐  ");
+        else {
+            drawCorner(tableCard1, 0, true);
+            System.out.print("--");
+            if (tableCard1.getType() == 1) {
+                System.out.print("-----");
+            } else {
+                if (tableCard1.getScoringType() == 1) {
+                    System.out.print("2-C--");
+                } else if (tableCard1.getScoringType() == 2) {
+                    if (tableCard1.getPoints() == 3)
+                        System.out.print("-3---");
+                    else
+                        System.out.print("-5---");
+                } else {
+                    if (tableCard1.getObject().equals(CornerItem.QUILL))
+                        System.out.print("1-Q--");
+                    else if (tableCard1.getObject().equals(CornerItem.MANUSCRIPT)) {
+                        System.out.print("1-M--");
+                    } else {
+                        System.out.print("1-B--");
+                    }
+                }
+            }
+            drawCorner(tableCard1, 1, true);
+            System.out.println("  ");
+        }
+        if (tableCard2 == null)
+            System.out.print("┌-------┐");
+        else {
+            drawCorner(tableCard2, 0, true);
+            System.out.print("--");
+            if (tableCard2.getType() == 1) {
+                System.out.print("-----");
+            } else {
+                if (tableCard2.getScoringType() == 1) {
+                    System.out.print("2-C--");
+                } else if (tableCard2.getScoringType() == 2) {
+                    if (tableCard2.getPoints() == 3)
+                        System.out.print("-3---");
+                    else
+                        System.out.print("-5---");
+                } else {
+                    if (tableCard2.getObject().equals(CornerItem.QUILL))
+                        System.out.print("1-Q--");
+                    else if (tableCard2.getObject().equals(CornerItem.MANUSCRIPT)) {
+                        System.out.print("1-M--");
+                    } else {
+                        System.out.print("1-B--");
+                    }
+                }
+            }
+            drawCorner(tableCard2, 1, true);
+
+        }
+        System.out.print("\n");
+        if (topResDeck == null) {
+            System.out.print("  | empty |  ");
+        } else {
+            if (topResDeck.getKingdomsType().equals(CornerItem.FUNGI)) {
+                System.out.print("  |   F   |  ");
+            } else if (topResDeck.getKingdomsType().equals(CornerItem.PLANT)) {
+                System.out.print("  |   P   |  ");
+            } else if (topResDeck.getKingdomsType().equals(CornerItem.INSECT)) {
+                System.out.print("  |   I   |  ");
+            } else {
+                System.out.print("  |   A   |  ");
+            }
+        }
+        if (tableCard1 == null) {
+            System.out.print("| empty |  ");
+        } else {
+            System.out.print("|       |  ");
+        }
+        if (tableCard2 == null) {
+            System.out.print("| empty |");
+        } else {
+            System.out.print("|       |");
+        }
+
+        if (topResDeck == null)
+            System.out.print("  └-------┘  ");
+        else
+            System.out.print("  O-------O  ");
+        if (tableCard1 == null)
+            System.out.print("└-------┘  ");
+        else {
+            drawCorner(tableCard1, 3, true);
+            if (tableCard1.getType() == 1) {
+                System.out.print("-------");
+            } else {
+                drawRequirements(tableCard1);
+            }
+            drawCorner(tableCard1, 2, true);
+            System.out.print("  ");
+        }
+            drawCorner(tableCard2, 3, true);
+            if (tableCard2.getType() == 1) {
+                System.out.print("-------");
+            } else {
+                drawRequirements(tableCard2);
+            }
+            drawCorner(tableCard2, 2, true);
+            System.out.print("\n\n");
+
+            if (topGoldDeck == null)
+                System.out.print("  ┌-------┐  ");
+            else
+                System.out.print("  O-------O  ");
+            if (tableCard3 == null)
+                System.out.print("┌-------┐  ");
+            else {
+                drawCorner(tableCard3, 0, true);
+                System.out.print("--");
+                if (tableCard3.getType() == 1) {
+                    System.out.print("-----");
+                } else {
+                    if (tableCard3.getScoringType() == 1) {
+                        System.out.print("2-C--");
+                    } else if (tableCard3.getScoringType() == 2) {
+                        if (tableCard3.getPoints() == 3)
+                            System.out.print("-3---");
+                        else
+                            System.out.print("-5---");
+                    } else {
+                        if (tableCard3.getObject().equals(CornerItem.QUILL))
+                            System.out.print("1-Q--");
+                        else if (tableCard1.getObject().equals(CornerItem.MANUSCRIPT)) {
+                            System.out.print("1-M--");
+                        } else {
+                            System.out.print("1-B--");
+                        }
+                    }
+                }
+                drawCorner(tableCard3, 1, true);
+                System.out.print("  ");
+            }
+            if (tableCard4 == null)
+                System.out.print("┌-------┐");
+            else {
+                drawCorner(tableCard4, 0, true);
+                System.out.print("--");
+                if (tableCard4.getType() == 1) {
+                    System.out.print("-----");
+                } else {
+                    if (tableCard4.getScoringType() == 1) {
+                        System.out.print("2-C--");
+                    } else if (tableCard4.getScoringType() == 2) {
+                        if (tableCard4.getPoints() == 3)
+                            System.out.print("-3---");
+                        else
+                            System.out.print("-5---");
+                    } else {
+                        if (tableCard4.getObject().equals(CornerItem.QUILL))
+                            System.out.print("1-Q--");
+                        else if (tableCard4.getObject().equals(CornerItem.MANUSCRIPT)) {
+                            System.out.print("1-M--");
+                        } else {
+                            System.out.print("1-B--");
+                        }
+                    }
+                }
+                drawCorner(tableCard4, 1, true);
+
+            }
+            System.out.print("\n");
+            if (topGoldDeck == null) {
+                System.out.print("  | empty |  ");
+            } else {
+                if (topGoldDeck.getKingdomsType().equals(CornerItem.FUNGI)) {
+                    System.out.print("  |   F   |  ");
+                } else if (topGoldDeck.getKingdomsType().equals(CornerItem.PLANT)) {
+                    System.out.print("  |   P   |  ");
+                } else if (topGoldDeck.getKingdomsType().equals(CornerItem.INSECT)) {
+                    System.out.print("  |   I   |  ");
+                } else {
+                    System.out.print("  |   A   |  ");
+                }
+            }
+            if (tableCard3 == null) {
+                System.out.print("| empty |  ");
+            } else {
+                System.out.print("|       |  ");
+            }
+            if (tableCard4 == null) {
+                System.out.print("| empty |");
+            } else {
+                System.out.print("|       |");
+            }
+
+            if (topGoldDeck == null)
+                System.out.print("  └-------┘  ");
+            else
+                System.out.print("  O-------O  ");
+            if (tableCard3 == null)
+                System.out.print("└-------┘  ");
+            else {
+                drawCorner(tableCard3, 3, true);
+                if (tableCard3.getType() == 1) {
+                    System.out.print("-------");
+                } else {
+                    drawRequirements(tableCard3);
+                }
+
+                drawCorner(tableCard3, 2, true);
+                System.out.print("  ");
+            }
+            if (tableCard4 == null)
+                System.out.print("└-------┘");
+            else {
+                drawCorner(tableCard4, 3, true);
+                if (tableCard4.getType() == 1) {
+                    System.out.print("-------");
+                } else {
+                    drawRequirements(tableCard4);
+                }
+                drawCorner(tableCard4, 2, true);
+            }
+
+        }
+
+
+    public void drawAvailableColors(ArrayList<Color> colors)
+    {
+        System.out.println("Choose a color from the available ones:");
+        for(int i=0; i<colors.size(); i++){
+            if(colors.get(i).equals(Color.RED))
+                System.out.print("RED  ");
+            else if (colors.get(i).equals(Color.BLUE)) {
+                System.out.print("BLUE  ");
+            }
+            else if (colors.get(i).equals(Color.BLUE)) {
+                System.out.print("GREEN  ");
+            }
+            else {
+                System.out.print("YELLOW  ");
             }
         }
     }
@@ -1172,14 +1572,14 @@ public class CliView {
                     }
                     if(flag1 && flag2)
                     {
-                        if (down < 10 && j < 10)
-                            System.out.print("  (" + down + "," + j + ")  ");
-                        else if (down < 10 && j > 9) {
-                            System.out.print(" (" + down + "," + j + ")  ");
-                        } else if (down > 9 && j < 10) {
-                            System.out.print(" (" + down + "," + j + ")  ");
+                        if (down+1 < 10 && j < 10)
+                            System.out.print("  (" + (down+1) + "," + j + ")  ");
+                        else if (down+1 < 10 && j > 9) {
+                            System.out.print(" (" + (down+1) + "," + j + ")  ");
+                        } else if (down+1 > 9 && j < 10) {
+                            System.out.print(" (" + (down + +1)+ "," + j + ")  ");
                         } else {
-                            System.out.print(" (" + down + "," + j + ") ");
+                            System.out.print(" (" + (down+1) + "," + j + ") ");
                         }
                     } else {
                         System.out.print("         ");
