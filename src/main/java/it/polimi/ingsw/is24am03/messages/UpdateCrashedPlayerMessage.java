@@ -89,8 +89,8 @@ public class UpdateCrashedPlayerMessage extends Message{
         return table;
     }
 
-    public UpdateCrashedPlayerMessage(MessageType messageType, String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Map<String, Color> colors, ArrayList<ResourceCard> table) {
-        super(messageType);
+    public UpdateCrashedPlayerMessage(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Map<String, Color> colors, ArrayList<ResourceCard> table) {
+        super(MessageType.UPDATE_CRASHED_PLAYER);
         this.nickname = nickname;
         this.chat = chat;
         this.gameState = gameState;

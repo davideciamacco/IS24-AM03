@@ -11,6 +11,7 @@ import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
+import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
@@ -411,7 +412,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     }
 
     @Override
-    public void notifyJoinedPlayer(ArrayList<String> joinedPlayer) throws RemoteException {
+    public void notifyJoinedPlayer(String joinedPlayer) throws RemoteException {
         JoinedPlayerMessage joinedPlayerMessage=new JoinedPlayerMessage(joinedPlayer);
         this.sendMessage(joinedPlayerMessage);
     }
@@ -482,7 +483,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     }
 
     @Override
-    public void notifyFirstHand(String player, ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) throws RemoteException {
+    public void notifyFirstHand(ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) throws RemoteException {
         FirstHandMessage firstHandMessage=new FirstHandMessage(p1,p2,p3,startingCard, o1,o2);
         this.sendMessage(firstHandMessage);
     }
@@ -521,6 +522,12 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     public void notifyFinalColors(Map<String, Color> colors) throws RemoteException {
         FinalColorsMessage finalColorsMessage=new FinalColorsMessage(colors);
         this.sendMessage(finalColorsMessage);
+    }
+
+    @Override
+    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Map<String, Color> colors, ArrayList<ResourceCard> table) throws RemoteException {
+        UpdateCrashedPlayerMessage updateCrashedPlayerMessage=new UpdateCrashedPlayerMessage(nickname,chat,gameState,hand,objectiveCard,boards,points,players,objectiveCards,colors,table);
+        this.sendMessage(updateCrashedPlayerMessage);
     }
 
     @Override

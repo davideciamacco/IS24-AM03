@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is24am03.server.model.chat;
 
-public class Text {
+import java.io.Serializable;
+
+public class Text implements Serializable {
 
     public String getSender() {
         return sender;

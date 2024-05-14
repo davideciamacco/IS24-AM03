@@ -8,13 +8,13 @@ public class JoinedPlayerMessage extends Message{
 @Serial
     private static final long serialVersionUID= 1842763004088165760L;
 
-private ArrayList<String> player;
+private String player;
 
-    public ArrayList<String> getPlayer() {
+    public String getPlayer() {
         return player;
     }
 
-    public JoinedPlayerMessage(ArrayList<String> player){
+    public JoinedPlayerMessage(String player){
     super(MessageType.JOINED_PLAYER);
     this.player=player;
 }

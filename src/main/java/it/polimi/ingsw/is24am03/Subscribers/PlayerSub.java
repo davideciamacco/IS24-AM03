@@ -1,13 +1,10 @@
 package it.polimi.ingsw.is24am03.Subscribers;
 
 
-import it.polimi.ingsw.is24am03.Subscribers.Subscriber;
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
-import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
-import it.polimi.ingsw.is24am03.server.model.player.Player;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public interface PlayerSub extends Subscriber {
     public String getSub() throws RemoteException;
 
 
-    public void notifyFirstHand(String player, ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) throws RemoteException;
+    public void notifyFirstHand(ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) throws RemoteException;
 
 
     public void notifyAvailableColors(ArrayList<Color> colors) throws RemoteException;

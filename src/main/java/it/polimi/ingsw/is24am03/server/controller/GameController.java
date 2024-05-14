@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is24am03.server.controller;
 
-import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
-import it.polimi.ingsw.is24am03.Subscribers.GameSub;
-import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
-import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
+import it.polimi.ingsw.is24am03.Subscribers.*;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
@@ -289,6 +286,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             gameModel.sendGroupMessage(sender, text);
         }
     }
+
+
+
     public void sendPrivateText(String sender, String receiver, String text) throws PlayerAbsentException, BadTextException, InvalidStateException, ParametersException{
         synchronized (chatLock){
             gameModel.sendPrivateMessage(sender, receiver,text);

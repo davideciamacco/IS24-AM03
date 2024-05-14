@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is24am03.server.model.game;
 
-import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
-import it.polimi.ingsw.is24am03.Subscribers.GameSub;
-import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
-import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
+import it.polimi.ingsw.is24am03.Subscribers.*;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -26,6 +23,16 @@ public interface RemoteGameController extends Remote{
     public void sendGroupText(String nickname, String text) throws BadTextException, InvalidStateException, RemoteException;
 
 
+    public void addToObserver(ChatSub subscriber) throws RemoteException;
+    public void addToObserver(PlayerSub subscriber) throws RemoteException;
+    public void addToObserver(PlayerBoardSub subscriber) throws RemoteException;
+    public void addToObserver(GameSub subscriber) throws RemoteException;
+    public void removeSub(ChatSub subscriber) throws RemoteException;
+    public void removeSub(PlayerSub subscriber) throws RemoteException;
+    public void removeSub(PlayerBoardSub subscriber) throws RemoteException;
+    public void removeSub(GameSub subscriber) throws RemoteException;
+
+    public void canStart() throws RemoteException;
 
 
 

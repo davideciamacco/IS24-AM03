@@ -134,7 +134,7 @@ public class Game{
         setOrder();
         //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
         //l'ultimo player entrato è già iscritto al gioco
-        /*
+
         for(GameSub gameSub: gameSubs){
             try{
                 gameSub.NotifyNumbersOfPlayersReached();
@@ -158,7 +158,7 @@ public class Game{
                 gameSub.notifyChangeState(gameState);
             } catch (RemoteException ignored) {
             }
-        }*/
+        }
         this.gameState = State.STARTING;
         startingDeck.shuffle();
         objectiveDeck.shuffle();
@@ -169,7 +169,7 @@ public class Game{
         //NOFITY COMMON CARDS//
 
         //WE NOTIFY FIRST ON THE FIRST CARD IN RESOURCE DECK AND IN GOLD DECK
-        /*
+
         for(GameSub gameSub: gameSubs){
             try {
                 gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
@@ -203,7 +203,7 @@ public class Game{
             }catch(RemoteException ignored){}
 
 
-        }*/
+        }
         //DONE
 
         distributeCards();
@@ -273,12 +273,12 @@ public class Game{
             p.setObjectiveCard(objectiveDeck.drawCard(),objectiveDeck.drawCard());
             //NOTIFY FIRST HAND, comprende anche la starting card e le due objetive cards//
             //trovo il sub corrispondente al player a cui devo notificare le proprie carte
-            /*
+
             try {
-                findSub(p).notifyFirstHand(p.getNickname(),p.getHand().get(0), p.getHand().get(1), p.getHand().get(2), p.getStartingCard(),p.getObjective1(),p.getObjective2());
+                findSub(p).notifyFirstHand(p.getHand().get(0), p.getHand().get(1), p.getHand().get(2), p.getStartingCard(),p.getObjective1(),p.getObjective2());
             }catch (RemoteException ignored){}
 
-             */
+
         }
     }
 
@@ -335,9 +335,7 @@ public class Game{
             for (GameSub gameSub : gameSubs) {
                 try {
                     if(!gameSub.getSub().equals(player)){
-                        List<String> p= players.stream().map(Player::getNickname).toList();
-                        ArrayList<String> p1=new ArrayList<>(p);
-                        gameSub.notifyJoinedPlayer(p1);}
+                        gameSub.notifyJoinedPlayer(player);}
                 } catch (RemoteException ignored) {
                 }
             }
@@ -774,13 +772,13 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
-        /*
+
         for (GameSub gameSub : gameSubs) {
             try {
                 gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
             } catch (RemoteException ignored) {
             }
-        }*/
+        }
     }
 
     public ArrayList<Color> getAvailableColors(){
@@ -852,6 +850,7 @@ public class Game{
         for(Player p: getPlayers()){
             p.getPlayerSubs().remove(playerSub);
         }
+        //però tutti gli altri sub devono
     }
     public void addSub(ChatSub chatSub){
         chat.getChatSubs().add(chatSub);
@@ -929,16 +928,6 @@ public class Game{
         }
         return player;
     }
-   /* public Player findPlayer(String nickname){
-        Player x=null;
-        for(Player p: players){
-            if(p.getNickname().equals(nickname)){
-                x=p;
-            }
-        }
-        return x;
-    }
-    */
 
 
     public PlayerSub findSub(String nickname){

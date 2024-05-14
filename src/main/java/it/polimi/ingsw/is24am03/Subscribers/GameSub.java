@@ -3,7 +3,9 @@ package it.polimi.ingsw.is24am03.Subscribers;
 
 
 import it.polimi.ingsw.is24am03.Subscribers.Subscriber;
+import it.polimi.ingsw.is24am03.messages.MessageType;
 import it.polimi.ingsw.is24am03.server.model.cards.*;
+import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 
@@ -13,7 +15,7 @@ import java.util.Map;
 
 public interface GameSub extends Subscriber {
 
-    public void notifyJoinedPlayer(ArrayList<String> players) throws RemoteException;
+    public void notifyJoinedPlayer(String player) throws RemoteException;
 
     //notify winners
     public void notifyWinners(ArrayList<String> winners) throws RemoteException;
@@ -42,5 +44,8 @@ public interface GameSub extends Subscriber {
    public void NotifyLastRound()throws RemoteException;
 
     public void notifyFinalColors(Map<String, Color> colors) throws RemoteException;
+
+    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Map<String, Color> colors, ArrayList<ResourceCard> table) throws RemoteException;
+
 
 }

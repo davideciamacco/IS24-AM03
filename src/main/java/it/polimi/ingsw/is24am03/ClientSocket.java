@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +12,7 @@ import java.util.concurrent.Executors;
 
 public class ClientSocket implements Client{
     private boolean hasJoined;
+    private ClientModel clientModel;
     private final String ip;
     private final int port;
     private final Socket connection;
@@ -156,7 +158,7 @@ public class ClientSocket implements Client{
 
             //MESSAGGI UPDATE DEL GIOCO (INTESO COME COMMON TABLE, STATI ETC)
             //TUTTI I MESSAGGI DI UPDATE DI GAME SONO BROADCAST
-            /*
+
             case UPDATE_COMMON_TABLE -> this.parse((NotifyCommonTableMessage)responseMessage);
             case COMMON_OBJECTIVE-> this.parse((CommonObjectiveMessage) responseMessage);
             case NOTIFY_WINNERS-> this.parse((WinnersMessage) responseMessage);
@@ -166,17 +168,12 @@ public class ClientSocket implements Client{
             case TURN_ORDER-> this.parse((TurnOrderMessage) responseMessage);
             case GAME_STATE-> this.parse((ChangeStateMessage) responseMessage);
             case NOTIFY_CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
-*/
-
-            ////////
 
             //MESSAGGI DI UPDATE RIGUARDANTI UN GIOCATORE
 
             //BROADCAST MESSAGE//
-            /*
+
             case UPDATE_POINTS-> this.parse((UpdatePointsMessage) responseMessage);
-
-
             //PRIVATE MESSAGES//
             case UPDATE_PERSONAL_CARDS-> this.parse((PersonalCardsMessage) responseMessage);
             //message choice objective is sent after the player chose his secret objective
@@ -185,24 +182,19 @@ public class ClientSocket implements Client{
             case FIRST_HAND-> this.parse((FirstHandMessage) responseMessage);
             //MESSAGGIO DI UPDATE PER IL PLAYER CRASHATO RITORNATO IN GIOCO//
             case UPDATE_CRASHED_PLAYER -> this.parse((UpdateCrashedPlayerMessage)responseMessage);
-
-            ////////
-
             //PLAYER BOARD MESSAGE, E' UN MESSAGGIO BROADCAST//
             case UPDATE_PLAYER_BOARD-> this.parse((PlayerBoardMessage) responseMessage);
-
-            ////////
-
-
             //CHAT//
             case GROUP_CHAT-> this.parse((GroupChatMessage) responseMessage);
             case PRIVATE_CHAT-> this.parse((PrivateChatMessage) responseMessage);
             case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
 
-            ////////
+            case AVAILABLE_COLORS -> this.parse((AvailableColorMessage) responseMessage);
+            case FINAL_COLORS -> this.parse((FinalColorsMessage)responseMessage);
+            case NOTIFY_ADDITIONAL_ROUND -> this.parse((LastRoundMessage)responseMessage);
+            case NOTIFY_NUM_PLAYERS_REACHED -> this.parse((NotifyNumPlayersReachedMessage)responseMessage);
             default -> {
             }
-*/
         }
     }
 
@@ -229,6 +221,10 @@ public class ClientSocket implements Client{
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
             System.out.println("Game created successfully");
+            //qui creo il local model
+            try {
+                this.clientModel = new ClientModel(this.nickname, view);
+            }catch (RemoteException e){}
             hasJoined = true;
         }
         else
@@ -243,6 +239,76 @@ public class ClientSocket implements Client{
             System.out.println(message.getDetails());
         System.out.flush();
     }
+    private void parse(NotifyCommonTableMessage message) {
+        try {
+            this.clientModel.updateCommonTable(message.getResourceCard(), message.getIndex());
+        }catch (RemoteException e){}
+    }
+    private void parse(CommonObjectiveMessage responseMessage){
+        try {
+            this.clientModel.notifyCommonObjective(responseMessage.getObjectiveCard1(), responseMessage.getObjectiveCard2());
+        } catch (RemoteException e) {
+
+        }
+    }
+    private void parse(WinnersMessage response){
+        try {
+            this.clientModel.notifyWinners(response.getWinners());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(JoinedPlayerMessage response){
+        try {
+            this.clientModel.notifyJoinedPlayer(response.getPlayer());
+        } catch (RemoteException e) {
+
+        }
+        System.out.println(response.getPlayer()+"has joined the game");
+    }
+    private void parse (RejoinedPlayerMessage response){
+        try {
+            this.clientModel.notifyRejoinedPlayer(response.getPlayer());
+        } catch (RemoteException e) {
+
+        }
+        System.out.println(response.getPlayer()+"has rejoined the game");
+    }
+
+    private void parse(CurrentPlayerMessage response){
+        try {
+            this.clientModel.notifyCurrentPlayer(response.getCurrentPlayer());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(TurnOrderMessage response){
+        try {
+            this.clientModel.notifyTurnOrder(response.getTurnOrder());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(ChangeStateMessage response){
+        try {
+            this.clientModel.notifyChangeState(response.getState());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(CrashedPlayerMessage response){
+        try {
+            this.clientModel.notifyCrashedPlayer(response.getPlayer());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             System.out.println("Joined successfully");
@@ -271,7 +337,77 @@ public class ClientSocket implements Client{
         System.out.flush();
     }
 
+    private void parse(UpdatePointsMessage response){
+        try {
+            this.clientModel.ReceiveUpdateOnPoints(response.getPlayer(),response.getPoints());
+        } catch (RemoteException e) {
 
+        }
+    }
+
+    private void parse(PersonalCardsMessage response){
+        try {
+            this.clientModel.NotifyChangePersonalCards(response.getPlayer(), response.getHand());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(ChoiceObjectiveMessage choiceObjectiveMessage){
+        try {
+            this.clientModel.notifyChoiceObjective(choiceObjectiveMessage.getPlayer(), choiceObjectiveMessage.getObjectiveCard());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(FirstHandMessage firstHandMessage){
+        try {
+            this.clientModel.notifyFirstHand(firstHandMessage.getPlayableCard1(), firstHandMessage.getPlayableCard2(), firstHandMessage.getPlayableCard3(), firstHandMessage.getStartingCard(), firstHandMessage.getObjectiveCard1(), firstHandMessage.getObjectiveCard2());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(UpdateCrashedPlayerMessage updateCrashedPlayerMessage){
+        try {
+            this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColors(), updateCrashedPlayerMessage.getTable());
+        }catch (RemoteException e){}
+    }
+
+    private void parse(PlayerBoardMessage playerBoardMessage){
+        try {
+            this.clientModel.notifyChangePlayerBoard(playerBoardMessage.getPlayer(),playerBoardMessage.getPlayableCard(), playerBoardMessage.getI(), playerBoardMessage.getJ());
+        } catch (RemoteException e) {
+
+        }
+
+    }
+
+    private void parse(GroupChatMessage groupChatMessage){
+        try {
+            this.clientModel.ReceiveGroupText(groupChatMessage.getSender(),groupChatMessage.getText());
+        } catch (RemoteException e) {
+
+        }
+    }
+    private void parse(PrivateChatMessage privateChatMessage){
+        try {
+            this.clientModel.ReceivePrivateText(privateChatMessage.getSender(), privateChatMessage.getRecipient(),privateChatMessage.getText());
+        } catch (RemoteException e) {
+
+        }
+    }
+
+    private void parse(ConfirmChatMessage confirmChatMessage){
+        if(confirmChatMessage.isConfirmChat()){
+            System.out.println("Message send correctly");
+        }
+        else{
+            System.out.println(confirmChatMessage.getDetails());
+        }
+        System.out.flush();
+    }
 
     private void sendMessage(Message message) {
         synchronized (outputStream) {

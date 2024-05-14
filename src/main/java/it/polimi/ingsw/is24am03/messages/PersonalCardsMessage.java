@@ -12,7 +12,7 @@ public class PersonalCardsMessage extends Message{
 
     private String player;
 
-    private String getPlayer() {
+    public String getPlayer() {
         return player;
     }
 

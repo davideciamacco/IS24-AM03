@@ -1,5 +1,9 @@
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
+import it.polimi.ingsw.is24am03.Subscribers.GameSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
+import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 
@@ -19,6 +23,8 @@ public class ClientRMI implements Client{
     private boolean hasJoined;
     private boolean connectionClosed;
     private String nickname;
+
+    private ClientModel clientModel;
 
     public ClientRMI(String hostName, int portNumber, CliView view) {
         boolean connected = false;
@@ -51,6 +57,7 @@ public class ClientRMI implements Client{
             this.gameController.createGame(nPlayers, nickname);
             System.out.println("Game created successfully");
             this.nickname = nickname;
+            this.clientModel=new ClientModel(nickname,view);
             hasJoined=true;
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
@@ -68,6 +75,8 @@ public class ClientRMI implements Client{
             System.out.println("Joined successfully");
             hasJoined=true;
             this.nickname=nickname;
+            this.subscribeToObservers();
+            this.gameController.canStart();
         }
         catch(IllegalArgumentException e)
         {
@@ -235,7 +244,7 @@ public class ClientRMI implements Client{
             System.out.println("Group text sent successfully");
         } catch (BadTextException | InvalidStateException e1) {
             System.out.println(e1.getMessage());
-        } catch(RemoteException ignored){}
+        } catch(RemoteException e){}
 
 
     }
@@ -245,7 +254,26 @@ public class ClientRMI implements Client{
             System.out.println("Private text sent successfully");
         } catch (BadTextException | InvalidStateException | PlayerAbsentException | ParametersException e) {
             System.out.println(e.getMessage());
-        } catch(RemoteException ignored){}
+        } catch(RemoteException e){}
+    }
+
+    private void subscribeToObservers(){
+        try {
+            gameController.addToObserver((GameSub) this);
+            gameController.addToObserver((ChatSub) this);
+            gameController.addToObserver((PlayerSub) this);
+            gameController.addToObserver((PlayerBoardSub) this);
+        }catch (RemoteException e){}
+    }
+
+    private void removeFromObservers(){
+        try {
+            gameController.removeSub((ChatSub) this);
+            gameController.removeSub((PlayerSub) this);
+            gameController.removeSub((PlayerBoardSub) this);
+            gameController.removeSub((GameSub) this);
+        }catch (RemoteException e){}
+
     }
 }
 
