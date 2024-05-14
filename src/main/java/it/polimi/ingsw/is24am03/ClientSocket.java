@@ -32,7 +32,6 @@ public class ClientSocket implements Client{
         this.view = view;
         this.hasJoined = false;
 
-
         try {
             this.connection = new Socket(ip, port);
             this.outputStream = new ObjectOutputStream(connection.getOutputStream());
@@ -125,6 +124,7 @@ public class ClientSocket implements Client{
                         queueMessages.notifyAll();
                         queueMessages.wait(1);
                     } catch (IOException | ClassNotFoundException | InterruptedException e ) {
+                        e.printStackTrace();
                         active = false;
                     }
                 }

@@ -58,7 +58,6 @@ public class ServerMain{
             try {
                 Socket socket = serverSocket.accept();
                 System.out.println("Client connected: " + socket.getInetAddress());
-                //       logger.info("Client connected");
                 executor.execute(new ClientTCPHandler(socket, gameController));
             } catch(IOException e) {
                 break;

@@ -21,6 +21,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 //import java.rmi.RemoteException;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -43,14 +44,11 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         this.gameController = gameController;
         this.queueMessages = new ArrayDeque<>();
         try {
-
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException("Connection with client failed over TCP");
         }
-
-
     }
 
 
@@ -90,13 +88,20 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                         queueMessages.notifyAll();
                         queueMessages.wait(1);
                     } catch ( ClassNotFoundException | InterruptedException e) {
-                        break;
-                    } catch ( IOException ignored){
 
+                        e.printStackTrace();
+                        break;
+                    } catch(SocketException e){
+                        e.printStackTrace();
+                        break;
+                    }
+                    catch ( IOException ignored){
+                        ignored.printStackTrace();
                     }
                 }
             }
         });
+        System.out.println("A");
     }
 
     private Message messageParser(Message inputMessage){
@@ -239,6 +244,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
+
             gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname());
             this.nickname=createGameMessage.getNickname();
             this.subscribeToObservers();

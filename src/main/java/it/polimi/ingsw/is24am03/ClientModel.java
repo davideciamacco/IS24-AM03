@@ -136,7 +136,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         viewInterface.notify("current player is " + current);
         if (current.equals(player)) {
             if (gameState.equals(State.OBJECTIVE)) {
-                viewInterface.notify("\nOption 2:\n");
+                viewInterface.notify("\nOption 1:\n");
                 viewInterface.drawObjective(objectiveCard1);
                 viewInterface.notify("\nOption 2:\n");
                 viewInterface.drawObjective(objectiveCard2);

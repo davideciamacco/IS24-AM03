@@ -61,6 +61,7 @@ public class CliView {
                 try {
                     client.CreateGame(Integer.parseInt(inputArray[1]), inputArray[2]);
                 } catch (Exception ignored) {
+                    ignored.printStackTrace();
                     System.out.println("Missing arguments");
                 }
             }
@@ -641,6 +642,7 @@ public class CliView {
     }
 
     public void drawTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
+        System.out.print("\n");
         if (topResDeck == null)
             System.out.print("  ┌-------┐  ");
         else
@@ -671,7 +673,7 @@ public class CliView {
                 }
             }
             drawCorner(tableCard1, 1, true);
-            System.out.println("  ");
+            System.out.print("  ");
         }
         if (tableCard2 == null)
             System.out.print("┌-------┐");
@@ -1083,9 +1085,6 @@ public class CliView {
             firstsx = firstsx - 1;
         if (lastdx != 80)
             lastdx = lastdx + 1;
-        System.out.println(firstsx);
-        System.out.println(down);
-        System.out.println(lastdx);
         if (top != 0) {
             top = top - 1;
             output1 = " ";

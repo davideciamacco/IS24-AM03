@@ -54,10 +54,13 @@ public class ClientRMI implements Client{
     public void CreateGame(int nPlayers, String nickname){
 
         try {
+            clientModel=new ClientModel(nickname,view);
             this.gameController.createGame(nPlayers, nickname);
+
             System.out.println("Game created successfully");
             this.nickname = nickname;
             this.clientModel=new ClientModel(nickname,view);
+            this.subscribeToObservers();
             hasJoined=true;
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
@@ -71,6 +74,7 @@ public class ClientRMI implements Client{
 
     public void JoinGame(String nickname){
         try{
+            clientModel=new ClientModel(nickname, view);
             this.gameController.addPlayer(nickname);
             System.out.println("Joined successfully");
             hasJoined=true;
@@ -263,19 +267,19 @@ public class ClientRMI implements Client{
 
     private void subscribeToObservers(){
         try {
-            gameController.addToObserver((GameSub) this);
-            gameController.addToObserver((ChatSub) this);
-            gameController.addToObserver((PlayerSub) this);
-            gameController.addToObserver((PlayerBoardSub) this);
+            gameController.addToObserver((GameSub) clientModel);
+            gameController.addToObserver((ChatSub) clientModel);
+            gameController.addToObserver((PlayerSub) clientModel);
+            gameController.addToObserver((PlayerBoardSub) clientModel);
         }catch (RemoteException e){}
     }
 
     private void removeFromObservers(){
         try {
-            gameController.removeSub((ChatSub) this);
-            gameController.removeSub((PlayerSub) this);
-            gameController.removeSub((PlayerBoardSub) this);
-            gameController.removeSub((GameSub) this);
+            gameController.removeSub((ChatSub) clientModel);
+            gameController.removeSub((PlayerSub) clientModel);
+            gameController.removeSub((PlayerBoardSub) clientModel);
+            gameController.removeSub((GameSub) clientModel);
         }catch (RemoteException e){}
 
     }
