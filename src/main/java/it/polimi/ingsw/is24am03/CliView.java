@@ -148,11 +148,11 @@ public class CliView {
         } else if (card.getId() == 52) {
             System.out.print("--PPA--");
         } else if (card.getId() == 53) {
-            System.out.print("-PP-PI--)";
+            System.out.print("-PP-PI--");
         } else if (card.getId() == 54) {
             System.out.print("-PP-PA-");
         } else if (card.getId() == 55) {
-            System.out.print("-PP-PF--)";
+            System.out.print("-PP-PF--");
         } else if (card.getId() == 56) {
             System.out.print("--PPP--");
         } else if (card.getId() == 57) {
