@@ -25,8 +25,8 @@ public class PersonalCardsMessage extends Message{
 
     public PersonalCardsMessage(String player, ArrayList<ResourceCard> hand){
         super(MessageType.UPDATE_PERSONAL_CARDS);
-
-
+        this.player=player;
+        this.hand=hand;
     }
 
 }

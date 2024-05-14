@@ -147,10 +147,14 @@ public class ClientRMI implements Client{
         try {
             this.gameController.placeCard(nickname,choice,i,j,face);
             System.out.println("Card placed successfully");
-
-        }
-        catch(PositionOccupiedException e){
+        } catch(PositionOccupiedException e){
             System.out.println("Position is not empty");
+        } catch (CoordinatesOutOfBoundsException e) {
+            System.out.println("Coordinates out of bound");
+        } catch (NoCardsAvailableException e){
+            System.out.println("Card can't be placed in these coordinates");
+        } catch (RequirementsNotMetException e){
+            System.out.println("Gold card requirements not satisfied");
         }catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
@@ -159,14 +163,7 @@ public class ClientRMI implements Client{
             System.out.println("Action not allowed in this state");
         } catch (GameNotExistingException e) {
             System.out.println("GameNotExists exception");
-        } catch (CoordinatesOutOfBoundsException e) {
-            System.out.println("Coordinates out of bound");
-        } catch (NoCardsAvailableException e){
-            System.out.println("Card can't be placed in these coordinates");
-        } catch (RequirementsNotMetException e){
-            System.out.println("Gold card requirements not satisfied");
-        }
-
+        }catch (RemoteException e){}
         System.out.flush();
     }
     public void DrawGold(){

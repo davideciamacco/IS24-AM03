@@ -11,7 +11,7 @@ public interface RemoteGameController extends Remote{
     public void drawGold(String player) throws PlayerNotInTurnException, InvalidStateException, EmptyDeckException, RemoteException, GameNotExistingException;
     public void drawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, NullCardSelectedException, RemoteException, GameNotExistingException;
     public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException, RemoteException, GameNotExistingException;
-    public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException;
+    public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException;
     public void setObjectiveCard(String player, int choice) throws PlayerNotInTurnException, RemoteException, GameNotExistingException;
 
     public void selectStartingFace(String player, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException;

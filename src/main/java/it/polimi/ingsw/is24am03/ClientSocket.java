@@ -32,6 +32,7 @@ public class ClientSocket implements Client{
         this.view = view;
         this.hasJoined = false;
 
+
         try {
             this.connection = new Socket(ip, port);
             this.outputStream = new ObjectOutputStream(connection.getOutputStream());
@@ -52,6 +53,10 @@ public class ClientSocket implements Client{
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
         this.nickname = nickname;
+        try{
+        clientModel = new ClientModel(nickname, view);
+        }
+        catch(RemoteException e){}
         this.sendMessage(joinMessage);
     }
 
@@ -201,6 +206,19 @@ public class ClientSocket implements Client{
     //TUTTE LE NOTIFICHE DI UPDATE VERRANNO POI GESTITE CON METODI CHIAMATI SUL LOCAL MODEL /
 
 
+    private void parse(AvailableColorMessage response){
+        try {
+            this.clientModel.notifyAvailableColors(response.getColors());
+        }catch(RemoteException e){}
+    }
+
+    private void parse(NotifyNumPlayersReachedMessage response){
+        try
+        {
+            this.clientModel.NotifyNumbersOfPlayersReached();
+        }catch(RemoteException e){}
+    }
+
     private void parse(ConfirmDrawMessage message) {
         if (message.getconfirmdraw()){
             System.out.println("Card drawn successfully");
@@ -222,9 +240,9 @@ public class ClientSocket implements Client{
         if (message.getConfirmGameCreation()){
             System.out.println("Game created successfully");
             //qui creo il local model
-            try {
+            /*try {
                 this.clientModel = new ClientModel(this.nickname, view);
-            }catch (RemoteException e){}
+            }catch (RemoteException e){}*/
             hasJoined = true;
         }
         else
@@ -312,10 +330,13 @@ public class ClientSocket implements Client{
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             System.out.println("Joined successfully");
+
             hasJoined = true;
         }
-        else
+        else{
+            clientModel=null;
             System.out.println(message.getDetails());
+        }
         System.out.flush();
     }
 

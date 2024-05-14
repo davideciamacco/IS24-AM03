@@ -7,7 +7,6 @@ import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.Game;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
-import org.controlsfx.control.spreadsheet.SpreadsheetCellEditor;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -53,6 +52,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     public void selectStartingFace(String player, String face) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException {
         boolean faceBoolean;
+        System.out.println("player: "+player+"\n currentPlayer: "+ gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname());
         synchronized(gameLock) {
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
@@ -206,7 +206,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * @throws PlayerNotInTurnException if the player is not currently in turn
      * @throws InvalidStateException   if the game state is not suitable for placing cards
      */
-    public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException {
+    public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException {
         synchronized (gameLock)
         {
             boolean faceBoolean;

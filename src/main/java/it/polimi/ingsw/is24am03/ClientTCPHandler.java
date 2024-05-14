@@ -168,6 +168,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     */
     private Message parse(PlaceCardMessage placeCardMessage){
         boolean result;
+
         String description = "";
         try {
             gameController.placeCard(placeCardMessage.getPlayer(),placeCardMessage.getChoice(),placeCardMessage.getI(),placeCardMessage.getJ(),placeCardMessage.getFace());
@@ -203,6 +204,8 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         catch (RequirementsNotMetException e){
             result = false;
             description = "Gold card requirements not satisfied";
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
         return new ConfirmPlaceMessage(result, description);
     }
@@ -257,7 +260,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     private Message parse(JoinGameMessage joinGameMessage){
         boolean result;
         String description = "";
-        System.out.println("prova");
         try {
             if(!joinGameMessage.getHasJoined()) {
                 //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
@@ -339,15 +341,14 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.selectStartingFace(chooseStartingMessage.getPlayer(), chooseStartingMessage.getFace());
             result = true;
         }
-        catch (PlayerNotInTurnException e)
-        {
-            result=false;
-            description="Not your turn";
-        }
         catch (InvalidStateException e)
         {
             result=false;
             description="Action not allowed in this state";
+        } catch (PlayerNotInTurnException e)
+        {
+            result=false;
+            description="Not your turn";
         }
         catch (IllegalArgumentException e)
         {

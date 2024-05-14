@@ -9,8 +9,6 @@ public interface PlayerBoardSub extends Subscriber{
 
     public void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException;
 
-
-
     public String getSub() throws RemoteException;
 
 

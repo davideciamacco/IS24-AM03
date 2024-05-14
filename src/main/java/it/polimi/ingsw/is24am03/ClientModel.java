@@ -35,13 +35,26 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     //    //4--> carta in posizione 2
     //    //5--> carta in posizione 3
 
-    private ArrayList<ResourceCard> commonTable;
+   private ResourceCard resourceDeck;
+   private ResourceCard goldDeck;
+
+    private ResourceCard card0;
+
+    private ResourceCard card1;
+
+    private ResourceCard card2;
+
+    private ResourceCard card3;
     private ArrayList<ObjectiveCard> commonObjective;
     private String color;
     private Map<String, Boolean> playersState;
 
+    private String current;
+
     private ArrayList<ResourceCard> hand;
-    private ObjectiveCard objectiveCard;
+    private ObjectiveCard objectiveCard1;
+    private ObjectiveCard objectiveCard2;
+    private StartingCard startingCard;
 
     //giocatori e punti
     private Map<String, Integer> playerPoints;
@@ -66,110 +79,204 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.player=player;
         this.viewInterface=viewInterface;
         this.chat=new ArrayList<>();
-        this.commonTable=new ArrayList<>();
+        this.resourceDeck=null;
+        this.goldDeck=null;
+        this.card0=null;
+        this.card1=null;
+        this.card2=null;
+        this.card3=null;
         this.commonObjective=new ArrayList<>();
         this.playersState=new HashMap<>();
         this.hand=new ArrayList<>();
-        this.objectiveCard=null;
+        this.objectiveCard1=null;
+        this.objectiveCard2=null;
+        this.startingCard=null;
         this.playerPoints=new HashMap<>();
         this.boards=new HashMap<>();
+        this.boards.put(player,new PlayableCard[81][81]);
+        this.players=new ArrayList<>();
         this.players.add(player);
 
     }
-//TODO togliere dai metodi che fanno override i throws remote exception
 
 
     @Override
-    public void notifyJoinedPlayer(String joinedPlayer) throws RemoteException {
+    public synchronized void  notifyJoinedPlayer(String joinedPlayer) throws RemoteException {
+        viewInterface.notify(joinedPlayer+"  has joined the game");
+    }
+
+    @Override
+    public synchronized void notifyWinners(ArrayList<String> winners)throws RemoteException {
+       StringBuilder message = new StringBuilder();
+       for(String s: winners){
+           message.append(s).append("-");
+       }
+       message= new StringBuilder("winners are " + message);
+       viewInterface.notify(message.toString());
+    }
+
+    @Override
+    public synchronized void  notifyTurnOrder(ArrayList<String> order) throws RemoteException{
+        for(String s : order){players.add(s);}
+        StringBuilder message = new StringBuilder();
+        for(String s: order){
+            playerPoints.put(s,0);
+            message.append(s).append("-");
+            boards.put(s,new PlayableCard[81][81]);
+        }
+        message= new StringBuilder("Turn order is  " + message);
+
+        viewInterface.notify(message.toString());
 
     }
 
     @Override
-    public void notifyWinners(ArrayList<String> winners)throws RemoteException {
+    public synchronized void notifyCurrentPlayer(String current)throws RemoteException {
+        this.current = current;
+        viewInterface.notify("current player is " + current);
+        if (current.equals(player)) {
+            if (gameState.equals(State.OBJECTIVE)) {
+                viewInterface.notify("\nOption 2:\n");
+                viewInterface.drawObjective(objectiveCard1);
+                viewInterface.notify("\nOption 2:\n");
+                viewInterface.drawObjective(objectiveCard2);
+            } else if (gameState.equals(State.STARTING)) {
+                viewInterface.drawStarting(startingCard);
+            } else if (gameState.equals(State.PLAYING)) {
+                viewInterface.drawBoard(boards.get(current));
+            }
+        }
 
     }
 
-    @Override
-    public void notifyTurnOrder(ArrayList<String> order) throws RemoteException{
 
+    @Override
+    public synchronized void notifyCrashedPlayer(String username)throws RemoteException {
+        viewInterface.notify("player "+username+" has crashed");
     }
 
     @Override
-    public void notifyCurrentPlayer(String current)throws RemoteException{
-
-    }
-
-    @Override
-    public void notifyCrashedPlayer(String username)throws RemoteException {
-
-    }
-
-    @Override
-    public void notifyChangeState(State gameState)throws RemoteException {
+    public synchronized void notifyChangeState(State gameState)throws RemoteException {
         this.gameState=gameState;
+        viewInterface.notify("Game state has changed, now is "+gameState.toString());
 
 
     }
 
     @Override
-    public void notifyRejoinedPlayer(String rejoinedPlayer)throws RemoteException{
+    public synchronized void notifyRejoinedPlayer(String rejoinedPlayer)throws RemoteException{
+        viewInterface.notify(rejoinedPlayer+" has joined the game");
+    }
+
+    @Override
+    public synchronized void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException{
+        //all'interno devo mettergli quello che c'era prima
+        PlayableCard[][] tempBoard;
+        tempBoard= boards.get(player);
+        tempBoard[i][j]=p;
+        boards.put(player, tempBoard);
+        viewInterface.notify(player + " placed a card");
+        if(player.equals(this.player)){
+
+        }
+    }
+
+    @Override
+    public synchronized void ReceiveUpdateOnPoints(String player, int points)throws RemoteException {
+        playerPoints.put(player, points);
+        viewInterface.notify("Update on "+player+" points! He reached"+points);
+        //viewinterface.drawTable
+    }
+
+    @Override
+    public synchronized  void NotifyChangePersonalCards(String Player, ArrayList<ResourceCard> p) throws RemoteException {
+       hand=p;
+       viewInterface.drawHand(p);
+    }
+
+    @Override
+    public synchronized void notifyChoiceObjective(String player, ObjectiveCard o)throws RemoteException {
+        objectiveCard1=o;
+        viewInterface.notify("Your personal objective is: ");
+        viewInterface.drawObjective(o);
 
     }
 
     @Override
-    public void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException{
-
-    }
-
-    @Override
-    public void ReceiveUpdateOnPoints(String player, int points)throws RemoteException {
-
-    }
-
-    @Override
-    public void NotifyChangePersonalCards(String Player, ArrayList<ResourceCard> p) throws RemoteException {
-
-    }
-
-    @Override
-    public void notifyChoiceObjective(String player, ObjectiveCard o)throws RemoteException {
-
-    }
-
-    @Override
-    public String getSub()throws RemoteException {
+    public synchronized String getSub()throws RemoteException {
         return this.player;
     }
 
 
     @Override
-    public void notifyFirstHand(ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2)throws RemoteException{
+    public synchronized void notifyFirstHand(ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2)throws RemoteException{
+        hand.add(p1);
+        hand.add(p2);
+        hand.add(p3);
+        viewInterface.drawHand(hand);
+        this.startingCard=startingCard;
+        this.objectiveCard1=o1;
+        this.objectiveCard2=o2;
+        viewInterface.drawStarting(startingCard);
+        viewInterface.drawObjective(o1);
+        viewInterface.drawObjective(o2);
+    }
+
+    @Override
+    public synchronized void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)throws RemoteException{
+        commonObjective.add(objectiveCard1);
+        commonObjective.add(objectiveCard2);
+        viewInterface.drawObjective(objectiveCard1);
+        viewInterface.drawObjective(objectiveCard2);
+    }
+
+    @Override
+    public synchronized void updateCommonTable(ResourceCard resourceCard,int index) throws RemoteException {
+        //0--> resource deck
+        //1--> gold deck
+        //2--> carta 0
+        //3--> carta 1
+        //4-->carta 2
+        //5--> carta 3
+        switch (index){
+            case 0:
+                this.resourceDeck=resourceCard;
+                break;
+            case 1:
+                this.goldDeck=resourceCard;
+                break;
+            case 2:
+                this.card0=resourceCard;
+                break;
+            case 3:
+                this.card1=resourceCard;
+                break;
+            case 4:
+                this.card2=resourceCard;
+                break;
+            case 5:
+                this.card3=resourceCard;
+                break;
+        }
+        if(gameState!=State.STARTING){
+            viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+        }
 
     }
 
     @Override
-    public void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)throws RemoteException{
-
-    }
-
-    @Override
-    public void updateCommonTable(ResourceCard resourceCard,int index) throws RemoteException {
-
-    }
-
-    @Override
-    public void NotifyNumbersOfPlayersReached() throws RemoteException {
-
+    public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
+        viewInterface.notify("Number of players has been reached, the game will start in a few moments");
     }
 
     @Override
     public void NotifyLastRound() throws RemoteException {
-
+        viewInterface.notify("Last round will start, during this round drawing won't be permitted");
     }
 
     @Override
     public void notifyAvailableColors(ArrayList<Color> colors) throws RemoteException {
-
+        viewInterface.drawAvailableColors(colors);
     }
 
     @Override

@@ -269,7 +269,7 @@ public class CliView {
         }
     }
 
-    private void drawHand(ArrayList<ResourceCard> hand) {
+    public void drawHand(ArrayList<ResourceCard> hand) {
         System.out.println("FRONT:         BACK:");
         System.out.println("\n");
         for (int i = 0; i < 3; i++) {
@@ -640,7 +640,7 @@ public class CliView {
         }
     }
 
-    public void drawTable(HashMap<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
+    public void drawTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
         if (topResDeck == null)
             System.out.print("  ┌-------┐  ");
         else
@@ -725,7 +725,7 @@ public class CliView {
         } else {
             System.out.print("|       |");
         }
-
+        System.out.print("\n");
         if (topResDeck == null)
             System.out.print("  └-------┘  ");
         else
@@ -742,6 +742,9 @@ public class CliView {
             drawCorner(tableCard1, 2, true);
             System.out.print("  ");
         }
+        if(tableCard2==null)
+            System.out.print("└-------┘");
+        else{
             drawCorner(tableCard2, 3, true);
             if (tableCard2.getType() == 1) {
                 System.out.print("-------");
@@ -749,6 +752,7 @@ public class CliView {
                 drawRequirements(tableCard2);
             }
             drawCorner(tableCard2, 2, true);
+        }
             System.out.print("\n\n");
 
             if (topGoldDeck == null)
@@ -835,7 +839,7 @@ public class CliView {
             } else {
                 System.out.print("|       |");
             }
-
+            System.out.print("\n");
             if (topGoldDeck == null)
                 System.out.print("  └-------┘  ");
             else
@@ -877,19 +881,19 @@ public class CliView {
             else if (colors.get(i).equals(Color.BLUE)) {
                 System.out.print("BLUE  ");
             }
-            else if (colors.get(i).equals(Color.BLUE)) {
+            else if (colors.get(i).equals(Color.GREEN)) {
                 System.out.print("GREEN  ");
             }
             else {
                 System.out.print("YELLOW  ");
             }
         }
+        System.out.print("\n");
     }
 
     public void drawStarting(StartingCard startCard){
             System.out.println("FRONT:         BACK:");
             System.out.println("\n");
-            for (int i = 0; i < 3; i++) {
                 if (startCard.getId() == 80) {
                     System.out.println("O-------P      F-------A");
                     System.out.println("|   F   |      |       |");
@@ -921,7 +925,7 @@ public class CliView {
                     System.out.println("└---S---┘      P---S---I");
                     System.out.println("\n");
                 }
-            }
+
         }
 
     public void drawObjective(ObjectiveCard obj){
@@ -1593,6 +1597,11 @@ public class CliView {
 
             }
             }
+        System.out.print("\n\n");
+        }
+
+        public void notify(String message){
+        System.out.println(message);
         }
 
 

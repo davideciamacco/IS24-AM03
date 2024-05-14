@@ -407,9 +407,11 @@ public class Game{
         if(goldDeck.isEmpty())
             throw new EmptyDeckException("There aren't other cards in the selected deck");
         getPlayers().get(currentPlayer).addCard(goldDeck.drawCard());
+        System.out.println("\nID:"+getPlayers().get(currentPlayer).getHand().getFirst().getId()+"\n");
         //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
         try {
-            findSub(player).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+            findSub(getPlayers().get(currentPlayer)).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+
         }catch (RemoteException ignored){}
 
         //SE IL DECK GOLD è EMPTY NOTIFY ON EMPTY DECK
@@ -777,7 +779,7 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
-
+        System.out.println(currentPlayer+"\n");
         for (GameSub gameSub : gameSubs) {
             try {
                 gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());

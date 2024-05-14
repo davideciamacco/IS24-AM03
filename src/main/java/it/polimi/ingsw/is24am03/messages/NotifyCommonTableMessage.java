@@ -24,6 +24,7 @@ public class NotifyCommonTableMessage extends Message{
     public NotifyCommonTableMessage(ResourceCard resourceCard, int index){
         super(MessageType.UPDATE_COMMON_TABLE);
         this.index=index;
+        this.resourceCard=resourceCard;
     }
 }
 
