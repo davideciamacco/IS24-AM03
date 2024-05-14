@@ -46,7 +46,13 @@ public class ClientSocket implements Client{
 
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
-        this.nickname = nickname;
+        this.nickname=nickname;
+        try{
+            clientModel = new ClientModel(nickname, view);
+        }
+        catch(RemoteException e){
+
+        }
         this.sendMessage(requestMessage);
     }
 
@@ -194,9 +200,10 @@ public class ClientSocket implements Client{
             case PRIVATE_CHAT-> this.parse((PrivateChatMessage) responseMessage);
             case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
 
+
             case AVAILABLE_COLORS -> this.parse((AvailableColorMessage) responseMessage);
-            case FINAL_COLORS -> this.parse((FinalColorsMessage)responseMessage);
-            case NOTIFY_ADDITIONAL_ROUND -> this.parse((LastRoundMessage)responseMessage);
+            //case FINAL_COLORS -> this.parse((FinalColorsMessage)responseMessage);
+            //case NOTIFY_ADDITIONAL_ROUND -> this.parse((LastRoundMessage)responseMessage);
             case NOTIFY_NUM_PLAYERS_REACHED -> this.parse((NotifyNumPlayersReachedMessage)responseMessage);
             default -> {
             }
@@ -238,6 +245,7 @@ public class ClientSocket implements Client{
 
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
+            this.nickname = nickname;
             System.out.println("Game created successfully");
             //qui creo il local model
             /*try {

@@ -19,7 +19,6 @@ public class Launch
             }
         }
         else{
-            System.out.println("\uD83C\uDF44\u200D\uD83D\uDFEB");
             ServerMain.main(args);}
     }
 }
