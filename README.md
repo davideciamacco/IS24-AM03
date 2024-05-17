@@ -46,7 +46,7 @@ Legend:
 
 
 ## Installation
-In order to run My Shelfie, you can clone this repository
+In order to run Codex Naturalis, you can clone this repository
 ```
 git clone https://github.com/davideciamacco/IS24-AM03.git
 ```
