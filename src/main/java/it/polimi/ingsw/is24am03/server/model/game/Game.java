@@ -99,10 +99,16 @@ public class Game{
      */
     private Chat chat;
 
+    private boolean timer;
+
+    private int numPlayersConnected;
+
     /**
      * ArrayList which contains all GameSubs. Used to implement Observer Pattern
      */
     private ArrayList<GameSub> gameSubs;
+
+    private ScheduledExecutorService scheduler;
 
     /**
      * Constructor of the Game objects, it initializes all the attributes and add the host to the game
@@ -110,6 +116,7 @@ public class Game{
      * @param host is the Player that have created the game
      */
     public Game(int nPlayers, String host) {
+        this.timer=false;
         this.lastRound = false;
         this.ending = false;
         this.roundNumber=0;
@@ -128,6 +135,7 @@ public class Game{
         this.gameSubs=new ArrayList<>();
         this.numPlayersConnected = 1;
         addPlayer(host);
+        scheduler = Executors.newScheduledThreadPool(1);
     }
 
     /**
@@ -453,7 +461,7 @@ public class Game{
             throw new NullCardSelectedException();
         Player p = players.get(currentPlayer);
         switch (choice) {
-            case 0:
+            case 1:
                 p.addCard(tableCards.get(0));
                 try {
                     findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
@@ -479,7 +487,7 @@ public class Game{
                 }
                 break;
 
-            case 1:
+            case 2:
                 p.addCard(tableCards.get(1));
                 try {
                     findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
@@ -505,7 +513,7 @@ public class Game{
                 }
                 break;
 
-            case 2:
+            case 3:
                 p.addCard(tableCards.get(2));
                 try {
                     findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
@@ -531,7 +539,7 @@ public class Game{
                 }
                 break;
 
-            case 3:
+            case 4:
                 p.addCard(tableCards.get(3));
                 try {
                     findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
@@ -783,13 +791,27 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
-        System.out.println(currentPlayer+"\n");
-        for (GameSub gameSub : gameSubs) {
-            try {
-                gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
-            } catch (RemoteException ignored) {
-            }
+        while(!players.get(currentPlayer).getConnected() && !timer) {
+            currentPlayer = (currentPlayer + 1) % (numPlayers);
         }
+        int i;
+        if(timer) {
+            if (numPlayersConnected == 1) {
+                for (i=0; i<numPlayers; i++) {
+                    if (players.get(i).getConnected())
+                        players.get(i).setWinner(true);
+                }
+            }
+            gameState = State.ENDING;
+        }
+        else {
+                for (GameSub gameSub : gameSubs) {
+                    try {
+                        gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
+                    } catch (RemoteException ignored) {
+                    }
+                }
+            }
     }
 
     public ArrayList<Color> getAvailableColors(){

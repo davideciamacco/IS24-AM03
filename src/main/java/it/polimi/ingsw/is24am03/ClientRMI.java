@@ -245,6 +245,19 @@ public class ClientRMI implements Client{
         }
     }
 
+    public void RejoinGame(String nickname){
+        try{
+            this.gameController.rejoinGame(nickname);
+            System.out.println("Rejoined successfully");
+        }
+        catch(IllegalArgumentException e){
+            System.out.println("Player not existing");
+        }
+        catch (RemoteException e){
+
+        }
+    }
+
     //metodi per gestire invio messaggio chat
     public void sendGroupText(String sender, String text){
         try {

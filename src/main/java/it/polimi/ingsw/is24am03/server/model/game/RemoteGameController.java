@@ -35,6 +35,6 @@ public interface RemoteGameController extends Remote{
     public void canStart() throws RemoteException;
 
 
-
+    void rejoinGame(String nickname) throws RemoteException;
 }
 

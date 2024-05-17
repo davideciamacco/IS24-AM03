@@ -27,6 +27,8 @@ public class Player {
     private int numObj;
     private  PlayerBoard playerBoard;
 
+    private boolean connected;
+
     private ArrayList<PlayerSub> playerSubs;
 
     /**
@@ -186,6 +188,12 @@ public class Player {
         return playerSubs;
     }
 
+    public void setConnected(boolean state){
+        this.connected=state;
+    }
 
+    public boolean getConnected(){
+        return connected;
+    }
 
 }

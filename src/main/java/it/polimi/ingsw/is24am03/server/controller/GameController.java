@@ -21,6 +21,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     private final Object gameLock;
     private final Object chatLock;
 
+
     /**
      * Using the GameInterface type for gameModel allows flexibility.
      */
@@ -172,7 +173,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             try {
                 gameModel.drawTable(player, choice);
             }
-            catch(NullCardSelectedException e){}
+            catch(NullCardSelectedException e){
+                throw e;
+            }
         }
     }
 
@@ -268,6 +271,67 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 gameModel.setColor(chosenColor);
             else
                 throw new ColorAlreadyPickedException();
+        }
+    }
+
+    public void handleCrashedPlayer(String nickname){
+        gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()-1);
+        if(gameModel.getNumPlayersConnected()<=1){
+            gameModel.startTimer();
+        }
+        for(int i=0; i<gameModel.getNumPlayers(); i++) {
+            if (gameModel.getPlayers().get(i).getNickname().equals(nickname)) {
+                gameModel.getPlayers().get(i).setConnected(false);
+            }
+        }
+        if(gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(nickname)) {
+            if (gameModel.getGameState().equals(State.PLAYING))
+                gameModel.nextTurn();
+            else if (gameModel.getGameState().equals(State.DRAWING)) {
+                try {
+                    gameModel.drawResources(nickname);
+                } catch (EmptyDeckException e1) {
+                    try {
+                        gameModel.drawGold(nickname);
+                    } catch (EmptyDeckException e2) {
+                        try {
+                            gameModel.drawTable(nickname, 1);
+                        } catch (NullCardSelectedException e3) {
+                            try {
+                                gameModel.drawTable(nickname, 2);
+                            } catch (NullCardSelectedException e4) {
+                                try {
+                                    gameModel.drawTable(nickname, 3);
+                                } catch (NullCardSelectedException e5) {
+                                    try {
+                                        gameModel.drawTable(nickname, 4);
+                                    } catch (NullCardSelectedException e6) {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void rejoinGame(String nickname){
+        int check=-1;
+        int i=0;
+        while(i<gameModel.getPlayers().size() && check==-1) {
+            if (gameModel.getPlayers().get(i).getNickname().equals(nickname) && !gameModel.getPlayers().get(i).getConnected())
+                check = i;
+            i++;
+        }
+        if(check==-1)
+            throw new IllegalArgumentException();
+        else {
+            gameModel.getPlayers().get(check).setConnected(true);
+            gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
+            if(gameModel.getNumPlayersConnected()==2)
+                gameModel.stopTimer();
         }
     }
 

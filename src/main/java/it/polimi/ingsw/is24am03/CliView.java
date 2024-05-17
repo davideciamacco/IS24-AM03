@@ -116,6 +116,13 @@ public class CliView {
                     System.out.println("Missing arguments");
                 }
             }
+            case "RejoinGame" ->{
+                try{
+                    client.RejoinGame(inputArray[1]);
+                } catch (Exception ignored) {
+                    System.out.println("Missing arguments");
+                }
+            }
             default -> {
                 System.out.println("Invalid Command");
             }

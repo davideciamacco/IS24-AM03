@@ -16,4 +16,5 @@ public interface Client {
 
     public void sendPrivateText(String sender, String Receiver, String text);
 
+    public void RejoinGame(String nickname);
 }
