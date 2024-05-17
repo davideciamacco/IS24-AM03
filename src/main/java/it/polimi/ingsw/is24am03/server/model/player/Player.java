@@ -46,6 +46,7 @@ public class Player {
         this.numObj = 0;
         this.playerBoard = new PlayerBoard(this);
         this.playerSubs=new ArrayList<>();
+        this.connected = true;
     }
     public boolean isWinner(){
         return this.winner;

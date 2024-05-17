@@ -159,7 +159,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     //* @throws FullHandException        if the player's hand is already full
      * @throws InvalidStateException   if the game state is not suitable for drawing table cards
      */
-    public void drawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException {
+    public void drawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException {
         synchronized (gameLock)
         {
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {

@@ -6,6 +6,7 @@ import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.rmi.AlreadyBoundException;
@@ -58,7 +59,8 @@ public class ServerMain{
             try {
                 Socket socket = serverSocket.accept();
                 System.out.println("Client connected: " + socket.getInetAddress());
-                executor.execute(new ClientTCPHandler(socket, gameController));
+                ClientTCPHandler client = new ClientTCPHandler(socket, gameController);
+                executor.execute(client);
             } catch(IOException e) {
                 break;
             }

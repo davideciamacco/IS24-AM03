@@ -13,10 +13,13 @@ import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This class is used to handle the main logic of a Game
@@ -123,6 +126,7 @@ public class Game{
         this.availableColors = new ArrayList<Color>(List.of(Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW));
         this.chat=new Chat();
         this.gameSubs=new ArrayList<>();
+        this.numPlayersConnected = 1;
         addPlayer(host);
     }
 
@@ -956,5 +960,30 @@ public class Game{
             }catch (RemoteException ignored){}
         }
         return ps;
+    }
+
+    public void startTimer() {
+
+        long limit = 30;
+
+        Runnable task = () -> {
+            timer = true;
+            System.out.println("Timer raggiunto.");
+            scheduler.shutdown();
+        };
+
+        scheduler.schedule(task, limit, TimeUnit.SECONDS);
+    }
+
+    public void stopTimer(){
+        scheduler.shutdownNow();
+    }
+
+    public int getNumPlayersConnected(){
+        return numPlayersConnected;
+    }
+
+    public void setNumPlayersConnected(int value){
+        numPlayersConnected=value;
     }
 }
