@@ -197,6 +197,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Invalid arguments";
         }
+        catch(InvalidStateException e){
+            result=false;
+            description = "Action not allowed in this state";
+        }
         catch (PlayerNotInTurnException e)
         {
             result=false;

@@ -238,6 +238,9 @@ public class ClientRMI implements Client{
         } catch (PlayerNotInTurnException e) {
             System.out.println("Not your turn");
         }
+        catch(InvalidStateException e){
+            System.out.println("Action not allowed in this state");
+        }
         catch(IllegalArgumentException e){
             System.out.println("Invalid arguments");
         } catch(RemoteException e) {

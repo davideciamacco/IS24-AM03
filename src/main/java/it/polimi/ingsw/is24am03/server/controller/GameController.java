@@ -75,10 +75,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void setObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException {
+    public void setObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException, InvalidStateException {
         if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
             throw new PlayerNotInTurnException();
         }
+        if(!gameModel.getGameState().equals(State.OBJECTIVE))
+            throw new InvalidStateException("Action not allowed in this state");
         if(gameModel == null)
             throw new GameNotExistingException();
         if(choice<1 || choice>2) throw new IllegalArgumentException();
