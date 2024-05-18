@@ -10,6 +10,10 @@ import it.polimi.ingsw.is24am03.server.model.player.Player;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * the game controller ensures the communication through client controller and server model
@@ -20,6 +24,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      */
     private final Object gameLock;
     private final Object chatLock;
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);;
+
+    private ScheduledFuture<?> thread;
 
 
     /**
@@ -196,6 +204,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if(player.isBlank() || player.equals("ALL")) throw new IllegalArgumentException();
             for(Player p: gameModel.getPlayers())
                 if(p.getNickname().equals(player)) throw new NicknameAlreadyUsedException();
+            gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
             gameModel.addPlayer(player);
         }
     }
@@ -279,7 +288,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void handleCrashedPlayer(String nickname){
         gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()-1);
         if(gameModel.getNumPlayersConnected()<=1){
-            gameModel.startTimer();
+            startTimer();
         }
         for(int i=0; i<gameModel.getNumPlayers(); i++) {
             if (gameModel.getPlayers().get(i).getNickname().equals(nickname)) {
@@ -331,10 +340,33 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             throw new IllegalArgumentException();
         else {
             gameModel.getPlayers().get(check).setConnected(true);
+            System.out.println(gameModel.getNumPlayersConnected());
             gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
+            System.out.println(gameModel.getNumPlayersConnected());
             if(gameModel.getNumPlayersConnected()==2)
-                gameModel.stopTimer();
+                stopTimer();
         }
+    }
+
+    public void startTimer() {
+
+        long limit = 30;
+
+        Runnable task = () -> {
+            if(gameModel.getNumPlayersConnected()<2)
+            {
+                gameModel.setTimer(true);
+                System.out.println("Timer raggiunto.");
+            }
+            scheduler.shutdown();
+        };
+
+        thread = scheduler.schedule(task, limit, TimeUnit.SECONDS);
+    }
+
+    public void stopTimer(){
+        thread.cancel(true);
+        System.out.println("Timer interrotto");
     }
 
 

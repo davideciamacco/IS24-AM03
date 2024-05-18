@@ -15,6 +15,7 @@ import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import java.rmi.RemoteException;
@@ -108,7 +109,7 @@ public class Game{
      */
     private ArrayList<GameSub> gameSubs;
 
-    private ScheduledExecutorService scheduler;
+
 
     /**
      * Constructor of the Game objects, it initializes all the attributes and add the host to the game
@@ -135,7 +136,6 @@ public class Game{
         this.gameSubs=new ArrayList<>();
         this.numPlayersConnected = 1;
         addPlayer(host);
-        scheduler = Executors.newScheduledThreadPool(1);
     }
 
     /**
@@ -984,22 +984,9 @@ public class Game{
         return ps;
     }
 
-    public void startTimer() {
 
-        long limit = 30;
 
-        Runnable task = () -> {
-            timer = true;
-            System.out.println("Timer raggiunto.");
-            scheduler.shutdown();
-        };
 
-        scheduler.schedule(task, limit, TimeUnit.SECONDS);
-    }
-
-    public void stopTimer(){
-        scheduler.shutdownNow();
-    }
 
     public int getNumPlayersConnected(){
         return numPlayersConnected;
@@ -1007,5 +994,9 @@ public class Game{
 
     public void setNumPlayersConnected(int value){
         numPlayersConnected=value;
+    }
+
+    public void setTimer(boolean b) {
+        timer=b;
     }
 }
