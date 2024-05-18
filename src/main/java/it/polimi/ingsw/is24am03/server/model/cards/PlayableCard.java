@@ -76,7 +76,9 @@ public abstract class PlayableCard extends Card {
         if (face) {
             Pair<Corner, Boolean> pair = frontCorners.get(cornerIndex);
             frontCorners.set(cornerIndex, new Pair<>(pair.getKey(), covered));
-        } else {
+            System.out.println(frontCorners.get(3).getValue());
+        }
+        else {
             Pair<Corner, Boolean> pair = backCorners.get(cornerIndex);
             backCorners.set(cornerIndex, new Pair<>(pair.getKey(), covered));
         }

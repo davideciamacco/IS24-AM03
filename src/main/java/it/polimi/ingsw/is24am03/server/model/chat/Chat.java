@@ -34,7 +34,7 @@ public class Chat {
 
     // in questo metodo posso controllare la validità del messaggio ricevuto
     public void NotifyChat(Text t){
-        if(t.getRecipient().isEmpty()) {
+        if(t.getRecipient()==null) {
             //NOTIFICO TUTTI I SUB DI UN MESSAGGIO DELLA CHAT PUBBLICA
             for (ChatSub chatSub : getChatSubs()) {
                 try {
@@ -46,12 +46,11 @@ public class Chat {
             this.texts.add(t);
         }
         else {
-            //NOTIFICO SOLO IL SUB INTERESSATO DELLA CHAT PRIVATA
+            //NOTIFICO SOLO IL SUB INTERESSATO DELLA CHAT PRIVATA e quello che l'ha mandato, così lo mostro a video
             for(ChatSub chatSub: getChatSubs()){
                 try{
-                    if(chatSub.getSub().equals(t.getRecipient())){
+                    if(chatSub.getSub().equals(t.getRecipient()) || chatSub.getSub().equals(t.getSender())){
                         chatSub.ReceivePrivateText(t.getSender(),t.getRecipient(),t.getMex());
-                        break;
                     }
                 }catch (RemoteException ignored){}
             }

@@ -35,6 +35,7 @@ public class ServerMain{
         ServerSocket serverSocket;
         try {
             serverSocket = new ServerSocket(port);
+            System.out.println(port);
             System.out.println("Server started. Waiting for clients...");
         } catch (IOException e) {
             System.err.println(e.getMessage());

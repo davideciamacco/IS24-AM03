@@ -448,9 +448,10 @@ public class PlayerBoard {
         if(check==0){
             throw new NoCardsAvailableException();
         }
-        if(!checkRequirements(c.getRequirements()))
-            throw new RequirementsNotMetException();
-
+        if(c.getFace()){
+            if(!checkRequirements(c.getRequirements()))
+                throw new RequirementsNotMetException();
+        }
 
         board[i][j] = c;
         increaseItemCount(c);

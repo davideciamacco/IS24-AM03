@@ -65,30 +65,30 @@ public class CliView {
                     System.out.println("Missing arguments");
                 }
             }
-            case "JoinGame" -> {
-                try{
+            case "Join" -> {
+                try {
                     client.JoinGame(inputArray[1]);
                 } catch (Exception ignored) {
                     System.out.println("Missing arguments");
                 }
             }
-            case "PickColor" -> {
-                try{
+            case "Color" -> {
+                try {
                     client.PickColor(inputArray[1]);
                 } catch (Exception ignored) {
                     System.out.println("Missing arguments");
                 }
             }
-            case "ChooseStartingCardSide" ->{
-                try{
+            case "Starting" -> {
+                try {
                     client.ChooseStartingCardSide(inputArray[1]);
                 } catch (Exception ignored) {
                     System.out.println("Missing arguments");
                 }
             }
 
-            case "ChooseObjectiveCard" ->{
-                try{
+            case "Objective" -> {
+                try {
                     client.ChooseObjectiveCard(Integer.parseInt(inputArray[1]));
                 } catch (Exception ignored) {
                     System.out.println("Missing arguments");
@@ -104,21 +104,53 @@ public class CliView {
             }
 
             case "DrawResource" -> {
-                    client.DrawResource();
+                client.DrawResource();
             }
             case "DrawGold" -> {
-                    client.DrawGold();
+                client.DrawGold();
             }
-            case "DrawTable" ->{
-                try{
+            case "DrawTable" -> {
+                try {
                     client.DrawTable(Integer.parseInt(inputArray[1]));
                 } catch (Exception ignored) {
                     System.out.println("Missing arguments");
                 }
             }
+            case "SendGroupChat" -> {
+                try {
+                    String text = cliInput.substring("SendGroupChat".length()).trim();
+                    client.sendGroupText(text);
+                } catch (Exception ignored) {
+                    System.out.println("Missing arguments");
+                }
+            }
+            case "SendPrivateChat" -> {
+                String text = cliInput.substring("SendPrivateChat".length()).trim();
+                int first = text.indexOf(' ');
+                try{
+                    check(first);
+
+                }catch (Exception ignored){
+                    System.out.println("Invalid command");
+                }
+                try {
+                    client.sendPrivateText(inputArray[1],text.substring(first+1).trim());
+                }catch(Exception ignored){
+                    System.out.println("Missing arguments");
+                }
+            }
+
             default -> {
                 System.out.println("Invalid Command");
             }
+        }
+    }
+
+
+
+    private void check(int i) throws Exception{
+        if(i==-1){
+            throw new Exception();
         }
     }
 
@@ -271,6 +303,7 @@ public class CliView {
     }
 
     public void drawHand(ArrayList<ResourceCard> hand) {
+        System.out.println("PERSONAL HAND\n");
         System.out.println("FRONT:         BACK:");
         System.out.println("\n");
         for (int i = 0; i < 3; i++) {
@@ -638,11 +671,15 @@ public class CliView {
                 System.out.println("|       |      |   I   |");
                 System.out.println("└-IIIII-┘      O-------O");
             }
+
         }
+        System.out.println("\n");
+        System.out.println("END PERSONAL HAND\n");
     }
 
     public void drawTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
         System.out.print("\n");
+        System.out.println("---COMMON TABLE---\n");
         if (topResDeck == null)
             System.out.print("  ┌-------┐  ");
         else
@@ -870,6 +907,8 @@ public class CliView {
                 }
                 drawCorner(tableCard4, 2, true);
             }
+        System.out.println("\n");
+        System.out.println("---END COMMON TABLE---\n");
 
         }
 
@@ -894,6 +933,8 @@ public class CliView {
     }
 
     public void drawStarting(StartingCard startCard){
+        System.out.println("----STARTING CARD----\n");
+
             System.out.println("FRONT:         BACK:");
             System.out.println("\n");
                 if (startCard.getId() == 80) {
@@ -927,6 +968,7 @@ public class CliView {
                     System.out.println("└---S---┘      P---S---I");
                     System.out.println("\n");
                 }
+        System.out.println("---END STARTING CARD---\n");
 
         }
 
@@ -1025,6 +1067,7 @@ public class CliView {
         } else if(obj.getId()==101) {
             System.out.println("2 points for each pair of quills.");
         }
+
     }
 
     public void drawBoard(PlayableCard[][] board) {
@@ -1309,6 +1352,9 @@ public class CliView {
                             else
                                 System.out.print("| P A F |");
                         }
+                       // System.out.println("\n");
+                       // System.out.println(board[i][j].getFront().get(3).getValue());
+                       // System.out.println("\n");
                         if (!board[i][j].getFront().get(3).getValue()) {
                             if (board[i][j].getFace()) {
                                 if (!board[i][j].getFrontCorner(3).isVisible()) {
@@ -1603,5 +1649,10 @@ public class CliView {
         System.out.println(message);
         }
 
+        public void drawChat(ArrayList<String> chat){
+            for(int i=0; i< chat.size();i++){
+
+            }
+        }
 
     }

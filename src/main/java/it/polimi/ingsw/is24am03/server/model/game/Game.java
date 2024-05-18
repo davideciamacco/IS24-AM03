@@ -141,25 +141,17 @@ public class Game{
             }catch (RemoteException ignored){}
         }
         //notify turn order//
-        ArrayList<String> order = new ArrayList<>();
-        for (Player p : players) {
-            order.add(p.getNickname());
-        }
-        for (GameSub gameSub : gameSubs) {
-            try {
-                gameSub.notifyTurnOrder(order);
-            } catch (RemoteException ignored) {
-            }
-        }
+
 
         //NOTIFY CHANGE STATE
+
+        this.gameState = State.STARTING;
         for (GameSub gameSub : gameSubs) {
             try {
                 gameSub.notifyChangeState(gameState);
             } catch (RemoteException ignored) {
             }
         }
-        this.gameState = State.STARTING;
         startingDeck.shuffle();
         objectiveDeck.shuffle();
         goldDeck.shuffle();
@@ -169,41 +161,10 @@ public class Game{
         //NOFITY COMMON CARDS//
 
         //WE NOTIFY FIRST ON THE FIRST CARD IN RESOURCE DECK AND IN GOLD DECK
-
-        for(GameSub gameSub: gameSubs){
-            try {
-                gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
-                gameSub.updateCommonTable(goldDeck.getCards().get(0),1);
-            }catch (RemoteException ignored){}
-        }
-        //notify on the four common cards
-        for (GameSub gameSub : gameSubs) {
-            try {
-                gameSub.updateCommonTable(tableCards.get(0),2);
-            } catch (RemoteException ignored) {
-            }
-            try {
-                gameSub.updateCommonTable(tableCards.get(1),3);
-            } catch (RemoteException ignored) {
-            }
-            try {
-                gameSub.updateCommonTable(tableCards.get(2),4);
-            } catch (RemoteException ignored) {
-            }
-            try {
-                gameSub.updateCommonTable(tableCards.get(3),5);
-            } catch (RemoteException ignored) {}
-        }
         //DONE
 
         //NOTIFY ON COMMON OBJECTIVE
-        for (GameSub gameSub : gameSubs) {
-            try {
-                gameSub.notifyCommonObjective(commonObjective.get(0), commonObjective.get(1));
-            }catch(RemoteException ignored){}
 
-
-        }
         //DONE
 
         distributeCards();
@@ -270,17 +231,44 @@ public class Game{
             p.addCard(resourceDeck.drawCard());
             p.addCard(goldDeck.drawCard());
             p.setStartingCard(startingDeck.drawCard());
-            p.setObjectiveCard(objectiveDeck.drawCard(),objectiveDeck.drawCard());
+            p.setObjectiveCard(objectiveDeck.drawCard(), objectiveDeck.drawCard());
             //NOTIFY FIRST HAND, comprende anche la starting card e le due objetive cards//
             //trovo il sub corrispondente al player a cui devo notificare le proprie carte
+        }
 
+        //dopo aver distribuito le carte devo:
+        ArrayList<ResourceCard> commons=new ArrayList<>();
+            commons.add(resourceDeck.getCards().get(0));
+            commons.add(goldDeck.getCards().get(0));
+            commons.add(tableCards.get(0));
+        commons.add(tableCards.get(1));
+        commons.add(tableCards.get(2));
+        commons.add(tableCards.get(3));
+        //1: notificare il nuovo stato della board, le carte di resource deck e gold deck sono cambiate
+        for(GameSub gameSub: gameSubs){
             try {
+                gameSub.UpdateFirst(commons);
+                gameSub.notifyCommonObjective(commonObjective.get(0),commonObjective.get(1));
+            }catch (RemoteException ignored){}
+        }
+        for(Player p: players){
+            try{
                 findSub(p).notifyFirstHand(p.getHand().get(0), p.getHand().get(1), p.getHand().get(2), p.getStartingCard(),p.getObjective1(),p.getObjective2());
             }catch (RemoteException ignored){}
-
-
         }
-    }
+        ArrayList<String> order = new ArrayList<>();
+        for (Player p : players) {
+            order.add(p.getNickname());
+        }
+        for (GameSub gameSub : gameSubs) {
+            try {
+                gameSub.notifyTurnOrder(order);
+            } catch (RemoteException ignored) {
+            }
+        }
+        }
+
+
 
 
 
@@ -334,8 +322,8 @@ public class Game{
             //NOTIFY ON JOINED PLAYER, notifico a tutti tranne il player appena entrato
             for (GameSub gameSub : gameSubs) {
                 try {
-                    if(!gameSub.getSub().equals(player)){
-                        gameSub.notifyJoinedPlayer(player);}
+
+                        gameSub.notifyJoinedPlayer(player);
                 } catch (RemoteException ignored) {
                 }
             }
@@ -364,9 +352,9 @@ public class Game{
      * Add a resource card to the selected player
      * @param player represents the player who is drawing
      */
-    public void drawResources(String player) throws EmptyDeckException {
-        if(resourceDeck.isEmpty())
-            throw new EmptyDeckException("There aren't other cards in the selected deck");
+    public void drawResources(String player) /* throws EmptyDeckException*/ {
+        //if(resourceDeck.isEmpty())
+          //  throw new EmptyDeckException("There aren't other cards in the selected deck");
         getPlayers().get(currentPlayer).addCard(resourceDeck.drawCard());
         //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
         try {
@@ -403,9 +391,9 @@ public class Game{
      * Add a gold card to the selected player
      * @param player represents the player who is drawing
      */
-    public void drawGold(String player) throws EmptyDeckException {
-        if(goldDeck.isEmpty())
-            throw new EmptyDeckException("There aren't other cards in the selected deck");
+    public void drawGold(String player) /*throws EmptyDeckException*/ {
+       // if(goldDeck.isEmpty())
+         //   throw new EmptyDeckException("There aren't other cards in the selected deck");
         getPlayers().get(currentPlayer).addCard(goldDeck.drawCard());
         System.out.println("\nID:"+getPlayers().get(currentPlayer).getHand().getFirst().getId()+"\n");
         //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
@@ -444,9 +432,9 @@ public class Game{
      * @param player represents the player who is drawing
      * @param choice consists of the card chosen among the four cards on the table
      */
-    public void drawTable(String player, int choice) throws NullCardSelectedException {
-        if (tableCards.get(choice) == null)
-            throw new NullCardSelectedException();
+    public void drawTable(String player, int choice) /*throws NullCardSelectedException*/ {
+       // if (tableCards.get(choice) == null)
+         //   throw new NullCardSelectedException();
         Player p = players.get(currentPlayer);
         switch (choice) {
             case 0:
@@ -881,39 +869,20 @@ public class Game{
             p.getPlayerBoard().getPlayerBoardSubs().remove(playerBoardSub);
         }
     }
-    public void sendPrivateMessage(String sender, String receiver, String message) throws PlayerAbsentException, BadTextException, InvalidStateException,ParametersException{
+    public void sendPrivateMessage(String sender, String receiver, String message) {
         //controllo su stato del gioco
-        if(gameState==State.WAITING || gameState==State.ENDING){
-            throw new InvalidStateException("You cannot send a text during this state");
-        }
-        List<String> player= players.stream().map(Player::getNickname).toList();
-        player=new ArrayList<>(player);
-        if(!player.contains(receiver)){
-            throw new PlayerAbsentException("Receiver isn't part of the game");
-        }
+
         //se il player è crashato non posso mandare messaggio
         //
         //controllo su sender==null receiver==null  oppure sono vuoti, bad text exception
-        if(sender.isEmpty() || receiver.isEmpty() || message.isEmpty()){
-            throw new BadTextException("receiver or text are empty,try again");
-        }
-        if(sender.equals(receiver)){
-            throw new ParametersException("You cannot send a message to yourself");
-        }
+
 
         Text t=new Text(sender, receiver,message);
         chat.NotifyChat(t);
     }
     //nel game faccio tutti i controlli sul messaggio
-    public void sendGroupMessage(String sender, String message) throws BadTextException, InvalidStateException{
-        if(gameState==State.WAITING || gameState==State.ENDING){
-            throw new InvalidStateException("You cannot send a text during this state");
-        }
-        if(sender.isEmpty() || message.isEmpty()){
-            throw  new BadTextException("Sender or text can't be empty");
-        }
-
-        Text t=new Text(sender, "", message);
+    public void sendGroupMessage(String sender, String message){
+        Text t=new Text(sender,message);
         chat.NotifyChat(t);
     }
     /*
