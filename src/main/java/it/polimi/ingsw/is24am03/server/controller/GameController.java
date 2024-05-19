@@ -285,7 +285,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         {
             if(gameModel == null) throw new GameNotExistingException();
             if(gameModel.getPlayers().size()==gameModel.getNumPlayers()) throw new FullLobbyException();
-            if(player.isBlank() || player.equals("ALL")) throw new IllegalArgumentException();
+            if(player.isBlank()) throw new IllegalArgumentException();
             for(Player p: gameModel.getPlayers())
                 if(p.getNickname().equals(player)) throw new NicknameAlreadyUsedException();
             gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
