@@ -120,7 +120,8 @@ public class CliView {
                 try{
                     client.RejoinGame(inputArray[1]);
                 } catch (Exception ignored) {
-                    System.out.println("Missing arguments");
+                    ignored.printStackTrace();
+                    System.out.println("Missing arguments!");
                 }
             }
             default -> {

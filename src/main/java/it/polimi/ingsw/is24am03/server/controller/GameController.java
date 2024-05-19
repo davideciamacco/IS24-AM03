@@ -7,9 +7,11 @@ import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.Game;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
+import javafx.util.Pair;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -25,10 +27,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     private final Object gameLock;
     private final Object chatLock;
 
+    private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);;
 
     private ScheduledFuture<?> thread;
 
+    private ArrayList<Pair<String, Long>> heartBeats;
 
     /**
      * Using the GameInterface type for gameModel allows flexibility.
@@ -41,8 +46,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      //* @param game the game model to be associated with this controller
      */
     public GameController() throws RemoteException {
+        heartBeats = new ArrayList<>();
         gameLock= new Object();
         chatLock=new Object();
+        startHeartbeatChecker();
     }
 
     public void canStart(){
@@ -51,11 +58,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void createGame(int numPlayers, String nickname) throws GameAlreadyCreatedException {
+    public void createGame(int numPlayers, String nickname, String ConnectionType) throws GameAlreadyCreatedException {
         synchronized (gameLock) {
             if(nickname.isBlank() || numPlayers<2 || numPlayers>4) throw new IllegalArgumentException();
             if(gameModel!=null) throw new GameAlreadyCreatedException();
             gameModel = new Game(numPlayers, nickname);
+            if(ConnectionType.equals("RMI"))
+                heartBeats.add(new Pair<>(nickname, System.currentTimeMillis()));
         }
     }
 
@@ -118,17 +127,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             try {
                 gameModel.drawResources(player);
             } catch (EmptyDeckException e)
-            {}
+            {
+                System.out.println("Mazzo vuoto");
+            }
         }
     }
-
-    /*public ArrayList<Player> checkWinner()
-    {
-        synchronized (gameLock)
-        {
-            return gameModel.checkWinner();
-        }
-    }*/
 
     /**
      * Draws gold for the player from the gold deck.
@@ -196,7 +199,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * @throws FullLobbyException if the lobby is already full
      * @throws NicknameAlreadyUsedException if the provided nickname is already used by another player
      */
-    public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException, IllegalArgumentException, GameNotExistingException {
+    public void addPlayer(String player, String ConnectionType) throws FullLobbyException, NicknameAlreadyUsedException, IllegalArgumentException, GameNotExistingException {
         synchronized (gameLock)
         {
             if(gameModel == null) throw new GameNotExistingException();
@@ -206,6 +209,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 if(p.getNickname().equals(player)) throw new NicknameAlreadyUsedException();
             gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
             gameModel.addPlayer(player);
+            if(ConnectionType.equals("RMI"))
+                heartBeats.add(new Pair<>(player, System.currentTimeMillis()));
         }
     }
 
@@ -289,6 +294,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()-1);
         if(gameModel.getNumPlayersConnected()<=1){
             startTimer();
+            System.out.println("Timer avviato");
         }
         for(int i=0; i<gameModel.getNumPlayers(); i++) {
             if (gameModel.getPlayers().get(i).getNickname().equals(nickname)) {
@@ -328,7 +334,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void rejoinGame(String nickname){
+    public void rejoinGame(String nickname) throws InvalidStateException {
         int check=-1;
         int i=0;
         while(i<gameModel.getPlayers().size() && check==-1) {
@@ -338,19 +344,20 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
         if(check==-1)
             throw new IllegalArgumentException();
-        else {
-            gameModel.getPlayers().get(check).setConnected(true);
-            System.out.println(gameModel.getNumPlayersConnected());
-            gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
-            System.out.println(gameModel.getNumPlayersConnected());
-            if(gameModel.getNumPlayersConnected()==2)
-                stopTimer();
+        if(gameModel.getGameState().equals(State.ENDING))
+            throw new InvalidStateException("Action not allowed in this state");
+        gameModel.getPlayers().get(check).setConnected(true);
+        System.out.println(gameModel.getNumPlayersConnected());
+        gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
+        System.out.println(gameModel.getNumPlayersConnected());
+        if(gameModel.getNumPlayersConnected()==2)
+            stopTimer();
         }
-    }
+
 
     public void startTimer() {
 
-        long limit = 30;
+        long limit = 100;
 
         Runnable task = () -> {
             if(gameModel.getNumPlayersConnected()<2)
@@ -369,6 +376,28 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         System.out.println("Timer interrotto");
     }
 
+    public void setLastHeartBeat(String player){
+        for(int i=0; i< heartBeats.size(); i++){
+            if(heartBeats.get(i).getKey().equals(player))
+                heartBeats.set(i, new Pair<>(player, System.currentTimeMillis()));
+        }
+    }
+
+    public void checkHeartBeats(){
+        long currentTime = System.currentTimeMillis();
+        for (int i=0; i<heartBeats.size(); i++) {
+            if (currentTime - heartBeats.get(i).getValue() > 5000) {
+                handleCrashedPlayer(heartBeats.get(i).getKey());
+                heartBeats.remove(i);
+                i--;
+            }
+        }
+    }
+
+    private void startHeartbeatChecker() {
+        long heartbeatInterval = 5000; // 100 seconds
+        heartbeatScheduler.scheduleAtFixedRate(this::checkHeartBeats, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
+    }
 
     public Game getGameModel() {
         return gameModel;

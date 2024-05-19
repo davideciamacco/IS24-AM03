@@ -11,43 +11,44 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ClientRMI implements Client{
     Registry registry;
-    private String username;
     private RemoteGameController gameController;
     private final CliView view;
-    //private Game gameModel;
     private final String ip;
     private final int port;
     private boolean hasJoined;
-    private boolean connectionClosed;
     private String nickname;
 
     private ClientModel clientModel;
+    private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
+
 
     public ClientRMI(String hostName, int portNumber, CliView view) {
         boolean connected = false;
-        this.connectionClosed = false;
         this.hasJoined=false;
         RemoteGameController temp = null;
         this.ip = hostName;
         this.port = portNumber;
         this.view = view;
         while(!connected){
-            try{
-                this.registry= LocateRegistry.getRegistry(hostName, portNumber);
+            try {
+                this.registry = LocateRegistry.getRegistry(hostName, portNumber);
                 String remoteObjectName = "game_controller";
-                temp =  (RemoteGameController) registry.lookup(remoteObjectName);
+                temp = (RemoteGameController) registry.lookup(remoteObjectName);
 
                 connected = true;
-            }catch(RemoteException e){
-            }catch(NotBoundException e){
             }
-
+            catch(RemoteException e){}
+            catch(NotBoundException e){}
         }
-
         this.gameController = temp;
+        startHeartbeatSender();
+        addShutdownHook();
     }
 
 
@@ -55,7 +56,7 @@ public class ClientRMI implements Client{
 
         try {
             clientModel=new ClientModel(nickname,view);
-            this.gameController.createGame(nPlayers, nickname);
+            this.gameController.createGame(nPlayers, nickname, "RMI");
 
             System.out.println("Game created successfully");
             this.nickname = nickname;
@@ -74,13 +75,18 @@ public class ClientRMI implements Client{
 
     public void JoinGame(String nickname){
         try{
-            clientModel=new ClientModel(nickname, view);
-            this.gameController.addPlayer(nickname);
-            System.out.println("Joined successfully");
-            hasJoined=true;
-            this.nickname=nickname;
-            this.subscribeToObservers();
-            this.gameController.canStart();
+            if(!hasJoined){
+                clientModel=new ClientModel(nickname, view);
+                this.gameController.addPlayer(nickname, "RMI");
+                System.out.println("Joined successfully");
+                hasJoined=true;
+                this.nickname=nickname;
+                this.subscribeToObservers();
+                this.gameController.canStart();
+            }
+            else{
+                System.out.println("Already joined");
+            }
         }
         catch(IllegalArgumentException e)
         {
@@ -250,14 +256,25 @@ public class ClientRMI implements Client{
 
     public void RejoinGame(String nickname){
         try{
-            this.gameController.rejoinGame(nickname);
-            System.out.println("Rejoined successfully");
+            if(!hasJoined){
+                clientModel=new ClientModel(nickname, view);
+                this.gameController.rejoinGame(nickname);
+                System.out.println("Rejoined successfully");
+                hasJoined=true;
+                this.nickname=nickname;
+                this.subscribeToObservers();
+            }
+            else{
+                System.out.println("Already joined");
+            }
         }
         catch(IllegalArgumentException e){
             System.out.println("Player not existing");
         }
         catch (RemoteException e){
 
+        } catch (InvalidStateException e) {
+            System.out.println("Action not allowed in this state");
         }
     }
 
@@ -298,6 +315,25 @@ public class ClientRMI implements Client{
             gameController.removeSub((GameSub) clientModel);
         }catch (RemoteException e){}
 
+    }
+
+    private void startHeartbeatSender() {
+        long heartbeatInterval = 5000; // 5 seconds
+        heartbeatScheduler.scheduleAtFixedRate(this::sendHeartbeat, 0, heartbeatInterval, TimeUnit.MILLISECONDS);
+    }
+
+    private void sendHeartbeat() {
+        try {
+            gameController.setLastHeartBeat(nickname);
+        } catch (RemoteException e) {
+        }
+    }
+
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Arresto");
+            removeFromObservers();
+        }));
     }
 }
 

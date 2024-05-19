@@ -160,7 +160,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.gameState=gameState;
         viewInterface.notify("Game state has changed, now is "+gameState.toString());
 
-
     }
 
     @Override
@@ -171,10 +170,10 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     @Override
     public synchronized void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException{
         //all'interno devo mettergli quello che c'era prima
-        PlayableCard[][] tempBoard;
+        PlayableCard[][] tempBoard;/*
         tempBoard= boards.get(player);
         tempBoard[i][j]=p;
-        boards.put(player, tempBoard);
+        boards.put(player, tempBoard);*/
         viewInterface.notify(player + " placed a card");
         if(player.equals(this.player)){
 

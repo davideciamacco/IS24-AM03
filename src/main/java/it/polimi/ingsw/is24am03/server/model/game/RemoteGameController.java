@@ -6,11 +6,11 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RemoteGameController extends Remote{
-    public void createGame(int numPlayers, String nickname) throws RemoteException, GameAlreadyCreatedException;
+    public void createGame(int numPlayers, String nickname, String ConnectionType) throws RemoteException, GameAlreadyCreatedException;
     public void drawResources(String player) throws EmptyDeckException, PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException;
     public void drawGold(String player) throws PlayerNotInTurnException, InvalidStateException, EmptyDeckException, RemoteException, GameNotExistingException;
     public void drawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, NullCardSelectedException, RemoteException, GameNotExistingException;
-    public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException, RemoteException, GameNotExistingException;
+    public void addPlayer(String player, String ConnectionType) throws FullLobbyException, NicknameAlreadyUsedException, RemoteException, GameNotExistingException;
     public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException;
     public void setObjectiveCard(String player, int choice) throws PlayerNotInTurnException, RemoteException, GameNotExistingException, InvalidStateException;
 
@@ -35,6 +35,8 @@ public interface RemoteGameController extends Remote{
     public void canStart() throws RemoteException;
 
 
-    void rejoinGame(String nickname) throws RemoteException;
+    void rejoinGame(String nickname) throws RemoteException, InvalidStateException;
+
+    void setLastHeartBeat(String nickname) throws RemoteException;
 }
 

@@ -138,6 +138,9 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result = false;
             description = "Player not existing";
+        } catch (InvalidStateException e) {
+            result=false;
+            description="Action not allowed in this state";
         }
         return new ConfirmRejoinGameMessage(result, description);
     }
@@ -180,7 +183,11 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         catch (RequirementsNotMetException e){
             result = false;
             description = "Gold card requirements not satisfied";
-        } catch (RemoteException e) {
+        }
+        catch(IllegalArgumentException e){
+            result = false;
+            description = "Invalid arguments";
+        }  catch (RemoteException e) {
             throw new RuntimeException(e);
         }
         return new ConfirmPlaceMessage(result, description);
@@ -220,7 +227,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         String description = "";
         try {
 
-            gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname());
+            gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname(), "TCP");
             this.nickname=createGameMessage.getNickname();
             this.subscribeToObservers();
             result = true;
@@ -246,7 +253,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
                     //posso iscrivere il sub al gioco
                     this.nickname = joinGameMessage.getNickname();
-                    gameController.addPlayer(joinGameMessage.getNickname());
+                    gameController.addPlayer(joinGameMessage.getNickname(), "TCP");
                     this.subscribeToObservers();
                     gameController.canStart();
                     result = true;
@@ -347,7 +354,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.drawGold(DrawResourceMessage.getNickname());
+            gameController.drawResources(DrawResourceMessage.getNickname());
             result = true;
         }
         catch(PlayerNotInTurnException e)
