@@ -44,6 +44,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      */
     private Game gameModel = null;
 
+    boolean timer;
     /**
      * Constructs a GameController with the specified game.
      *
@@ -54,6 +55,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         gameLock= new Object();
         chatLock=new Object();
         startHeartbeatChecker();
+        timer=false;
     }
 
     public void canStart(){
@@ -455,7 +457,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     public void startTimer() {
 
-        long limit = 100;
+        long limit = 20;
 
         Runnable task = () -> {
             if(gameModel.getNumPlayersConnected()<2)
@@ -465,11 +467,15 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             }
             scheduler.shutdown();
         };
+        if(!timer) {
+            thread = scheduler.schedule(task, limit, TimeUnit.SECONDS);
+            timer = true;
+        }
 
-        thread = scheduler.schedule(task, limit, TimeUnit.SECONDS);
     }
 
     public void stopTimer(){
+        timer=false;
         thread.cancel(true);
         System.out.println("Timer interrotto");
     }
