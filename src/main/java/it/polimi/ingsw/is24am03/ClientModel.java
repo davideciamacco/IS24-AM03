@@ -155,7 +155,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.gameState=gameState;
         viewInterface.notify("Game state has changed, now is "+gameState.toString());
 
-
     }
 
     @Override
@@ -166,9 +165,12 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     @Override
     public synchronized void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException{
         //all'interno devo mettergli quello che c'era prima
-        PlayableCard[][] tempBoard;
+        PlayableCard[][] tempBoard;/*
         tempBoard= boards.get(player);
         tempBoard[i][j]=p;
+
+        boards.put(player, tempBoard);*/
+        /*
         if (i + 1 < 81 && j + 1 < 81 && tempBoard[i + 1][j + 1] != null) {
             tempBoard[i + 1][j + 1].setCornerCoverage(0, true); // Imposta come coperto l'angolo 0 della carta adiacente in basso a destra
         }
@@ -180,8 +182,9 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         }
         if (i - 1 >= 0 && j - 1 >= 0 && tempBoard[i - 1][j - 1] != null) {
             tempBoard[i - 1][j - 1].setCornerCoverage(2, true); // Imposta come coperto l'angolo 2 della carta adiacente in alto a sinistra
-        }
+        }*/
         boards.put(player, tempBoard);
+
         viewInterface.notify(player + " placed a card");
         if(player.equals(this.player)){
             System.out.println("Card placed successfully\n");

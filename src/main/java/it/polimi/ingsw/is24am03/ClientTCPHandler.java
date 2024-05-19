@@ -29,11 +29,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, PlayerBoardSub{
-    private  Socket socket;
+    private Socket socket;
     private GameController gameController;
     private  ObjectInputStream inputStream;
     private  ObjectOutputStream outputStream;
-
+    private boolean active;
     private String nickname;
     private  Queue<Message> queueMessages;
 
@@ -44,6 +44,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         this.socket = socket;
         this.gameController = gameController;
         this.queueMessages = new ArrayDeque<>();
+        active=true;
         try {
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
@@ -52,58 +53,29 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         }
     }
 
-
-    public void run() {
-        this.ParserAgent();
-        this.messagesReceiver();
-    }
-
-    private void ParserAgent(){
-        parseExecutors.execute( () -> {
-            Message response;
-            parserLoop:
-            while (true)
-                synchronized (queueMessages) {
-                    while (queueMessages.isEmpty()) {
-                        try {
-                            queueMessages.wait();
-                        } catch (InterruptedException e) {
-                            break parserLoop;
-                        }
-                    }
-                    response = this.messageParser(queueMessages.poll());
-                    //System.out.println("Server riceve da client");
-                    sendMessage(response);
-
-
-                }
-        });
-    }
-    private void messagesReceiver()  {
-        parseExecutors.execute( () -> {
-            while(true) {
-                synchronized (queueMessages) {
-                    try {
-                        Message incomingMessage = (Message) inputStream.readObject();
-                        queueMessages.add(incomingMessage);
-                        queueMessages.notifyAll();
-                        queueMessages.wait(1);
-                    } catch ( ClassNotFoundException | InterruptedException e) {
-
-                        e.printStackTrace();
-                        break;
-                    } catch(SocketException e){
-                        e.printStackTrace();
-                        break;
-                    }
-                    catch ( IOException ignored){
-                        ignored.printStackTrace();
-                    }
-                }
+    public void run(){
+        Message response;
+        while(active){
+            try {
+                Message incomingMessage = (Message) inputStream.readObject();
+                response = this.messageParser(incomingMessage);
+                sendMessage(response);
             }
-        });
-        System.out.println("A");
+            catch(SocketException e){
+                e.printStackTrace();
+                active=false;
+            }
+            catch ( ClassNotFoundException e){
+                e.printStackTrace();
+            }
+            catch (IOException ignored) {
+                ignored.printStackTrace();
+            }
+        }
+        gameController.handleCrashedPlayer(nickname);
+        removeFromObservers();
     }
+
 
     private Message messageParser(Message inputMessage){
         Message outputMessage=null;
@@ -118,13 +90,13 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             case DRAW_GOLD -> outputMessage =this.parse((DrawGoldMessage) inputMessage);
             case DRAW_RESOURCE -> outputMessage = this.parse((DrawResourceMessage) inputMessage);
             case DRAW_TABLE -> outputMessage = this.parse((DrawTableMessage) inputMessage);
-      //      case REJOIN_GAME -> outputMessage=this.parse((RejoinGameMessage) inputMessage);
+            case REJOIN_GAME -> outputMessage=this.parse((RejoinGameMessage) inputMessage);
             case GROUP_CHAT -> outputMessage=this.parse((GroupChatMessage)inputMessage);
             case PRIVATE_CHAT -> outputMessage=this.parse((PrivateChatMessage) inputMessage);
-
         }
         return outputMessage;
     }
+
     private Message parse(DrawTableMessage DrawTableMessage){
         boolean result;
         String description = "";
@@ -146,6 +118,8 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result = false;
             description = "Game not existing";
+        } catch (NullCardSelectedException e) {
+            throw new RuntimeException(e);
         }
         catch (NullCardSelectedException e){
             result=false;
@@ -157,28 +131,28 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
 
         return new ConfirmDrawMessage(result, description);
     }
-/*
-    private Message parse(RejoinGameMessage RejoinGameMessage){
+
+    private Message parse(RejoinGameMessage rejoinGameMessage){
         boolean result;
         String description = "";
         try {
-            gameController.rejoinPLayer();
+            gameController.rejoinGame(rejoinGameMessage.getNickname());
             result = true;
+            this.nickname = rejoinGameMessage.getNickname();
+            this.subscribeToObservers();
+
         }
-        catch (PlayerNotInTurnException e)
-        {
-            result=false;
-            description="Not your turn";
-        }
-        catch(InvalidStateException e )
+        catch(IllegalArgumentException e )
         {
             result = false;
-            description = "Game not existing";
+            description = "Player not existing";
+        } catch (InvalidStateException e) {
+            result=false;
+            description="Action not allowed in this state";
         }
-
-        return new ConfirmPlaceMessage(result, description);
+        return new ConfirmRejoinGameMessage(result, description);
     }
-    */
+
     private Message parse(PlaceCardMessage placeCardMessage){
         boolean result;
 
@@ -221,7 +195,11 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         catch (RequirementsNotMetException e){
             result = false;
             description = "Gold card requirements not satisfied";
-        } catch (RemoteException e) {
+        }
+        catch(IllegalArgumentException e){
+            result = false;
+            description = "Invalid arguments";
+        }  catch (RemoteException e) {
             throw new RuntimeException(e);
         }
         return new ConfirmPlaceMessage(result, description);
@@ -237,6 +215,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result=false;
             description = "Invalid arguments";
+        }
+        catch(InvalidStateException e){
+            result=false;
+            description = "Action not allowed in this state";
         }
         catch (PlayerNotInTurnException e)
         {
@@ -261,7 +243,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         String description = "";
         try {
 
-            gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname());
+            gameController.createGame(createGameMessage.getPlayerNumber(), createGameMessage.getNickname(), "TCP");
             this.nickname=createGameMessage.getNickname();
             this.subscribeToObservers();
             result = true;
@@ -287,9 +269,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
                     //posso iscrivere il sub al gioco
                     this.nickname = joinGameMessage.getNickname();
-                    gameController.addPlayer(joinGameMessage.getNickname());
-                this.subscribeToObservers();
-
+                    gameController.addPlayer(joinGameMessage.getNickname(), "TCP");
+                    this.subscribeToObservers();
+                    gameController.canStart();
+                    result = true;
             }
             else
             {
@@ -394,6 +377,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         }
         return new ConfirmStartingCardMessage(result, description);
     }
+  
     private Message parse(DrawResourceMessage DrawResourceMessage){
         boolean result;
         String description = "";

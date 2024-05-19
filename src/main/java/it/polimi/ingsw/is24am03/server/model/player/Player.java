@@ -27,6 +27,8 @@ public class Player {
     private int numObj;
     private  PlayerBoard playerBoard;
 
+    private boolean connected;
+
     private ArrayList<PlayerSub> playerSubs;
 
     /**
@@ -46,6 +48,7 @@ public class Player {
         this.numObj = 0;
         this.playerBoard = new PlayerBoard(this);
         this.playerSubs=new ArrayList<>();
+        this.connected = true;
     }
     public boolean isWinner(){
         return this.winner;
@@ -185,6 +188,12 @@ public class Player {
         return playerSubs;
     }
 
+    public void setConnected(boolean state){
+        this.connected=state;
+    }
 
+    public boolean getConnected(){
+        return connected;
+    }
 
 }

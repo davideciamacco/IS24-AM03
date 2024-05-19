@@ -7,11 +7,19 @@ import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.Game;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
+import javafx.util.Pair;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import java.util.List;
+
 
 /**
  * the game controller ensures the communication through client controller and server model
@@ -22,6 +30,14 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      */
     private final Object gameLock;
     private final Object chatLock;
+
+    private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);;
+
+    private ScheduledFuture<?> thread;
+
+    private ArrayList<Pair<String, Long>> heartBeats;
 
     /**
      * Using the GameInterface type for gameModel allows flexibility.
@@ -34,8 +50,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      //* @param game the game model to be associated with this controller
      */
     public GameController() throws RemoteException {
+        heartBeats = new ArrayList<>();
         gameLock= new Object();
         chatLock=new Object();
+        startHeartbeatChecker();
     }
 
     public void canStart(){
@@ -46,11 +64,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void createGame(int numPlayers, String nickname) throws GameAlreadyCreatedException {
+    public void createGame(int numPlayers, String nickname, String ConnectionType) throws GameAlreadyCreatedException {
         synchronized (gameLock) {
             if(nickname.isBlank() || numPlayers<2 || numPlayers>4) throw new IllegalArgumentException();
             if(gameModel!=null) throw new GameAlreadyCreatedException();
             gameModel = new Game(numPlayers, nickname);
+            if(ConnectionType.equals("RMI"))
+                heartBeats.add(new Pair<>(nickname, System.currentTimeMillis()));
         }
     }
     //metodo per verificare che la selezione della starting card può avere senso
@@ -83,6 +103,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     //metodo per verificare che player può selezionare carta obiettivo
 
+
     public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException,GameNotExistingException{
         synchronized (gameLock) {
             if (!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
@@ -93,10 +114,14 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if (choice < 1 || choice > 2) throw new IllegalArgumentException();
         }
     }
+          
     public void setObjectiveCard(String player, int choice) {
       /*  if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
+
             throw new PlayerNotInTurnException();
         }
+        if(!gameModel.getGameState().equals(State.OBJECTIVE))
+            throw new InvalidStateException("Action not allowed in this state");
         if(gameModel == null)
             throw new GameNotExistingException();
         if(choice<1 || choice>2) throw new IllegalArgumentException();*/
@@ -143,18 +168,17 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 throw new InvalidStateException("Action not allowed in this state");
             try {*/
                 gameModel.drawResources(player);
+
+            } catch (EmptyDeckException e)
+            {
+                System.out.println("Mazzo vuoto");
+            }
+
             /*} catch (EmptyDeckException e)
             {}*/
+
         }
     }
-
-    /*public ArrayList<Player> checkWinner()
-    {
-        synchronized (gameLock)
-        {
-            return gameModel.checkWinner();
-        }
-    }*/
 
     /**
      * Draws gold for the player from the gold deck.
@@ -216,6 +240,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      */
 
     public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException{
+
         synchronized (gameLock)
         {
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
@@ -228,6 +253,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if(gameModel.getTableCards().get(choice)==null){
                throw new NullCardSelectedException();
             }
+
+            catch(NullCardSelectedException e){
+                throw e;
+            }
+
 
         }
     }
@@ -246,6 +276,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 gameModel.drawTable(player, choice);
             /*}
             catch(NullCardSelectedException e){}*/
+
         }
     }
 
@@ -256,7 +287,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * @throws FullLobbyException if the lobby is already full
      * @throws NicknameAlreadyUsedException if the provided nickname is already used by another player
      */
-    public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException, IllegalArgumentException, GameNotExistingException {
+    public void addPlayer(String player, String ConnectionType) throws FullLobbyException, NicknameAlreadyUsedException, IllegalArgumentException, GameNotExistingException {
         synchronized (gameLock)
         {
             if(gameModel == null) throw new GameNotExistingException();
@@ -264,7 +295,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if(player.isBlank() || player.equals("ALL")) throw new IllegalArgumentException();
             for(Player p: gameModel.getPlayers())
                 if(p.getNickname().equals(player)) throw new NicknameAlreadyUsedException();
+            gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
             gameModel.addPlayer(player);
+            if(ConnectionType.equals("RMI"))
+                heartBeats.add(new Pair<>(player, System.currentTimeMillis()));
         }
     }
 
@@ -373,6 +407,114 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    public void handleCrashedPlayer(String nickname){
+        gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()-1);
+        if(gameModel.getNumPlayersConnected()<=1){
+            startTimer();
+            System.out.println("Timer avviato");
+        }
+        for(int i=0; i<gameModel.getNumPlayers(); i++) {
+            if (gameModel.getPlayers().get(i).getNickname().equals(nickname)) {
+                gameModel.getPlayers().get(i).setConnected(false);
+            }
+        }
+        if(gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(nickname)) {
+            if (gameModel.getGameState().equals(State.PLAYING))
+                gameModel.nextTurn();
+            else if (gameModel.getGameState().equals(State.DRAWING)) {
+                try {
+                    gameModel.drawResources(nickname);
+                } catch (EmptyDeckException e1) {
+                    try {
+                        gameModel.drawGold(nickname);
+                    } catch (EmptyDeckException e2) {
+                        try {
+                            gameModel.drawTable(nickname, 1);
+                        } catch (NullCardSelectedException e3) {
+                            try {
+                                gameModel.drawTable(nickname, 2);
+                            } catch (NullCardSelectedException e4) {
+                                try {
+                                    gameModel.drawTable(nickname, 3);
+                                } catch (NullCardSelectedException e5) {
+                                    try {
+                                        gameModel.drawTable(nickname, 4);
+                                    } catch (NullCardSelectedException e6) {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void rejoinGame(String nickname) throws InvalidStateException {
+        int check=-1;
+        int i=0;
+        while(i<gameModel.getPlayers().size() && check==-1) {
+            if (gameModel.getPlayers().get(i).getNickname().equals(nickname) && !gameModel.getPlayers().get(i).getConnected())
+                check = i;
+            i++;
+        }
+        if(check==-1)
+            throw new IllegalArgumentException();
+        if(gameModel.getGameState().equals(State.ENDING))
+            throw new InvalidStateException("Action not allowed in this state");
+        gameModel.getPlayers().get(check).setConnected(true);
+        System.out.println(gameModel.getNumPlayersConnected());
+        gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
+        System.out.println(gameModel.getNumPlayersConnected());
+        if(gameModel.getNumPlayersConnected()==2)
+            stopTimer();
+        }
+
+
+    public void startTimer() {
+
+        long limit = 100;
+
+        Runnable task = () -> {
+            if(gameModel.getNumPlayersConnected()<2)
+            {
+                gameModel.setTimer(true);
+                System.out.println("Timer raggiunto.");
+            }
+            scheduler.shutdown();
+        };
+
+        thread = scheduler.schedule(task, limit, TimeUnit.SECONDS);
+    }
+
+    public void stopTimer(){
+        thread.cancel(true);
+        System.out.println("Timer interrotto");
+    }
+
+    public void setLastHeartBeat(String player){
+        for(int i=0; i< heartBeats.size(); i++){
+            if(heartBeats.get(i).getKey().equals(player))
+                heartBeats.set(i, new Pair<>(player, System.currentTimeMillis()));
+        }
+    }
+
+    public void checkHeartBeats(){
+        long currentTime = System.currentTimeMillis();
+        for (int i=0; i<heartBeats.size(); i++) {
+            if (currentTime - heartBeats.get(i).getValue() > 5000) {
+                handleCrashedPlayer(heartBeats.get(i).getKey());
+                heartBeats.remove(i);
+                i--;
+            }
+        }
+    }
+
+    private void startHeartbeatChecker() {
+        long heartbeatInterval = 5000; // 100 seconds
+        heartbeatScheduler.scheduleAtFixedRate(this::checkHeartBeats, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
+    }
 
     public Game getGameModel() {
         return gameModel;

@@ -116,6 +116,16 @@ public class CliView {
                     System.out.println("Missing arguments");
                 }
             }
+
+            case "RejoinGame" ->{
+                try{
+                    client.RejoinGame(inputArray[1]);
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                    System.out.println("Missing arguments!");
+                }
+            }
+
             case "SendGroupChat" -> {
                 try {
                     String text = cliInput.substring("SendGroupChat".length()).trim();
@@ -139,6 +149,7 @@ public class CliView {
                     System.out.println("Missing arguments");
                 }
             }
+
 
             default -> {
                 System.out.println("Invalid Command");

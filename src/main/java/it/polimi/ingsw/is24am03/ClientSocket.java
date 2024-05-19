@@ -113,6 +113,17 @@ public class ClientSocket implements Client{
         this.sendMessage(privateChatMessage);
     }
 
+    public void RejoinGame(String player_name){
+        RejoinGameMessage rejoinGameMessage = new RejoinGameMessage(player_name);
+        this.nickname = player_name;
+        try{
+            clientModel = new ClientModel(player_name, view);
+        }
+        catch(RemoteException e){}
+        this.sendMessage(rejoinGameMessage);
+    }
+
+
     private void messagesReceiver()  {
         threadManager.execute( () -> {
             boolean active = true;
@@ -164,6 +175,7 @@ public class ClientSocket implements Client{
             case CONFIRM_CHOOSE_OBJECTIVE -> this.parse((ConfirmChooseObjectiveMessage) responseMessage);
             case CONFIRM_PLACE -> this.parse((ConfirmPlaceMessage) responseMessage);
             case CONFIRM_DRAW -> this.parse((ConfirmDrawMessage) responseMessage);
+            case CONFIRM_REJOIN -> this.parse((ConfirmRejoinGameMessage) responseMessage);
 
             ///////
 
@@ -291,6 +303,13 @@ public class ClientSocket implements Client{
         } catch (RemoteException e) {
 
         }
+    }
+
+    private void parse(ConfirmRejoinGameMessage response){
+        if(response.getConfirmRejoin())
+            System.out.println("Rejoined successfully");
+        else
+            System.out.println(response.getDetails());
     }
 
     private void parse(JoinedPlayerMessage response){

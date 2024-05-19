@@ -6,6 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RemoteGameController extends Remote{
+
     public void createGame(int numPlayers, String nickname) throws RemoteException, GameAlreadyCreatedException;
     public void drawResources(String player) throws /*throws EmptyDeckException, PlayerNotInTurnException, InvalidStateException*/ RemoteException; /*GameNotExistingException*/
     public void drawGold(String player) throws /*PlayerNotInTurnException, InvalidStateException, EmptyDeckException,  GameNotExistingException*/RemoteException;
@@ -13,6 +14,7 @@ public interface RemoteGameController extends Remote{
     public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException, RemoteException, GameNotExistingException;
     public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException, ArgumentException;
     public void setObjectiveCard(String player, int choice) throws RemoteException;
+
 
     public void selectStartingFace(String player, String face)throws RemoteException;
     public void canSelectStartingFace(String player, String face)throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, RemoteException;
@@ -44,6 +46,8 @@ public void canPickColor(String nickname, String color) throws PlayerNotInTurnEx
 public void canSendGroupChat(String sender, String text) throws  BadTextException,InvalidStateException, RemoteException;
 public void canSendPrivateChat(String sender, String receiver, String text) throws  PlayerAbsentException, BadTextException, InvalidStateException, ParametersException, RemoteException;
 
+    void rejoinGame(String nickname) throws RemoteException, InvalidStateException;
 
+    void setLastHeartBeat(String nickname) throws RemoteException;
 }
 
