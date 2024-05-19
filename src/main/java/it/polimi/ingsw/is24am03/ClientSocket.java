@@ -102,14 +102,14 @@ public class ClientSocket implements Client{
     }
 
     @Override
-    public void sendGroupText(String sender, String text) {
-        GroupChatMessage groupChatMessage= new GroupChatMessage(sender, text);
+    public void sendGroupText(String text) {
+        GroupChatMessage groupChatMessage= new GroupChatMessage(nickname, text);
         this.sendMessage(groupChatMessage);
     }
 
     @Override
-    public void sendPrivateText(String sender, String receiver, String text) {
-        PrivateChatMessage privateChatMessage= new PrivateChatMessage(sender, receiver, text);
+    public void sendPrivateText(String receiver, String text) {
+        PrivateChatMessage privateChatMessage= new PrivateChatMessage(nickname, receiver, text);
         this.sendMessage(privateChatMessage);
     }
 
@@ -200,7 +200,7 @@ public class ClientSocket implements Client{
             //PRIVATE MESSAGES//
             case UPDATE_PERSONAL_CARDS-> this.parse((PersonalCardsMessage) responseMessage);
             //message choice objective is sent after the player chose his secret objective
-            case CHOICE_OBJECTIVE-> this.parse((ChoiceObjectiveMessage) responseMessage);
+            case UPDATE_PERSONAL_OBJECTIVE-> this.parse((ChoiceObjectiveMessage) responseMessage);
             //first-hand message contains first hand of the player + objective cards+ starting card
             case FIRST_HAND-> this.parse((FirstHandMessage) responseMessage);
             //MESSAGGIO DI UPDATE PER IL PLAYER CRASHATO RITORNATO IN GIOCO//
@@ -212,9 +212,9 @@ public class ClientSocket implements Client{
             case PRIVATE_CHAT-> this.parse((PrivateChatMessage) responseMessage);
             case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
 
-
+            case FIRST_COMMON -> this.parse((StartingCommonMessage)responseMessage);
             case AVAILABLE_COLORS -> this.parse((AvailableColorMessage) responseMessage);
-            //case FINAL_COLORS -> this.parse((FinalColorsMessage)responseMessage);
+            case FINAL_COLORS -> this.parse((FinalColorsMessage)responseMessage);
             //case NOTIFY_ADDITIONAL_ROUND -> this.parse((LastRoundMessage)responseMessage);
             case NOTIFY_NUM_PLAYERS_REACHED -> this.parse((NotifyNumPlayersReachedMessage)responseMessage);
             default -> {
@@ -224,6 +224,16 @@ public class ClientSocket implements Client{
 
     //TUTTE LE NOTIFICHE DI UPDATE VERRANNO POI GESTITE CON METODI CHIAMATI SUL LOCAL MODEL /
 
+    private void parse(FinalColorsMessage response){
+        try{
+            this.clientModel.notifyFinalColors(response.getColors());
+        }catch (RemoteException e){}
+    }
+    private void parse(StartingCommonMessage response){
+        try{
+            this.clientModel.UpdateFirst(response.getCommons());
+        }catch (RemoteException e){}
+    }
 
     private void parse(AvailableColorMessage response){
         try {
@@ -247,11 +257,9 @@ public class ClientSocket implements Client{
         System.out.flush();
     }
     private void parse(ConfirmPlaceMessage message) {
-        if (message.getConfirmPlace()){
-            System.out.println("Card placed successfully");
-        }
-        else
+        if (!message.getConfirmPlace()) {
             System.out.println(message.getDetails());
+        }
         System.out.flush();
     }
 
@@ -310,7 +318,7 @@ public class ClientSocket implements Client{
         } catch (RemoteException e) {
 
         }
-        System.out.println(response.getPlayer()+"has joined the game");
+
     }
     private void parse (RejoinedPlayerMessage response){
         try {
@@ -318,7 +326,7 @@ public class ClientSocket implements Client{
         } catch (RemoteException e) {
 
         }
-        System.out.println(response.getPlayer()+"has rejoined the game");
+        //System.out.println(response.getPlayer()+"has rejoined the game");
     }
 
     private void parse(CurrentPlayerMessage response){
@@ -403,6 +411,7 @@ public class ClientSocket implements Client{
 
     private void parse(ChoiceObjectiveMessage choiceObjectiveMessage){
         try {
+            System.out.println("you chose objective\n");
             this.clientModel.notifyChoiceObjective(choiceObjectiveMessage.getPlayer(), choiceObjectiveMessage.getObjectiveCard());
         } catch (RemoteException e) {
 
@@ -449,7 +458,7 @@ public class ClientSocket implements Client{
 
     private void parse(ConfirmChatMessage confirmChatMessage){
         if(confirmChatMessage.isConfirmChat()){
-            System.out.println("Message send correctly");
+            System.out.println("Message sent correctly");
         }
         else{
             System.out.println(confirmChatMessage.getDetails());

@@ -24,6 +24,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -100,7 +101,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.drawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
+            gameController.canDrawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
             result = true;
         }
         catch (PlayerNotInTurnException e)
@@ -119,6 +120,13 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             description = "Game not existing";
         } catch (NullCardSelectedException e) {
             throw new RuntimeException(e);
+        }
+        catch (NullCardSelectedException e){
+            result=false;
+            description="Empty place selected";
+        }
+        if(result){
+            CompletableFuture.runAsync(()->gameController.drawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice()));
         }
 
         return new ConfirmDrawMessage(result, description);
@@ -152,6 +160,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         try {
             gameController.placeCard(placeCardMessage.getPlayer(),placeCardMessage.getChoice(),placeCardMessage.getI(),placeCardMessage.getJ(),placeCardMessage.getFace());
             result = true;
+        }
+        catch (ArgumentException e){
+            result=false;
+            description= e.getMessage();
         }
         catch(CoordinatesOutOfBoundsException e){
             result = false;
@@ -196,7 +208,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.setObjectiveCard(ChooseObjectiveMessage.getPlayer(), ChooseObjectiveMessage.getChoose());
+            gameController.canSetObjectiveCard(ChooseObjectiveMessage.getPlayer(), ChooseObjectiveMessage.getChoose());
             result = true;
         }
         catch(IllegalArgumentException e)
@@ -218,6 +230,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result=false;
             description = "Game not existing";
+        }
+        if(result){
+            CompletableFuture.runAsync(()->gameController.setObjectiveCard(ChooseObjectiveMessage.getPlayer(), ChooseObjectiveMessage.getChoose()));
+
         }
         return new ConfirmChooseObjectiveMessage(result, description);
     }
@@ -246,7 +262,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     }
 
     private Message parse(JoinGameMessage joinGameMessage){
-        boolean result;
+        boolean result=true;
         String description = "";
         try {
             if(!joinGameMessage.getHasJoined()) {
@@ -289,6 +305,11 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
+        if(result){
+           CompletableFuture.runAsync(()->gameController.canStart());
+        }
+
+        result = true;
         return new ConfirmJoinGameMessage(result, description);
     }
 
@@ -296,7 +317,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.pickColor(pickColorMessage.getNickname(), pickColorMessage.getColor());
+            gameController.canPickColor(pickColorMessage.getNickname(), pickColorMessage.getColor());
             result = true;
 
         } catch (ColorAlreadyPickedException e)
@@ -319,6 +340,9 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
+        if(result){
+            CompletableFuture.runAsync(()->gameController.pickColor(pickColorMessage.getNickname(),pickColorMessage.getColor()));
+        }
         return new ConfirmPickColorMessage(result, description);
     }
 
@@ -326,7 +350,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.selectStartingFace(chooseStartingMessage.getPlayer(), chooseStartingMessage.getFace());
+            gameController.canSelectStartingFace(chooseStartingMessage.getPlayer(),chooseStartingMessage.getFace());
             result = true;
         }
         catch (InvalidStateException e)
@@ -348,13 +372,17 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
+        if(result){
+            CompletableFuture.runAsync(()->gameController.selectStartingFace(chooseStartingMessage.getPlayer(),chooseStartingMessage.getFace()));
+        }
         return new ConfirmStartingCardMessage(result, description);
     }
+  
     private Message parse(DrawResourceMessage DrawResourceMessage){
         boolean result;
         String description = "";
         try {
-            gameController.drawResources(DrawResourceMessage.getNickname());
+            gameController.canDrawResources(DrawResourceMessage.getNickname());
             result = true;
         }
         catch(PlayerNotInTurnException e)
@@ -371,6 +399,13 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result=false;
             description = "Game not existing";
+        }
+        catch (EmptyDeckException e){
+            result=false;
+            description= "Empty deck";
+        }
+        if(result) {
+            CompletableFuture.runAsync(() -> gameController.drawResources(DrawResourceMessage.getNickname()));
         }
         return new ConfirmDrawMessage(result, description);
     }
@@ -378,7 +413,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.drawGold(drawGoldMessage.getNickname());
+            gameController.canDrawGold(drawGoldMessage.getNickname());
             result = true;
         }
         catch(PlayerNotInTurnException e)
@@ -395,6 +430,14 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result=false;
             description = "Game not existing";
+        }
+        catch(EmptyDeckException e){
+            result=false;
+            description=e.getMessage();
+        }
+        if(result){
+            CompletableFuture.runAsync(() -> gameController.drawGold(drawGoldMessage.getNickname()));
+
         }
         return new ConfirmDrawMessage(result, description);
     }
@@ -535,6 +578,12 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     }
 
     @Override
+    public void UpdateFirst(ArrayList<ResourceCard> commons) throws RemoteException {
+        StartingCommonMessage startingCommonMessage=new StartingCommonMessage(commons);
+        this.sendMessage(startingCommonMessage);
+    }
+
+    @Override
     public void ReceiveGroupText(String sender, String text) throws RemoteException {
         GroupChatMessage groupChatMessage=new GroupChatMessage(sender, text);
         this.sendMessage(groupChatMessage);
@@ -565,10 +614,13 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result=true;
         String description = "";
         try {
-            gameController.sendGroupText(groupChatMessage.getSender(), groupChatMessage.getText());
+            gameController.canSendGroupChat(groupChatMessage.getSender(), groupChatMessage.getText());
         } catch ( BadTextException | InvalidStateException e) {
             result = false;
             description = description + e.getMessage();
+        }
+        if(result){
+            CompletableFuture.runAsync(()->gameController.sendGroupText(groupChatMessage.getSender(), groupChatMessage.getText()));
         }
         return new ConfirmChatMessage(result, description);
     }
@@ -576,10 +628,15 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result=true;
         String description="";
         try{
-            gameController.sendPrivateText(privateChatMessage.getSender(),privateChatMessage.getRecipient(),privateChatMessage.getText());
+
+            gameController.canSendPrivateChat(privateChatMessage.getSender(),privateChatMessage.getRecipient(),privateChatMessage.getText());
         }catch (PlayerAbsentException | BadTextException | InvalidStateException | ParametersException e){
+
             result=false;
             description=description+e.getMessage();
+        }
+        if(result){
+            CompletableFuture.runAsync(()->gameController.sendPrivateText(privateChatMessage.getSender(), privateChatMessage.getRecipient(),privateChatMessage.getText()));
         }
         return new ConfirmChatMessage(result,description);
     }

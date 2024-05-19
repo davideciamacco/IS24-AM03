@@ -12,9 +12,9 @@ public interface Client {
 
     public void ChooseObjectiveCard(int choice);
 
-    public void sendGroupText(String sender, String text);
+    public void sendGroupText(String text);
 
-    public void sendPrivateText(String sender, String Receiver, String text);
+    public void sendPrivateText(String Receiver, String text);
 
     public void RejoinGame(String nickname);
 }

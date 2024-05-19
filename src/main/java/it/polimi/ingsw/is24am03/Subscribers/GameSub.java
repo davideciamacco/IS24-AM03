@@ -47,5 +47,6 @@ public interface GameSub extends Subscriber {
 
     public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Map<String, Color> colors, ArrayList<ResourceCard> table) throws RemoteException;
 
+    public void UpdateFirst(ArrayList<ResourceCard> commons) throws RemoteException;
 
 }

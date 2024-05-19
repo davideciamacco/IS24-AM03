@@ -14,6 +14,8 @@ import java.rmi.registry.Registry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
+
 
 public class ClientRMI implements Client{
     Registry registry;
@@ -114,8 +116,9 @@ public class ClientRMI implements Client{
     public void PickColor(String color)
     {
         try {
-            this.gameController.pickColor(nickname, color);
+            this.gameController.canPickColor(nickname, color);
             System.out.println("Color picked successfully");
+            this.gameController.pickColor(nickname,color);
             hasJoined=true;
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
@@ -131,14 +134,16 @@ public class ClientRMI implements Client{
         } catch (GameNotExistingException e) {
             System.out.println("Game not existing");
         }
+
+
         System.out.flush();
     }
     public void ChooseStartingCardSide(String face)
     {
         try {
-            this.gameController.selectStartingFace(nickname,face);
+            this.gameController.canSelectStartingFace(nickname,face);
             System.out.println("Starting card side chosen successfully");
-
+            this.gameController.selectStartingFace(nickname,face);
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
@@ -156,8 +161,11 @@ public class ClientRMI implements Client{
     public void PlaceCard(int choice,int i,int j,String face){
         try {
             this.gameController.placeCard(nickname,choice,i,j,face);
-            System.out.println("Card placed successfully");
-        } catch(PositionOccupiedException e){
+            //System.out.println("Card placed successfully");
+        }catch (ArgumentException e){
+            System.out.println(e.getMessage());
+        }
+        catch(PositionOccupiedException e){
             System.out.println("Position is not empty");
         } catch (CoordinatesOutOfBoundsException e) {
             System.out.println("Coordinates out of bound");
@@ -178,8 +186,9 @@ public class ClientRMI implements Client{
     }
     public void DrawGold(){
         try {
-            this.gameController.drawGold(nickname);
+            this.gameController.canDrawGold(nickname);
             System.out.println("Gold card drawn successfully");
+            this.gameController.drawGold(nickname);
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
@@ -197,8 +206,9 @@ public class ClientRMI implements Client{
     }
     public void DrawResource(){
         try {
-            this.gameController.drawResources(nickname);
+            this.gameController.canDrawResources(nickname);
             System.out.println("Resource card drawn successfully");
+            this.gameController.drawResources(nickname);
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
@@ -217,8 +227,9 @@ public class ClientRMI implements Client{
 
     public void DrawTable(int choice){
         try {
-            this.gameController.drawTable(nickname,choice);
+            this.gameController.canDrawTable(nickname,choice);
             System.out.println("Card drawn successfully");
+            this.gameController.drawTable(nickname,choice);
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
@@ -237,8 +248,9 @@ public class ClientRMI implements Client{
 
     public void ChooseObjectiveCard(int choice){
         try{
-            this.gameController.setObjectiveCard(nickname, choice);
+            this.gameController.canSetObjectiveCard(nickname, choice);
             System.out.println("Objective card selected successfully");
+            this.gameController.setObjectiveCard(nickname,choice);
         } catch (GameNotExistingException e) {
             System.out.println("Game not existing");
         } catch (PlayerNotInTurnException e) {
@@ -279,20 +291,22 @@ public class ClientRMI implements Client{
     }
 
     //metodi per gestire invio messaggio chat
-    public void sendGroupText(String sender, String text){
+    public void sendGroupText(String text){
         try {
-            this.gameController.sendGroupText(this.nickname, text);
+            this.gameController.canSendGroupChat(this.nickname, text);
             System.out.println("Group text sent successfully");
+            this.gameController.sendGroupText(this.nickname, text);
         } catch (BadTextException | InvalidStateException e1) {
             System.out.println(e1.getMessage());
         } catch(RemoteException e){}
 
 
     }
-    public void sendPrivateText(String sender, String receiver, String text){
+    public void sendPrivateText(String receiver, String text){
         try{
-            this.gameController.sendPrivateText(this.nickname, receiver,text);
+            this.gameController.canSendPrivateChat(this.nickname, receiver,text);
             System.out.println("Private text sent successfully");
+            this.gameController.sendPrivateText(this.nickname, receiver,text);
         } catch (BadTextException | InvalidStateException | PlayerAbsentException | ParametersException e) {
             System.out.println(e.getMessage());
         } catch(RemoteException e){}
