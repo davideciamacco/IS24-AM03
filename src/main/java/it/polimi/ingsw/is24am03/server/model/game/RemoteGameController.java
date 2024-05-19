@@ -7,11 +7,11 @@ import java.rmi.RemoteException;
 
 public interface RemoteGameController extends Remote{
 
-    public void createGame(int numPlayers, String nickname) throws RemoteException, GameAlreadyCreatedException;
+    public void createGame(int numPlayers, String nickname, String ConnectionType) throws RemoteException, GameAlreadyCreatedException;
     public void drawResources(String player) throws /*throws EmptyDeckException, PlayerNotInTurnException, InvalidStateException*/ RemoteException; /*GameNotExistingException*/
     public void drawGold(String player) throws /*PlayerNotInTurnException, InvalidStateException, EmptyDeckException,  GameNotExistingException*/RemoteException;
     public void drawTable(String player, int choice) throws /*PlayerNotInTurnException, InvalidStateException, NullCardSelectedException,*/ RemoteException /*GameNotExistingException*/;
-    public void addPlayer(String player) throws FullLobbyException, NicknameAlreadyUsedException, RemoteException, GameNotExistingException;
+    public void addPlayer(String player, String ConnectionType) throws FullLobbyException, NicknameAlreadyUsedException, RemoteException, GameNotExistingException;
     public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException, ArgumentException;
     public void setObjectiveCard(String player, int choice) throws RemoteException;
 
@@ -37,7 +37,7 @@ public void canPickColor(String nickname, String color) throws PlayerNotInTurnEx
 
     public void canStart() throws RemoteException;
 
-    public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException,GameNotExistingException,RemoteException;
+    public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException, RemoteException, InvalidStateException;
     public void canDrawResources(String player) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,RemoteException, EmptyDeckException;
     public void canDrawGold(String player)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, EmptyDeckException,RemoteException;
     public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, RemoteException, NullCardSelectedException;

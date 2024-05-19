@@ -258,7 +258,7 @@ public class CliView {
                 else if (corner==1) {
                     System.out.print("┐");
                 }
-                else if (corner==1) {
+                else if (corner==2) {
                     System.out.print("┘");
                 }
                 else
@@ -949,34 +949,34 @@ public class CliView {
             System.out.println("FRONT:         BACK:");
             System.out.println("\n");
                 if (startCard.getId() == 80) {
-                    System.out.println("O-------P      F-------A");
-                    System.out.println("|   F   |      |       |");
-                    System.out.println("I---S---O      I---S---A");
+                    System.out.println("F-------A      O-------P");
+                    System.out.println("|       |      |   F   |");
+                    System.out.println("I---S---A      I---S---O");
                     System.out.println("\n");
                 } else if (startCard.getId() == 81) {
-                    System.out.println("A-------O      P-------A");
-                    System.out.println("|   F   |      |       |");
-                    System.out.println("O---S---F      F---S---I");
+                    System.out.println("P-------A      A-------O");
+                    System.out.println("|       |      |   F   |");
+                    System.out.println("F---S---I      O---S---F");
                     System.out.println("\n");
                 } else if (startCard.getId() == 82) {
-                    System.out.println("O-------O      I-------A");
-                    System.out.println("|  P F  |      |       |");
-                    System.out.println("O---S---O      F---S---P");
+                    System.out.println("I-------A      O-------O");
+                    System.out.println("|       |      |  P F  |");
+                    System.out.println("F---S---P      O---S---O");
                     System.out.println("\n");
                 } else if (startCard.getId() == 83) {
-                    System.out.println("O-------O      P-------I");
-                    System.out.println("|  A I  |      |       |");
-                    System.out.println("O---S---O      A---S---F");
+                    System.out.println("P-------I      O-------O");
+                    System.out.println("|       |      |  A I  |");
+                    System.out.println("A---S---F      O---S---O");
                     System.out.println("\n");
                 } else if (startCard.getId() == 84) {
-                    System.out.println("O-------O      I-------F");
-                    System.out.println("|  AIP  |      |       |");
-                    System.out.println("└---S---┘      P---S---A");
+                    System.out.println("I-------F      O-------O");
+                    System.out.println("|       |      |  AIP  |");
+                    System.out.println("P---S---A      └---S---┘");
                     System.out.println("\n");
                 } else {
-                    System.out.println("O-------O      F-------A");
-                    System.out.println("|  PAF  |      |       |");
-                    System.out.println("└---S---┘      P---S---I");
+                    System.out.println("F-------A      O-------O");
+                    System.out.println("|       |      |  PAF  |");
+                    System.out.println("P---S---I      └---S---┘ ");
                     System.out.println("\n");
                 }
         System.out.println("---END STARTING CARD---\n");

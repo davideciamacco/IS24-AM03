@@ -182,8 +182,8 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         }
         if (i - 1 >= 0 && j - 1 >= 0 && tempBoard[i - 1][j - 1] != null) {
             tempBoard[i - 1][j - 1].setCornerCoverage(2, true); // Imposta come coperto l'angolo 2 della carta adiacente in alto a sinistra
-        }*/
-        boards.put(player, tempBoard);
+        }
+        boards.put(player, tempBoard);*/
 
         viewInterface.notify(player + " placed a card");
         if(player.equals(this.player)){
@@ -276,7 +276,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
                 this.card3=resourceCard;
                 break;
         }
-
+        if(index==1 || index==0)
             viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
 
 

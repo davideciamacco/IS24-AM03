@@ -104,13 +104,15 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     //metodo per verificare che player può selezionare carta obiettivo
 
 
-    public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException,GameNotExistingException{
+    public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException, InvalidStateException {
         synchronized (gameLock) {
             if (!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
             if (gameModel == null)
                 throw new GameNotExistingException();
+            if(!gameModel.getGameState().equals(State.OBJECTIVE))
+                throw new InvalidStateException("Action not allowed in this state");
             if (choice < 1 || choice > 2) throw new IllegalArgumentException();
         }
     }
@@ -165,14 +167,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 throw new GameNotExistingException();
             //if(P.getHand().size()==3) throw new FullHandException();
             if (!gameModel.getGameState().equals(State.DRAWING))
-                throw new InvalidStateException("Action not allowed in this state");
-            try {*/
+                throw new InvalidStateException("Action not allowed in this state");*/
                 gameModel.drawResources(player);
-
-            } catch (EmptyDeckException e)
-            {
-                System.out.println("Mazzo vuoto");
-            }
 
             /*} catch (EmptyDeckException e)
             {}*/
@@ -254,13 +250,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                throw new NullCardSelectedException();
             }
 
-            catch(NullCardSelectedException e){
-                throw e;
-            }
-
 
         }
     }
+
     //metodo per fare check che player possa pescare da tavolo
     public void drawTable(String player, int choice) /*throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException*/ {
         synchronized (gameLock)
@@ -422,31 +415,19 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if (gameModel.getGameState().equals(State.PLAYING))
                 gameModel.nextTurn();
             else if (gameModel.getGameState().equals(State.DRAWING)) {
-                try {
+                if(!gameModel.getResourceDeck().isEmpty())
                     gameModel.drawResources(nickname);
-                } catch (EmptyDeckException e1) {
-                    try {
-                        gameModel.drawGold(nickname);
-                    } catch (EmptyDeckException e2) {
-                        try {
-                            gameModel.drawTable(nickname, 1);
-                        } catch (NullCardSelectedException e3) {
-                            try {
-                                gameModel.drawTable(nickname, 2);
-                            } catch (NullCardSelectedException e4) {
-                                try {
-                                    gameModel.drawTable(nickname, 3);
-                                } catch (NullCardSelectedException e5) {
-                                    try {
-                                        gameModel.drawTable(nickname, 4);
-                                    } catch (NullCardSelectedException e6) {
+                else if(!gameModel.getGoldDeck().isEmpty())
+                    gameModel.drawGold(nickname);
+                else if(gameModel.getTableCards().get(0)==null)
+                    gameModel.drawTable(nickname, 1);
+                else if(gameModel.getTableCards().get(1)==null)
+                    gameModel.drawTable(nickname, 2);
+                else if(gameModel.getTableCards().get(2)==null)
+                    gameModel.drawTable(nickname, 3);
+                else
+                    gameModel.drawTable(nickname, 4);
 
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }

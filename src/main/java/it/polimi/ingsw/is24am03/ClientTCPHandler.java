@@ -104,6 +104,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.canDrawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
             result = true;
         }
+        catch (NullCardSelectedException e){
+            result=false;
+            description="Empty place selected";
+        }
         catch (PlayerNotInTurnException e)
         {
             result=false;
@@ -118,12 +122,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result = false;
             description = "Game not existing";
-        } catch (NullCardSelectedException e) {
-            throw new RuntimeException(e);
-        }
-        catch (NullCardSelectedException e){
-            result=false;
-            description="Empty place selected";
         }
         if(result){
             CompletableFuture.runAsync(()->gameController.drawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice()));
@@ -271,7 +269,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                     this.nickname = joinGameMessage.getNickname();
                     gameController.addPlayer(joinGameMessage.getNickname(), "TCP");
                     this.subscribeToObservers();
-                    gameController.canStart();
                     result = true;
             }
             else
@@ -448,7 +445,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 outputStream.writeObject(message);
                 outputStream.flush();
                 outputStream.reset();
-                System.out.println("Server invia a client");
             } catch (IOException e) {
                 try {
                     e.printStackTrace();

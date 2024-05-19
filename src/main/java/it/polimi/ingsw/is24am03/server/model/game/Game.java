@@ -180,6 +180,7 @@ public class Game{
         //DONE
 
         distributeCards();
+        System.out.println("Primo next turn");
         nextTurn();
     }
 
@@ -346,7 +347,6 @@ public class Game{
             //NOTIFY ON JOINED PLAYER, notifico a tutti tranne il player appena entrato
             for (GameSub gameSub : gameSubs) {
                 try {
-
                         gameSub.notifyJoinedPlayer(player);
                 } catch (RemoteException ignored) {
                 }
@@ -593,7 +593,10 @@ public class Game{
         } else {
             for(GameSub gameSub: gameSubs){
                 try {
+                    if(deck==0)
                         gameSub.updateCommonTable(resourceDeck.getCards().getFirst(), deck);
+                    else
+                        gameSub.updateCommonTable(goldDeck.getCards().getFirst(), deck);
 
                 }catch (RemoteException ignored){}
             }
@@ -725,12 +728,18 @@ public class Game{
      * Method used to change the current player to the next one
      */
     public void nextTurn(){
+        System.out.println(gameState);
+        System.out.println(currentPlayer);
+        System.out.println(numPlayers);
         if(currentPlayer==numPlayers-1){
-            if(ending && lastRound)
+            if(ending && lastRound) {
                 endGame();
-            else if(gameState.equals(State.DRAWING))
+            }
+            else if(gameState.equals(State.DRAWING)) {
                 roundNumber++;
+            }
             else if(gameState.equals(State.STARTING)) {
+                System.out.println("Color");
                 gameState = State.COLOR;
                 //NOTIFICO A TUTTI CHE SIAMO NELLO STATO DI SCELTA DEL COLORE
                 for (GameSub gameSub : gameSubs) {
@@ -796,7 +805,9 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
+
         while(!players.get(currentPlayer).getConnected() && !timer) {
+            System.out.println("while: "+currentPlayer);
             currentPlayer = (currentPlayer + 1) % (numPlayers);
         }
         int i;
