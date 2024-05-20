@@ -1612,43 +1612,57 @@ public class CliView {
             System.out.flush();
             output3="";
             }
-        boolean flag1;
         boolean flag2;
+        int f1;
+        int f2;
         if(down!=80)
         {
             for(j=firstsx; j<=lastdx; j++)
             {
-                flag1=false;
+                f1=0;
+                f2=0;
                 flag2=false;
                 if((j+down+1)%2==0 && board[down+1][j]==null)
                 {
+                    flag2=true;
                     if(j!=0)
                     {
-                        flag1=true;
+                        f1=1;
                         if(board[down][j-1]!=null) {
-                            if (board[down][j - 1].getFace() && !board[down][j - 1].getFront().get(2).getKey().isVisible())
-                                flag1 = false;
+                            f1=2;
+                            if (board[down][j - 1].getFace() && !board[down][j - 1].getFront().get(2).getKey().isVisible()) {
+                                f1=0;
+                            }
                         }
                     }
                     if(j!=80) {
-                        flag2 = true;
+                        f2=1;
                         if(board[down][j+1]!=null) {
-                            if (board[down][j + 1].getFace() && !board[down][j + 1].getFront().get(3).getKey().isVisible())
-                                flag2 = false;
+                            f2=2;
+                            if (board[down][j + 1].getFace() && !board[down][j + 1].getFront().get(3).getKey().isVisible()) {
+                                f2=0;
+                            }
                         }
                     }
-                    if(flag1 && flag2)
-                    {
-                        if (down+1 < 10 && j < 10)
-                            System.out.print("  (" + (down+1) + "," + j + ")  ");
-                        else if (down+1 < 10 && j > 9) {
-                            System.out.print(" (" + (down+1) + "," + j + ")  ");
-                        } else if (down+1 > 9 && j < 10) {
-                            System.out.print(" (" + (down + +1)+ "," + j + ")  ");
-                        } else {
-                            System.out.print(" (" + (down+1) + "," + j + ") ");
+                    if(flag2) {
+                        if (f1 != 0 && f2 != 0) {
+                            if ((f1 == 1 && f2 == 2) || (f1 == 2 && f2 == 1) || (f1 == 2 && f2 == 2)) {
+                                if (down + 1 < 10 && j < 10)
+                                    System.out.print("  (" + (down + 1) + "," + j + ")  ");
+                                else if (down + 1 < 10 && j > 9) {
+                                    System.out.print(" (" + (down + 1) + "," + j + ")  ");
+                                } else if (down + 1 > 9 && j < 10) {
+                                    System.out.print(" (" + (down + +1) + "," + j + ")  ");
+                                } else {
+                                    System.out.print(" (" + (down + 1) + "," + j + ") ");
+                                }
+                            }else {
+                                System.out.print("         ");
+                            }
+                        }else {
+                            System.out.print("         ");
                         }
-                    } else {
+                    }else {
                         System.out.print("         ");
                     }
                 }

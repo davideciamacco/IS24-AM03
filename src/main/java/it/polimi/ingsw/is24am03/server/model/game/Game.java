@@ -199,12 +199,10 @@ public class Game{
     public void endGame() {
         gameState = State.ENDING;
         int i;
-        if(timer){
-            if(numPlayersConnected==1) {
-                for(i=0; i<numPlayers; i++) {
-                    if(players.get(i).getConnected())
-                        players.get(i).setWinner(true);
-                }
+        if(numPlayersConnected==1) {
+            for(i=0; i<numPlayers; i++) {
+                if(players.get(i).getConnected())
+                    players.get(i).setWinner(true);
             }
         }
         else{
@@ -651,7 +649,7 @@ public class Game{
                 playerSub.ReceiveUpdateOnPoints(player,p.getPoints());
             }catch (RemoteException ignored){}
         }
-        if(p.getPoints()>=3)
+        if(p.getPoints()>=20)
             ending=true;
         if(!lastRound) {
             this.gameState = State.DRAWING;
@@ -749,9 +747,6 @@ public class Game{
      * Method used to change the current player to the next one
      */
     public void nextTurn(){
-        //System.out.println(gameState);
-       // System.out.println(currentPlayer);
-        //System.out.println(numPlayers);
         if(currentPlayer==numPlayers-1){
             if(ending && lastRound) {
                 endGame();
@@ -827,27 +822,16 @@ public class Game{
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
 
-        while(!players.get(currentPlayer).getConnected() && !timer) {
-            //System.out.println("while: "+currentPlayer);
+        while(!players.get(currentPlayer).getConnected() && numPlayersConnected>1) {
             currentPlayer = (currentPlayer + 1) % (numPlayers);
         }
-        int i;
-        if(timer) {
-            if (numPlayersConnected == 1) {
-                for (i=0; i<numPlayers; i++) {
-                    if (players.get(i).getConnected())
-                        players.get(i).setWinner(true);
+            for (GameSub gameSub : gameSubs) {
+                try {
+                    gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
+                } catch (RemoteException ignored) {
                 }
             }
-            endGame();
-        }
 
-                for (GameSub gameSub : gameSubs) {
-                    try {
-                        gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
-                    } catch (RemoteException ignored) {
-                    }
-                }
 
     }
 

@@ -428,25 +428,29 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                         }
                     }
 
+            if(gameModel.getNumPlayersConnected()>1)
+            {
+                if (gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(nickname)) {
+                    if (gameModel.getGameState().equals(State.PLAYING))
+                        gameModel.nextTurn();
+                    else if (gameModel.getGameState().equals(State.DRAWING)) {
+                        if (!gameModel.getResourceDeck().isEmpty())
+                            gameModel.drawResources(nickname);
+                        else if (!gameModel.getGoldDeck().isEmpty())
+                            gameModel.drawGold(nickname);
+                        else if (gameModel.getTableCards().get(0) == null)
+                            gameModel.drawTable(nickname, 1);
+                        else if (gameModel.getTableCards().get(1) == null)
+                            gameModel.drawTable(nickname, 2);
+                        else if (gameModel.getTableCards().get(2) == null)
+                            gameModel.drawTable(nickname, 3);
+                        else
+                            gameModel.drawTable(nickname, 4);
 
-            if (gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(nickname)) {
-                if (gameModel.getGameState().equals(State.PLAYING))
-                    gameModel.nextTurn();
-                else if (gameModel.getGameState().equals(State.DRAWING)) {
-                    if (!gameModel.getResourceDeck().isEmpty())
-                        gameModel.drawResources(nickname);
-                    else if (!gameModel.getGoldDeck().isEmpty())
-                        gameModel.drawGold(nickname);
-                    else if (gameModel.getTableCards().get(0) == null)
-                        gameModel.drawTable(nickname, 1);
-                    else if (gameModel.getTableCards().get(1) == null)
-                        gameModel.drawTable(nickname, 2);
-                    else if (gameModel.getTableCards().get(2) == null)
-                        gameModel.drawTable(nickname, 3);
-                    else
-                        gameModel.drawTable(nickname, 4);
-
+                    }
                 }
+            } else{
+                System.out.println("Partita sospesa");
             }
         }
     }
@@ -479,7 +483,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         Runnable task = () -> {
             if(gameModel.getNumPlayersConnected()<2)
             {
-                gameModel.setTimer(true);
+                //gameModel.setTimer(true);
+                gameModel.endGame();
                 System.out.println("Timer raggiunto.");
             }
             scheduler.shutdown();
