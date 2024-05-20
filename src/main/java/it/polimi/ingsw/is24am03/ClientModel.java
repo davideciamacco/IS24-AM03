@@ -144,7 +144,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         }
     }
 
-
     @Override
     public synchronized void notifyCrashedPlayer(String username)throws RemoteException {
         viewInterface.notify("player "+username+" has crashed");
@@ -159,18 +158,19 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     @Override
     public synchronized void notifyRejoinedPlayer(String rejoinedPlayer)throws RemoteException{
-        viewInterface.notify(rejoinedPlayer+" has rejoined the game");
+        if(!rejoinedPlayer.equals(this.player))
+            viewInterface.notify(rejoinedPlayer+" has rejoined the game");
     }
 
     @Override
     public synchronized void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException{
         //all'interno devo mettergli quello che c'era prima
-        PlayableCard[][] tempBoard;/*
+        PlayableCard[][] tempBoard;
         tempBoard= boards.get(player);
         tempBoard[i][j]=p;
 
-        boards.put(player, tempBoard);*/
-        /*
+        boards.put(player, tempBoard);
+
         if (i + 1 < 81 && j + 1 < 81 && tempBoard[i + 1][j + 1] != null) {
             tempBoard[i + 1][j + 1].setCornerCoverage(0, true); // Imposta come coperto l'angolo 0 della carta adiacente in basso a destra
         }
@@ -183,11 +183,14 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         if (i - 1 >= 0 && j - 1 >= 0 && tempBoard[i - 1][j - 1] != null) {
             tempBoard[i - 1][j - 1].setCornerCoverage(2, true); // Imposta come coperto l'angolo 2 della carta adiacente in alto a sinistra
         }
-        boards.put(player, tempBoard);*/
+        boards.put(player, tempBoard);
 
-        viewInterface.notify(player + " placed a card");
         if(player.equals(this.player)){
             System.out.println("Card placed successfully\n");
+            viewInterface.drawBoard(boards.get(player));
+        }
+        else{
+            viewInterface.notify("*************** " + player + " placed a card! Here is her/his board: ");
             viewInterface.drawBoard(boards.get(player));
         }
     }
@@ -218,7 +221,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     public synchronized String getSub()throws RemoteException {
         return this.player;
     }
-
 
     @Override
     public synchronized void notifyFirstHand(ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2)throws RemoteException{
@@ -278,8 +280,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         }
         if(index==1 || index==0)
             viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
-
-
     }
 
     @Override
@@ -324,15 +324,59 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     }
 
     @Override
-    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Map<String, Color> colors, ArrayList<ResourceCard> table) throws RemoteException {
+    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table) throws RemoteException {
+        this.current=nickname; //
+        this.chat=chat; //
+        this.gameState=gameState; //
+        this.hand=hand;
+        this.objectiveCard1=objectiveCard;
+        this.boards=boards; //
+        this.playerPoints=points; //
+        this.players=players; //
+        this.commonObjective=objectiveCards;
+        this.resourceDeck=table.get(0);
+        this.goldDeck=table.get(1);
+        this.card0=table.get(2);
+        this.card1=table.get(3);
+        this.card2=table.get(4);
+        this.card3=table.get(5);
+
+        //gli mostro a video il giocatore corrente
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("HERE ARE SOME UPDATES YOU MIGHT'VE MISSED WHILE GONE!");
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("CURRENT PLAYER: "+ nickname);
+        StringBuilder message = new StringBuilder();
+        for(String s: players){
+            message.append(s).append("-");
+        }
+        message= new StringBuilder("TURN ORDER IS " + message);
+        viewInterface.notify(message.toString());
+        System.out.println("GAME NOW IS IN "+gameState + " STATE");
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("OTHER PLAYERS' BOARDS, TAKE A PEEK!");
+        for(String s: players){
+            if(!s.equals(this.player)){
+                System.out.println("THIS IS "+ s + " BOARD" + " WHO SCORED SO FAR " + playerPoints.get(s));
+                viewInterface.drawBoard(boards.get(s));
+                System.out.println("---------------------------------------------------------------------");
+            }
+        }
+        viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+        System.out.println("--COMMON OBJECTIVES---");
+        viewInterface.drawObjective(objectiveCards.get(0));
+        viewInterface.drawObjective(objectiveCards.get(1));
+        System.out.println("---END COMMON OBJECTIVES---");
+        viewInterface.drawHand(hand);
+        System.out.println("YOUR PERSONAL OBJECTIVE IS:");
+        viewInterface.drawObjective(objectiveCard);
+        System.out.println("---------------------------------------------------------------------");
 
     }
 
     @Override
     public void UpdateFirst(ArrayList<ResourceCard> commons) throws RemoteException {
-        // 0--> res
-        //1--> gold
-        //2-->
+
         this.resourceDeck=commons.get(0);
         this.goldDeck=commons.get(1);
         this.card0=commons.get(2);
@@ -341,7 +385,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.card3=commons.get(5);
         viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
     }
-
 
     @Override
     public void ReceiveGroupText(String sender, String text)throws RemoteException {
@@ -358,15 +401,15 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         //sono ordinati in ordine lifo
         //se text è pubblico allora disegno gli ultimi 2 messaggi
         //devo disegnare dalla fine
-        LocalDateTime currentTime = LocalDateTime.now();
+       // LocalDateTime currentTime = LocalDateTime.now();
 
         // Definisci il formato desiderato per l'orario
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+       // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         // Format l'orario corrente
-        String formattedTime = currentTime.format(formatter);
+        //String formattedTime = currentTime.format(formatter);
 
-        times.add(0,formattedTime);
+        //times.add(0,formattedTime);
         // Stampa l'orario corrente
 
         if(msg.getRecipient()==null){
@@ -376,12 +419,12 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
             }
             for(int i=chat.size()-1; i>0; i--){
                 if(chat.get(i).getSender().equals(this.player) && chat.get(i).getRecipient()==null){
-                    System.out.println(chat.get(i).getSender() + " (YOU) : " + chat.get(i).getMex() + "         time: " + times.get(i));
+                    System.out.println(chat.get(i).getSender() + " (YOU) : " + chat.get(i).getMex());
 
                 }
                 else {
                     if(chat.get(i).getRecipient()==null){
-                    System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex() + "              time: " + times.get(i));}
+                    System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex());}
 
                 }
             }
@@ -390,11 +433,11 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
             }
             System.out.println("----NEW GROUP CHAT MESSAGE----");
             if(chat.get(0).getSender().equals(this.player)){
-                System.out.println("YOU: " + chat.get(0).getMex()+ "            time: " + times.get(0));
+                System.out.println("YOU: " + chat.get(0).getMex());
                 System.out.println("************************************");
             }
             else{
-                System.out.println(chat.get(0).getSender() + " : " + chat.get(0).getMex()+ "            time: " + times.get(0));
+                System.out.println(chat.get(0).getSender() + " : " + chat.get(0).getMex());
                 System.out.println("************************************");
             }
         }
@@ -406,24 +449,25 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
                 for(int i=chat.size()-1; i>=0; i--){
                     //messaggi che io ho mandato a lui
                     if(chat.get(i).getSender().equals(this.player) && chat.get(i).getRecipient().equals(msg.getRecipient())){
-                    System.out.println("YOU " + " : " + chat.get(i).getMex() + "            time: " + times.get(i));}
+                    System.out.println("YOU " + " : " + chat.get(i).getMex() );}
                     //messaggi che lui ha mandato a me
                     else if(chat.get(i).getSender().equals(msg.getRecipient()) && chat.get(i).getRecipient().equals(this.player)){
-                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex() + "          time: " + times.get(i));}
+                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex() );}
                     }
                 }
 
             if(msg.getRecipient().equals(this.player)) {
                 //stampo tutti i loro vecchi messaggi
+                System.out.println("You receiver a text from " + msg.getSender());
                 System.out.println("YOUR PRIVATE CHAT WITH: " + msg.getSender());
                 System.out.println("************************************");
                 for(int i=chat.size()-1; i>=0; i--){
                     //messa che io ho mandato a lui
                     if(chat.get(i).getSender().equals(this.player) && chat.get(i).getRecipient().equals(msg.getSender())){
-                        System.out.println("YOU " + " : " + chat.get(i).getMex() + "            time: " + times.get(i));}
+                        System.out.println("YOU " + " : " + chat.get(i).getMex());}
                     //mess che lui ha mandato a me
                     else if(chat.get(i).getSender().equals(msg.getSender()) && chat.get(i).getRecipient().equals(this.player)){
-                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex() + "          time: " + times.get(i));}
+                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex());}
                 }
 
             }
@@ -431,7 +475,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     }
 
-    //funzione per trovare numero di messaggi della chat di gruppo
     private int findNumber(ArrayList<Text> chat){
         int number=0;
         for(Text t: chat){
@@ -442,7 +485,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         return number;
     }
 
-    //trovo numero di messaggi che io ho ricevuto da sender
 
 
 

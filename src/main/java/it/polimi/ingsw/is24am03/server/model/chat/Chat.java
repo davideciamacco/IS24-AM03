@@ -86,6 +86,19 @@ public class Chat {
         }
         return privateChat;
     }
+    //creo metodo per estrarre tutti i messaggi di gruppo e tutti i messaggi di cui un player è stato recipient o sender.
+    //tutti i messaggi in cui recipient è uguale a null (sono inclusi anche quelli mandati sul gruppo dal player in questione
+    //tutti i messaggi in cui il player è il recipient
+    public ArrayList<Text> getAll(String player){
+        ArrayList<Text> mex=new ArrayList<>();
+        for(Text t: getTexts()){
+          if(t.getRecipient()==null || t.getRecipient().equals(player)){
+             mex.add(0,t);
+          }
+        }
+        return mex;
+    }
+
 
     public ArrayList<Text> getTexts() {
         return texts;

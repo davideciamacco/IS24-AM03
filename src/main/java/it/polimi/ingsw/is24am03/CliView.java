@@ -918,7 +918,6 @@ public class CliView {
                 }
                 drawCorner(tableCard4, 2, true);
             }
-        System.out.println("\n");
         System.out.println("---END COMMON TABLE---\n");
 
         }

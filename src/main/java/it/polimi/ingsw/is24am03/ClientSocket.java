@@ -190,6 +190,7 @@ public class ClientSocket implements Client{
             case NOTIFY_CURRENT_PLAYER -> this.parse((CurrentPlayerMessage) responseMessage);
             case TURN_ORDER-> this.parse((TurnOrderMessage) responseMessage);
             case GAME_STATE-> this.parse((ChangeStateMessage) responseMessage);
+            //questo notifica a quelli in gioco che un certo player è crashato
             case NOTIFY_CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
 
             //MESSAGGI DI UPDATE RIGUARDANTI UN GIOCATORE
@@ -326,7 +327,7 @@ public class ClientSocket implements Client{
         } catch (RemoteException e) {
 
         }
-        //System.out.println(response.getPlayer()+"has rejoined the game");
+        System.out.println(response.getPlayer()+"has rejoined the game");
     }
 
     private void parse(CurrentPlayerMessage response){
@@ -356,8 +357,8 @@ public class ClientSocket implements Client{
     private void parse(CrashedPlayerMessage response){
         try {
             this.clientModel.notifyCrashedPlayer(response.getPlayer());
-        } catch (RemoteException e) {
-
+        } catch (RemoteException ignored) {
+            //System.out.println("Crashato");
         }
     }
 
@@ -428,7 +429,7 @@ public class ClientSocket implements Client{
 
     private void parse(UpdateCrashedPlayerMessage updateCrashedPlayerMessage){
         try {
-            this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColors(), updateCrashedPlayerMessage.getTable());
+            this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColor(), updateCrashedPlayerMessage.getTable());
         }catch (RemoteException e){}
     }
 

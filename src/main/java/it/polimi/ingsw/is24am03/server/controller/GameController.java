@@ -8,6 +8,7 @@ import it.polimi.ingsw.is24am03.server.model.game.Game;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
 import javafx.util.Pair;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -403,33 +404,47 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
     public void handleCrashedPlayer(String nickname){
-        gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()-1);
-        if(gameModel.getNumPlayersConnected()<=1){
-            startTimer();
-            System.out.println("Timer avviato");
-        }
-        for(int i=0; i<gameModel.getNumPlayers(); i++) {
-            if (gameModel.getPlayers().get(i).getNickname().equals(nickname)) {
-                gameModel.getPlayers().get(i).setConnected(false);
+        synchronized (gameLock) {
+            gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected() - 1);
+            System.out.println(gameModel.getNumPlayersConnected());
+            if (gameModel.getNumPlayersConnected() <= 1) {
+                startTimer();
+                System.out.println("Timer avviato");
             }
-        }
-        if(gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(nickname)) {
-            if (gameModel.getGameState().equals(State.PLAYING))
-                gameModel.nextTurn();
-            else if (gameModel.getGameState().equals(State.DRAWING)) {
-                if(!gameModel.getResourceDeck().isEmpty())
-                    gameModel.drawResources(nickname);
-                else if(!gameModel.getGoldDeck().isEmpty())
-                    gameModel.drawGold(nickname);
-                else if(gameModel.getTableCards().get(0)==null)
-                    gameModel.drawTable(nickname, 1);
-                else if(gameModel.getTableCards().get(1)==null)
-                    gameModel.drawTable(nickname, 2);
-                else if(gameModel.getTableCards().get(2)==null)
-                    gameModel.drawTable(nickname, 3);
-                else
-                    gameModel.drawTable(nickname, 4);
+            for (int i = 0; i < gameModel.getNumPlayers(); i++) {
+                if (gameModel.getPlayers().get(i).getNickname().equals(nickname)) {
+                    gameModel.getPlayers().get(i).setConnected(false);
+                }
+            }
+                    //metodo che notifica tutti i sub che il player si è disconnesso, tranne player in questione
+                for (GameSub gameSub : gameModel.getGameSubs()) {
+                        try {
+                            if (!gameSub.getSub().equals(nickname)) {
+                                gameSub.notifyCrashedPlayer(nickname);
+                            }
+                        } catch (RemoteException ignored) {
+                        }
+                    }
 
+
+            if (gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(nickname)) {
+                if (gameModel.getGameState().equals(State.PLAYING))
+                    gameModel.nextTurn();
+                else if (gameModel.getGameState().equals(State.DRAWING)) {
+                    if (!gameModel.getResourceDeck().isEmpty())
+                        gameModel.drawResources(nickname);
+                    else if (!gameModel.getGoldDeck().isEmpty())
+                        gameModel.drawGold(nickname);
+                    else if (gameModel.getTableCards().get(0) == null)
+                        gameModel.drawTable(nickname, 1);
+                    else if (gameModel.getTableCards().get(1) == null)
+                        gameModel.drawTable(nickname, 2);
+                    else if (gameModel.getTableCards().get(2) == null)
+                        gameModel.drawTable(nickname, 3);
+                    else
+                        gameModel.drawTable(nickname, 4);
+
+                }
             }
         }
     }
@@ -548,16 +563,34 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         if(gameModel.getGameState()==State.WAITING || gameModel.getGameState()==State.ENDING){
             throw new InvalidStateException("You cannot send a text during this state");
         }
-        List<String> player= gameModel.getPlayers().stream().map(Player::getNickname).toList();
+        List<String> player= gameModel.getPlayers().stream().filter(Player::getConnected).map(Player::getNickname).toList();
         player=new ArrayList<>(player);
         if(!player.contains(receiver)){
-            throw new PlayerAbsentException("Receiver isn't part of the game");
+            throw new PlayerAbsentException("Receiver isn't part of the game or has crashed");
         }
         if(sender.isEmpty() || receiver.isEmpty() || text.isEmpty()){
             throw new BadTextException("receiver or text are empty,try again");
         }
         if(sender.equals(receiver)){
             throw new ParametersException("You cannot send a message to yourself");
+        }
+    }
+
+    public void rejoinedChief(String player){
+        //deve occuparsi di notificare a tutti i game sub che player è tornato
+
+        //deve occuparsi di mandare update al player in questione
+        synchronized (gameLock){
+            //notifico a tutti tranne al player tornato che lui è tornato
+            for(GameSub gameSub: gameModel.getGameSubs()){
+                try {
+                    if (!gameSub.getSub().equals(player)) {
+                        gameSub.notifyRejoinedPlayer(player);
+                    }
+                }catch (RemoteException ignored){}
+            }
+            //creo notifica per il player in questione
+            gameModel.manageUpdate(player);
         }
     }
 }

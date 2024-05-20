@@ -5,6 +5,7 @@ import it.polimi.ingsw.is24am03.Subscribers.GameSub;
 import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
 import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
+import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.chat.Chat;
 import it.polimi.ingsw.is24am03.server.model.chat.Text;
@@ -13,6 +14,8 @@ import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
+
+import java.lang.reflect.Array;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -103,6 +106,10 @@ public class Game{
     private boolean timer;
 
     private int numPlayersConnected;
+
+    public ArrayList<GameSub> getGameSubs() {
+        return gameSubs;
+    }
 
     /**
      * ArrayList which contains all GameSubs. Used to implement Observer Pattern
@@ -277,9 +284,12 @@ public class Game{
             }catch (RemoteException ignored){}
         }
         for(Player p: players){
-            try{
-                findSub(p).notifyFirstHand(p.getHand().get(0), p.getHand().get(1), p.getHand().get(2), p.getStartingCard(),p.getObjective1(),p.getObjective2());
-            }catch (RemoteException ignored){}
+            if(p.getConnected()) {
+                try {
+                    findSub(p).notifyFirstHand(p.getHand().get(0), p.getHand().get(1), p.getHand().get(2), p.getStartingCard(), p.getObjective1(), p.getObjective2());
+                } catch (RemoteException ignored) {
+                }
+            }
         }
         ArrayList<String> order = new ArrayList<>();
         for (Player p : players) {
@@ -292,10 +302,6 @@ public class Game{
             }
         }
         }
-
-
-
-
 
     /**
      * Method that set the first four cards revealed on the table
@@ -381,10 +387,12 @@ public class Game{
           //  throw new EmptyDeckException("There aren't other cards in the selected deck");
         getPlayers().get(currentPlayer).addCard(resourceDeck.drawCard());
         //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
-        try {
-            findSub(player).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
-        }catch (RemoteException ignored){
-            System.out.println("Errore 1");
+        if(getPlayers().get(currentPlayer).getConnected()) {
+            try {
+                findSub(player).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+            } catch (RemoteException ignored) {
+                System.out.println("Errore 1");
+            }
         }
 
         //SE IL DECK RISORSA è EMPTY NOTIFY ON EMPTY DECK
@@ -426,10 +434,13 @@ public class Game{
         getPlayers().get(currentPlayer).addCard(goldDeck.drawCard());
         System.out.println("\nID:"+getPlayers().get(currentPlayer).getHand().getFirst().getId()+"\n");
         //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
-        try {
-            findSub(getPlayers().get(currentPlayer)).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+        if(getPlayers().get(currentPlayer).getConnected()) {
+            try {
+                findSub(getPlayers().get(currentPlayer)).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
 
-        }catch (RemoteException ignored){}
+            } catch (RemoteException ignored) {
+            }
+        }
 
         //SE IL DECK GOLD è EMPTY NOTIFY ON EMPTY DECK
         if(goldDeck.isEmpty()){
@@ -468,9 +479,11 @@ public class Game{
         switch (choice) {
             case 1:
                 p.addCard(tableCards.get(0));
-                try {
-                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
-                } catch (RemoteException ignored) {
+                if(p.getConnected()) {
+                    try {
+                        findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                    } catch (RemoteException ignored) {
+                    }
                 }
                 if (!resourceDeck.isEmpty()) {
                     tableCards.set(0, resourceDeck.drawCard());
@@ -494,9 +507,11 @@ public class Game{
 
             case 2:
                 p.addCard(tableCards.get(1));
-                try {
-                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
-                } catch (RemoteException ignored) {
+                if(p.getConnected()) {
+                    try {
+                        findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                    } catch (RemoteException ignored) {
+                    }
                 }
                 if (!resourceDeck.isEmpty()) {
                     tableCards.set(1, resourceDeck.drawCard());
@@ -520,9 +535,11 @@ public class Game{
 
             case 3:
                 p.addCard(tableCards.get(2));
-                try {
-                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
-                } catch (RemoteException ignored) {
+                if(p.getConnected()) {
+                    try {
+                        findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                    } catch (RemoteException ignored) {
+                    }
                 }
                 if (!goldDeck.isEmpty()) {
                     tableCards.set(2, goldDeck.drawCard());
@@ -546,9 +563,11 @@ public class Game{
 
             case 4:
                 p.addCard(tableCards.get(3));
-                try {
-                    findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
-                } catch (RemoteException ignored) {
+                if(p.getConnected()) {
+                    try {
+                        findSub(p).NotifyChangePersonalCards(p.getNickname(), p.getHand());
+                    } catch (RemoteException ignored) {
+                    }
                 }
                 if (!resourceDeck.isEmpty()) {
                     tableCards.set(3, resourceDeck.drawCard());
@@ -604,7 +623,6 @@ public class Game{
 
     }
 
-
     /**
      * This method allows to place a card
      * @param player consists of the player who is placing
@@ -645,31 +663,26 @@ public class Game{
         }
         else{
             if(currentPlayer==numPlayers-1) {
-                try {
-                    findSub(player).NotifyChangePersonalCards(player, p.getHand());
-                }catch (RemoteException ignored){}
+                if(findPlayer(player).getConnected()) {
+                    try {
+                        findSub(player).NotifyChangePersonalCards(player, p.getHand());
+                    } catch (RemoteException ignored) {
+                    }
+                }
                 //notifico a quello che ha pescato il cambiamento delle sue carte, ora sono solo due
                 endGame();
             }
             else {
-                try {
-                    findSub(player).NotifyChangePersonalCards(player, p.getHand());
-                }catch (RemoteException ignored){}
-
+                if(findPlayer(player).getConnected()) {
+                    try {
+                        findSub(player).NotifyChangePersonalCards(player, p.getHand());
+                    } catch (RemoteException ignored) {
+                    }
+                }
                 nextTurn();
             }
         }
     }
-
-    /*
-    public void sendMessage(Player sender, Player receiver, String message) {
-
-    }
-
-    public void sendMessageAll(Player sender, String message) {
-
-    }*/
-
 
     /**
      * Set the order of the players used for the game
@@ -679,7 +692,6 @@ public class Game{
     }
 
     public State getGameState() {return gameState;}
-
 
     public void selectStartingFace(String player, boolean face)
     {
@@ -729,8 +741,8 @@ public class Game{
      */
     public void nextTurn(){
         System.out.println(gameState);
-        System.out.println(currentPlayer);
-        System.out.println(numPlayers);
+       // System.out.println(currentPlayer);
+        //System.out.println(numPlayers);
         if(currentPlayer==numPlayers-1){
             if(ending && lastRound) {
                 endGame();
@@ -739,7 +751,7 @@ public class Game{
                 roundNumber++;
             }
             else if(gameState.equals(State.STARTING)) {
-                System.out.println("Color");
+                //System.out.println("Color");
                 gameState = State.COLOR;
                 //NOTIFICO A TUTTI CHE SIAMO NELLO STATO DI SCELTA DEL COLORE
                 for (GameSub gameSub : gameSubs) {
@@ -820,14 +832,14 @@ public class Game{
             }
             endGame();
         }
-        else {
+
                 for (GameSub gameSub : gameSubs) {
                     try {
                         gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
                     } catch (RemoteException ignored) {
                     }
                 }
-            }
+
     }
 
     public ArrayList<Color> getAvailableColors(){
@@ -953,13 +965,7 @@ public class Game{
         Text t=new Text(sender,message);
         chat.NotifyChat(t);
     }
-    /*
-    public ObjectiveCard drawObjectiveOptions(){
-        return objectiveDeck.drawCard();
-    }*/
 
-    //METHODS USED TO HELP FINDING THE RIGHT OBSERVER//
-    //trovo sub corrispondente a un certo player
     public PlayerSub findSub(Player p) {
         PlayerSub player=null;
         for (PlayerSub playerSub : p.getPlayerSubs()) {
@@ -972,7 +978,6 @@ public class Game{
         }
         return player;
     }
-
 
     public PlayerSub findSub(String nickname){
         //cerco nella lista dei giocatori il giocatore corrispondente
@@ -995,9 +1000,118 @@ public class Game{
         return ps;
     }
 
+    public Player findPlayer(String player){
+        Player pl=null;
+        for(Player p: players){
+            if(p.getNickname().equals(player)){
+                pl=p;
+            }
+        }
+        return pl;
+    }
 
+    public void manageUpdate(String player){
+        //trovo copia arraylist carte giocatore
+        ArrayList<ResourceCard> hand=new ArrayList<>();
+        hand=findPlayer(player).getHand();
 
+        //array di carte del tavolo
+        ArrayList<ResourceCard> table=new ArrayList<>();
+        //indice 0: deck risorsa
+        if(resourceDeck.isEmpty()){
+            table.add(0,null);
+        }
+        else{
+            table.add(0,resourceDeck.getCards().get(0));
+        }
+        //indice 1: deck oro
+        if(goldDeck.isEmpty()){
+            table.add(1,null);
+        }
+        else{
+            table.add(1,goldDeck.getCards().get(0));
+        }
+        //indice 2: prima carta
+        if(tableCards.get(0)==null){
+            table.add(2,null);
+        }
+        else{
+            table.add(2,tableCards.get(0));
+        }
+        //indice 3: seconda carta
+        if(tableCards.get(1)==null){
+            table.add(3,null);
+        }
+        else{
+            table.add(3,tableCards.get(1));
+        }
+        //indice 4: terza carta
+        if(tableCards.get(2)==null){
+            table.add(4,null);
+        }
+        else{
+            table.add(4,tableCards.get(2));
+        }
+        //indice 5: quarta carta
+        if(tableCards.get(3)==null){
+            table.add(5,null);
+        }
+        else{
+            table.add(5,tableCards.get(3));
+        }
 
+        //array di obiettivi comuni
+        ArrayList<ObjectiveCard> objectiveCards =new ArrayList<>();
+        objectiveCards=commonObjective;
+
+        //colore giocatore
+        Color color;
+        color=findPlayer(player).getPawncolor();
+
+        //current player
+        String current;
+        current=getPlayers().get(currentPlayer).getNickname();
+
+        //obiettivo personale giocatore
+        ObjectiveCard objectiveCard;
+        objectiveCard=findPlayer(player).getObjectiveCard();
+
+        //mappa di stringa: player-playerboard
+        Map<String, PlayableCard[][]> boards=new HashMap<>();
+        for(Player p: getPlayers()){
+            boards.put(p.getNickname(), p.getPlayerBoard().getBoard());
+        }
+
+        //mappa di player-punti
+        Map<String, Integer> points=new HashMap<>();
+        for(Player p: getPlayers()){
+            points.put(p.getNickname(),p.getPoints());
+        }
+
+        //array list di giocatori
+        ArrayList<String> order=new ArrayList<>();
+        for (Player p : players) {
+            order.add(p.getNickname());
+        }
+
+        //game state
+        State gameState;
+        gameState=getGameState();
+
+        //array list di messaggi
+        ArrayList<Text> chat=new ArrayList<>();
+        chat=this.chat.getAll(player);
+
+        //devo notificare il sub corrispondente
+        for(GameSub gameSub:getGameSubs()){
+            try{
+                if(gameSub.getSub().equals(player)){
+                    gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table);
+                }
+            }catch (RemoteException ignored){}
+        }
+
+    }
 
     public int getNumPlayersConnected(){
         return numPlayersConnected;

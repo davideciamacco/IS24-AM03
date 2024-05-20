@@ -138,6 +138,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result = true;
             this.nickname = rejoinGameMessage.getNickname();
             this.subscribeToObservers();
+            //metodo che si occupa di notificare tutti che il player è tornato in vita e che mandi a lui notifiche
 
         }
         catch(IllegalArgumentException e )
@@ -147,6 +148,9 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         } catch (InvalidStateException e) {
             result=false;
             description="Action not allowed in this state";
+        }
+        if(result){
+            CompletableFuture.runAsync(()->gameController.rejoinedChief(rejoinGameMessage.getNickname()));
         }
         return new ConfirmRejoinGameMessage(result, description);
     }
@@ -568,8 +572,8 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     }
 
     @Override
-    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Map<String, Color> colors, ArrayList<ResourceCard> table) throws RemoteException {
-        UpdateCrashedPlayerMessage updateCrashedPlayerMessage=new UpdateCrashedPlayerMessage(nickname,chat,gameState,hand,objectiveCard,boards,points,players,objectiveCards,colors,table);
+    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table) throws RemoteException {
+        UpdateCrashedPlayerMessage updateCrashedPlayerMessage=new UpdateCrashedPlayerMessage(nickname,chat,gameState,hand,objectiveCard,boards,points,players,objectiveCards,color,table);
         this.sendMessage(updateCrashedPlayerMessage);
     }
 

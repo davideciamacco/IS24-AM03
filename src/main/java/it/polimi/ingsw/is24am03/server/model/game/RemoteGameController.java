@@ -16,6 +16,8 @@ public interface RemoteGameController extends Remote{
     public void setObjectiveCard(String player, int choice) throws RemoteException;
 
 
+    public void rejoinedChief(String player) throws RemoteException;
+
     public void selectStartingFace(String player, String face)throws RemoteException;
     public void canSelectStartingFace(String player, String face)throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, RemoteException;
 
