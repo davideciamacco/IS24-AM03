@@ -216,7 +216,7 @@ public class ClientSocket implements Client{
             case FIRST_COMMON -> this.parse((StartingCommonMessage)responseMessage);
             case AVAILABLE_COLORS -> this.parse((AvailableColorMessage) responseMessage);
             case FINAL_COLORS -> this.parse((FinalColorsMessage)responseMessage);
-            //case NOTIFY_ADDITIONAL_ROUND -> this.parse((LastRoundMessage)responseMessage);
+            case NOTIFY_ADDITIONAL_ROUND -> this.parse((LastRoundMessage)responseMessage);
             case NOTIFY_NUM_PLAYERS_REACHED -> this.parse((NotifyNumPlayersReachedMessage)responseMessage);
             default -> {
             }
@@ -225,6 +225,11 @@ public class ClientSocket implements Client{
 
     //TUTTE LE NOTIFICHE DI UPDATE VERRANNO POI GESTITE CON METODI CHIAMATI SUL LOCAL MODEL /
 
+    private void parse(LastRoundMessage lastRoundMessage){
+        try{
+            this.clientModel.NotifyLastRound();
+        }catch (RemoteException e){}
+    }
     private void parse(FinalColorsMessage response){
         try{
             this.clientModel.notifyFinalColors(response.getColors());
@@ -327,7 +332,7 @@ public class ClientSocket implements Client{
         } catch (RemoteException e) {
 
         }
-        System.out.println(response.getPlayer()+"has rejoined the game");
+       // System.out.println(response.getPlayer()+"has rejoined the game");
     }
 
     private void parse(CurrentPlayerMessage response){

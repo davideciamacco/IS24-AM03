@@ -62,18 +62,19 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 sendMessage(response);
             }
             catch(SocketException e){
-                e.printStackTrace();
+                //e.printStackTrace();
                 active=false;
             }
             catch ( ClassNotFoundException e){
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             catch (IOException ignored) {
-                ignored.printStackTrace();
+              //ignored.printStackTrace();
+                active=false;
             }
         }
-        gameController.handleCrashedPlayer(nickname);
         removeFromObservers();
+        gameController.handleCrashedPlayer(nickname);
     }
 
 
@@ -368,6 +369,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description="input not valid";
         }
+        catch (ArgumentException e){
+            result=false;
+            description=e.getMessage();
+        }
         catch(GameNotExistingException e)
         {
             result=false;
@@ -451,7 +456,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 outputStream.reset();
             } catch (IOException e) {
                 try {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     socket.close();
                 } catch (IOException ignored) {}
             }

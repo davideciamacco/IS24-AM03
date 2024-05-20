@@ -77,7 +77,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
     //metodo per verificare che la selezione della starting card può avere senso
-    public void canSelectStartingFace(String player, String face) throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException{
+    public void canSelectStartingFace(String player, String face) throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, ArgumentException{
         synchronized (gameLock) {
             if (!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
@@ -87,6 +87,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
             if (!gameModel.getGameState().equals(State.STARTING))
                 throw new InvalidStateException("Action not allowed in this state");
+            if(!face.equals("FRONT") && !face.equals("BACK"))
+                throw new ArgumentException("Face must be 'FRONT' or 'BACK' ");
 
         }
     }

@@ -152,6 +152,8 @@ public class ClientRMI implements Client{
             System.out.println("Action not allowed in this state");
         } catch (GameNotExistingException e) {
             System.out.println("GameNotExists exception");
+        }catch (ArgumentException e){
+            System.out.println(e.getMessage());
         } catch (RemoteException e)
         {
 
@@ -275,6 +277,7 @@ public class ClientRMI implements Client{
                 hasJoined=true;
                 this.nickname=nickname;
                 this.subscribeToObservers();
+                this.gameController.rejoinedChief(nickname);
             }
             else{
                 System.out.println("Already joined");

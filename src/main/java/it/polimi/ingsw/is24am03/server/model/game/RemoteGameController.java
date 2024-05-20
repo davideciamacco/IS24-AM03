@@ -19,7 +19,7 @@ public interface RemoteGameController extends Remote{
     public void rejoinedChief(String player) throws RemoteException;
 
     public void selectStartingFace(String player, String face)throws RemoteException;
-    public void canSelectStartingFace(String player, String face)throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, RemoteException;
+    public void canSelectStartingFace(String player, String face)throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, RemoteException,ArgumentException;
 
     void pickColor(String nickname, String color) throws /*PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException,*/ RemoteException/*, GameNotExistingException*/;
 public void canPickColor(String nickname, String color) throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException, RemoteException, GameNotExistingException;

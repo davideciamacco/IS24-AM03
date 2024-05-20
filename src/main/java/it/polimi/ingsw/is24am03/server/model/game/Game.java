@@ -385,11 +385,12 @@ public class Game{
     public void drawResources(String player) /* throws EmptyDeckException*/ {
         //if(resourceDeck.isEmpty())
           //  throw new EmptyDeckException("There aren't other cards in the selected deck");
-        getPlayers().get(currentPlayer).addCard(resourceDeck.drawCard());
+        Player p=findPlayer(player);
+        p.addCard(resourceDeck.drawCard());
         //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
-        if(getPlayers().get(currentPlayer).getConnected()) {
+        if(p.getConnected()) {
             try {
-                findSub(player).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+                findSub(player).NotifyChangePersonalCards(player, p.getHand());
             } catch (RemoteException ignored) {
                 System.out.println("Errore 1");
             }
@@ -431,12 +432,12 @@ public class Game{
     public void drawGold(String player) /*throws EmptyDeckException*/ {
        // if(goldDeck.isEmpty())
          //   throw new EmptyDeckException("There aren't other cards in the selected deck");
-        getPlayers().get(currentPlayer).addCard(goldDeck.drawCard());
-        System.out.println("\nID:"+getPlayers().get(currentPlayer).getHand().getFirst().getId()+"\n");
+        findPlayer(player).addCard(goldDeck.drawCard());
+        //System.out.println("\nID:"+getPlayers().get(currentPlayer).getHand().getFirst().getId()+"\n");
         //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
-        if(getPlayers().get(currentPlayer).getConnected()) {
+        if(findPlayer(player).getConnected()) {
             try {
-                findSub(getPlayers().get(currentPlayer)).NotifyChangePersonalCards(player, getPlayers().get(currentPlayer).getHand());
+                findSub(player).NotifyChangePersonalCards(player, findPlayer(player).getHand());
 
             } catch (RemoteException ignored) {
             }
@@ -475,7 +476,7 @@ public class Game{
     public void drawTable(String player, int choice) /*throws NullCardSelectedException*/ {
        // if (tableCards.get(choice) == null)
          //   throw new NullCardSelectedException();
-        Player p = players.get(currentPlayer);
+        Player p = findPlayer(player);
         switch (choice) {
             case 1:
                 p.addCard(tableCards.get(0));
@@ -641,14 +642,16 @@ public class Game{
             throw e;
         }
         //notifico tutti i sub della playerboard di p che player ha piazzato una carta
-        p.getPlayerBoard().notifyChangePlayerBoard(player,p.getPlayerBoard().getBoard()[i][j],i,j);
+
+            p.getPlayerBoard().notifyChangePlayerBoard(player, p.getPlayerBoard().getBoard()[i][j], i, j);
+
         //notifico a tutti i sub del player che ha appena giocato l'update dei punti
         for(PlayerSub playerSub: p.getPlayerSubs()){
             try{
                 playerSub.ReceiveUpdateOnPoints(player,p.getPoints());
             }catch (RemoteException ignored){}
         }
-        if(p.getPoints()>=20)
+        if(p.getPoints()>=3)
             ending=true;
         if(!lastRound) {
             this.gameState = State.DRAWING;
@@ -678,6 +681,12 @@ public class Game{
                         findSub(player).NotifyChangePersonalCards(player, p.getHand());
                     } catch (RemoteException ignored) {
                     }
+                }
+                gameState=State.PLAYING;
+                for(GameSub gameSub: getGameSubs()){
+                    try{
+                        gameSub.notifyChangeState(gameState);
+                    }catch (RemoteException e){}
                 }
                 nextTurn();
             }
@@ -740,7 +749,7 @@ public class Game{
      * Method used to change the current player to the next one
      */
     public void nextTurn(){
-        System.out.println(gameState);
+        //System.out.println(gameState);
        // System.out.println(currentPlayer);
         //System.out.println(numPlayers);
         if(currentPlayer==numPlayers-1){
@@ -819,7 +828,7 @@ public class Game{
         currentPlayer = (currentPlayer+1)%(numPlayers);
 
         while(!players.get(currentPlayer).getConnected() && !timer) {
-            System.out.println("while: "+currentPlayer);
+            //System.out.println("while: "+currentPlayer);
             currentPlayer = (currentPlayer + 1) % (numPlayers);
         }
         int i;
@@ -904,16 +913,16 @@ public class Game{
         }
         //caso in cui io sia all'inizio della partita
         if(gameState==State.WAITING){
-        PlayerSub first =findSub(players.getFirst());
-        for(int i=1; i<players.size(); i++) {
-            players.get(i).getPlayerSubs().add(first);
+            for(int i=0; i<players.size()-1;i++){
+                PlayerSub first = players.get(i).getPlayerSubs().get(i);
+                players.get(players.size()-1).getPlayerSubs().add(first);
+            }
         }
-        }
-        else{
+        /*else{
             for(Player p: players){
                 p.getPlayerSubs().add(playerSub);
             }
-        }
+        }*/
     }
     public void removeSub(PlayerSub playerSub){
         for(Player p: getPlayers()){
@@ -933,16 +942,19 @@ public class Game{
         }
         //ho ottenuto il sub della playerboard del primo giocatore
         if(gameState==State.WAITING) {
-            PlayerBoardSub first = players.getFirst().getPlayerBoard().getPlayerBoardSubs().getFirst();
-            for (int i = 1; i < players.size(); i++) {
-                players.get(i).getPlayerBoard().getPlayerBoardSubs().add(first);
+            //DEVO ISCRIVERE I GIOCATORI ALLA LISTA DI PLAYER DAL PRIMO A PLAYER-1
+            for(int i=0; i<players.size()-1;i++){
+                PlayerBoardSub first = players.get(i).getPlayerBoard().getPlayerBoardSubs().get(i);
+                players.get(players.size()-1).getPlayerBoard().getPlayerBoardSubs().add(first);
             }
-        }
+
+
+        }/*
         else{
             for(Player p: players){
                 p.getPlayerBoard().getPlayerBoardSubs().add(playerBoardSub);
             }
-        }
+        }*/
     }
     public void removeSub(PlayerBoardSub playerBoardSub){
         for(Player p: getPlayers()){

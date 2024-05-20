@@ -121,7 +121,7 @@ public class CliView {
                 try{
                     client.RejoinGame(inputArray[1]);
                 } catch (Exception ignored) {
-                    ignored.printStackTrace();
+                   // ignored.printStackTrace();
                     System.out.println("Missing arguments!");
                 }
             }
@@ -317,7 +317,7 @@ public class CliView {
         System.out.println("PERSONAL HAND\n");
         System.out.println("FRONT:         BACK:");
         System.out.println("\n");
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < hand.size(); i++) {
             if (hand.get(i).getId() == 0) {
                 System.out.println("F-------O      O-------O");
                 System.out.println("|       |      |   F   |");
@@ -918,6 +918,7 @@ public class CliView {
                 }
                 drawCorner(tableCard4, 2, true);
             }
+        System.out.println("\n");
         System.out.println("---END COMMON TABLE---\n");
 
         }
@@ -925,18 +926,25 @@ public class CliView {
 
     public void drawAvailableColors(ArrayList<Color> colors)
     {
+        String ANSI_RESET = "\033[0m";
+
+        String ANSI_RED = "\033[0;31m";
+        String ANSI_GREEN = "\033[0;32m";
+        String ANSI_YELLOW = "\033[0;33m";
+        String ANSI_BLUE = "\033[0;34m";
+
         System.out.println("Choose a color from the available ones:");
         for(int i=0; i<colors.size(); i++){
             if(colors.get(i).equals(Color.RED))
-                System.out.print("RED  ");
+                System.out.print(ANSI_RED + "RED  "+ ANSI_RESET );
             else if (colors.get(i).equals(Color.BLUE)) {
-                System.out.print("BLUE  ");
+                System.out.print(ANSI_BLUE + "BLUE  "+ ANSI_RESET );
             }
             else if (colors.get(i).equals(Color.GREEN)) {
-                System.out.print("GREEN  ");
+                System.out.print(ANSI_GREEN+"GREEN  "+ANSI_RESET);
             }
             else {
-                System.out.print("YELLOW  ");
+                System.out.print(ANSI_YELLOW+"YELLOW  "+ANSI_RESET);
             }
         }
         System.out.print("\n");

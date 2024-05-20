@@ -186,11 +186,11 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         boards.put(player, tempBoard);
 
         if(player.equals(this.player)){
-            System.out.println("Card placed successfully\n");
+            System.out.println("You placed a card successfully\n");
             viewInterface.drawBoard(boards.get(player));
         }
         else{
-            viewInterface.notify("*************** " + player + " placed a card! Here is her/his board: ");
+            viewInterface.notify("*************** " + player + " PLACED A CARD! HERE IS HIS/HER BOARD **************+ ");
             viewInterface.drawBoard(boards.get(player));
         }
     }
@@ -198,7 +198,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     @Override
     public synchronized void ReceiveUpdateOnPoints(String player, int points)throws RemoteException {
         playerPoints.put(player, points);
-        viewInterface.notify("Update on "+player+" points! He reached "+ points);
+        viewInterface.notify("Update on "+player+" points! He/She reached "+ points +" points!");
         //viewinterface.drawTable
         //
     }
@@ -444,7 +444,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         else{
             if(msg.getSender().equals(this.player)){
                 //trovo tutti i messaggi scambiati con il player destinatario
-                System.out.println("YOUR PRIVATE CHAT WITH: " + msg.getRecipient());
+                System.out.println("YOU SENT A TEXT TO "+ msg.getRecipient() + "THIS IS YOUR PRIVATE CHAT WITH: " + msg.getRecipient());
                 System.out.println("************************************");
                 for(int i=chat.size()-1; i>=0; i--){
                     //messaggi che io ho mandato a lui
@@ -458,8 +458,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
             if(msg.getRecipient().equals(this.player)) {
                 //stampo tutti i loro vecchi messaggi
-                System.out.println("You receiver a text from " + msg.getSender());
-                System.out.println("YOUR PRIVATE CHAT WITH: " + msg.getSender());
+                System.out.println("YOU HAVE A NEW TEXT FROM " + msg.getSender() + " THIS IS YOUR PRIVATE CHAT WITH: " + msg.getSender());
                 System.out.println("************************************");
                 for(int i=chat.size()-1; i>=0; i--){
                     //messa che io ho mandato a lui
