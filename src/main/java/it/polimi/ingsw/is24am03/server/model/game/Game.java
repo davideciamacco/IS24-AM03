@@ -612,9 +612,9 @@ public class Game{
             for(GameSub gameSub: gameSubs){
                 try {
                     if(deck==0)
-                        gameSub.updateCommonTable(resourceDeck.getCards().getFirst(), deck);
+                        gameSub.updateCommonTable(resourceDeck.getCards().get(0), deck);
                     else
-                        gameSub.updateCommonTable(goldDeck.getCards().getFirst(), deck);
+                        gameSub.updateCommonTable(goldDeck.getCards().get(0), deck);
 
                 }catch (RemoteException ignored){}
             }
@@ -766,7 +766,7 @@ public class Game{
                 }
                 //notifico solo al primo client i colori disponibili, ovvero tutti i colori
                 try {
-                    findSub(players.getFirst()).notifyAvailableColors(availableColors);
+                    findSub(players.get(0)).notifyAvailableColors(availableColors);
                 }catch (RemoteException ignored){}
             }
             else if(gameState.equals(State.COLOR)) {

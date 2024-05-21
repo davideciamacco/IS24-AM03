@@ -20,11 +20,11 @@ public class ClientSocket implements Client{
     private final ObjectInputStream inputStream;
     private final Queue<Message> queueMessages;
     private final ExecutorService threadManager;
-    private final CliView view;
+    private final ViewInterface view;
 
     private String nickname;
 
-    public ClientSocket(String ip, int port, CliView view) {
+    public ClientSocket(String ip, int port, ViewInterface view) {
         this.ip = ip;
         this.port = port;
         this.queueMessages = new ArrayDeque<>();

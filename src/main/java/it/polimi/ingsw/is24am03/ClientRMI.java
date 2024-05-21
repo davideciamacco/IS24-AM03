@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 public class ClientRMI implements Client{
     Registry registry;
     private RemoteGameController gameController;
-    private final CliView view;
+    private final ViewInterface view;
     private final String ip;
     private final int port;
     private boolean hasJoined;
@@ -30,7 +30,7 @@ public class ClientRMI implements Client{
     private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
 
 
-    public ClientRMI(String hostName, int portNumber, CliView view) {
+    public ClientRMI(String hostName, int portNumber, ViewInterface view) {
         boolean connected = false;
         this.hasJoined=false;
         RemoteGameController temp = null;

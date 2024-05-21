@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-public class CliView {
+public class CliView implements ViewInterface{
     private final ExecutorService inputReader;
     private final Scanner inputScan;
     private final Client client;
@@ -22,7 +22,7 @@ public class CliView {
 
     public static void main(String[] args) {
         try{
-            CliView view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
+            ViewInterface view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
         }
         catch (NumberFormatException e){
             System.out.println("Expected an integer in arguments 2 and 3.");
@@ -1687,4 +1687,8 @@ public class CliView {
             }
         }
 
+    @Override
+    public void drawScene(SceneType sceneType) {
+
     }
+}
