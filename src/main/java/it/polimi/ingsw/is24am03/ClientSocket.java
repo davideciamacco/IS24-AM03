@@ -135,7 +135,7 @@ public class ClientSocket implements Client{
                         queueMessages.notifyAll();
                         queueMessages.wait(1);
                     } catch (IOException | ClassNotFoundException | InterruptedException e ) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         active = false;
                     }
                 }

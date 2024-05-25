@@ -33,6 +33,79 @@ public class GoldCard extends ResourceCard {
         return -1;
     }
 
-    public CornerItem getObject(){
-        return object;}
+    public CornerItem getObject(){return object;}
+
+    public void drawCard(){
+        StringBuilder req = new StringBuilder();
+        ArrayList<String> frontcorner = preDraw();
+        if (scoringType==0) {
+            switch (object) {
+                case PLANT: {
+                    frontcorner.add(getPoints()+"-P");
+                    break;
+                }
+                case ANIMAL: {
+                    frontcorner.add(getPoints()+"-A");
+                    break;
+                }
+                case INSECT: {
+                    frontcorner.add(getPoints()+"-I");
+                    break;
+                }
+                case FUNGI: {
+                    frontcorner.add(getPoints()+"-F");
+                    break;
+                }
+                case QUILL: {
+                    frontcorner.add(getPoints() + "-Q");
+                    break;
+                }
+                case INKWELL:{
+                    frontcorner.add(getPoints()+"-B");
+                    break;
+                }
+                case MANUSCRIPT:{
+                    frontcorner.add(getPoints()+"-M");
+                    break;
+                }
+            }
+        }
+        else if (scoringType==1) {
+            frontcorner.add(getPoints()+"-C");
+        }
+        else if (scoringType==2) {
+            frontcorner.add(("-"+getPoints())+"-");
+        }
+
+        for (CornerItem cornerItem : requirementsList) {
+            switch (cornerItem) {
+                case PLANT: {
+                    req.append("P");
+                    break;
+                }
+                case ANIMAL: {
+                    req.append("A");
+                    break;
+                }
+                case INSECT: {
+                    req.append("I");
+                    break;
+                }
+                case FUNGI: {
+                    req.append("F");
+                    break;
+                }
+            }
+        }
+
+        while(req.length()<5) {
+            req.append("-");
+        }
+
+        frontcorner.add(req.toString());
+        System.out.println(frontcorner.get(0) + "--"+frontcorner.get(5)+"--" + frontcorner.get(1) + "      " + "O-------O");
+        System.out.println("|       |      |   " + frontcorner.get(4) + "   |");
+        System.out.println(frontcorner.get(3) +"-"+frontcorner.get(6)+"-" + frontcorner.get(2) + "      " + "O-------O");
+        System.out.println("\n");
+    }
 }

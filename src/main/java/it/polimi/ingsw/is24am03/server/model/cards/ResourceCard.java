@@ -55,4 +55,67 @@ public class ResourceCard extends PlayableCard {
         ArrayList<CornerItem> a= new ArrayList<>();
         return a;
     }
+    public ArrayList<String> preDraw(){
+        ArrayList<String> frontcorner = new ArrayList<>();
+        for(int i=0; i<4; i++) {
+            if (!getFrontCorner(i).isVisible() && i == 0) {
+                frontcorner.add("┌");
+            } else if (!getFrontCorner(i).isVisible() && i == 1) {
+                frontcorner.add("┐");
+            } else if (!getFrontCorner(i).isVisible() && i == 2) {
+                frontcorner.add("┘");
+            } else if (!getFrontCorner(i).isVisible() && i == 3) {
+                frontcorner.add("└");
+            } else if (getFrontCorner(i).getItem().equals(CornerItem.FUNGI)) {
+                frontcorner.add("F");
+            } else if (getFrontCorner(i).getItem().equals(CornerItem.ANIMAL)) {
+                frontcorner.add("A");
+            } else if (getFrontCorner(i).getItem().equals(CornerItem.INSECT)) {
+                frontcorner.add("I");
+            } else if (getFrontCorner(i).getItem().equals(CornerItem.PLANT)) {
+                frontcorner.add("P");
+            } else if (getFrontCorner(i).getItem().equals(CornerItem.MANUSCRIPT)) {
+                frontcorner.add("M");
+            } else if (getFrontCorner(i).getItem().equals(CornerItem.EMPTY)) {
+                frontcorner.add("O");
+            } else if (getFrontCorner(i).getItem().equals(CornerItem.QUILL)) {
+                frontcorner.add("Q");
+            } else {
+                frontcorner.add("B");
+            }
+        }
+        switch (kingdomType) {
+            case PLANT: {
+                frontcorner.add("P");
+                break;
+            }
+            case ANIMAL: {
+                frontcorner.add("A");
+                break;
+            }
+            case INSECT: {
+                frontcorner.add("I");
+                break;
+            }
+            case FUNGI: {
+                frontcorner.add("F");
+                break;
+            }
+        }
+        return frontcorner;
+    }
+
+    public void drawCard(){
+        ArrayList<String> frontcorner = preDraw();
+        if (getPoints()==0) {
+            frontcorner.add("-");
+        }
+        else{
+            frontcorner.add((Integer.toString(getPoints())));
+        }
+        System.out.println(frontcorner.get(0) + "---"+frontcorner.get(5)+"---" + frontcorner.get(1) + "      " + "O-------O");
+        System.out.println("|       |      |   " + frontcorner.get(4) + "   |");
+        System.out.println(frontcorner.get(3) + "-------" + frontcorner.get(2) + "      " + "O-------O");
+        System.out.println("\n");
+    }
 }

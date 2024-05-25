@@ -30,7 +30,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     private ArrayList<String> times=new ArrayList<>();
 
     //array list per le carte da gioco comune
-    //  //0--> resource deck
+    //    //0--> resource deck
     //    //1--> gold deck
     //    //2--> carta in posizione 0
     //    //3--> carta in posizione 1
@@ -139,7 +139,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 //        if(gameState==State.PLAYING){
 //            if(current.equals(player)){
 //                viewInterface.drawBoard(boards.get(player));
-//                viewInterface.drawHand(this.hand);
+//        viewInterface.drawHand(this.hand);
 //            }
 //        }
     }
@@ -208,7 +208,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     @Override
     public synchronized  void NotifyChangePersonalCards(String Player, ArrayList<ResourceCard> p) throws RemoteException {
     //   hand=p;
-     //  viewInterface.drawHand(p);
+    //   viewInterface.drawHand(p);
     }
 
     @Override
