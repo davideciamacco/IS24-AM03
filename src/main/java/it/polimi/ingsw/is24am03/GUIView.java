@@ -1,5 +1,10 @@
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
+import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
+import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
+import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -23,42 +28,22 @@ import java.util.*;
  * Gui Application Class
  */
 public class GUIView extends Application implements ViewInterface {
-    private Client controller;
+    private static Client controller;
     private GUIController guiController;
     private FXMLLoader fxmlLoader;
     private Scene scene;
     private Stage stage;
     private String connectionType;
 
-    public GUIView() {
-        this.controller = null;
-        this.guiController = null;
-        this.fxmlLoader = null;
-        this.scene = null;
-        this.stage = null;
-        this.connectionType = "";
+    public static void setClient(Client client) {
+        controller = client;
     }
-
+    
     @Override
     public void start(Stage stage) {
         Parameters parameters = getParameters();
         List<String> args = parameters.getRaw();
-
-        try {
-            if (args.get(0).equals("--TCP")) {
-                int port = Integer.parseInt(args.get(2));
-                controller = new ClientSocket(args.get(1), port, this);
-            } else {
-                int port = Integer.parseInt(args.get(1));
-                controller = new ClientRMI(args.get(1), port, this);
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Numero di porta non valido", "Il numero della porta deve essere un intero.");
-            return;
-        } catch (RuntimeException e) {
-            showAlert("Connessione fallita", e.getMessage());
-            return;
-        }
+        controller.setGUI(this);
 
         this.stage = stage;
         this.stage.setFullScreen(true);
@@ -130,6 +115,41 @@ public class GUIView extends Application implements ViewInterface {
             stage.setScene(scene);
             stage.show();
         });
+    }
+
+    @Override
+    public void notify(String s) {
+
+    }
+
+    @Override
+    public void drawBoard(PlayableCard[][] playableCards) {
+
+    }
+
+    @Override
+    public void drawHand(ArrayList<ResourceCard> hand) {
+
+    }
+
+    @Override
+    public void drawObjective(ObjectiveCard o) {
+
+    }
+
+    @Override
+    public void drawStarting(StartingCard startingCard) {
+
+    }
+
+    @Override
+    public void drawTable(Map<String, Integer> playerPoints, ResourceCard resourceDeck, ResourceCard goldDeck, ResourceCard card0, ResourceCard card1, ResourceCard card2, ResourceCard card3) {
+
+    }
+
+    @Override
+    public void drawAvailableColors(ArrayList<Color> colors) {
+
     }
 
 }
