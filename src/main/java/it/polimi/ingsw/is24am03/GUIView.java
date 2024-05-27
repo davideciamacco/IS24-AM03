@@ -71,7 +71,7 @@ public class GUIView extends Application implements ViewInterface {
             this.stage.setScene(scene);
             this.stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             showAlert("Loading Error", "Unable to load the FXML file.");
         }
 
@@ -106,7 +106,7 @@ public class GUIView extends Application implements ViewInterface {
                 Parent newRoot = fxmlLoader.load();
                 scene.setRoot(newRoot);
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 showAlert("Loading Error", "Unable to load the FXML file.");
             }
 

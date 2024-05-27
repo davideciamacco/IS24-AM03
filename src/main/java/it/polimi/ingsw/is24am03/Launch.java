@@ -39,9 +39,17 @@ public class Launch {
                 } else if (args[3].equals("--RMI")) {
                     client = new ClientRMI(host, port, view); // Pass null for now, we will set the view later
                 }
-
                 if (client != null) {
                     GUIView.setClient(client);  // Pass the client to GUIView
+                    System.out.println("  ____ ___  ____  _______  __                           \n" +
+                        " / ___/ _ \\|  _ \\| ____\\ \\/ /                           \n" +
+                        "| |  | | | | | | |  _|  \\  /                            \n" +
+                        "| |__| |_| | |_| | |___ /  \\                            \n" +
+                        " \\____\\___/|____/|_____/_/\\_\\      _    _     ___ ____  \n" +
+                        "| \\ | |  / \\|_   _| | | |  _ \\    / \\  | |   |_ _/ ___| \n" +
+                        "|  \\| | / _ \\ | | | | | | |_) |  / _ \\ | |    | |\\___ \\ \n" +
+                        "| |\\  |/ ___ \\| | | |_| |  _ <  / ___ \\| |___ | | ___) |\n" +
+                        "|_| \\_/_/   \\_\\_|  \\___/|_| \\_\\/_/   \\_\\_____|___|____/ ");
                     GUIView.main(newArgs);
                 } else {
                     System.err.println("Invalid connection type.");

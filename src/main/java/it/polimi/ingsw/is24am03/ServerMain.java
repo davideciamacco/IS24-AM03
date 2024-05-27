@@ -1,12 +1,10 @@
 package it.polimi.ingsw.is24am03;
 
 import it.polimi.ingsw.is24am03.server.controller.GameController;
-import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.rmi.AlreadyBoundException;
@@ -88,8 +86,8 @@ public class ServerMain{
                 ServerMain echoServer = new ServerMain(hostName, portNumber, rmiPortNumber);
                 echoServer.startServer();
             }
-            catch(RemoteException e){
-                e.printStackTrace();
+            catch(RemoteException ignored){
+
             }
         }
         else {

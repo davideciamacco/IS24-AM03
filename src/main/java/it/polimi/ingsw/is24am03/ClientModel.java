@@ -30,7 +30,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     private ArrayList<String> times=new ArrayList<>();
 
     //array list per le carte da gioco comune
-    //  //0--> resource deck
+    //    //0--> resource deck
     //    //1--> gold deck
     //    //2--> carta in posizione 0
     //    //3--> carta in posizione 1
