@@ -22,6 +22,15 @@ public class CliView implements ViewInterface{
 
     public static void main(String[] args) {
         try{
+            System.out.println("  ____ ___  ____  _______  __                           \n" +
+                    " / ___/ _ \\|  _ \\| ____\\ \\/ /                           \n" +
+                    "| |  | | | | | | |  _|  \\  /                            \n" +
+                    "| |__| |_| | |_| | |___ /  \\                            \n" +
+                    " \\____\\___/|____/|_____/_/\\_\\      _    _     ___ ____  \n" +
+                    "| \\ | |  / \\|_   _| | | |  _ \\    / \\  | |   |_ _/ ___| \n" +
+                    "|  \\| | / _ \\ | | | | | | |_) |  / _ \\ | |    | |\\___ \\ \n" +
+                    "| |\\  |/ ___ \\| | | |_| |  _ <  / ___ \\| |___ | | ___) |\n" +
+                    "|_| \\_/_/   \\_\\_|  \\___/|_| \\_\\/_/   \\_\\_____|___|____/ ");
             ViewInterface view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
 
         }
@@ -37,11 +46,7 @@ public class CliView implements ViewInterface{
         inputScan = new Scanner(System.in);
         inputReader = Executors.newCachedThreadPool();
         client.setCLI(this);
-   //     if (connectionType.equals("--TCP"))
-    //        client = new ClientSocket(ip, port, this);
-    //    else {
-     //       client = new ClientRMI(ip, port, this);
-     //   }
+
         inputReader.execute(() -> {
             String cliInput;
             synchronized (inputScan) {

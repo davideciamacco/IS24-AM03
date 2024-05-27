@@ -98,7 +98,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.boards.put(player,new PlayableCard[81][81]);
         this.players=new ArrayList<>();
         this.players.add(player);
-
+        viewInterface.drawScene(SceneType.WAITING);
     }
 
 
@@ -290,6 +290,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     @Override
     public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
         viewInterface.notify("Number of players has been reached, the game will start in a few moments");
+        viewInterface.drawScene(SceneType.GAME);
     }
 
     @Override

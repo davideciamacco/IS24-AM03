@@ -376,7 +376,6 @@ public class ClientSocket implements Client{
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             System.out.println("Joined successfully");
-
             hasJoined = true;
         }
         else{

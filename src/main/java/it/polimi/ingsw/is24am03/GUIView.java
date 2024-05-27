@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -72,7 +73,6 @@ public class GUIView extends Application implements ViewInterface {
             this.stage.show();
         } catch (IOException e) {
             //e.printStackTrace();
-            showAlert("Loading Error", "Unable to load the FXML file.");
         }
 
     }
@@ -93,12 +93,12 @@ public class GUIView extends Application implements ViewInterface {
     @Override
     public void drawScene(SceneType sceneType) {
         Platform.runLater(() -> {
-            String fxmlPath;
+            String fxmlPath = "";
             switch (sceneType) {
+                case WAITING -> fxmlPath="/it/polimi/ingsw/is24am03/lobby-view.fxml";
+                case COLOR -> fxmlPath="/it/polimi/ingsw/is24am03/color-view.fxml";
 
-                default -> fxmlPath = "/it/polimi/ingsw/is24am03/login-view.fxml";
             }
-
             fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(GUIView.class.getResource(fxmlPath));
 
