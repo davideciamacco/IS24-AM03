@@ -20,12 +20,11 @@ import java.util.concurrent.CompletableFuture;
 public class ClientRMI implements Client{
     Registry registry;
     private RemoteGameController gameController;
-    private final ViewInterface view;
+    private ViewInterface view;
     private final String ip;
     private final int port;
     private boolean hasJoined;
     private String nickname;
-
     private ClientModel clientModel;
     private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
 
@@ -160,6 +159,17 @@ public class ClientRMI implements Client{
         }
         System.out.flush();
     }
+
+    @Override
+    public void setGUI(ViewInterface view) {
+            this.view=view;
+    }
+
+    @Override
+    public void setCLI(ViewInterface view) {
+        this.view=view;
+    }
+
     public void PlaceCard(int choice,int i,int j,String face){
         try {
             this.gameController.placeCard(nickname,choice,i,j,face);

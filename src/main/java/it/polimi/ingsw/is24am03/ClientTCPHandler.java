@@ -37,7 +37,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     private String nickname;
     private  Queue<Message> queueMessages;
 
-    private  ExecutorService parseExecutors = Executors.newCachedThreadPool();
 
 
     public ClientTCPHandler(Socket socket, GameController gameController) {
@@ -311,7 +310,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
            CompletableFuture.runAsync(()->gameController.canStart());
         }
 
-        result = true;
         return new ConfirmJoinGameMessage(result, description);
     }
 

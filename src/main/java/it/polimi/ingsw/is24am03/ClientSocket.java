@@ -20,10 +20,15 @@ public class ClientSocket implements Client{
     private final ObjectInputStream inputStream;
     private final Queue<Message> queueMessages;
     private final ExecutorService threadManager;
-    private final ViewInterface view;
+    private  ViewInterface view;
 
     private String nickname;
-
+    public void setGUI(ViewInterface gui){
+        this.view=gui;
+    }
+    public void setCLI(ViewInterface cli){
+        this.view=cli;
+    }
     public ClientSocket(String ip, int port, ViewInterface view) {
         this.ip = ip;
         this.port = port;
@@ -371,7 +376,6 @@ public class ClientSocket implements Client{
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             System.out.println("Joined successfully");
-
             hasJoined = true;
         }
         else{

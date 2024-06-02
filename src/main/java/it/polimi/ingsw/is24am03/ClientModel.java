@@ -98,73 +98,73 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.boards.put(player,new PlayableCard[81][81]);
         this.players=new ArrayList<>();
         this.players.add(player);
-
+        viewInterface.drawScene(SceneType.WAITING);
     }
 
 
     @Override
     public synchronized void  notifyJoinedPlayer(String joinedPlayer) throws RemoteException {
-    //    viewInterface.notify(joinedPlayer+"  has joined the game");
+        viewInterface.notify(joinedPlayer+"  has joined the game");
     }
 
     @Override
     public synchronized void notifyWinners(ArrayList<String> winners)throws RemoteException {
-    //   StringBuilder message = new StringBuilder();
-    //   for(String s: winners){
-    //       message.append(s).append("-");
-    //   }
-    //   message= new StringBuilder("winners are " + message);
-    //   viewInterface.notify(message.toString());
+       StringBuilder message = new StringBuilder();
+       for(String s: winners){
+           message.append(s).append("-");
+       }
+       message= new StringBuilder("winners are " + message);
+       viewInterface.notify(message.toString());
     }
 
     @Override
     public synchronized void  notifyTurnOrder(ArrayList<String> order) throws RemoteException{
-    //       players=order;
-    //    StringBuilder message = new StringBuilder();
-    //   for(String s: order){
-    //        playerPoints.put(s,0);
-    //        message.append(s).append("-");
-    //       boards.put(s,new PlayableCard[81][81]);
-    //    }
-    //    message= new StringBuilder("Turn order is  " + message);
-//
-  //      viewInterface.notify(message.toString());
+           players=order;
+        StringBuilder message = new StringBuilder();
+        for(String s: order){
+            playerPoints.put(s,0);
+            message.append(s).append("-");
+            boards.put(s,new PlayableCard[81][81]);
+         }
+        message= new StringBuilder("Turn order is  " + message);
+
+        viewInterface.notify(message.toString());
 
     }
 
     @Override
     public synchronized void notifyCurrentPlayer(String current)throws RemoteException {
-//        this.current = current;
-//        viewInterface.notify("current player is " + current);
-//        if(gameState==State.PLAYING){
-//            if(current.equals(player)){
-//                viewInterface.drawBoard(boards.get(player));
-//        viewInterface.drawHand(this.hand);
-//            }
-//        }
+        this.current = current;
+        viewInterface.notify("current player is " + current);
+        if(gameState==State.PLAYING){
+            if(current.equals(player)){
+                viewInterface.drawBoard(boards.get(player));
+                viewInterface.drawHand(this.hand);
+            }
+        }
     }
 
     @Override
     public synchronized void notifyCrashedPlayer(String username)throws RemoteException {
-     //   viewInterface.notify("player "+username+" has crashed");
+        viewInterface.notify("player "+username+" has crashed");
     }
 
     @Override
     public synchronized void notifyChangeState(State gameState)throws RemoteException {
-    //    this.gameState=gameState;
-     //   viewInterface.notify("Game state has changed, now is "+gameState.toString());
+        this.gameState=gameState;
+        viewInterface.notify("Game state has changed, now is "+gameState.toString());
 
     }
 
     @Override
     public synchronized void notifyRejoinedPlayer(String rejoinedPlayer)throws RemoteException{
-     //   if(!rejoinedPlayer.equals(this.player))
-     //       viewInterface.notify(rejoinedPlayer+" has rejoined the game");
+        if(!rejoinedPlayer.equals(this.player))
+            viewInterface.notify(rejoinedPlayer+" has rejoined the game");
     }
 
     @Override
     public synchronized void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException{
-        /*
+
         //all'interno devo mettergli quello che c'era prima
         PlayableCard[][] tempBoard;
         tempBoard= boards.get(player);
@@ -194,28 +194,28 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
             viewInterface.notify("*************** " + player + " PLACED A CARD! HERE IS HIS/HER BOARD **************+ ");
             viewInterface.drawBoard(boards.get(player));
         }
-        */
+
     }
 
     @Override
     public synchronized void ReceiveUpdateOnPoints(String player, int points)throws RemoteException {
-    //    playerPoints.put(player, points);
-    //    viewInterface.notify("Update on "+player+" points! He/She reached "+ points +" points!");
+        playerPoints.put(player, points);
+        viewInterface.notify("Update on "+player+" points! He/She reached "+ points +" points!");
         //viewinterface.drawTable
-        //
+
     }
 
     @Override
     public synchronized  void NotifyChangePersonalCards(String Player, ArrayList<ResourceCard> p) throws RemoteException {
-    //   hand=p;
-    //   viewInterface.drawHand(p);
+       hand=p;
+       viewInterface.drawHand(p);
     }
 
     @Override
     public synchronized void notifyChoiceObjective(String player, ObjectiveCard o)throws RemoteException {
-    //    objectiveCard1=o;
-     //   viewInterface.notify("Your personal objective is: ");
-     //   viewInterface.drawObjective(o);
+        objectiveCard1=o;
+        viewInterface.notify("Your personal objective is: ");
+        viewInterface.drawObjective(o);
 
     }
 
@@ -225,46 +225,36 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     }
 
     @Override
-    public void ReceiveGroupText(String sender, String text) throws RemoteException {
-
-    }
-
-    @Override
-    public void ReceivePrivateText(String sender, String receiver, String text) throws RemoteException {
-
-    }
-
-    @Override
     public synchronized void notifyFirstHand(ResourceCard p1, ResourceCard p2, ResourceCard p3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2)throws RemoteException{
-    //    hand.add(p1);
-    //    hand.add(p2);
-    //    hand.add(p3);
-    //    viewInterface.drawHand(hand);
-    //    this.startingCard=startingCard;
-    //    this.objectiveCard1=o1;
-    //    this.objectiveCard2=o2;
-    //    viewInterface.drawStarting(startingCard);
-    //    System.out.println("\n");
-    //    System.out.println("--PERSONAL OBJECTIVES---\n");
-    //    viewInterface.drawObjective(o1);
-    //   viewInterface.drawObjective(o2);
-    //    System.out.println("---END PERSONAL OBJECTIVES---\n");
+        hand.add(p1);
+        hand.add(p2);
+        hand.add(p3);
+        viewInterface.drawHand(hand);
+        this.startingCard=startingCard;
+        this.objectiveCard1=o1;
+        this.objectiveCard2=o2;
+        viewInterface.drawStarting(startingCard);
+        System.out.println("\n");
+        System.out.println("--PERSONAL OBJECTIVES---\n");
+        viewInterface.drawObjective(o1);
+       viewInterface.drawObjective(o2);
+        System.out.println("---END PERSONAL OBJECTIVES---\n");
     }
 
     @Override
     public synchronized void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)throws RemoteException{
-    //    commonObjective.add(objectiveCard1);
-    //    commonObjective.add(objectiveCard2);
-    //    System.out.println("--COMMON OBJECTIVES---");
-    //    viewInterface.drawObjective(objectiveCard1);
-    //    viewInterface.drawObjective(objectiveCard2);
-    //    System.out.println("---END COMMON OBJECTIVES---");
-    //    System.out.println("\n");
+        commonObjective.add(objectiveCard1);
+        commonObjective.add(objectiveCard2);
+        System.out.println("--COMMON OBJECTIVES---");
+        viewInterface.drawObjective(objectiveCard1);
+        viewInterface.drawObjective(objectiveCard2);
+        System.out.println("---END COMMON OBJECTIVES---");
+        System.out.println("\n");
     }
 
     @Override
     public synchronized void updateCommonTable(ResourceCard resourceCard,int index) throws RemoteException {
-        /*
+
         //0--> resource deck
         //1--> gold deck
         //2--> carta 0
@@ -294,27 +284,28 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         if(index==1 || index==0)
             viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
 
-         */
+
     }
 
     @Override
     public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
-     //   viewInterface.notify("Number of players has been reached, the game will start in a few moments");
+        viewInterface.notify("Number of players has been reached, the game will start in a few moments");
+        viewInterface.drawScene(SceneType.GAME);
     }
 
     @Override
     public void NotifyLastRound() throws RemoteException {
-      //  viewInterface.notify("Last round will start, during this round drawing won't be permitted");
+        viewInterface.notify("Last round will start, during this round drawing won't be permitted");
     }
 
     @Override
     public void notifyAvailableColors(ArrayList<Color> colors) throws RemoteException {
-    //    viewInterface.drawAvailableColors(colors);
+        viewInterface.drawAvailableColors(colors);
     }
 
     @Override
     public void notifyFinalColors(Map<String, Color> colors) throws RemoteException {
-        /*
+
         String ANSI_RESET = "\033[0m";
 
          String ANSI_RED = "\033[0;31m";
@@ -338,12 +329,12 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
             }
         }
 
-         */
+
     }
 
     @Override
     public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table) throws RemoteException {
-        /*
+
         this.current=nickname; //
         this.chat=chat; //
         this.gameState=gameState; //
@@ -392,12 +383,12 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         System.out.println("---------------------------------------------------------------------");
 
 
-         */
+
     }
 
     @Override
     public void UpdateFirst(ArrayList<ResourceCard> commons) throws RemoteException {
-/*
+
         this.resourceDeck=commons.get(0);
         this.goldDeck=commons.get(1);
         this.card0=commons.get(2);
@@ -494,7 +485,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         }
 
 
- */
+
     }
 
     private int findNumber(ArrayList<Text> chat){

@@ -9,9 +9,9 @@ public interface Client {
     public void DrawTable(int choice);
     public void PlaceCard(int choice, int i, int j, String face);
     public void ChooseStartingCardSide(String face);
-
+    public void setGUI(ViewInterface view);
+    public void setCLI(ViewInterface view);
     public void ChooseObjectiveCard(int choice);
-
     public void sendGroupText(String text);
 
     public void sendPrivateText(String Receiver, String text);

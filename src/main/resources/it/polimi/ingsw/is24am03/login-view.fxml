@@ -10,34 +10,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="800.0" prefWidth="1200.0" styleClass="anchor" stylesheets="@login.view.css" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.LoginViewController">
+<BorderPane prefHeight="800.0" prefWidth="1200.0" styleClass="anchor" stylesheets="@login.view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.LoginViewController">
     <top>
-        <ImageView fitHeight="193.0" fitWidth="534.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+        <ImageView fitHeight="301.0" fitWidth="275.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
             <image>
                 <Image url="@logo.jpeg" />
             </image>
         </ImageView>
     </top>
     <center>
-        <VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" spacing="10">
+        <VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="663.0" spacing="10" BorderPane.alignment="CENTER">
             <children>
-                <Label alignment="CENTER" graphicTextGap="6.0" prefHeight="93.0" prefWidth="227.0" text="Comando" textAlignment="CENTER">
-                    <font>
-                        <Font name="Arial" size="24.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                </Label>
-                <TextField fx:id="commandField" alignment="CENTER" prefHeight="35.0" prefWidth="230.0" promptText="Inserisci il comando">
-                    <font>
-                        <Font name="Arial" size="18.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets bottom="15.0" />
-                    </VBox.margin>
-                </TextField>
-                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onSendButtonClick" prefHeight="35.0" prefWidth="230.0" text="Invia" textAlignment="CENTER">
+            <TextField fx:id="numbersOfPlayersField" />
+            <TextField fx:id="nicknameCreateField" alignment="CENTER" />
+                <Button alignment="CENTER" graphicTextGap="8.0" mnemonicParsing="false" onAction="#onCreateButtonClick" prefHeight="35.0" prefWidth="230.0" text="Create Game" textAlignment="CENTER">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -47,6 +33,8 @@
                         <Font size="18.0" />
                     </font>
                 </Label>
+            <TextField fx:id="nicknameJoinField" />
+            <Button graphicTextGap="8.0" mnemonicParsing="false" onAction="#onJoinButtonClick" prefHeight="48.0" prefWidth="232.0" text="Join Game" />
                 <Label fx:id="errorLabelDesc" alignment="CENTER" prefHeight="21.0" prefWidth="531.0" textFill="#eb1e1e">
                     <font>
                         <Font size="15.0" />
@@ -55,6 +43,8 @@
                         <Insets bottom="15.0" />
                     </VBox.margin>
                 </Label>
+            <TextField fx:id="nicknameRejoinField" />
+            <Button mnemonicParsing="false" onAction="#onRejoinButtonClick" prefHeight="38.0" prefWidth="242.0" text="Rejoin Game" />
             </children>
             <opaqueInsets>
                 <Insets />
