@@ -260,7 +260,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game already created";
         }
-        return new ConfirmGameMessage(result, description);
+        return new ConfirmGameMessage(result, createGameMessage.getNickname(), description );
     }
 
     private Message parse(JoinGameMessage joinGameMessage){
@@ -270,8 +270,8 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             if(!joinGameMessage.getHasJoined()) {
                 //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
                     //posso iscrivere il sub al gioco
-                    this.nickname = joinGameMessage.getNickname();
                     gameController.addPlayer(joinGameMessage.getNickname(), "TCP");
+                    this.nickname = joinGameMessage.getNickname();
                     this.subscribeToObservers();
                     result = true;
             }
@@ -310,7 +310,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
            CompletableFuture.runAsync(()->gameController.canStart());
         }
 
-        return new ConfirmJoinGameMessage(result, description);
+        return new ConfirmJoinGameMessage(result, joinGameMessage.getNickname(), description);
     }
 
     private Message parse(PickColorMessage pickColorMessage) {

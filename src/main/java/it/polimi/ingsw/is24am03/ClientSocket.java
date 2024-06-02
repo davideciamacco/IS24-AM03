@@ -51,22 +51,12 @@ public class ClientSocket implements Client{
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
         this.nickname=nickname;
-        try{
-            clientModel = new ClientModel(nickname, view);
-        }
-        catch(RemoteException e){
-
-        }
         this.sendMessage(requestMessage);
     }
 
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
         this.nickname = nickname;
-        try{
-        clientModel = new ClientModel(nickname, view);
-        }
-        catch(RemoteException e){}
         this.sendMessage(joinMessage);
     }
 
@@ -181,8 +171,7 @@ public class ClientSocket implements Client{
             case CONFIRM_PLACE -> this.parse((ConfirmPlaceMessage) responseMessage);
             case CONFIRM_DRAW -> this.parse((ConfirmDrawMessage) responseMessage);
             case CONFIRM_REJOIN -> this.parse((ConfirmRejoinGameMessage) responseMessage);
-
-            ///////
+            
 
             //MESSAGGI UPDATE DEL GIOCO (INTESO COME COMMON TABLE, STATI ETC)
             //TUTTI I MESSAGGI DI UPDATE DI GAME SONO BROADCAST
@@ -276,12 +265,12 @@ public class ClientSocket implements Client{
 
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
-            this.nickname = nickname;
+            this.nickname = message.getNickname();
             System.out.println("Game created successfully");
             //qui creo il local model
-            /*try {
+            try {
                 this.clientModel = new ClientModel(this.nickname, view);
-            }catch (RemoteException e){}*/
+            }catch (RemoteException e){}
             hasJoined = true;
         }
         else
@@ -377,9 +366,11 @@ public class ClientSocket implements Client{
         if(message.getConfirmJoin()) {
             System.out.println("Joined successfully");
             hasJoined = true;
+            try {
+                clientModel = new ClientModel(message.getNickname(), view);
+            } catch(RemoteException e ){}
         }
         else{
-            clientModel=null;
             System.out.println(message.getDetails());
         }
         System.out.flush();
