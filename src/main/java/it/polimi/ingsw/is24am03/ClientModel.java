@@ -121,11 +121,17 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     public synchronized void  notifyTurnOrder(ArrayList<String> order) throws RemoteException{
            players=order;
         StringBuilder message = new StringBuilder();
-        for(String s: order){
+        for (int i = 0; i < order.size(); i++) {
+            String s = order.get(i);
             playerPoints.put(s,0);
-            message.append(s).append("-");
             boards.put(s,new PlayableCard[81][81]);
-         }
+            if (i == order.size() - 1) {
+                message.append(s);
+            }
+            else{
+                message.append(s).append("-");
+            }
+        }
         message= new StringBuilder("Turn order is  " + message);
 
         viewInterface.notify(message.toString());
