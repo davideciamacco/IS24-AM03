@@ -4,7 +4,9 @@ import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
+import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
+import it.polimi.ingsw.is24am03.server.model.enums.State;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -117,10 +119,10 @@ public class GUIView extends Application implements ViewInterface {
         });
     }
 
-    @Override
+   /* @Override
     public void notify(String s) {
 
-    }
+    }*/
 
     @Override
     public void drawBoard(PlayableCard[][] playableCards) {
@@ -149,6 +151,126 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void drawAvailableColors(ArrayList<Color> colors) {
+
+    }
+
+    @Override
+    public void notifyJoinedPlayer(String joinedPlayer) {
+
+    }
+
+    @Override
+    public void notifyWinners(ArrayList<String> winners) {
+
+    }
+
+    @Override
+    public void notifyTurnOrder(ArrayList<String> order) {
+
+    }
+
+    @Override
+    public void notifyCurrentPlayer(String current, Map<String, PlayableCard[][]> boards, String player, ArrayList<ResourceCard> hand, State gamestate) {
+
+    }
+
+    @Override
+    public void notifyCrashedPlayer(String username) {
+
+    }
+
+    @Override
+    public void notifyChangeState(State gameState) {
+
+    }
+
+    @Override
+    public void notifyRejoinedPlayer(String rejoinedPlayer) {
+
+    }
+
+    @Override
+    public void notifyChangePlayerBoard(String player, String nickname, Map<String, PlayableCard[][]> boards) {
+
+    }
+
+    @Override
+    public void ReceiveUpdateOnPoints(String player, int points) {
+
+    }
+
+    @Override
+    public void NotifyChangePersonalCards(ArrayList<ResourceCard> p) {
+
+    }
+
+    @Override
+    public void notifyChoiceObjective(ObjectiveCard o) {
+
+    }
+
+    @Override
+    public void notifyFirstHand(ArrayList<ResourceCard> hand, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) {
+
+    }
+
+    @Override
+    public void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+
+    }
+
+    @Override
+    public void updateCommonTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
+
+    }
+
+    @Override
+    public void NotifyNumbersOfPlayersReached() {
+
+    }
+
+    @Override
+    public void NotifyLastRound() {
+
+    }
+
+    @Override
+    public void notifyAvailableColors(ArrayList<Color> colors) {
+
+    }
+
+    @Override
+    public void notifyFinalColors(Map<String, Color> colors, ArrayList<String> players) {
+
+    }
+
+    @Override
+    public void drawFinalColors(Map<String, Color> colors, ArrayList<String> players) {
+
+    }
+
+    @Override
+    public void UpdateCrashedPlayer(String nickname, String player, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table) {
+
+    }
+
+    @Override
+    public void UpdateFirst(Map<String, Integer> points, ArrayList<ResourceCard> commons) {
+
+    }
+
+    @Override
+    public void addGroupText(ArrayList<Text> chat, String player) {
+
+    }
+
+    @Override
+    public void drawChat(ArrayList<Text> chat, String player) {
+
+    }
+
+    @Override
+    public void printNotifications(String message) {
 
     }
 

@@ -61,7 +61,6 @@ public class ClientRMI implements Client{
 
             System.out.println("Game created successfully");
             this.nickname = nickname;
-            this.clientModel=new ClientModel(nickname,view);
             this.subscribeToObservers();
             hasJoined=true;
         } catch (IllegalArgumentException e) {
