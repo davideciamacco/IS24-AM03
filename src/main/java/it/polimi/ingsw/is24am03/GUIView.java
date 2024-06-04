@@ -47,14 +47,14 @@ public class GUIView extends Application implements ViewInterface {
         controller.setGUI(this);
 
         this.stage = stage;
-        this.stage.setFullScreen(true);
-        this.stage.getIcons().add(new Image(getClass().getResourceAsStream("/it/polimi/ingsw/is24am03/logo.jpeg")));
+        //this.stage.setFullScreen(true);
+        this.stage.getIcons().add(new Image(getClass().getResourceAsStream("/it/polimi/ingsw/is24am03/logo.png")));
 
         if (Taskbar.isTaskbarSupported()) {
             var taskbar = Taskbar.getTaskbar();
             if (taskbar.isSupported(Feature.ICON_IMAGE)) {
                 final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-                var dockIcon = defaultToolkit.getImage(getClass().getResource("/logo.jpeg"));
+                var dockIcon = defaultToolkit.getImage(getClass().getResource("/logo.png"));
                 taskbar.setIconImage(dockIcon);
             }
         }
