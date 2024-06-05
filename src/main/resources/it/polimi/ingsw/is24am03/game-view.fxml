@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.GameViewController">
+   <children>
+      <Pane layoutY="-1.0" prefHeight="406.0" prefWidth="601.0" style="-fx-background-color: #333;">
+         <children>
+            <ImageView fitHeight="363.0" fitWidth="575.0" layoutX="28.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@abstract-surface-wood-texture-background.jpg" />
+               </image>
+            </ImageView>
+            <ImageView id="ResourceDeck" fx:id="resourceDeck" fitHeight="63.0" fitWidth="60.0" layoutX="178.0" layoutY="105.0" onMouseClicked="#onClickResourceDeck" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
+               <image>
+                  <Image url="@carta.jpg" />
+               </image>
+            </ImageView>
+            <ImageView id="GoldDeck" fx:id="goldDeck" fitHeight="63.0" fitWidth="60.0" layoutX="171.0" layoutY="167.0" onMouseClicked="#onClickGoldDeck" pickOnBounds="true" preserveRatio="true" smooth="false">
+               <image>
+                  <Image url="@carta.jpg" />
+               </image>
+            </ImageView>
+            <ImageView id="ResourceDeck" fx:id="table0" fitHeight="63.0" fitWidth="60.0" layoutX="259.0" layoutY="105.0" onMouseClicked="#onClickTable0" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
+               <image>
+                  <Image url="@carta.jpg" />
+               </image>
+            </ImageView>
+            <ImageView id="ResourceDeck" fx:id="table1" fitHeight="63.0" fitWidth="60.0" layoutX="351.0" layoutY="105.0" onMouseClicked="#onClickTable1" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
+               <image>
+                  <Image url="@carta.jpg" />
+               </image>
+            </ImageView>
+            <ImageView id="ResourceDeck" fx:id="table3" fitHeight="63.0" fitWidth="60.0" layoutX="351.0" layoutY="167.0" onMouseClicked="#onClickTable3" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
+               <image>
+                  <Image url="@carta.jpg" />
+               </image>
+            </ImageView>
+            <ImageView id="ResourceDeck" fx:id="table2" fitHeight="63.0" fitWidth="60.0" layoutX="259.0" layoutY="167.0" onMouseClicked="#onClickTable2" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
+               <image>
+                  <Image url="@carta.jpg" />
+               </image>
+            </ImageView>
+            <VBox layoutX="41.0" layoutY="147.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #333;" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
