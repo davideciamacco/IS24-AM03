@@ -20,11 +20,13 @@ public class LoginViewController extends GUIController {
     private ToggleButton ply3;
     @FXML
     private ToggleButton ply4;
+
     @FXML
     private ToggleGroup numPlayers;
     @FXML
     private VBox CreateBox;
     @FXML
+  
     private VBox JoinBox;
     @FXML
     private VBox RejoinBox;
@@ -84,11 +86,14 @@ public class LoginViewController extends GUIController {
     }
     @FXML
     private void onJoinButtonClick() {
-         String nickname = nicknameJoinField.getText();
-         if(nickname.isEmpty()){
-             errorLabel.setText("Error: Nickname cannot be empty.");
-         }
-         else
+
+        String nickname = nicknameJoinField.getText();
+        if(nickname.isEmpty()){
+            errorLabel.setText("Error: Nickname cannot be empty.");
+        }
+        else
+
+       
             clientController.JoinGame(nickname);
     }
     @FXML

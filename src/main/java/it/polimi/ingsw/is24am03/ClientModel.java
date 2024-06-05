@@ -104,80 +104,72 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     @Override
     public synchronized void  notifyJoinedPlayer(String joinedPlayer) throws RemoteException {
-        viewInterface.notify(joinedPlayer+"  has joined the game");
+        viewInterface.notifyJoinedPlayer(joinedPlayer);
     }
 
     @Override
     public synchronized void notifyWinners(ArrayList<String> winners)throws RemoteException {
-       StringBuilder message = new StringBuilder();
-       for(String s: winners){
-           message.append(s).append("-");
-       }
-       message= new StringBuilder("winners are " + message);
-       viewInterface.notify(message.toString());
+        viewInterface.notifyWinners(winners);
     }
+
 
     @Override
     public synchronized void  notifyTurnOrder(ArrayList<String> order) throws RemoteException{
-           players=order;
-        StringBuilder message = new StringBuilder();
-        for (int i = 0; i < order.size(); i++) {
-            String s = order.get(i);
+
+        players=order;
+        for(String s: order){
             playerPoints.put(s,0);
             boards.put(s,new PlayableCard[81][81]);
-            if (i == order.size() - 1) {
-                message.append(s);
-            }
-            else{
-                message.append(s).append("-");
-            }
         }
-        message= new StringBuilder("Turn order is  " + message);
 
-        viewInterface.notify(message.toString());
+
+
+        viewInterface.notifyTurnOrder(order);
 
     }
+
 
     @Override
     public synchronized void notifyCurrentPlayer(String current)throws RemoteException {
         this.current = current;
-        viewInterface.notify("current player is " + current);
-        if(gameState==State.PLAYING){
-            if(current.equals(player)){
-                viewInterface.drawBoard(boards.get(player));
-                viewInterface.drawHand(this.hand);
-            }
-        }
+        viewInterface.notifyCurrentPlayer(current,boards,player, hand, gameState);
+
     }
+
 
     @Override
     public synchronized void notifyCrashedPlayer(String username)throws RemoteException {
-        viewInterface.notify("player "+username+" has crashed");
+        viewInterface.notifyCrashedPlayer(username);
     }
+
 
     @Override
     public synchronized void notifyChangeState(State gameState)throws RemoteException {
         this.gameState=gameState;
-        viewInterface.notify("Game state has changed, now is "+gameState.toString());
+        //lo stato del gioco può essere starting, playing, drawing o ending
+
+        //il problema è che se sono allo starting devo aspettare il current player
+
+        //se lo stato cambia e sono ancora io il giocatore devo gestirla diversamente
+
+        viewInterface.notifyChangeState(gameState);
 
     }
+
 
     @Override
     public synchronized void notifyRejoinedPlayer(String rejoinedPlayer)throws RemoteException{
         if(!rejoinedPlayer.equals(this.player))
-            viewInterface.notify(rejoinedPlayer+" has rejoined the game");
+            viewInterface.notifyRejoinedPlayer(rejoinedPlayer);
     }
+
 
     @Override
     public synchronized void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) throws RemoteException{
-
         //all'interno devo mettergli quello che c'era prima
         PlayableCard[][] tempBoard;
         tempBoard= boards.get(player);
         tempBoard[i][j]=p;
-
-        boards.put(player, tempBoard);
-
         if (i + 1 < 81 && j + 1 < 81 && tempBoard[i + 1][j + 1] != null) {
             tempBoard[i + 1][j + 1].setCornerCoverage(0, true); // Imposta come coperto l'angolo 0 della carta adiacente in basso a destra
         }
@@ -191,37 +183,29 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
             tempBoard[i - 1][j - 1].setCornerCoverage(2, true); // Imposta come coperto l'angolo 2 della carta adiacente in alto a sinistra
         }
         boards.put(player, tempBoard);
-
-        if(player.equals(this.player)){
-            System.out.println("You placed a card successfully\n");
-            viewInterface.drawBoard(boards.get(player));
-        }
-        else{
-            viewInterface.notify("*************** " + player + " PLACED A CARD! HERE IS HIS/HER BOARD **************+ ");
-            viewInterface.drawBoard(boards.get(player));
-        }
+        viewInterface.notifyChangePlayerBoard(player, this.player, boards);
 
     }
+
 
     @Override
     public synchronized void ReceiveUpdateOnPoints(String player, int points)throws RemoteException {
         playerPoints.put(player, points);
-        viewInterface.notify("Update on "+player+" points! He/She reached "+ points +" points!");
-        //viewinterface.drawTable
-
+        viewInterface.ReceiveUpdateOnPoints(player, points);
     }
+
 
     @Override
     public synchronized  void NotifyChangePersonalCards(String Player, ArrayList<ResourceCard> p) throws RemoteException {
-       hand=p;
-       viewInterface.drawHand(p);
+        hand=p;
+        viewInterface.NotifyChangePersonalCards(p);
     }
+
 
     @Override
     public synchronized void notifyChoiceObjective(String player, ObjectiveCard o)throws RemoteException {
         objectiveCard1=o;
-        viewInterface.notify("Your personal objective is: ");
-        viewInterface.drawObjective(o);
+        viewInterface.notifyChoiceObjective(o);
 
     }
 
@@ -235,27 +219,17 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         hand.add(p1);
         hand.add(p2);
         hand.add(p3);
-        viewInterface.drawHand(hand);
         this.startingCard=startingCard;
         this.objectiveCard1=o1;
         this.objectiveCard2=o2;
-        viewInterface.drawStarting(startingCard);
-        System.out.println("\n");
-        System.out.println("--PERSONAL OBJECTIVES---\n");
-        viewInterface.drawObjective(o1);
-       viewInterface.drawObjective(o2);
-        System.out.println("---END PERSONAL OBJECTIVES---\n");
+       viewInterface.notifyFirstHand(hand,startingCard,o1,o2);
     }
 
     @Override
     public synchronized void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)throws RemoteException{
         commonObjective.add(objectiveCard1);
         commonObjective.add(objectiveCard2);
-        System.out.println("--COMMON OBJECTIVES---");
-        viewInterface.drawObjective(objectiveCard1);
-        viewInterface.drawObjective(objectiveCard2);
-        System.out.println("---END COMMON OBJECTIVES---");
-        System.out.println("\n");
+      viewInterface.notifyCommonObjective(objectiveCard1,objectiveCard2);
     }
 
     @Override
@@ -288,54 +262,32 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
                 break;
         }
         if(index==1 || index==0)
-            viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+            viewInterface.updateCommonTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
 
 
     }
 
     @Override
     public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
-        viewInterface.notify("Number of players has been reached, the game will start in a few moments");
-        //viewInterface.drawScene(SceneType.GAME);
+
+        viewInterface.NotifyNumbersOfPlayersReached();
+        viewInterface.drawScene(SceneType.COLOR);
+
     }
 
     @Override
     public void NotifyLastRound() throws RemoteException {
-        viewInterface.notify("Last round will start, during this round drawing won't be permitted");
+        viewInterface.NotifyLastRound();
     }
 
     @Override
     public void notifyAvailableColors(ArrayList<Color> colors) throws RemoteException {
-        viewInterface.drawAvailableColors(colors);
+        viewInterface.notifyAvailableColors(colors);
     }
 
     @Override
     public void notifyFinalColors(Map<String, Color> colors) throws RemoteException {
-
-        String ANSI_RESET = "\033[0m";
-
-         String ANSI_RED = "\033[0;31m";
-        String ANSI_GREEN = "\033[0;32m";
-         String ANSI_YELLOW = "\033[0;33m";
-      String ANSI_BLUE = "\033[0;34m";
-        String square = "\u25A0";
-        System.out.println("--------FINAL COLORS-------");
-        for(String p: players){
-           if(colors.get(p).equals(Color.BLUE)){
-               System.out.println( p + ":" + ANSI_BLUE  + square + ANSI_RESET);
-           }
-            if(colors.get(p).equals(Color.RED)){
-                System.out.println( p + ":" + ANSI_RED  + square + ANSI_RESET);
-            }
-            if(colors.get(p).equals(Color.GREEN)){
-                System.out.println( p + ":" + ANSI_GREEN  + square + ANSI_RESET);
-            }
-            if(colors.get(p).equals(Color.YELLOW)){
-                System.out.println( p + ":" + ANSI_YELLOW  + square + ANSI_RESET);
-            }
-        }
-
-
+        viewInterface.notifyFinalColors(colors, players);
     }
 
     @Override
@@ -356,40 +308,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.card1=table.get(3);
         this.card2=table.get(4);
         this.card3=table.get(5);
-
-        //gli mostro a video il giocatore corrente
-        System.out.println("---------------------------------------------------------------------");
-        System.out.println("HERE ARE SOME UPDATES YOU MIGHT'VE MISSED WHILE GONE!");
-        System.out.println("---------------------------------------------------------------------");
-        System.out.println("CURRENT PLAYER: "+ nickname);
-        StringBuilder message = new StringBuilder();
-        for(String s: players){
-            message.append(s).append("-");
-        }
-        message= new StringBuilder("TURN ORDER IS " + message);
-        viewInterface.notify(message.toString());
-        System.out.println("GAME NOW IS IN "+gameState + " STATE");
-        System.out.println("---------------------------------------------------------------------");
-        System.out.println("OTHER PLAYERS' BOARDS, TAKE A PEEK!");
-        for(String s: players){
-            if(!s.equals(this.player)){
-                System.out.println("THIS IS "+ s + " BOARD" + " WHO SCORED SO FAR " + playerPoints.get(s));
-                viewInterface.drawBoard(boards.get(s));
-                System.out.println("---------------------------------------------------------------------");
-            }
-        }
-        viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
-        System.out.println("--COMMON OBJECTIVES---");
-        viewInterface.drawObjective(objectiveCards.get(0));
-        viewInterface.drawObjective(objectiveCards.get(1));
-        System.out.println("---END COMMON OBJECTIVES---");
-        viewInterface.drawHand(hand);
-        System.out.println("YOUR PERSONAL OBJECTIVE IS:");
-        viewInterface.drawObjective(objectiveCard);
-        System.out.println("---------------------------------------------------------------------");
-
-
-
+        viewInterface.UpdateCrashedPlayer(nickname, this.player, gameState, hand, objectiveCard, boards, points, players, objectiveCards, color, table);
     }
 
     @Override
@@ -401,7 +320,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.card1=commons.get(3);
         this.card2=commons.get(4);
         this.card3=commons.get(5);
-        viewInterface.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+        viewInterface.UpdateFirst(playerPoints,commons);
     }
 
     @Override
@@ -416,98 +335,10 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     //metodo per aggiungere messaggio alla chat generale
     public synchronized void addGroupText(Text msg){
         chat.add(0, msg);
-        //sono ordinati in ordine lifo
-        //se text è pubblico allora disegno gli ultimi 2 messaggi
-        //devo disegnare dalla fine
-       // LocalDateTime currentTime = LocalDateTime.now();
-
-        // Definisci il formato desiderato per l'orario
-       // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        // Format l'orario corrente
-        //String formattedTime = currentTime.format(formatter);
-
-        //times.add(0,formattedTime);
-        // Stampa l'orario corrente
-
-        if(msg.getRecipient()==null){
-            //stampo tutti i messaggi precedenti se ce ne sono, che abbiano receiver nullo
-            if(findNumber(chat)>=2){
-                System.out.println("----PREVIOUS GROUP CHAT MESSAGES----");
-            }
-            for(int i=chat.size()-1; i>0; i--){
-                if(chat.get(i).getSender().equals(this.player) && chat.get(i).getRecipient()==null){
-                    System.out.println(chat.get(i).getSender() + " (YOU) : " + chat.get(i).getMex());
-
-                }
-                else {
-                    if(chat.get(i).getRecipient()==null){
-                    System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex());}
-
-                }
-            }
-            if(findNumber(chat)>=2){
-                System.out.println("************************************");
-            }
-            System.out.println("----NEW GROUP CHAT MESSAGE----");
-            if(chat.get(0).getSender().equals(this.player)){
-                System.out.println("YOU: " + chat.get(0).getMex());
-                System.out.println("************************************");
-            }
-            else{
-                System.out.println(chat.get(0).getSender() + " : " + chat.get(0).getMex());
-                System.out.println("************************************");
-            }
-        }
-        else{
-            if(msg.getSender().equals(this.player)){
-                //trovo tutti i messaggi scambiati con il player destinatario
-                System.out.println("YOU SENT A TEXT TO "+ msg.getRecipient() + "THIS IS YOUR PRIVATE CHAT WITH: " + msg.getRecipient());
-                System.out.println("************************************");
-                for(int i=chat.size()-1; i>=0; i--){
-                    //messaggi che io ho mandato a lui
-                    if(chat.get(i).getSender().equals(this.player) && chat.get(i).getRecipient().equals(msg.getRecipient())){
-                    System.out.println("YOU " + " : " + chat.get(i).getMex() );}
-                    //messaggi che lui ha mandato a me
-                    else if(chat.get(i).getSender().equals(msg.getRecipient()) && chat.get(i).getRecipient().equals(this.player)){
-                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex() );}
-                    }
-                }
-
-            if(msg.getRecipient().equals(this.player)) {
-                //stampo tutti i loro vecchi messaggi
-                System.out.println("YOU HAVE A NEW TEXT FROM " + msg.getSender() + " THIS IS YOUR PRIVATE CHAT WITH: " + msg.getSender());
-                System.out.println("************************************");
-                for(int i=chat.size()-1; i>=0; i--){
-                    //messa che io ho mandato a lui
-                    if(chat.get(i).getSender().equals(this.player) && chat.get(i).getRecipient().equals(msg.getSender())){
-                        System.out.println("YOU " + " : " + chat.get(i).getMex());}
-                    //mess che lui ha mandato a me
-                    else if(chat.get(i).getSender().equals(msg.getSender()) && chat.get(i).getRecipient().equals(this.player)){
-                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex());}
-                }
-
-            }
-        }
-
-
-
+        viewInterface.addGroupText(chat, this.player);
     }
-
-    private int findNumber(ArrayList<Text> chat){
-
-        int number=0;
-        for(Text t: chat){
-            if(t.getRecipient()==null){
-                number++;
-            }
-        }
-        return number;
-
-
+    public void printNotifications(String message) {
+        viewInterface.printNotifications(message);
     }
-
-
-
 
 }

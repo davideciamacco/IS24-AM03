@@ -503,7 +503,7 @@ public class PlayerBoard {
             try {
                 playerBoardSub.notifyChangePlayerBoard(player, p, i, j);
             } catch (RemoteException ignored) {
-                System.out.println(ignored.getMessage());
+
             }
         }
     }

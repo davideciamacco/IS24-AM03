@@ -9,11 +9,13 @@ public class ConfirmJoinGameMessage extends ConfirmMessage {
 
     private final String nickname;
 
-    public ConfirmJoinGameMessage(Boolean confirmJoinGame, String nickname, String details) {
-        super(MessageType.CONFIRM_JOIN,details);
-        this.confirmJoinGame =confirmJoinGame;
+    public ConfirmJoinGameMessage(Boolean confirmJoinGame, String details, String nickname) {
+        super(MessageType.CONFIRM_JOIN, details);
+        this.confirmJoinGame = confirmJoinGame;
+
         this.nickname = nickname;
     }
+
     public Boolean getConfirmJoin() {
         return confirmJoinGame;
     }

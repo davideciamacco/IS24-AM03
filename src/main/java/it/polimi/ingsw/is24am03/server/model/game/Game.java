@@ -150,13 +150,37 @@ public class Game{
      * initializes the common objective cards, shuffles the decks and reveals the first four cards on the table
      */
     public void startGame(){
+
+        //stampo i sub di ogni playerboard dei giocatori
+
+        for(Player p: players){
+            System.out.println("Player subs di player" + p.getNickname());
+            for(int i=0; i<p.getPlayerSubs().size(); i++) {
+
+                try{
+                    System.out.println(p.getPlayerSubs().get(i).getSub());
+                }catch (RemoteException ignored){}
+
+            }
+            System.out.println("Playerboard subs di player" + p.getNickname());
+            for(int i=0; i<p.getPlayerBoard().getPlayerBoardSubs().size(); i++){
+                try{
+                    System.out.println(p.getPlayerBoard().getPlayerBoardSubs().get(i).getSub());
+                }catch (RemoteException ignored){}
+            }
+        }
         setOrder();
         //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
         //l'ultimo player entrato è già iscritto al gioco
 
         for(GameSub gameSub: gameSubs){
+            try {
+                System.out.println(gameSub.getSub());
+            }catch(RemoteException e){}
+        }
+        for(GameSub gameSub: gameSubs){
             try{
-                gameSub.NotifyNumbersOfPlayersReached();
+                    gameSub.NotifyNumbersOfPlayersReached();
             }catch (RemoteException ignored){}
         }
         //notify turn order//
@@ -390,7 +414,7 @@ public class Game{
             try {
                 findSub(player).NotifyChangePersonalCards(player, p.getHand());
             } catch (RemoteException ignored) {
-                System.out.println("Errore 1");
+                //System.out.println("Errore 1");
             }
         }
 
@@ -400,7 +424,7 @@ public class Game{
                 try {
                     gameSub.updateCommonTable(null,0);
                 } catch (RemoteException ignored) {
-                    System.out.println("Errore 2");
+                    //System.out.println("Errore 2");
                 }
             }
         }
@@ -411,7 +435,7 @@ public class Game{
                 try {
                     gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
                 }catch (RemoteException ignored){
-                    System.out.println("Errore 3");
+                    //System.out.println("Errore 3");
                 }
             }
         }
@@ -654,9 +678,12 @@ public class Game{
         if(!lastRound) {
             this.gameState = State.DRAWING;
             //notifico a tutti il cambiamento dello stato
+
+            //notifico anche del current player
             for (GameSub gameSub : gameSubs) {
                 try {
                     gameSub.notifyChangeState(gameState);
+                    gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
                 } catch (RemoteException ignored) {
                 }
             }
@@ -811,6 +838,7 @@ public class Game{
             }
 
         }
+        //se sono qua o sono all'inizio oppure non sono ancora all'ultimo giocatore
         if(gameState.equals(State.DRAWING)) {
             gameState = State.PLAYING;
             for (GameSub gameSub : gameSubs) {
@@ -821,6 +849,7 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
+        System.out.println(players.get(currentPlayer).getNickname());
 
         while(!players.get(currentPlayer).getConnected() && numPlayersConnected>1) {
             currentPlayer = (currentPlayer + 1) % (numPlayers);
@@ -891,6 +920,7 @@ public class Game{
         gameSubs.remove(gameSub);
     }
     public void addSub(PlayerSub playerSub){
+        //qui aggiungo il seconod player al primo e a se stesso
         for(Player p: getPlayers()){
             p.getPlayerSubs().add(playerSub);
 
@@ -898,9 +928,10 @@ public class Game{
         //caso in cui io sia all'inizio della partita
         if(gameState==State.WAITING){
             for(int i=0; i<players.size()-1;i++){
-                PlayerSub first = players.get(i).getPlayerSubs().get(i);
+                PlayerSub first = players.get(i).getPlayerSubs().get(0);
                 players.get(players.size()-1).getPlayerSubs().add(first);
             }
+
         }
         /*else{
             for(Player p: players){
@@ -921,14 +952,19 @@ public class Game{
         chat.getChatSubs().remove(chatSub);
     }
     public void addSub(PlayerBoardSub playerBoardSub){
+        //qui iscrivo l'ultimo giocatore alle board degli altri già entrati
         for(Player p: getPlayers()){
             p.getPlayerBoard().getPlayerBoardSubs().add(playerBoardSub);
         }
+
+        //devo iscrivere i giocatori già in gioco alla board dell'ultimo entrato
         //ho ottenuto il sub della playerboard del primo giocatore
+
+        //game state è uguale a starting
         if(gameState==State.WAITING) {
             //DEVO ISCRIVERE I GIOCATORI ALLA LISTA DI PLAYER DAL PRIMO A PLAYER-1
             for(int i=0; i<players.size()-1;i++){
-                PlayerBoardSub first = players.get(i).getPlayerBoard().getPlayerBoardSubs().get(i);
+                PlayerBoardSub first = players.get(i).getPlayerBoard().getPlayerBoardSubs().get(0);
                 players.get(players.size()-1).getPlayerBoard().getPlayerBoardSubs().add(first);
             }
 
