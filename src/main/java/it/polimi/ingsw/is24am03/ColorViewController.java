@@ -17,15 +17,21 @@ public class ColorViewController extends GUIController {
     @FXML
     private Button greenButton;
 
+    @FXML
     private void onClickRedButton(){
             clientController.PickColor("RED");
     }
+    @FXML
     private void onClickBlueButton(){
             clientController.PickColor("BLUE");
     }
+
+    @FXML
     private void onClickGreenButton(){
             clientController.PickColor("GREEN");
     }
+
+    @FXML
     private void onClickYellowButton(){
         clientController.PickColor("YELLOW");
     }

@@ -67,7 +67,6 @@
                 <Button fx:id="doneJoin" text="Done" />
 
 
-
             </VBox>
 
 

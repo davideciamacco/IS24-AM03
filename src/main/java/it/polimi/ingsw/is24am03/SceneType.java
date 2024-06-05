@@ -4,5 +4,8 @@ public enum SceneType {
     LOGIN,
     WAITING,
     GAME,
-    COLOR
+    COLOR,
+    STARTING,
+    OBJECTIVE,
+
 }
