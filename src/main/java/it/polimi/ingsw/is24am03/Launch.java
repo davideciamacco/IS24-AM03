@@ -10,9 +10,7 @@ public class Launch {
         if (args.length == 4) {
             String connectionType = args[0];
             String[] newArgs = new String[args.length - 1];
-            for (int j = 0; j < args.length - 1; j++) {
-                newArgs[j] = args[j + 1];
-            }
+            System.arraycopy(args, 1, newArgs, 0, args.length - 1);
             String host = args[1];
             try {
                 port = Integer.parseInt(args[2]);

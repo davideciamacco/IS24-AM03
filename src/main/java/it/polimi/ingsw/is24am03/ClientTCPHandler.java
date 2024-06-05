@@ -259,6 +259,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         }
 
         return new ConfirmGameMessage(result, description, this.nickname);
+
     }
 
     private Message parse(JoinGameMessage joinGameMessage){
@@ -269,8 +270,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
                     //posso iscrivere il sub al gioco
 
+
                     gameController.addPlayer(joinGameMessage.getNickname(), "TCP");
                     this.nickname= joinGameMessage.getNickname();
+
                     this.subscribeToObservers();
                     //se il messaggio non è empty significa che il gioco non può iniziare e devo stampargli Joined successfully
                     if(gameController.getGameModel().getNumPlayers()!=gameController.getGameModel().getPlayers().size()){
@@ -310,7 +313,9 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             description = "Game not existing";
         }
 
+
         return new ConfirmJoinGameMessage(result, description, this.nickname);
+
     }
 
     private Message parse(PickColorMessage pickColorMessage) {

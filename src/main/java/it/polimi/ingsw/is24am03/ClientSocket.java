@@ -173,9 +173,9 @@ public class ClientSocket implements Client{
             case CONFIRM_PLACE -> this.parse((ConfirmPlaceMessage) responseMessage);
             case CONFIRM_DRAW -> this.parse((ConfirmDrawMessage) responseMessage);
             case CONFIRM_REJOIN -> this.parse((ConfirmRejoinGameMessage) responseMessage);
+
             case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
 
-            ///////
 
             //MESSAGGI UPDATE DEL GIOCO (INTESO COME COMMON TABLE, STATI ETC)
             //TUTTI I MESSAGGI DI UPDATE DI GAME SONO BROADCAST
@@ -380,6 +380,7 @@ public class ClientSocket implements Client{
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             hasJoined = true;
+
             if (this.clientModel == null) {
                 try {
                     //sono qui perchè non ci sono ancora abbastanza giocatori
@@ -391,7 +392,6 @@ public class ClientSocket implements Client{
                 }catch (RemoteException e){}
 
             }
-
         }
         else{
             System.out.println(message.getDetails());

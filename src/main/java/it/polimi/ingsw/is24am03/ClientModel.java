@@ -115,11 +115,14 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     @Override
     public synchronized void  notifyTurnOrder(ArrayList<String> order) throws RemoteException{
+
         players=order;
         for(String s: order){
             playerPoints.put(s,0);
             boards.put(s,new PlayableCard[81][81]);
         }
+
+
 
         viewInterface.notifyTurnOrder(order);
 
@@ -266,9 +269,10 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     @Override
     public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
-       // viewInterface.notify("Number of players has been reached, the game will start in a few moments");
+
         viewInterface.NotifyNumbersOfPlayersReached();
         viewInterface.drawScene(SceneType.COLOR);
+
     }
 
     @Override

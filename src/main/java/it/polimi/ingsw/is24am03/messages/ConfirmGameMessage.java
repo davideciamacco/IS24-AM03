@@ -9,6 +9,12 @@ public class ConfirmGameMessage extends ConfirmMessage {
 
     private final Boolean confirmGameCreation;
 
+
+    public String getNickname() {
+        return nickname;
+    }
+
+
     private final String nickname;
 
     /**
@@ -17,6 +23,7 @@ public class ConfirmGameMessage extends ConfirmMessage {
      * @param confirmGameCreation true if the game has been created successfully, false otherwise
      * @param details             details of the error
      */
+
     public ConfirmGameMessage(Boolean confirmGameCreation, String details, String nickname) {
         super(MessageType.CONFIRM_GAME, details);
         this.confirmGameCreation = confirmGameCreation;
