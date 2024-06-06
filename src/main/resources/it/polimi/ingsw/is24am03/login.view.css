@@ -1,8 +1,15 @@
 /* login-view.css */
 
 .anchor {
-    -fx-background-color: #f0f0f0;
+
     -fx-padding: 20;
+    -fx-background-image: url("box.jpg");
+    -fx-alignment: center;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size:cover;
+
+
 }
 
 .label {
@@ -57,5 +64,6 @@
 
 .button-login:hover {
     -fx-background-color: #555;
-    -fx-background-image: url("carta.jpg");
+
 }
+.button-login

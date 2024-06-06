@@ -7,6 +7,7 @@ import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
 import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
+import it.polimi.ingsw.is24am03.server.model.game.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -104,6 +106,7 @@ public class GUIView extends Application implements ViewInterface {
             switch (sceneType) {
                 case WAITING -> fxmlPath="/it/polimi/ingsw/is24am03/lobby-view.fxml";
                 case COLOR -> fxmlPath="/it/polimi/ingsw/is24am03/color-view.fxml";
+                case GAME -> fxmlPath="/it/polimi/ingsw/is24am03/game-view.fxml";
 
             }
             fxmlLoader = new FXMLLoader();
@@ -113,7 +116,7 @@ public class GUIView extends Application implements ViewInterface {
                 Parent newRoot = fxmlLoader.load();
                 scene.setRoot(newRoot);
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
                 showAlert("Loading Error", "Unable to load the FXML file.");
             }
 
@@ -137,21 +140,46 @@ public class GUIView extends Application implements ViewInterface {
     @Override
     public void drawHand(ArrayList<ResourceCard> hand) {
 
+       //posso passare a game view controller la lista delle carte/ids, tanto dovrà disegnarle sia fronte che retro
+    Platform.runLater(()->{
+        GameViewController gameViewController=fxmlLoader.getController();
+        gameViewController.drawHand(hand);
+    });
+
     }
 
     @Override
     public void drawObjective(ObjectiveCard o) {
+    }
+
+    private void drawObjective1(ObjectiveCard o){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawObjective1(o);
+        });
+    }
+    private  void  drawObjective2(ObjectiveCard o){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawObjective2(o);
+        });
 
     }
 
     @Override
     public void drawStarting(StartingCard startingCard) {
-
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawStarting(startingCard);
+        });
     }
 
     @Override
     public void drawTable(Map<String, Integer> playerPoints, ResourceCard resourceDeck, ResourceCard goldDeck, ResourceCard card0, ResourceCard card1, ResourceCard card2, ResourceCard card3) {
-
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+        });
     }
 
     @Override
@@ -216,17 +244,30 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyFirstHand(ArrayList<ResourceCard> hand, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) {
+        this.drawHand(hand);
+        this.drawStarting(startingCard);
+        this.drawObjective1(o1);
+        this.drawObjective2(o2);
+    }
 
+    private void drawCommonObjective(ObjectiveCard o1, ObjectiveCard o2){
+        ArrayList<ObjectiveCard> commons=new ArrayList<>();
+        commons.add(o1);
+        commons.add(o2);
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawCommonObjective(commons);
+        });
     }
 
     @Override
     public void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
-
+        this.drawCommonObjective(objectiveCard1,objectiveCard2);
     }
 
     @Override
     public void updateCommonTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
-
+        this.drawTable(points, topResDeck,topGoldDeck,tableCard1,tableCard2,tableCard3,tableCard4);
     }
 
     @Override
@@ -261,7 +302,7 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void UpdateFirst(Map<String, Integer> points, ArrayList<ResourceCard> commons) {
-
+        this.drawTable(points, commons.get(0), commons.get(1), commons.get(2), commons.get(3), commons.get(4), commons.get(5));
     }
 
     @Override

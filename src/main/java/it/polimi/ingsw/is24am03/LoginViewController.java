@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.awt.event.MouseEvent;
+
 public class LoginViewController extends GUIController {
     @FXML
     private ToggleButton JoinGame;
@@ -48,6 +50,8 @@ public class LoginViewController extends GUIController {
     private TextField nicknameJoinField;
     @FXML
     private TextField nicknameRejoinField;
+
+
 
     @FXML
     private void onCreateButtonClick() {

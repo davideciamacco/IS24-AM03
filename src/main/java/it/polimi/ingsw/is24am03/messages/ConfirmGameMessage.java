@@ -37,7 +37,5 @@ public class ConfirmGameMessage extends ConfirmMessage {
         return confirmGameCreation;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
+
 }
