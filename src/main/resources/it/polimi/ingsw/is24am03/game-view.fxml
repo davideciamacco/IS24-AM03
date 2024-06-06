@@ -1,52 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.GameViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.GameViewController">
    <children>
-      <Pane layoutY="-1.0" prefHeight="406.0" prefWidth="601.0" style="-fx-background-color: #333;">
-         <children>
-            <ImageView fitHeight="363.0" fitWidth="575.0" layoutX="28.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@abstract-surface-wood-texture-background.jpg" />
-               </image>
-            </ImageView>
-            <ImageView id="ResourceDeck" fx:id="resourceDeck" fitHeight="63.0" fitWidth="60.0" layoutX="178.0" layoutY="105.0" onMouseClicked="#onClickResourceDeck" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
-               <image>
-                  <Image url="@carta.jpg" />
-               </image>
-            </ImageView>
-            <ImageView id="GoldDeck" fx:id="goldDeck" fitHeight="63.0" fitWidth="60.0" layoutX="171.0" layoutY="167.0" onMouseClicked="#onClickGoldDeck" pickOnBounds="true" preserveRatio="true" smooth="false">
-               <image>
-                  <Image url="@carta.jpg" />
-               </image>
-            </ImageView>
-            <ImageView id="ResourceDeck" fx:id="table0" fitHeight="63.0" fitWidth="60.0" layoutX="259.0" layoutY="105.0" onMouseClicked="#onClickTable0" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
-               <image>
-                  <Image url="@carta.jpg" />
-               </image>
-            </ImageView>
-            <ImageView id="ResourceDeck" fx:id="table1" fitHeight="63.0" fitWidth="60.0" layoutX="351.0" layoutY="105.0" onMouseClicked="#onClickTable1" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
-               <image>
-                  <Image url="@carta.jpg" />
-               </image>
-            </ImageView>
-            <ImageView id="ResourceDeck" fx:id="table3" fitHeight="63.0" fitWidth="60.0" layoutX="351.0" layoutY="167.0" onMouseClicked="#onClickTable3" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
-               <image>
-                  <Image url="@carta.jpg" />
-               </image>
-            </ImageView>
-            <ImageView id="ResourceDeck" fx:id="table2" fitHeight="63.0" fitWidth="60.0" layoutX="259.0" layoutY="167.0" onMouseClicked="#onClickTable2" pickOnBounds="true" preserveRatio="true" smooth="false" style="-fx-image: carta.jpg;">
-               <image>
-                  <Image url="@carta.jpg" />
-               </image>
-            </ImageView>
-            <VBox layoutX="41.0" layoutY="147.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #333;" />
-         </children>
-      </Pane>
+      <ScrollPane hbarPolicy="ALWAYS" layoutX="6.0" layoutY="6.0" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@game.css" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <Pane fx:id="zoom" prefHeight="1063.0" prefWidth="1893.0" styleClass="scroll" stylesheets="@game.css">
+               <children>
+                  <ImageView id="ResourceDeck" fx:id="resourceDeck" fitHeight="100.0" fitWidth="500.0" layoutX="588.0" layoutY="245.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="goldDeck" fitHeight="100.0" fitWidth="500.0" layoutX="599.0" layoutY="441.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="ResourceDeck" fx:id="table0" fitHeight="100.0" fitWidth="500.0" layoutX="894.0" layoutY="263.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="ResourceDeck" fx:id="table1" fitHeight="100.0" fitWidth="500.0" layoutX="1127.0" layoutY="242.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="ResourceDeck" fx:id="table3" fitHeight="100.0" fitWidth="500.0" layoutX="1109.0" layoutY="453.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="ResourceDeck" fx:id="table2" fitHeight="100.0" fitWidth="500.0" layoutX="863.0" layoutY="450.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="personalFront1" fitHeight="100.0" fitWidth="500.0" layoutX="93.0" layoutY="797.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="personalBack1" fitHeight="100.0" fitWidth="500.0" layoutX="329.0" layoutY="794.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="personalFront2" fitHeight="100.0" fitWidth="500.0" layoutX="557.0" layoutY="805.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="personalBack2" fitHeight="100.0" fitWidth="500.0" layoutX="887.0" layoutY="826.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="personalFront3" fitHeight="100.0" fitWidth="500.0" layoutX="1169.0" layoutY="812.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="personalBack3" fitHeight="100.0" fitWidth="500.0" layoutX="1400.0" layoutY="805.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="objective2" fitHeight="100.0" fitWidth="500.0" layoutX="45.0" layoutY="474.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="objective1" fitHeight="100.0" fitWidth="500.0" layoutX="64.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="startingCardFront" fitHeight="100.0" fitWidth="500.0" layoutX="1536.0" layoutY="237.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="GoldDeck" fx:id="startingCardBack" fitHeight="100.0" fitWidth="500.0" layoutX="1472.0" layoutY="455.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="ResourceDeck" fx:id="commonOb1" fitHeight="100.0" fitWidth="500.0" layoutX="690.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView id="ResourceDeck" fx:id="commonOb2" fitHeight="100.0" fitWidth="500.0" layoutX="997.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <image>
+                        <Image url="@carta.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+               <rotationAxis>
+                  <Point3D />
+               </rotationAxis>
+            </Pane>
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

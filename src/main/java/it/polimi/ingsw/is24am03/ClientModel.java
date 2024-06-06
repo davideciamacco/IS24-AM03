@@ -271,7 +271,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
 
         viewInterface.NotifyNumbersOfPlayersReached();
-        viewInterface.drawScene(SceneType.COLOR);
+        viewInterface.drawScene(SceneType.GAME);
 
     }
 

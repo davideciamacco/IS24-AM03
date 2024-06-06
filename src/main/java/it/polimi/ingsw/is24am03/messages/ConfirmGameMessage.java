@@ -37,4 +37,5 @@ public class ConfirmGameMessage extends ConfirmMessage {
         return confirmGameCreation;
     }
 
+
 }
