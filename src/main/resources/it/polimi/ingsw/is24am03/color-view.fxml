@@ -11,6 +11,6 @@
         <Button fx:id="redButton" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: red;"  onAction="#onClickRedButton"/>
         <Button fx:id="blueButton" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: blue;" onAction="#onClickBlueButton" />
         <Button fx:id="yellowButton" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: yellow;" onAction="#onClickYellowButton"/>
-        <Button fx:id="greenButton" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: green;" onAction="#onClickGreenButton"/>
+        <Button fx:id="greenButton" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #00ff00;" onAction="#onClickGreenButton"/>
     </HBox>
 </VBox>
