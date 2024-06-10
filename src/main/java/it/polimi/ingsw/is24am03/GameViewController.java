@@ -2,21 +2,29 @@
 package it.polimi.ingsw.is24am03;
 
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
+import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
+import it.polimi.ingsw.is24am03.server.model.enums.State;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
 
-import java.awt.event.MouseEvent;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,6 +46,28 @@ public class GameViewController extends GUIController implements Initializable {
     private ImageView resourceDeck;
 
     @FXML
+    private TextField choicheObjective;
+
+    @FXML
+    private TextField indexI;
+
+    @FXML
+
+    private TextField indexJ;
+
+    @FXML
+    private Button placeCard;
+
+    @FXML
+    private TextField cardSide;
+
+    @FXML
+    private TextField cardNumber;
+
+    @FXML
+    private Button objectiveChoice;
+
+    @FXML
     private ImageView goldDeck;
 
     @FXML
@@ -49,6 +79,9 @@ public class GameViewController extends GUIController implements Initializable {
     private ImageView table2;
     @FXML
     private ImageView table3;
+
+    @FXML
+    private TextField finalOb;
 
     @FXML
     private ImageView personalFront1;
@@ -72,6 +105,11 @@ public class GameViewController extends GUIController implements Initializable {
 
 
     @FXML
+    private GridPane grid;
+
+    @FXML
+    private TextField notifications;
+    @FXML
     private ImageView objective1;
 
     @FXML
@@ -84,6 +122,26 @@ public class GameViewController extends GUIController implements Initializable {
     private ImageView commonOb2;
 
 
+    @FXML
+    private TextField state;
+
+    @FXML
+    private TextField current;
+
+    @FXML
+    private TextField turnOrder;
+
+    @FXML
+    private Pane board;
+
+    @FXML
+    private void onClickPlaceCard(MouseEvent mouseEvent){
+        try{
+            clientController.PlaceCard(Integer.parseInt(String.valueOf(this.cardNumber)), Integer.parseInt(String.valueOf(this.indexI)), Integer.parseInt(String.valueOf(this.indexJ)), String.valueOf(this.cardSide));
+        }catch (Exception e){
+            this.drawNotifications("Missing Arguments");
+        }
+    }
     @FXML
     private void onClickResourceDeck(MouseEvent mouseEvent) {
         clientController.DrawResource();
@@ -119,6 +177,19 @@ public class GameViewController extends GUIController implements Initializable {
         clientController.DrawTable(4);
 
     }
+
+
+
+    @FXML
+    private void onClickObjective1(MouseEvent mouseEvent){
+        clientController.ChooseObjectiveCard(1);
+    }
+
+    @FXML
+    private void onClickObjective2(MouseEvent mouseEvent){
+        clientController.ChooseObjectiveCard(2);
+    }
+
 
     public void drawHand(ArrayList<ResourceCard> hand) {
         //devo scorrere le carte in hand e per ciascuna devo trovare sia fronte che retro
@@ -280,6 +351,13 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
+    public void drawBoard(PlayableCard[][] board, String current, String player){
+
+    }
+    public void updateStarting(){
+        this.startingCardBack.setVisible(false);
+        this.startingCardFront.setVisible(false);
+    }
 
     private String findFrontUrl(int id) {
         //metodo che mi restituisce l'url del fronte della carta corrispondente
@@ -387,11 +465,27 @@ public class GameViewController extends GUIController implements Initializable {
     private final double minScale=0.5;
 
 
+    @FXML
+    private TextField color;
+
+
+
+    @FXML
+    private Button green;
+    @FXML
+    private Button blue;
+    @FXML
+    private Button yellow;
+    @FXML
+    private Button red;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         zoom.setOnScroll(this::handleZoom);
+        this.finalOb.setVisible(false);
     }
+
 
     private void handleZoom(ScrollEvent event){
         double deltaY = event.getDeltaY();
@@ -407,5 +501,54 @@ public class GameViewController extends GUIController implements Initializable {
 
         event.consume();
     }
+
+    @FXML
+    private void onClickStartingFront(MouseEvent mouseEvent){
+        clientController.ChooseStartingCardSide("FRONT");
+    }
+
+    @FXML
+    private void onClickStartingBack(MouseEvent mouseEvent){
+        clientController.ChooseStartingCardSide("BACK");
+    }
+
+    public void drawFinalObjective(ObjectiveCard o){
+        this.finalOb.setVisible(true);
+        this.finalOb.setText("This is your secret objective");
+        Image card = new Image(getClass().getResource(findFrontUrl(o.getId())).toExternalForm());
+        this.objective2.setImage(card);
+        this.objective1.setVisible(false);
+    }
+
+    public void drawState(State s){
+        this.state.setText("Game state:" + s.toString());
+    }
+    public void drawTurnOrder(String s){
+            this.turnOrder.setText(s);
+    }
+    public void drawCurrent(String s){
+        this.current.setText("Current player is:" + s);
+    }
+    public void drawNotifications(String s){
+        this.notifications.setText(s);
+    }
+
+    @FXML
+    private void onClickRed(MouseEvent mouseEvent){
+        clientController.PickColor("RED");
+    }
+    @FXML
+    private void onClickBlue(MouseEvent mouseEvent){
+        clientController.PickColor("BLUE");
+    }
+    @FXML
+    private void onClickGreen(MouseEvent mouseEvent){
+        clientController.PickColor("GREEN");
+    }
+    @FXML
+    private void onClickYellow(MouseEvent mouseEvent){
+        clientController.PickColor("YELLOW");
+    }
+
 }
 

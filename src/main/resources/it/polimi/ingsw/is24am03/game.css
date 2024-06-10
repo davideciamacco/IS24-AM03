@@ -1,3 +1,26 @@
 .scroll {
     -fx-background-image: url("abstract-surface-wood-texture-background.jpg");
 }
+.clicked{
+    -fx-cursor: hand;
+
+}
+.button-blue{
+    -fx-cursor: hand;
+    -fx-background-color:#0000FF ;
+
+}
+.button-red{
+    -fx-cursor: hand;
+    -fx-background-color: #e70a36;
+
+}
+.button-green{
+    -fx-cursor: hand;
+    -fx-background-color: #1ab924;
+
+}
+.button-yellow{
+    -fx-cursor: hand;
+    -fx-background-color: #dfe528;
+}

@@ -137,6 +137,8 @@ public class GUIView extends Application implements ViewInterface {
 
     }
 
+
+
     @Override
     public void drawHand(ArrayList<ResourceCard> hand) {
 
@@ -199,32 +201,89 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyTurnOrder(ArrayList<String> order) {
-
+        StringBuilder message = new StringBuilder();
+        for(int i=0; i< order.size()-1;i++){
+            message.append(order.get(i)).append("-");
+        }
+        message.append(order.getLast());
+        message= new StringBuilder("Turn order is  " + message);
+       this.drawTurnOrder(message.toString());
+    }
+    public void drawTurnOrder(String s){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawTurnOrder(s);
+        });
     }
 
     @Override
     public void notifyCurrentPlayer(String current, Map<String, PlayableCard[][]> boards, String player, ArrayList<ResourceCard> hand, State gamestate) {
-
+       //devo cambiare text field current player
+        this.drawCurrent(current);
+        if(current.equals(player)){
+            if(gamestate.equals(State.PLAYING)){
+                this.printNotifications("It's your turn, pick a card");
+            }
+            if(gamestate.equals(State.COLOR)){
+                this.printNotifications("It's your turn, pick a color");
+            }
+            if(gamestate.equals(State.DRAWING)){
+                this.printNotifications("Draw a card");
+            }
+            if(gamestate.equals(State.STARTING)){
+                this.printNotifications("It's your turn, choose a side for your starting card");
+            }
+            if(gamestate.equals(State.OBJECTIVE)){
+                this.printNotifications("It's your turn, choose your personal objective");
+            }
+        }
+    }
+    public void drawCurrent(String current){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawCurrent(current);
+        });
     }
 
     @Override
     public void notifyCrashedPlayer(String username) {
-
+        this.printNotifications(username+" has crashed");
     }
 
     @Override
     public void notifyChangeState(State gameState) {
-
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawState(gameState);
+        });
     }
 
     @Override
     public void notifyRejoinedPlayer(String rejoinedPlayer) {
-
+        this.printNotifications(rejoinedPlayer+" has rejoined the game");
     }
 
     @Override
     public void notifyChangePlayerBoard(String player, String nickname, Map<String, PlayableCard[][]> boards) {
 
+        //questo viene usato anche per la starting card, il primo player è quello che ha messo la carta, il secondo è il player
+        //del local model corrispondente
+        if(player.equals(nickname)){
+            this.printNotifications("You placed a card successfully");
+            this.updateStarting();
+            this.drawBoard(boards.get(player));
+        }
+        else{
+            this.printNotifications("Player" + player + "placed a card");
+            this.drawBoard(boards.get(player));
+        }
+    }
+
+    private void updateStarting(){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.updateStarting();
+        });
     }
 
     @Override
@@ -239,8 +298,20 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyChoiceObjective(ObjectiveCard o) {
+        //devo comunicare a gui view di eliminare immagine relativa all'obiettivo non scelto
+        this.drawFinalObjective(o);
+
 
     }
+
+    public void drawFinalObjective(ObjectiveCard o){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawFinalObjective(o);
+        });
+    }
+
+
 
     @Override
     public void notifyFirstHand(ArrayList<ResourceCard> hand, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2) {
@@ -273,11 +344,13 @@ public class GUIView extends Application implements ViewInterface {
     @Override
     public void NotifyNumbersOfPlayersReached() {
 
+        //deve scrivere messaggio nella lobby
+
     }
 
     @Override
     public void NotifyLastRound() {
-
+        this.printNotifications("Last round is starting, during this round drawing won't be allowed");
     }
 
     @Override
@@ -317,7 +390,10 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void printNotifications(String message) {
-
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawNotifications(message);
+        });
     }
 
 }
