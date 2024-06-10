@@ -5,17 +5,18 @@ import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
+import it.polimi.ingsw.is24am03.server.model.chat.Text;
+import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Side;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -137,7 +139,7 @@ public class GameViewController extends GUIController implements Initializable {
     @FXML
     private void onClickPlaceCard(MouseEvent mouseEvent){
         try{
-            clientController.PlaceCard(Integer.parseInt(String.valueOf(this.cardNumber)), Integer.parseInt(String.valueOf(this.indexI)), Integer.parseInt(String.valueOf(this.indexJ)), String.valueOf(this.cardSide));
+            clientController.PlaceCard(Integer.parseInt(String.valueOf(this.cardNumber.getText())), Integer.parseInt(String.valueOf(this.indexI.getText())), Integer.parseInt(String.valueOf(this.indexJ.getText())), String.valueOf(this.cardSide.getText()));
         }catch (Exception e){
             this.drawNotifications("Missing Arguments");
         }
@@ -484,6 +486,26 @@ public class GameViewController extends GUIController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         zoom.setOnScroll(this::handleZoom);
         this.finalOb.setVisible(false);
+        this.color.setVisible(false);
+        this.green.setVisible(false);
+        this.blue.setVisible(false);
+        this.red.setVisible(false);
+        this.yellow.setVisible(false);
+        this.player1.setVisible(false);
+        this.player2.setVisible(false);
+        this.player3.setVisible(false);
+        this.player4.setVisible(false);
+        this.p1.setVisible(false);
+        this.p2.setVisible(false);
+        this.p3.setVisible(false);
+        this.p4.setVisible(false);
+        this.goBack1.setVisible(false);
+        this.goBack2.setVisible(false);
+        this.goBack3.setVisible(false);
+        this.goBack4.setVisible(false);
+        this.boards=new HashMap<>();
+        this.chat.setVisible(false);
+        this.closeGroupChat.setVisible(false);
     }
 
 
@@ -518,6 +540,8 @@ public class GameViewController extends GUIController implements Initializable {
         Image card = new Image(getClass().getResource(findFrontUrl(o.getId())).toExternalForm());
         this.objective2.setImage(card);
         this.objective1.setVisible(false);
+        this.objective2.setDisable(true);
+        this.notifications.clear();
     }
 
     public void drawState(State s){
@@ -533,22 +557,358 @@ public class GameViewController extends GUIController implements Initializable {
         this.notifications.setText(s);
     }
 
+    private void setInvisible(){
+        this.blue.setVisible(false);
+        this.red.setVisible(false);
+        this.yellow.setVisible(false);
+        this.green.setVisible(false);
+    }
     @FXML
     private void onClickRed(MouseEvent mouseEvent){
         clientController.PickColor("RED");
+        setInvisible();
+        this.notifications.clear();
+
     }
     @FXML
     private void onClickBlue(MouseEvent mouseEvent){
         clientController.PickColor("BLUE");
+        setInvisible();
+        this.notifications.clear();
     }
     @FXML
     private void onClickGreen(MouseEvent mouseEvent){
         clientController.PickColor("GREEN");
+        setInvisible();
+        this.notifications.clear();
     }
     @FXML
     private void onClickYellow(MouseEvent mouseEvent){
         clientController.PickColor("YELLOW");
+        setInvisible();
+        this.notifications.clear();
     }
 
+    @FXML
+    private void onClickGoBack(MouseEvent mouseEvent){
+        this.p1.setVisible(false);
+        this.p2.setVisible(false);
+        this.p3.setVisible(false);
+        this.p4.setVisible(false);
+        this.game.setVisible(true);
+        this.goBack1.setVisible(false);
+        this.goBack2.setVisible(false);
+        this.goBack3.setVisible(false);
+        this.goBack4.setVisible(false);
+        this.chat.setVisible(false);
+        this.closeGroupChat.setVisible(false);
+
+    }
+    public void drawAvailableColors(ArrayList<Color> colors){
+        this.color.setText("Pick a color");
+
+        for(int i=0; i<colors.size(); i++){
+            if(colors.get(i).equals(Color.BLUE)){
+                this.blue.setVisible(true);
+                this.blue.setText("");
+            }
+            if(colors.get(i).equals(Color.GREEN)){
+                this.green.setVisible(true);
+                this.green.setText("");
+            }
+            if(colors.get(i).equals(Color.YELLOW)){
+                this.yellow.setVisible(true);
+                this.yellow.setText("");
+            }
+            if(colors.get(i).equals(Color.RED)){
+                this.red.setVisible(true);
+                this.red.setText("");
+            }
+        }
+    }
+
+    public void drawFinalColors(Map<String,Color> colors, ArrayList<String> players){
+        this.color.setText("Final colors");
+        this.blue.setVisible(false);
+        this.green.setVisible(false);
+        this.red.setVisible(false);
+        this.yellow.setVisible(false);
+        for(int i =0; i<players.size(); i++){
+            if(colors.get(players.get(i)).equals(Color.BLUE)){
+                this.blue.setVisible(true);
+                this.blue.setDisable(true);
+                this.blue.setText(players.get(i));
+            }
+            if(colors.get(players.get(i)).equals(Color.GREEN)){
+                this.green.setVisible(true);
+                this.green.setDisable(true);
+                this.green.setText(players.get(i));
+            }
+            if(colors.get(players.get(i)).equals(Color.YELLOW)){
+                this.yellow.setVisible(true);
+                this.yellow.setDisable(true);
+                this.yellow.setText(players.get(i));
+            }
+            if(colors.get(players.get(i)).equals(Color.RED)){
+                this.red.setVisible(true);
+                this.red.setDisable(true);
+                this.red.setText(players.get(i));
+            }
+        }
+    }
+
+    @FXML
+    private Button player1;
+    @FXML
+    private Button player2;
+    @FXML
+    private Button player3;
+    @FXML
+    private Button player4;
+@FXML
+private Button goBack1;
+    @FXML
+    private Button goBack2;
+    @FXML
+    private Button goBack3;
+    @FXML
+    private Button goBack4;
+
+    @FXML
+    private ScrollPane game;
+
+
+    @FXML
+    private void onClickPlayer1(MouseEvent mouseEvent){
+        //metodo per mostrare pane giocatore
+        this.game.setVisible(false);
+        this.p1.setPrefHeight(1080);
+        this.p1.setPrefWidth(1920);
+        this.p1.setVisible(true);
+        this.goBack1.setVisible(true);
+        //devo disegnare il pane di p1
+
+    }
+    @FXML
+    private void onClickPlayer2(MouseEvent mouseEvent){
+        this.game.setVisible(false);
+        this.p2.setPrefHeight(1080);
+        this.p2.setPrefWidth(1920);
+        this.p2.setVisible(true);
+        this.goBack2.setVisible(true);
+
+    }
+    @FXML
+    private void onClickPlayer3(MouseEvent mouseEvent){
+        this.game.setVisible(false);
+        this.p3.setPrefHeight(1080);
+        this.p3.setPrefWidth(1920);
+        this.p3.setVisible(true);
+        this.goBack3.setVisible(true);
+
+    }
+    @FXML
+    private void onClickPlayer4(MouseEvent mouseEvent){
+        this.game.setVisible(false);
+        this.p4.setPrefHeight(1080);
+        this.p4.setPrefWidth(1920);
+        this.p4.setVisible(true);
+        this.goBack4.setVisible(true);
+
+    }
+
+    @FXML
+    private void onClickShowGroupChat(MouseEvent mouseEvent){
+        this.chat.setVisible(true);
+        this.openGroupChat.setVisible(false);
+        this.closeGroupChat.setVisible(true);
+    }
+
+    @FXML
+    private void onClickCloseGroupChat(MouseEvent mouseEvent){
+        this.chat.setVisible(false);
+        this.openGroupChat.setVisible(true);
+        this.closeGroupChat.setVisible(false);
+    }
+
+
+    private static final int GRID_SIZE = 40; // Numero massimo di carte in una direzione
+    private static final int CARD_WIDTH = 100; // Larghezza della carta
+    private static final int CARD_HEIGHT = 75; // Altezza della carta
+    private static final double PADDING_X = 78.5; // Padding lungo x (orizzontale)
+    private static final int PADDING_Y = 41;  // Padding lungo y (verticale)
+    private static final double WINDOW_WIDTH = GRID_SIZE * PADDING_X + CARD_WIDTH; // Larghezza della finestra
+    private static final int WINDOW_HEIGHT = GRID_SIZE * PADDING_Y + CARD_HEIGHT; // Altezza della finestra
+
+    @FXML
+    private Pane p1;
+
+    @FXML
+    private Pane p2;
+
+    @FXML
+    private Pane p3;
+
+    @FXML
+    private Pane p4;
+
+    @FXML
+    private ScrollPane groupChat;
+
+    @FXML
+    private SplitPane chat;
+
+    @FXML
+    private Button sendGroupChat;
+
+    @FXML
+    private Button openGroupChat;
+
+    @FXML
+    private Button closeGroupChat;
+
+    @FXML
+    private TextField groupText;
+
+    @FXML
+    private VBox messages;
+
+    @FXML
+    private void onClickSendGroupText(MouseEvent mouseEvent){
+        try{
+            clientController.sendGroupText(groupText.getText());
+            this.groupText.setText("");
+        }catch (Exception e){
+            this.drawNotifications("Missing arguments");
+        }
+    }
+
+    public void drawChat(ArrayList<Text> chat, String player){
+        if(chat.get(0).getRecipient()==null){
+            //stampo tutti i messaggi precedenti se ce ne sono, che abbiano receiver nullo
+
+            if(chat.get(0).getSender().equals(player)){
+                Label text=new Label(chat.get(0).getMex());
+                text.setText("YOU: " + chat.get(0).getMex());
+                text.setWrapText(true);
+                messages.getChildren().add(text);
+            }
+            else{
+                Label text=new Label(chat.get(0).getMex());
+                text.setText(chat.get(0).getSender()+" : " + chat.get(0).getMex());
+                text.setWrapText(true);
+                messages.getChildren().add(text);
+            }
+            groupChat.layout();
+            groupChat.setVvalue(1.0);
+
+        }
+    /*    else{
+            if(chat.get(0).getSender().equals(player)){
+                //trovo tutti i messaggi scambiati con il player destinatario
+                System.out.println("YOU SENT A TEXT TO "+ chat.get(0).getRecipient() + "THIS IS YOUR PRIVATE CHAT WITH: " + chat.get(0).getRecipient());
+                System.out.println("************************************");
+                for(int i=chat.size()-1; i>=0; i--){
+                    //messaggi che io ho mandato a lui
+                    if(chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getRecipient())){
+                        System.out.println("YOU " + " : " + chat.get(i).getMex() );}
+                    //messaggi che lui ha mandato a me
+                    else if(chat.get(i).getSender().equals(chat.get(0).getRecipient()) && chat.get(i).getRecipient().equals(player)){
+                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex() );}
+                }
+            }
+
+            if(chat.get(0).getRecipient().equals(player)) {
+                //stampo tutti i loro vecchi messaggi
+                System.out.println("YOU HAVE A NEW TEXT FROM " + chat.get(0).getSender() + " THIS IS YOUR PRIVATE CHAT WITH: " + chat.get(0).getSender());
+                System.out.println("************************************");
+                for(int i=chat.size()-1; i>=0; i--){
+                    //messa che io ho mandato a lui
+                    if(chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getSender())){
+                        System.out.println("YOU " + " : " + chat.get(i).getMex());}
+                    //mess che lui ha mandato a me
+                    else if(chat.get(i).getSender().equals(chat.get(0).getSender()) && chat.get(i).getRecipient().equals(player)){
+                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex());}
+                }
+
+            }
+        }*/
+    }
+
+    private Map<String,Pane> boards;
+
+ /*   public void DrawBoard(PlayableCard[][] board, String player) {
+        Pane pane = new Pane();
+        // Posizioniamo la carta centrale al centro della finestra
+        double startX = WINDOW_WIDTH / 2;
+        double startY = WINDOW_HEIGHT / 2;
+        // Usare una griglia virtuale per posizionare le carte
+        for (int row = 0; row < GRID_SIZE; row++) {
+            for (int col = 0; col < GRID_SIZE; col++) {
+                ImageView imageView = createCardImageView();
+                // Calcolare la posizione della carta
+                double x = startX + (col - GRID_SIZE / 2) * PADDING_X;
+                double y = startY + (row - GRID_SIZE / 2) * PADDING_Y;
+                imageView.setX(x);
+                imageView.setY(y);
+                pane.getChildren().add(imageView);
+            }
+        }
+    }*/
+    public void drawButtons(ArrayList<String> players){
+        //in questo metodo associo a ogni giocatore il suo pane corrispondente
+        if(players.size()==2){
+            this.player1.setText(players.get(0));
+            this.player2.setText(players.get(1));
+            boards.put(players.get(0), p1);
+            boards.put(players.get(1), p2);
+            this.player1.setVisible(true);
+            this.player2.setVisible(true);
+
+        }
+        else if(players.size()==3){
+            this.player1.setText(players.get(0));
+            this.player2.setText(players.get(1));
+            this.player3.setText(players.get(2));
+            boards.put(players.get(0), p1);
+            boards.put(players.get(1), p2);
+            boards.put(players.get(2), p3);
+            this.player1.setVisible(true);
+            this.player2.setVisible(true);
+            this.player3.setVisible(true);
+
+
+        }
+        else{
+            this.player1.setText(players.get(0));
+            this.player2.setText(players.get(1));
+            this.player3.setText(players.get(2));
+            this.player4.setText(players.get(3));
+            boards.put(players.get(0), p1);
+            boards.put(players.get(1), p2);
+            boards.put(players.get(2), p3);
+            boards.put(players.get(3), p4);
+            this.player1.setVisible(true);
+            this.player2.setVisible(true);
+            this.player3.setVisible(true);
+            this.player4.setVisible(true);
+
+        }
+    }
+   /* private ImageView createCardImageView() {
+        Image cardImage = new Image("file:path/to/your/card/image.png"); // Percorso all'immagine della carta
+        ImageView imageView = new ImageView(cardImage);
+        imageView.setFitWidth(CARD_WIDTH);
+        imageView.setFitHeight(CARD_HEIGHT);
+        return imageView;
+    }*/
 }
+
+    /*public void drawButtons(ArrayList<String> players){
+        for(int i=0; i<players.size(); i++){
+            Button b=new Button(players.get(i));
+
+        }
+
+     */
 

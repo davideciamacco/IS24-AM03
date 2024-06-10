@@ -4,16 +4,18 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.GameViewController">
    <children>
-      <ScrollPane hbarPolicy="ALWAYS" layoutX="6.0" layoutY="6.0" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@game.css" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fx:id="game" hbarPolicy="ALWAYS" layoutX="6.0" layoutY="6.0" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@game.css" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <Pane fx:id="zoom" prefHeight="1063.0" prefWidth="1893.0" styleClass="scroll" stylesheets="@game.css">
                <children>
@@ -87,32 +89,32 @@
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="startingCardFront" fitHeight="100.0" fitWidth="500.0" layoutX="1657.0" layoutY="268.0" onMouseClicked="#onClickStartingFront" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="GoldDeck" fx:id="startingCardFront" fitHeight="100.0" fitWidth="500.0" layoutX="1650.0" layoutY="452.0" onMouseClicked="#onClickStartingFront" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="startingCardBack" fitHeight="100.0" fitWidth="500.0" layoutX="1670.0" layoutY="472.0" onMouseClicked="#onClickStartingBack" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="GoldDeck" fx:id="startingCardBack" fitHeight="100.0" fitWidth="500.0" layoutX="1652.0" layoutY="593.0" onMouseClicked="#onClickStartingBack" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="commonOb1" fitHeight="100.0" fitWidth="500.0" layoutX="690.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="ResourceDeck" fx:id="commonOb1" fitHeight="100.0" fitWidth="500.0" layoutX="696.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="commonOb2" fitHeight="100.0" fitWidth="500.0" layoutX="997.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="ResourceDeck" fx:id="commonOb2" fitHeight="100.0" fitWidth="500.0" layoutX="898.0" layoutY="121.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
                   <TextField fx:id="finalOb" layoutX="57.0" layoutY="446.0" />
-                  <TextField fx:id="state" layoutX="44.0" layoutY="995.0" prefHeight="26.0" prefWidth="283.0" style="-fx-border-color: #333;">
+                  <TextField fx:id="state" layoutX="11.0" layoutY="995.0" prefHeight="26.0" prefWidth="385.0" style="-fx-border-color: #333;">
                      <font>
                         <Font size="31.0" />
                      </font></TextField>
-                  <TextField fx:id="current" layoutX="392.0" layoutY="998.0" prefHeight="26.0" prefWidth="373.0" style="-fx-border-color: #333;">
+                  <TextField fx:id="current" layoutX="416.0" layoutY="994.0" prefHeight="26.0" prefWidth="373.0" style="-fx-border-color: #333;">
                      <font>
                         <Font size="31.0" />
                      </font></TextField>
@@ -158,10 +160,35 @@
                         <Font size="31.0" />
                      </font>
                   </TextField>
-                  <Button fx:id="blue" layoutX="85.0" layoutY="152.0" mnemonicParsing="false" onMouseClicked="#onClickBlue" prefHeight="49.0" prefWidth="83.0" styleClass="button-blue" text="Blue" />
-                  <Button fx:id="red" layoutX="289.0" layoutY="152.0" mnemonicParsing="false" onMouseClicked="#onClickRed" prefHeight="49.0" prefWidth="83.0" styleClass="button-red" text="Red" />
-                  <Button fx:id="yellow" layoutX="388.0" layoutY="149.0" mnemonicParsing="false" onMouseClicked="#onClickYellow" prefHeight="49.0" prefWidth="83.0" styleClass="button-yellow" text="Yellow" />
-                  <Button fx:id="green" layoutX="194.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#onClickGreen" prefHeight="49.0" prefWidth="83.0" styleClass="button-green" text="Green" />
+                  <Button fx:id="blue" layoutX="21.0" layoutY="153.0" mnemonicParsing="false" onMouseClicked="#onClickBlue" prefHeight="49.0" prefWidth="124.0" styleClass="button-blue" text="Blue" />
+                  <Button fx:id="red" layoutX="305.0" layoutY="148.0" mnemonicParsing="false" onMouseClicked="#onClickRed" prefHeight="49.0" prefWidth="157.0" styleClass="button-red" text="Red" />
+                  <Button fx:id="yellow" layoutX="484.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#onClickYellow" prefHeight="49.0" prefWidth="116.0" styleClass="button-yellow" text="Yellow" />
+                  <Button fx:id="green" layoutX="156.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#onClickGreen" prefHeight="49.0" prefWidth="138.0" styleClass="button-green" text="Green" />
+                  <Button fx:id="player1" layoutX="1597.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer1" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
+                  <Button fx:id="player2" layoutX="1598.0" layoutY="83.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer2" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
+                  <Button fx:id="player3" layoutX="1601.0" layoutY="160.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer3" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
+                  <Button fx:id="player4" layoutX="1603.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer4" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
+                  <SplitPane fx:id="chat" dividerPositions="0.8292682926829268" layoutX="202.0" layoutY="522.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="105.0" prefWidth="306.0">
+                           <children>
+                              <ScrollPane fx:id="groupChat" layoutX="2.0" layoutY="8.0" prefHeight="188.0" prefWidth="431.0">
+                                 <content>
+                                    <VBox fx:id="messages" prefHeight="177.0" prefWidth="425.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Button fx:id="sendGroupChat" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendGroupText" prefHeight="30.0" prefWidth="135.0" text="Send Text" />
+                              <TextField fx:id="groupText" layoutX="161.0" layoutY="6.0" prefHeight="26.0" prefWidth="255.0" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+                  <Button fx:id="openGroupChat" layoutX="26.0" layoutY="631.0" mnemonicParsing="false" onMouseClicked="#onClickShowGroupChat" prefHeight="30.0" prefWidth="131.0" styleClass="clicked" text="Show Group Chat" />
+                  <Button fx:id="closeGroupChat" layoutX="25.0" layoutY="681.0" mnemonicParsing="false" onMouseClicked="#onClickCloseGroupChat" prefHeight="30.0" prefWidth="130.0" styleClass="clicked" text="Close Group Chat" />
                </children>
                <rotationAxis>
                   <Point3D />
@@ -169,5 +196,41 @@
             </Pane>
          </content>
       </ScrollPane>
+      <Pane fx:id="p1" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #333;">
+         <children>
+            <Button fx:id="goBack1" mnemonicParsing="false" onMouseClicked="#onClickGoBack" prefHeight="56.0" prefWidth="194.0" styleClass="clicked" text="GoBack">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="p4" prefHeight="200.0" prefWidth="219.0" style="-fx-border-color: #333;">
+         <children>
+            <Button fx:id="goBack4" layoutX="11.0" layoutY="36.0" mnemonicParsing="false" onMouseClicked="#onClickGoBack" prefHeight="56.0" prefWidth="194.0" styleClass="clicked" text="GoBack">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="p3" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #333;">
+         <children>
+            <Button fx:id="goBack3" layoutX="5.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#onClickGoBack" prefHeight="56.0" prefWidth="194.0" styleClass="clicked" text="GoBack">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="p2" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #333;">
+         <children>
+            <Button fx:id="goBack2" layoutX="7.0" layoutY="27.0" mnemonicParsing="false" onMouseClicked="#onClickGoBack" prefHeight="56.0" prefWidth="194.0" styleClass="clicked" text="GoBack">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

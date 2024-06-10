@@ -183,6 +183,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
             tempBoard[i - 1][j - 1].setCornerCoverage(2, true); // Imposta come coperto l'angolo 2 della carta adiacente in alto a sinistra
         }
         boards.put(player, tempBoard);
+        //primo parametro è il player che ha piazzato, il secondo è il player a cui arriva l'update della board
         viewInterface.notifyChangePlayerBoard(player, this.player, boards);
 
     }

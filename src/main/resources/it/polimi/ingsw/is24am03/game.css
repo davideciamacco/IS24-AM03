@@ -8,19 +8,28 @@
 .button-blue{
     -fx-cursor: hand;
     -fx-background-color:#0000FF ;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
 
 }
 .button-red{
     -fx-cursor: hand;
     -fx-background-color: #e70a36;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
+
 
 }
 .button-green{
     -fx-cursor: hand;
     -fx-background-color: #1ab924;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
 
 }
 .button-yellow{
     -fx-cursor: hand;
     -fx-background-color: #dfe528;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
 }

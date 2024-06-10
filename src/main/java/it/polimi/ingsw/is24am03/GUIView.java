@@ -134,7 +134,10 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void drawBoard(PlayableCard[][] playableCards) {
-
+      /*  Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawHand(hand);
+        });*/
     }
 
 
@@ -186,12 +189,15 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void drawAvailableColors(ArrayList<Color> colors) {
-
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawAvailableColors(colors);
+        });
     }
 
     @Override
     public void notifyJoinedPlayer(String joinedPlayer) {
-
+        //this.printNotifications(j);
     }
 
     @Override
@@ -207,12 +213,21 @@ public class GUIView extends Application implements ViewInterface {
         }
         message.append(order.getLast());
         message= new StringBuilder("Turn order is  " + message);
-       this.drawTurnOrder(message.toString());
+        this.drawTurnOrder(message.toString());
+        this.drawButtons(order);
+
     }
     public void drawTurnOrder(String s){
         Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
             gameViewController.drawTurnOrder(s);
+        });
+    }
+    //metodo per creare bottoni per le board degli altri giocatori
+    public void drawButtons(ArrayList<String> order){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawButtons(order);
         });
     }
 
@@ -274,7 +289,7 @@ public class GUIView extends Application implements ViewInterface {
             this.drawBoard(boards.get(player));
         }
         else{
-            this.printNotifications("Player" + player + "placed a card");
+            this.printNotifications(player + " placed a card");
             this.drawBoard(boards.get(player));
         }
     }
@@ -288,12 +303,12 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void ReceiveUpdateOnPoints(String player, int points) {
-
+        this.printNotifications(player + " scored " + points);
     }
 
     @Override
     public void NotifyChangePersonalCards(ArrayList<ResourceCard> p) {
-
+        this.drawHand(p);
     }
 
     @Override
@@ -355,17 +370,21 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyAvailableColors(ArrayList<Color> colors) {
-
+        this.drawAvailableColors(colors);
     }
+
 
     @Override
     public void notifyFinalColors(Map<String, Color> colors, ArrayList<String> players) {
-
+        this.drawFinalColors(colors, players);
     }
 
     @Override
     public void drawFinalColors(Map<String, Color> colors, ArrayList<String> players) {
-
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawFinalColors(colors, players);
+        });
     }
 
     @Override
@@ -380,12 +399,16 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void addGroupText(ArrayList<Text> chat, String player) {
-
+        this.drawChat(chat, player);
+        this.printNotifications("New group text, check below!");
     }
 
     @Override
     public void drawChat(ArrayList<Text> chat, String player) {
-
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawChat(chat, player);
+        });
     }
 
     @Override
