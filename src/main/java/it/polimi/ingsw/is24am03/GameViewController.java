@@ -353,9 +353,6 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
-    public void drawBoard(PlayableCard[][] board, String current, String player){
-
-    }
     public void updateStarting(){
         this.startingCardBack.setVisible(false);
         this.startingCardFront.setVisible(false);
@@ -676,19 +673,54 @@ private Button goBack1;
 
     @FXML
     private ScrollPane game;
+    private Map<String,Pane> boards;
+    public void DrawBoard(PlayableCard[][] board, String player) {
 
-
+//        // Posizioniamo la carta centrale al centro della finestra
+        double startX = 960;
+         double startY = 540;
+         int cont=0;
+//        // Usare una griglia virtuale per posizionare le carte
+               for (int row = 0; row < GRID_SIZE; row++) {
+            for (int col = 0; col < GRID_SIZE; col++){
+                if ((row + col) % 2 == 0) {
+                    Image card1 = new Image(getClass().getResource(findFrontUrl(0)).toExternalForm());
+                    ImageView imageView1 = new ImageView(card1);
+                    // Calcolare la posizione della carta
+                    double x = startX + (col - GRID_SIZE / 2) * PADDING_X;
+                    double y = startY + (row - GRID_SIZE / 2) * PADDING_Y;
+                    imageView1.setLayoutX(x);
+                    imageView1.setLayoutY(y);
+                    imageView1.setFitHeight(38.5);
+                    imageView1.setFitWidth(50.0);
+                    this.p1.getChildren().add(imageView1);
+                }
+                cont++;
+    }
+           }
+    }
+     private ImageView createCardImageView() {
+         Image cardImage = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/80.png"); // Percorso all'immagine della carta
+         ImageView imageView = new ImageView(cardImage);
+         imageView.setFitWidth(CARD_WIDTH);
+         imageView.setFitHeight(CARD_HEIGHT);
+         return imageView;
+     }
     @FXML
     private void onClickPlayer1(MouseEvent mouseEvent){
         //metodo per mostrare pane giocatore
         this.game.setVisible(false);
+        DrawBoard(null,null);
         this.p1.setPrefHeight(1080);
         this.p1.setPrefWidth(1920);
         this.p1.setVisible(true);
         this.goBack1.setVisible(true);
         //devo disegnare il pane di p1
 
+
+
     }
+
     @FXML
     private void onClickPlayer2(MouseEvent mouseEvent){
         this.game.setVisible(false);
@@ -732,13 +764,11 @@ private Button goBack1;
     }
 
 
-    private static final int GRID_SIZE = 40; // Numero massimo di carte in una direzione
-    private static final int CARD_WIDTH = 100; // Larghezza della carta
-    private static final int CARD_HEIGHT = 75; // Altezza della carta
-    private static final double PADDING_X = 78.5; // Padding lungo x (orizzontale)
-    private static final int PADDING_Y = 41;  // Padding lungo y (verticale)
-    private static final double WINDOW_WIDTH = GRID_SIZE * PADDING_X + CARD_WIDTH; // Larghezza della finestra
-    private static final int WINDOW_HEIGHT = GRID_SIZE * PADDING_Y + CARD_HEIGHT; // Altezza della finestra
+    private static final int GRID_SIZE = 20; // Numero massimo di carte in una direzione
+    private static final int CARD_WIDTH = 50; // Larghezza della carta
+    private static final double CARD_HEIGHT = 37.5; // Altezza della carta
+    private static final double PADDING_X = 39.25; // Padding lungo x (orizzontale)
+    private static final double PADDING_Y = 20.5;  // Padding lungo y (verticale)
 
     @FXML
     private Pane p1;
@@ -835,26 +865,8 @@ private Button goBack1;
         }*/
     }
 
-    private Map<String,Pane> boards;
 
- /*   public void DrawBoard(PlayableCard[][] board, String player) {
-        Pane pane = new Pane();
-        // Posizioniamo la carta centrale al centro della finestra
-        double startX = WINDOW_WIDTH / 2;
-        double startY = WINDOW_HEIGHT / 2;
-        // Usare una griglia virtuale per posizionare le carte
-        for (int row = 0; row < GRID_SIZE; row++) {
-            for (int col = 0; col < GRID_SIZE; col++) {
-                ImageView imageView = createCardImageView();
-                // Calcolare la posizione della carta
-                double x = startX + (col - GRID_SIZE / 2) * PADDING_X;
-                double y = startY + (row - GRID_SIZE / 2) * PADDING_Y;
-                imageView.setX(x);
-                imageView.setY(y);
-                pane.getChildren().add(imageView);
-            }
-        }
-    }*/
+
     public void drawButtons(ArrayList<String> players){
         //in questo metodo associo a ogni giocatore il suo pane corrispondente
         if(players.size()==2){
@@ -895,13 +907,7 @@ private Button goBack1;
 
         }
     }
-   /* private ImageView createCardImageView() {
-        Image cardImage = new Image("file:path/to/your/card/image.png"); // Percorso all'immagine della carta
-        ImageView imageView = new ImageView(cardImage);
-        imageView.setFitWidth(CARD_WIDTH);
-        imageView.setFitHeight(CARD_HEIGHT);
-        return imageView;
-    }*/
+
 }
 
     /*public void drawButtons(ArrayList<String> players){
