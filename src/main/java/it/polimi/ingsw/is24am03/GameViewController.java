@@ -10,27 +10,19 @@ import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
-import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class GameViewController extends GUIController implements Initializable {
@@ -674,6 +666,7 @@ private Button goBack1;
     @FXML
     private ScrollPane game;
     private Map<String,Pane> boards;
+    /*
     public void DrawBoard(PlayableCard[][] board, String player) {
 
 //        // Posizioniamo la carta centrale al centro della finestra
@@ -683,7 +676,7 @@ private Button goBack1;
 //        // Usare una griglia virtuale per posizionare le carte
                for (int row = 0; row < GRID_SIZE; row++) {
             for (int col = 0; col < GRID_SIZE; col++){
-                if ((row + col) % 2 == 0) {
+                if ((row + col) % 2 == 0 && row==col) {
                     Image card1 = new Image(getClass().getResource(findFrontUrl(0)).toExternalForm());
                     ImageView imageView1 = new ImageView(card1);
                     // Calcolare la posizione della carta
@@ -699,18 +692,61 @@ private Button goBack1;
     }
            }
     }
-     private ImageView createCardImageView() {
-         Image cardImage = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/80.png"); // Percorso all'immagine della carta
-         ImageView imageView = new ImageView(cardImage);
-         imageView.setFitWidth(CARD_WIDTH);
-         imageView.setFitHeight(CARD_HEIGHT);
-         return imageView;
-     }
+
+     */
+    public void drawBoard(PlayableCard[][] board) {
+        // Dimensioni della finestra
+        double startX = 960;
+        double startY = 540;
+
+        // Costanti per dimensioni delle carte e padding
+        final int GRID_SIZE = 40;
+        final int CARD_WIDTH = 50;
+        final double CARD_HEIGHT = 37.5;
+        final double PADDING_X = 39.25;
+        final double PADDING_Y = 20.5;
+
+        // Coordinate del centro della matrice
+        int centerX = board.length / 2;
+        int centerY = board[0].length / 2;
+
+        // Itera sui livelli concentrici
+        for (int level = 0; level <= Math.max(centerX, centerY); level++) {
+            // Esplora tutti gli elementi del livello attuale
+            for (int x = centerX - level; x <= centerX + level; x++) {
+                for (int y = centerY - level; y <= centerY + level; y++) {
+                    // Controlla se l'elemento (x, y) è valido e si trova sul bordo del livello attuale
+                    if (x >= 0 && x < board.length && y >= 0 && y < board[0].length &&
+                            (Math.abs(x - centerX) == level || Math.abs(y - centerY) == level)) {
+
+                        PlayableCard card = board[x][y];
+                        if (card != null) {
+                            Image cardImage;
+                            if (card.face) {
+                                cardImage = new Image(getClass().getResource(findFrontUrl(card.id)).toExternalForm());
+                            } else {
+                                cardImage = new Image(getClass().getResource(findBackUrl(card.id)).toExternalForm());
+                            }
+                            ImageView imageView = new ImageView(cardImage);
+                            // Calcolare la posizione della carta
+                            double posX = startX + (y - centerY) * PADDING_X;
+                            double posY = startY + (x - centerX) * PADDING_Y;
+                            imageView.setLayoutX(posX);
+                            imageView.setLayoutY(posY);
+                            imageView.setFitHeight(CARD_HEIGHT);
+                            imageView.setFitWidth(CARD_WIDTH);
+                            this.p1.getChildren().add(imageView);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @FXML
     private void onClickPlayer1(MouseEvent mouseEvent){
         //metodo per mostrare pane giocatore
         this.game.setVisible(false);
-        DrawBoard(null,null);
         this.p1.setPrefHeight(1080);
         this.p1.setPrefWidth(1920);
         this.p1.setVisible(true);
@@ -762,13 +798,6 @@ private Button goBack1;
         this.openGroupChat.setVisible(true);
         this.closeGroupChat.setVisible(false);
     }
-
-
-    private static final int GRID_SIZE = 20; // Numero massimo di carte in una direzione
-    private static final int CARD_WIDTH = 50; // Larghezza della carta
-    private static final double CARD_HEIGHT = 37.5; // Altezza della carta
-    private static final double PADDING_X = 39.25; // Padding lungo x (orizzontale)
-    private static final double PADDING_Y = 20.5;  // Padding lungo y (verticale)
 
     @FXML
     private Pane p1;

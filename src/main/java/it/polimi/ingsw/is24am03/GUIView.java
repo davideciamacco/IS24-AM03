@@ -134,17 +134,16 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void drawBoard(PlayableCard[][] playableCards) {
-      /*  Platform.runLater(()->{
+        Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
-            gameViewController.drawHand(hand);
-        });*/
+            gameViewController.drawBoard(playableCards);
+        });
     }
 
 
 
     @Override
     public void drawHand(ArrayList<ResourceCard> hand) {
-
        //posso passare a game view controller la lista delle carte/ids, tanto dovrà disegnarle sia fronte che retro
     Platform.runLater(()->{
         GameViewController gameViewController=fxmlLoader.getController();
