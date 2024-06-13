@@ -694,7 +694,7 @@ private Button goBack1;
     }
 
      */
-    public void drawBoard(PlayableCard[][] board) {
+    public void drawBoard(PlayableCard[][] board, String player) {
         // Dimensioni della finestra
         double startX = 960;
         double startY = 540;
@@ -711,6 +711,7 @@ private Button goBack1;
         int centerY = board[0].length / 2;
 
         // Itera sui livelli concentrici
+
         for (int level = 0; level <= Math.max(centerX, centerY); level++) {
             // Esplora tutti gli elementi del livello attuale
             for (int x = centerX - level; x <= centerX + level; x++) {
@@ -722,10 +723,10 @@ private Button goBack1;
                         PlayableCard card = board[x][y];
                         if (card != null) {
                             Image cardImage;
-                            if (card.face) {
-                                cardImage = new Image(getClass().getResource(findFrontUrl(card.id)).toExternalForm());
+                            if (card.getFace()) {
+                                cardImage = new Image(getClass().getResource(findFrontUrl(card.getId())).toExternalForm());
                             } else {
-                                cardImage = new Image(getClass().getResource(findBackUrl(card.id)).toExternalForm());
+                                cardImage = new Image(getClass().getResource(findBackUrl(card.getId())).toExternalForm());
                             }
                             ImageView imageView = new ImageView(cardImage);
                             // Calcolare la posizione della carta
@@ -735,7 +736,19 @@ private Button goBack1;
                             imageView.setLayoutY(posY);
                             imageView.setFitHeight(CARD_HEIGHT);
                             imageView.setFitWidth(CARD_WIDTH);
-                            this.p1.getChildren().add(imageView);
+                            if(player.equals(player1.getText())) {
+                                this.p1.getChildren().add(imageView);
+                            }
+                            else if(player.equals(player2.getText())) {
+                                this.p2.getChildren().add(imageView);
+                            }
+                            else if(player.equals(player3.getText())) {
+                                this.p3.getChildren().add(imageView);
+                            }
+                            else if(player.equals(player4.getText())) {
+                                this.p4.getChildren().add(imageView);
+                            }
+
                         }
                     }
                 }

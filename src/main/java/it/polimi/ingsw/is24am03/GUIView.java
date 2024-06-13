@@ -127,16 +127,21 @@ public class GUIView extends Application implements ViewInterface {
         });
     }
 
+    @Override
+    public void drawBoard(PlayableCard[][] playableCards) {
+
+    }
+
    /* @Override
     public void notify(String s) {
 
     }*/
 
-    @Override
-    public void drawBoard(PlayableCard[][] playableCards) {
+
+    public void drawBoard(PlayableCard[][] playableCards, String player) {
         Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
-            gameViewController.drawBoard(playableCards);
+            gameViewController.drawBoard(playableCards,player);
         });
     }
 
@@ -285,11 +290,11 @@ public class GUIView extends Application implements ViewInterface {
         if(player.equals(nickname)){
             this.printNotifications("You placed a card successfully");
             this.updateStarting();
-            this.drawBoard(boards.get(player));
+            this.drawBoard(boards.get(player),player);
         }
         else{
             this.printNotifications(player + " placed a card");
-            this.drawBoard(boards.get(player));
+            this.drawBoard(boards.get(player),player);
         }
     }
 
