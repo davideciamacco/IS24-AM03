@@ -293,7 +293,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     @Override
     public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table) throws RemoteException {
-
         this.current=nickname; //
         this.chat=chat; //
         this.gameState=gameState; //
@@ -309,6 +308,18 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.card1=table.get(3);
         this.card2=table.get(4);
         this.card3=table.get(5);
+        viewInterface.drawScene(SceneType.GAME);
+        viewInterface.updateCommonTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+        viewInterface.notifyCommonObjective(commonObjective.get(0), commonObjective.get(1));
+        viewInterface.NotifyChangePersonalCards(hand);
+        for(String player: boards.keySet()) {
+            viewInterface.notifyChangePlayerBoard(player, this.player, boards);
+        }
+        viewInterface.notifyChangeState(gameState);
+        viewInterface.notifyCurrentPlayer(current,boards,player, hand, gameState);
+        viewInterface.notifyTurnOrder(this.players);
+        viewInterface.notifyChoiceObjective(objectiveCard);
+        //viewInterface.notifyFinalColors(colors, players);
         viewInterface.UpdateCrashedPlayer(nickname, this.player, gameState, hand, objectiveCard, boards, points, players, objectiveCards, color, table);
     }
 
