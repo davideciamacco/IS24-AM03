@@ -694,6 +694,7 @@ private Button goBack1;
     }
 
      */
+    /*
     public void drawBoard(PlayableCard[][] board, String player) {
         // Dimensioni della finestra
         double startX = 960;
@@ -755,6 +756,169 @@ private Button goBack1;
             }
         }
     }
+
+     */
+
+    public void drawBoard(PlayableCard[][] board, String player) {
+        // Dimensioni della finestra
+        double startX = 960;
+        double startY = 540;
+
+        // Costanti per dimensioni delle carte e padding
+        final int GRID_SIZE = 40;
+        final int CARD_WIDTH = 50;
+        final double CARD_HEIGHT = 38.5;
+        final double PADDING_X = 39.25;
+        final double PADDING_Y = 20.5;
+        final double LABEL_OFFSET_X = 8; // Ridotto ulteriormente l'offset per i label lungo l'asse X
+        final double LABEL_OFFSET_Y = 8; // Ridotto ulteriormente l'offset per i label lungo l'asse Y
+
+        // Coordinate del centro della matrice
+        int centerX = board.length / 2;
+        int centerY = board[0].length / 2;
+
+        // Set per tenere traccia delle posizioni occupate e delle posizioni valide per piazzare una carta
+        Set<Position> occupiedPositions = new HashSet<>();
+        Set<Position> validPositions = new HashSet<>();
+        Map<Position, Label> positionLabels = new HashMap<>();
+
+        // Itera sui livelli concentrici
+        for (int level = 0; level <= Math.max(centerX, centerY); level++) {
+            // Esplora tutti gli elementi del livello attuale
+            for (int x = centerX - level; x <= centerX + level; x++) {
+                for (int y = centerY - level; y <= centerY + level; y++) {
+                    // Controlla se l'elemento (x, y) è valido e si trova sul bordo del livello attuale
+                    if (x >= 0 && x < board.length && y >= 0 && y < board[0].length &&
+                            (Math.abs(x - centerX) == level || Math.abs(y - centerY) == level)) {
+
+                        PlayableCard card = board[x][y];
+                        if (card != null) {
+                            Image cardImage;
+                            if (card.getFace()) {
+                                cardImage = new Image(getClass().getResource(findFrontUrl(card.getId())).toExternalForm());
+                            } else {
+                                cardImage = new Image(getClass().getResource(findBackUrl(card.getId())).toExternalForm());
+                            }
+                            ImageView imageView = new ImageView(cardImage);
+                            // Calcolare la posizione della carta
+                            double posX = startX + (y - centerY) * PADDING_X;
+                            double posY = startY + (x - centerX) * PADDING_Y;
+                            imageView.setLayoutX(posX);
+                            imageView.setLayoutY(posY);
+                            imageView.setFitHeight(CARD_HEIGHT);
+                            imageView.setFitWidth(CARD_WIDTH);
+
+                            if (player.equals(player1.getText())) {
+                                this.p1.getChildren().add(imageView);
+                            } else if (player.equals(player2.getText())) {
+                                this.p2.getChildren().add(imageView);
+                            } else if (player.equals(player3.getText())) {
+                                this.p3.getChildren().add(imageView);
+                            } else if (player.equals(player4.getText())) {
+                                this.p4.getChildren().add(imageView);
+                            }
+
+                            // Rimuovi il label se esiste
+                            Position pos = new Position(x, y);
+                            if (positionLabels.containsKey(pos)) {
+                                Label label = positionLabels.get(pos);
+                                if (player.equals(player1.getText())) {
+                                    this.p1.getChildren().remove(label);
+                                } else if (player.equals(player2.getText())) {
+                                    this.p2.getChildren().remove(label);
+                                } else if (player.equals(player3.getText())) {
+                                    this.p3.getChildren().remove(label);
+                                } else if (player.equals(player4.getText())) {
+                                    this.p4.getChildren().remove(label);
+                                }
+                                positionLabels.remove(pos);
+                            }
+
+                            // Aggiungi la posizione occupata
+                            occupiedPositions.add(pos);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Trova le posizioni valide per piazzare nuove carte
+        for (Position pos : occupiedPositions) {
+            int[][] directions = { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
+            for (int[] dir : directions) {
+                int newX = pos.x + dir[0];
+                int newY = pos.y + dir[1];
+                if (newX >= 0 && newX < board.length && newY >= 0 && newY < board[0].length && board[newX][newY] == null) {
+                    validPositions.add(new Position(newX, newY));
+                }
+            }
+        }
+
+        // Aggiungi i label nelle posizioni valide
+        for (Position pos : validPositions) {
+            String coordinateText = "(" + pos.x + ", " + pos.y + ")";
+            Label label = new Label(coordinateText);
+            double posX = startX + (pos.y - centerY) * PADDING_X;
+            double posY = startY + (pos.x - centerX) * PADDING_Y;
+
+            // Aggiungi offset per evitare la sovrapposizione
+            if (pos.x < centerX) {
+                posY -= LABEL_OFFSET_Y;
+            } else {
+                posY += LABEL_OFFSET_Y;
+            }
+
+            if (pos.y < centerY) {
+                posX -= LABEL_OFFSET_X;
+            } else {
+                posX += LABEL_OFFSET_X;
+            }
+
+            label.setLayoutX(posX);
+            label.setLayoutY(posY);
+
+            if (player.equals(player1.getText())) {
+                this.p1.getChildren().add(label);
+            } else if (player.equals(player2.getText())) {
+                this.p2.getChildren().add(label);
+            } else if (player.equals(player3.getText())) {
+                this.p3.getChildren().add(label);
+            } else if (player.equals(player4.getText())) {
+                this.p4.getChildren().add(label);
+            }
+
+            // Memorizza il label nella posizione
+            positionLabels.put(pos, label);
+        }
+    }
+
+    // Classe interna per rappresentare una posizione nella griglia
+    private static class Position {
+        int x, y;
+
+        Position(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        // Override di equals e hashCode per poter utilizzare Position in un HashSet
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Position position = (Position) o;
+            return x == position.x && y == position.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+    }
+
+
+
+
 
     @FXML
     private void onClickPlayer1(MouseEvent mouseEvent){
