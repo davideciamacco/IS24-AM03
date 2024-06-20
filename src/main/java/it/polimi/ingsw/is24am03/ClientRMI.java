@@ -64,9 +64,9 @@ public class ClientRMI implements Client{
             this.subscribeToObservers();
             hasJoined=true;
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid arguments");
+            view.drawError("Invalid arguments");
         } catch (GameAlreadyCreatedException e) {
-            System.out.println("Game already created");
+            view.drawError("Game already created");
         } catch (RemoteException e){
 
         }
@@ -85,24 +85,24 @@ public class ClientRMI implements Client{
                 this.gameController.canStart();
             }
             else{
-                System.out.println("Already joined");
+                view.drawError("Already joined");
             }
         }
         catch(IllegalArgumentException e)
         {
-            System.out.println("Nickname not allowed");
+            view.drawError("Nickname not allowed");
         }
         catch(FullLobbyException e)
         {
-            System.out.println("Lobby is full");
+            view.drawError("Lobby is full");
         }
         catch(NicknameAlreadyUsedException e)
         {
-            System.out.println("Nickname already used");
+            view.drawError("Nickname already used");
         }
         catch(GameNotExistingException e )
         {
-            System.out.println("Game not existing");
+            view.drawError("Game not existing");
         }
         catch (RemoteException e)
         {

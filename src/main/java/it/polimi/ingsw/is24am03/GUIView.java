@@ -423,4 +423,7 @@ public class GUIView extends Application implements ViewInterface {
         });
     }
 
+    public void drawError(String message){
+        showAlert("Error", message);
+    }
 }

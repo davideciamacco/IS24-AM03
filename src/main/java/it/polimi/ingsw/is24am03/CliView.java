@@ -1664,4 +1664,8 @@ public class CliView implements ViewInterface{
     public void drawScene(SceneType sceneType) {
 
     }
+
+    public void drawError(String message){
+        System.out.println(message);
+    }
 }

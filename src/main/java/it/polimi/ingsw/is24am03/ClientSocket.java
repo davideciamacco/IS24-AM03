@@ -290,7 +290,7 @@ public class ClientSocket implements Client{
             hasJoined = true;
         }
         else
-            System.out.println(message.getDetails());
+            view.drawError(message.getDetails());
         System.out.flush();
     }
     private void parse(ConfirmChooseObjectiveMessage message) {
@@ -394,7 +394,7 @@ public class ClientSocket implements Client{
             }
         }
         else{
-            System.out.println(message.getDetails());
+            view.drawError(message.getDetails());
 
         }
         System.out.flush();

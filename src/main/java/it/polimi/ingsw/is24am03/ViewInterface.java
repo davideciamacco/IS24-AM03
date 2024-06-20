@@ -54,5 +54,7 @@ public interface ViewInterface {
     public void addGroupText(ArrayList<Text> chat, String player);
     public void drawChat(ArrayList<Text> chat, String player);
 
+    public void drawError(String message);
+
     public void printNotifications(String message);
 }
