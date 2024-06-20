@@ -251,7 +251,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if(choice<1 || choice>4) throw new IllegalArgumentException();
             //if(P.getHand().size()==3) throw new FullHandException();
             if(!gameModel.getGameState().equals(State.DRAWING)) throw new InvalidStateException("");
-            if(gameModel.getTableCards().get(choice)==null){
+            if(gameModel.getTableCards().get(choice-1)==null){
                throw new NullCardSelectedException();
             }
 
