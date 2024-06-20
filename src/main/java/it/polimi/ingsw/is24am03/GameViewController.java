@@ -14,11 +14,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 
 import java.net.URL;
@@ -27,6 +30,8 @@ import java.util.*;
 
 public class GameViewController extends GUIController implements Initializable {
 
+    @FXML
+    private AnchorPane anchor;
 
     @Override
     public void postNotification(String title, String desc) {
@@ -35,6 +40,18 @@ public class GameViewController extends GUIController implements Initializable {
 
     @FXML
     private Pane zoom;
+
+    @FXML
+    private Pane p1;
+
+    @FXML
+    private Pane p2;
+
+    @FXML
+    private Pane p3;
+
+    @FXML
+    private Pane p4;
 
     @FXML
     private ImageView resourceDeck;
@@ -125,8 +142,12 @@ public class GameViewController extends GUIController implements Initializable {
     @FXML
     private TextField turnOrder;
 
+
+
     @FXML
     private Pane board;
+
+    private final double maxScale = 3.0;
 
     @FXML
     private void onClickPlaceCard(MouseEvent mouseEvent){
@@ -471,9 +492,15 @@ public class GameViewController extends GUIController implements Initializable {
     private Button red;
 
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         zoom.setOnScroll(this::handleZoom);
+        p1.setOnScroll(this::handleZoom);
+        p2.setOnScroll(this::handleZoom);
+        p3.setOnScroll(this::handleZoom);
+        p4.setOnScroll(this::handleZoom);
         this.finalOb.setVisible(false);
         this.color.setVisible(false);
         this.green.setVisible(false);
@@ -485,9 +512,13 @@ public class GameViewController extends GUIController implements Initializable {
         this.player3.setVisible(false);
         this.player4.setVisible(false);
         this.p1.setVisible(false);
+        this.scrollPane1.setVisible(false);
         this.p2.setVisible(false);
+        this.scrollPane2.setVisible(false);
         this.p3.setVisible(false);
+        this.scrollPane3.setVisible(false);
         this.p4.setVisible(false);
+        this.scrollPane4.setVisible(false);
         this.goBack1.setVisible(false);
         this.goBack2.setVisible(false);
         this.goBack3.setVisible(false);
@@ -505,10 +536,11 @@ public class GameViewController extends GUIController implements Initializable {
         } else {
             scaleValue += scaleIncrement;
         }
-        scaleValue = Math.max(minScale, scaleValue);
+        scaleValue = Math.max(1.0, Math.min(scaleValue, maxScale));
 
         Scale scale = new Scale(scaleValue, scaleValue, event.getX(), event.getY());
-        zoom.getTransforms().setAll(scale);
+        Pane zoomPane = (Pane) event.getSource();
+        zoomPane.getTransforms().setAll(scale);
 
         event.consume();
     }
@@ -581,9 +613,13 @@ public class GameViewController extends GUIController implements Initializable {
     @FXML
     private void onClickGoBack(MouseEvent mouseEvent){
         this.p1.setVisible(false);
+        this.scrollPane1.setVisible(false);
         this.p2.setVisible(false);
+        this.scrollPane2.setVisible(false);
         this.p3.setVisible(false);
+        this.scrollPane3.setVisible(false);
         this.p4.setVisible(false);
+        this.scrollPane4.setVisible(false);
         this.game.setVisible(true);
         this.goBack1.setVisible(false);
         this.goBack2.setVisible(false);
@@ -665,6 +701,21 @@ private Button goBack1;
 
     @FXML
     private ScrollPane game;
+
+    @FXML
+    private ScrollPane scrollPane1;
+
+    @FXML
+    private ScrollPane scrollPane2;
+
+
+    @FXML
+    private ScrollPane scrollPane3;
+
+    @FXML
+    private ScrollPane scrollPane4;
+
+
     private Map<String,Pane> boards;
     /*
     public void DrawBoard(PlayableCard[][] board, String player) {
@@ -927,6 +978,7 @@ private Button goBack1;
         this.p1.setPrefHeight(1080);
         this.p1.setPrefWidth(1920);
         this.p1.setVisible(true);
+        this.scrollPane1.setVisible(true);
         this.goBack1.setVisible(true);
         //devo disegnare il pane di p1
 
@@ -940,6 +992,7 @@ private Button goBack1;
         this.p2.setPrefHeight(1080);
         this.p2.setPrefWidth(1920);
         this.p2.setVisible(true);
+        this.scrollPane2.setVisible(true);
         this.goBack2.setVisible(true);
 
     }
@@ -949,6 +1002,7 @@ private Button goBack1;
         this.p3.setPrefHeight(1080);
         this.p3.setPrefWidth(1920);
         this.p3.setVisible(true);
+        this.scrollPane3.setVisible(true);
         this.goBack3.setVisible(true);
 
     }
@@ -958,6 +1012,7 @@ private Button goBack1;
         this.p4.setPrefHeight(1080);
         this.p4.setPrefWidth(1920);
         this.p4.setVisible(true);
+        this.scrollPane4.setVisible(true);
         this.goBack4.setVisible(true);
 
     }
@@ -976,20 +1031,24 @@ private Button goBack1;
         this.closeGroupChat.setVisible(false);
     }
 
-    @FXML
-    private Pane p1;
-
-    @FXML
-    private Pane p2;
-
-    @FXML
-    private Pane p3;
-
-    @FXML
-    private Pane p4;
 
     @FXML
     private ScrollPane groupChat;
+
+    /*
+    @FXML
+    private ScrollPane scrollPane1;
+
+
+    @FXML
+    private ScrollPane scrollPane2;
+
+    @FXML
+    private ScrollPane scrollPane3;
+
+    @FXML
+    private ScrollPane scrollPane4;
+*/
 
     @FXML
     private SplitPane chat;
