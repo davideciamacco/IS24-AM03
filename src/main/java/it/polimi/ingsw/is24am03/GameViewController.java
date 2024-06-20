@@ -820,7 +820,7 @@ private Button goBack1;
         final int CARD_WIDTH = 50;
         final double CARD_HEIGHT = 38.5;
         final double PADDING_X = 39.25;
-        final double PADDING_Y = 20.5;
+        final double PADDING_Y = 22;
         final double LABEL_OFFSET_X = 8; // Ridotto ulteriormente l'offset per i label lungo l'asse X
         final double LABEL_OFFSET_Y = 8; // Ridotto ulteriormente l'offset per i label lungo l'asse Y
 
