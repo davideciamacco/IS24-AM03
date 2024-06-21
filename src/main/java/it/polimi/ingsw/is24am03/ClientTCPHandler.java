@@ -53,28 +53,27 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         }
     }
 
-    public void run(){
+    public void run() {
         Message response;
-        while(active){
+        while (active) {
             try {
                 Message incomingMessage = (Message) inputStream.readObject();
                 response = this.messageParser(incomingMessage);
                 sendMessage(response);
-            }
-            catch(SocketException e){
+            } catch (SocketException e) {
                 //e.printStackTrace();
-                active=false;
-            }
-            catch ( ClassNotFoundException e){
+                active = false;
+            } catch (ClassNotFoundException e) {
                 //e.printStackTrace();
-            }
-            catch (IOException ignored) {
-              //ignored.printStackTrace();
-                active=false;
+            } catch (IOException ignored) {
+                //ignored.printStackTrace();
+                active = false;
             }
         }
-        removeFromObservers();
-        gameController.handleCrashedPlayer(nickname);
+        if (gameController.getGameModel() != null) {
+            removeFromObservers();
+            gameController.handleCrashedPlayer(nickname);
+        }
     }
 
 
