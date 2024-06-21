@@ -232,7 +232,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     public synchronized void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)throws RemoteException{
         commonObjective.add(objectiveCard1);
         commonObjective.add(objectiveCard2);
-      viewInterface.notifyCommonObjective(objectiveCard1,objectiveCard2);
+        viewInterface.notifyCommonObjective(objectiveCard1,objectiveCard2);
     }
 
     @Override
@@ -266,16 +266,12 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         }
         if(index==1 || index==0)
             viewInterface.updateCommonTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
-
-
     }
 
     @Override
     public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
-
         viewInterface.NotifyNumbersOfPlayersReached();
         viewInterface.drawScene(SceneType.GAME);
-
     }
 
     @Override
@@ -321,9 +317,9 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         viewInterface.drawScene(SceneType.GAME);
         viewInterface.updateCommonTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
         viewInterface.notifyCommonObjective(commonObjective.get(0), commonObjective.get(1));
-        viewInterface.NotifyChangePersonalCards(hand);
-        viewInterface.notifyFinalColors(playerscolors, players);
-        viewInterface.notifyChangeState(gameState);
+        this.NotifyChangePersonalCards(this.player,hand);
+        this.notifyFinalColors(playerscolors);
+        this.notifyChangeState(gameState);
         viewInterface.notifyCurrentPlayer(current,boards,player, hand, gameState);
         viewInterface.notifyTurnOrder(this.players);
         viewInterface.notifyChoiceObjective(objectiveCard);

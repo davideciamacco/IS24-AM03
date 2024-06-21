@@ -77,18 +77,25 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
     //metodo per verificare che la selezione della starting card può avere senso
-    public void canSelectStartingFace(String player, String face) throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, ArgumentException{
+    public void canSelectStartingFace(String player, String face) throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, ArgumentException, UnknownPlayerException{
         synchronized (gameLock) {
+            if (gameModel == null)
+                throw new GameNotExistingException();
+            if(!gameModel.extractNicknames().contains(player)){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
+            if(gameModel.extractNicknames().contains(player) && !gameModel.findPlayer(player).getConnected()){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
             if (!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
-            if (gameModel == null)
-                throw new GameNotExistingException();
-
             if (!gameModel.getGameState().equals(State.STARTING))
                 throw new InvalidStateException("Action not allowed in this state");
             if(!face.equals("FRONT") && !face.equals("BACK"))
                 throw new ArgumentException("Face must be 'FRONT' or 'BACK' ");
+            //se il player non esiste all'interno del gioco Unknown player exception
+
 
         }
     }
@@ -109,29 +116,28 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     //metodo per verificare che player può selezionare carta obiettivo
 
 
-    public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException, InvalidStateException {
+    public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException, InvalidStateException, UnknownPlayerException {
         synchronized (gameLock) {
+
+            if (gameModel == null)
+                throw new GameNotExistingException();
+
+            if((!gameModel.extractNicknames().contains(player))|| (gameModel.extractNicknames().contains(player) && !gameModel.findPlayer(player).getConnected())){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
             if (!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
-            if (gameModel == null)
-                throw new GameNotExistingException();
+
             if(!gameModel.getGameState().equals(State.OBJECTIVE))
                 throw new InvalidStateException("Action not allowed in this state");
-            if (choice < 1 || choice > 2) throw new IllegalArgumentException();
+            if (choice < 1 || choice > 2)
+                throw new IllegalArgumentException();
+
         }
     }
           
     public void setObjectiveCard(String player, int choice) {
-      /*  if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
-
-            throw new PlayerNotInTurnException();
-        }
-        if(!gameModel.getGameState().equals(State.OBJECTIVE))
-            throw new InvalidStateException("Action not allowed in this state");
-        if(gameModel == null)
-            throw new GameNotExistingException();
-        if(choice<1 || choice>2) throw new IllegalArgumentException();*/
         synchronized (gameLock) {
             System.out.println("Sto chiamando model");
             gameModel.setObjectiveCard(player, choice);
@@ -150,12 +156,16 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      */
 
     //metodo per verificare che player può pescare da risorse
-    public void canDrawResources(String player) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, EmptyDeckException {
+    public void canDrawResources(String player) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, EmptyDeckException, UnknownPlayerException {
         synchronized (gameLock) {
-            if (!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player))
-                throw new PlayerNotInTurnException();
             if (gameModel == null)
                 throw new GameNotExistingException();
+
+            if((!gameModel.extractNicknames().contains(player))||(gameModel.extractNicknames().contains(player) && !gameModel.findPlayer(player).getConnected())){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
+            if (!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player))
+                throw new PlayerNotInTurnException();
             //if(P.getHand().size()==3) throw new FullHandException();
             if (!gameModel.getGameState().equals(State.DRAWING)){
                 throw new InvalidStateException("Action not allowed in this state");}
@@ -166,18 +176,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
     public void drawResources(String player) /* throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException*/ {
         synchronized (gameLock) {
-           /* if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player))
-                throw new PlayerNotInTurnException();
-            if(gameModel == null)
-                throw new GameNotExistingException();
-            //if(P.getHand().size()==3) throw new FullHandException();
-            if (!gameModel.getGameState().equals(State.DRAWING))
-                throw new InvalidStateException("Action not allowed in this state");*/
                 gameModel.drawResources(player);
-
-            /*} catch (EmptyDeckException e)
-            {}*/
-
         }
     }
 
@@ -192,13 +191,18 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      */
     //metodo per fare check che player possa pescare da gold
 
-    public void canDrawGold(String player)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, EmptyDeckException{
+    public void canDrawGold(String player)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, EmptyDeckException, UnknownPlayerException{
         synchronized (gameLock) {
+
+            if(gameModel == null)
+                throw new GameNotExistingException();
+            if((!gameModel.extractNicknames().contains(player))||(gameModel.extractNicknames().contains(player) && !gameModel.findPlayer(player).getConnected())){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
-            if(gameModel == null)
-                throw new GameNotExistingException();
+
             if (!gameModel.getGameState().equals(State.DRAWING))
                 throw new InvalidStateException("Action not allowed in this state");
             if(gameModel.getGoldDeck().isEmpty()){
@@ -209,23 +213,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
 
 
-    }/*throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException*/
+    }
     public void drawGold(String player) {
             synchronized (gameLock) {
-               /* if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
-                    throw new PlayerNotInTurnException();
-                }
-                if(gameModel == null)
-                    throw new GameNotExistingException();
-                if (!gameModel.getGameState().equals(State.DRAWING))
-                    throw new InvalidStateException("Action not allowed in this state");
-                try {*/
                     gameModel.drawGold(player);
-               /* }
-                catch (EmptyDeckException e)
-                {
-
-                }*/
             }
         }
 
@@ -240,14 +231,19 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * @throws InvalidStateException   if the game state is not suitable for drawing table cards
      */
 
-    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException{
+    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException, UnknownPlayerException{
 
         synchronized (gameLock)
         {
+            if(gameModel == null)
+                throw new GameNotExistingException();
+            if((!gameModel.extractNicknames().contains(player))||(gameModel.extractNicknames().contains(player) && !gameModel.findPlayer(player).getConnected())){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
-            if(gameModel == null) throw new GameNotExistingException();
+            //if(gameModel == null) throw new GameNotExistingException();
             if(choice<1 || choice>4) throw new IllegalArgumentException();
             //if(P.getHand().size()==3) throw new FullHandException();
             if(!gameModel.getGameState().equals(State.DRAWING)) throw new InvalidStateException("");
@@ -263,18 +259,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void drawTable(String player, int choice) /*throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException*/ {
         synchronized (gameLock)
         {
-           /* if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
-                throw new PlayerNotInTurnException();
-            }
-            if(gameModel == null) throw new GameNotExistingException();
-            if(choice<1 || choice>4) throw new IllegalArgumentException();
-            //if(P.getHand().size()==3) throw new FullHandException();
-            if(!gameModel.getGameState().equals(State.DRAWING)) throw new InvalidStateException("");
-            try {*/
                 gameModel.drawTable(player, choice);
-            /*}
-            catch(NullCardSelectedException e){}*/
-
         }
     }
 
@@ -288,7 +273,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void addPlayer(String player, String ConnectionType) throws FullLobbyException, NicknameAlreadyUsedException, IllegalArgumentException, GameNotExistingException {
         synchronized (gameLock)
         {
-            if(gameModel == null) throw new GameNotExistingException();
+            if(gameModel == null)
+                throw new GameNotExistingException();
+
             if(gameModel.getPlayers().size()==gameModel.getNumPlayers()) throw new FullLobbyException();
             if(player.isBlank()) throw new IllegalArgumentException();
             for(Player p: gameModel.getPlayers())
@@ -314,14 +301,19 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     //metodo per vefificare che player possa piazzare
    // public void canPlaceCard(String player, int choice, int i, int j,String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException
-    public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException, ArgumentException {
+    public void placeCard(String player, int choice, int i, int j, String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException, ArgumentException, UnknownPlayerException {
         synchronized (gameLock)
         {
             boolean faceBoolean;
+            if(gameModel == null)
+                throw new GameNotExistingException();
+            if((!gameModel.extractNicknames().contains(player))||(gameModel.extractNicknames().contains(player) && !gameModel.findPlayer(player).getConnected())){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
-            if(gameModel == null) throw new GameNotExistingException();
+
             //      if(P.getHand().size()==0) throw new EmptyHandException();
             if(!gameModel.getGameState().equals(State.PLAYING)) throw new InvalidStateException("Action not allowed in this state");
             if(choice<1 || choice>3) throw new ArgumentException("Choice must be 1/2/3");
@@ -340,12 +332,16 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
     //metodo per verificare che player possa scegliere colore
-    public void canPickColor(String player, String color)throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException, GameNotExistingException,ColorAlreadyPickedException{
+    public void canPickColor(String player, String color)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,ColorAlreadyPickedException, UnknownPlayerException{
         Color chosenColor;
         boolean flag=false;
         synchronized (gameLock)
         {
-            if(gameModel == null) throw new GameNotExistingException();
+            if(gameModel == null)
+                throw new GameNotExistingException();
+            if((!gameModel.extractNicknames().contains(player))||(gameModel.extractNicknames().contains(player) && !gameModel.findPlayer(player).getConnected())){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
             if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
                 throw new PlayerNotInTurnException();
             }
@@ -376,16 +372,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
 
     }
-    public void pickColor(String player, String color) /*throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException, GameNotExistingException*/ {
-        Color chosenColor=Color.RED;
-        //boolean flag=false;
+    public void pickColor(String player, String color)  {
+        Color chosenColor = null;
         synchronized (gameLock)
         {
-            /*if(gameModel == null) throw new GameNotExistingException();
-            if(!gameModel.getPlayers().get(gameModel.getCurrentPlayer()).getNickname().equals(player)) {
-                throw new PlayerNotInTurnException();
-            }
-            if(!gameModel.getGameState().equals(State.COLOR)) throw new InvalidStateException("Action not allowed in this state");*/
             switch(color)
             {
                 case "RED":
@@ -455,7 +445,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void rejoinGame(String nickname) throws InvalidStateException {
+    public void rejoinGame(String nickname) throws InvalidStateException, GameNotExistingException,UnknownPlayerException {
         int check=-1;
         int i=0;
         while(i<gameModel.getPlayers().size() && check==-1) {
@@ -463,14 +453,19 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 check = i;
             i++;
         }
-        if(check==-1)
-            throw new IllegalArgumentException();
+        if(gameModel == null)
+            throw new GameNotExistingException();
+        if(check==-1){
+            throw new UnknownPlayerException("You aren't part of a game");
+        }
+       // if(check==-1)
+            //throw new IllegalArgumentException();
         if(gameModel.getGameState().equals(State.ENDING))
             throw new InvalidStateException("Action not allowed in this state");
         gameModel.getPlayers().get(check).setConnected(true);
-        System.out.println(gameModel.getNumPlayersConnected());
+        //System.out.println(gameModel.getNumPlayersConnected());
         gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected()+1);
-        System.out.println(gameModel.getNumPlayersConnected());
+        //System.out.println(gameModel.getNumPlayersConnected());
         if(gameModel.getNumPlayersConnected()==2)
             stopTimer();
         }
@@ -547,8 +542,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 gameModel.sendGroupMessage(sender, text);
         }
     }
-    public void canSendGroupChat(String sender, String text) throws  BadTextException,InvalidStateException{
+    public void canSendGroupChat(String sender, String text) throws  BadTextException,InvalidStateException, GameNotExistingException,UnknownPlayerException{
         synchronized (chatLock){
+            if(gameModel == null)
+                throw new GameNotExistingException();
+            if((!gameModel.extractNicknames().contains(sender)) || (gameModel.extractNicknames().contains(sender) && !gameModel.findPlayer(sender).getConnected())){
+                throw new UnknownPlayerException("You aren't part of a game");
+            }
             if(gameModel.getGameState()==State.WAITING || gameModel.getGameState()==State.ENDING){
                 throw new InvalidStateException("You cannot send a text during this state");
             }
@@ -564,15 +564,18 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 gameModel.sendPrivateMessage(sender, receiver, text);
         }
     }
-    public void canSendPrivateChat(String sender, String receiver, String text) throws PlayerAbsentException, BadTextException, InvalidStateException, ParametersException{
+    public void canSendPrivateChat(String sender, String receiver, String text) throws PlayerAbsentException, BadTextException, InvalidStateException, ParametersException, GameNotExistingException, UnknownPlayerException{
         //se receiver non è nella chat
-
+        if(gameModel == null)
+            throw new GameNotExistingException();
+        if((!gameModel.extractNicknames().contains(sender))||(gameModel.extractNicknames().contains(sender) && !gameModel.findPlayer(sender).getConnected())){
+            throw new UnknownPlayerException("You aren't part of a game");
+        }
         if(gameModel.getGameState()==State.WAITING || gameModel.getGameState()==State.ENDING){
             throw new InvalidStateException("You cannot send a text during this state");
         }
-        List<String> player= gameModel.getPlayers().stream().filter(Player::getConnected).map(Player::getNickname).toList();
-        player=new ArrayList<>(player);
-        if(!player.contains(receiver)){
+
+        if((!gameModel.extractNicknames().contains(receiver)) || (gameModel.extractNicknames().contains(receiver) && !gameModel.findPlayer(receiver).getConnected())){
             throw new PlayerAbsentException("Receiver isn't part of the game or has crashed");
         }
         if(sender.isEmpty() || receiver.isEmpty() || text.isEmpty()){

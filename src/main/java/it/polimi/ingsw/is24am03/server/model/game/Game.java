@@ -1135,7 +1135,7 @@ public class Game{
         chat=this.chat.getAll(player);
 
         ArrayList<Color> colors = new ArrayList<>();
-        for(Player p: players)
+        for(Player p: getPlayers())
             colors.add(p.getPawncolor());
 
         //devo notificare il sub corrispondente
@@ -1160,4 +1160,13 @@ public class Game{
     public void setTimer(boolean b) {
         timer=b;
     }
+
+    public ArrayList<String> extractNicknames(){
+        ArrayList<String> nicknames=new ArrayList<>();
+        for(int i=0; i<getPlayers().size();i++){
+            nicknames.add(getPlayers().get(i).getNickname());
+        }
+        return nicknames;
+    }
+
 }

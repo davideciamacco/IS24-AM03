@@ -105,7 +105,6 @@ public class GUIView extends Application implements ViewInterface {
             String fxmlPath = "";
             switch (sceneType) {
                 case WAITING -> fxmlPath="/it/polimi/ingsw/is24am03/lobby-view.fxml";
-                case COLOR -> fxmlPath="/it/polimi/ingsw/is24am03/color-view.fxml";
                 case GAME -> fxmlPath="/it/polimi/ingsw/is24am03/game-view.fxml";
 
             }

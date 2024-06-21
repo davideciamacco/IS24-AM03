@@ -15,6 +15,7 @@ import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
+import it.polimi.ingsw.is24am03.server.model.game.Game;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -126,6 +127,9 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         {
             result = false;
             description = "Game not existing";
+        }catch (UnknownPlayerException e){
+            result=false;
+            description=e.getMessage();
         }
         return new ConfirmDrawMessage(result, description);
     }
@@ -141,7 +145,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.rejoinedChief(rejoinGameMessage.getNickname());
 
         }
-        catch(IllegalArgumentException e )
+        catch(UnknownPlayerException e )
         {
             result = false;
             description = "Player not existing";
@@ -149,6 +153,9 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         } catch (InvalidStateException e) {
             result=false;
             description="Action not allowed in this state";
+        } catch (GameNotExistingException e){
+            result=false;
+            description="Game doesn't exist";
         }
 
         return new ConfirmRejoinGameMessage(result, description);
@@ -162,7 +169,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.placeCard(placeCardMessage.getPlayer(),placeCardMessage.getChoice(),placeCardMessage.getI(),placeCardMessage.getJ(),placeCardMessage.getFace());
             result = true;
         }
-        catch (ArgumentException e){
+        catch (ArgumentException | UnknownPlayerException e){
             result=false;
             description= e.getMessage();
         }
@@ -233,6 +240,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
+        catch (UnknownPlayerException e){
+            result=false;
+            description= e.getMessage();
+        }
 
         return new ConfirmChooseObjectiveMessage(result, description);
     }
@@ -269,7 +280,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             if(!joinGameMessage.getHasJoined()) {
                 //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
                     //posso iscrivere il sub al gioco
-
 
                     gameController.addPlayer(joinGameMessage.getNickname(), "TCP");
                     this.nickname= joinGameMessage.getNickname();
@@ -346,6 +356,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
+        catch (UnknownPlayerException e){
+            result=false;
+            description=e.getMessage();
+        }
 
         return new ConfirmPickColorMessage(result, description);
     }
@@ -357,7 +371,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.canSelectStartingFace(chooseStartingMessage.getPlayer(),chooseStartingMessage.getFace());
             gameController.selectStartingFace(chooseStartingMessage.getPlayer(),chooseStartingMessage.getFace());
             result = true;
-
         }
         catch (InvalidStateException e)
         {
@@ -373,7 +386,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description="input not valid";
         }
-        catch (ArgumentException e){
+        catch (ArgumentException | UnknownPlayerException e){
             result=false;
             description=e.getMessage();
         }
@@ -382,9 +395,6 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
-
-
-
         return new ConfirmStartingCardMessage(result, description);
     }
   
@@ -415,6 +425,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description= "Empty deck";
         }
+        catch (UnknownPlayerException e){
+            result=false;
+            description=e.getMessage();
+        }
 
 
         return new ConfirmDrawMessage(result, description);
@@ -442,7 +456,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             result=false;
             description = "Game not existing";
         }
-        catch(EmptyDeckException e){
+        catch(EmptyDeckException | UnknownPlayerException e){
             result=false;
             description=e.getMessage();
         }
@@ -625,7 +639,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.sendGroupText(groupChatMessage.getSender(), groupChatMessage.getText());
             result=true;
 
-        } catch ( BadTextException | InvalidStateException e) {
+        } catch ( BadTextException | GameNotExistingException | UnknownPlayerException | InvalidStateException e) {
             result = false;
             description = description + e.getMessage();
         }
@@ -640,7 +654,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.sendPrivateText(privateChatMessage.getSender(), privateChatMessage.getRecipient(),privateChatMessage.getText());
             result=true;
 
-        }catch (PlayerAbsentException | BadTextException | InvalidStateException | ParametersException e){
+        }catch (GameNotExistingException| UnknownPlayerException |PlayerAbsentException | BadTextException | InvalidStateException | ParametersException e){
 
             result=false;
             description=description+e.getMessage();

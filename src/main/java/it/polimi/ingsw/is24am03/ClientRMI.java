@@ -58,8 +58,8 @@ public class ClientRMI implements Client{
         try {
             clientModel=new ClientModel(nickname,view);
             this.gameController.createGame(nPlayers, nickname, "RMI");
-
-            System.out.println("Game created successfully");
+            //view.drawError("Game created successfully");
+           // System.out.println("Game created successfully");
             this.nickname = nickname;
             this.subscribeToObservers();
             hasJoined=true;
@@ -78,7 +78,8 @@ public class ClientRMI implements Client{
             if(!hasJoined){
                 clientModel=new ClientModel(nickname, view);
                 this.gameController.addPlayer(nickname, "RMI");
-                System.out.println("Joined successfully");
+                view.drawError("Joined successfully");
+                //System.out.println("Joined successfully");
                 hasJoined=true;
                 this.nickname=nickname;
                 this.subscribeToObservers();
@@ -115,24 +116,27 @@ public class ClientRMI implements Client{
     {
         try {
             this.gameController.canPickColor(nickname, color);
-            System.out.println("Color picked successfully");
+            clientModel.printNotifications("Color picked successfully");
+            //System.out.println("Color picked successfully");
             this.gameController.pickColor(nickname,color);
             hasJoined=true;
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid arguments");
+            clientModel.printNotifications("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
-            System.out.println("Not your turn");
+            clientModel.printNotifications("Not your turn");
         } catch (InvalidStateException e){
-            System.out.println("Action not allowed in this state");
+            clientModel.printNotifications("Action not allowed in this state");
         } catch (ColorAlreadyPickedException e) {
-            System.out.println("Color not available");
+            clientModel.printNotifications("Color not available");
         } catch (RemoteException e)
         {
 
         } catch (GameNotExistingException e) {
-            System.out.println("Game not existing");
+            view.drawError("Game not existing");
         }
-
+        catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
+        }
 
         System.out.flush();
     }
@@ -140,21 +144,23 @@ public class ClientRMI implements Client{
     {
         try {
             this.gameController.canSelectStartingFace(nickname,face);
-            System.out.println("Starting card side chosen successfully");
+            clientModel.printNotifications("Starting card side chosen successfully");
             this.gameController.selectStartingFace(nickname,face);
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid arguments");
+            clientModel.printNotifications("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
-            System.out.println("Not your turn");
+            clientModel.printNotifications("Not your turn");
         } catch (InvalidStateException e){
-            System.out.println("Action not allowed in this state");
+            clientModel.printNotifications("Action not allowed in this state");
         } catch (GameNotExistingException e) {
-            System.out.println("GameNotExists exception");
+            view.drawError("Game doesn't exist");
         }catch (ArgumentException e){
-            System.out.println(e.getMessage());
+            view.drawError(e.getMessage());
         } catch (RemoteException e)
         {
 
+        }catch (UnknownPlayerException e){
+            clientModel.printNotifications(e.getMessage());
         }
         System.out.flush();
     }
@@ -174,63 +180,71 @@ public class ClientRMI implements Client{
             this.gameController.placeCard(nickname,choice,i,j,face);
             //System.out.println("Card placed successfully");
         }catch (ArgumentException e){
-            System.out.println(e.getMessage());
+            clientModel.printNotifications("Invalid command");
+        } catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
         }
         catch(PositionOccupiedException e){
-            System.out.println("Position is not empty");
+            clientModel.printNotifications("Position is not empty");
         } catch (CoordinatesOutOfBoundsException e) {
-            System.out.println("Coordinates out of bound");
+            clientModel.printNotifications("Coordinates out of bound");
         } catch (NoCardsAvailableException e){
-            System.out.println("Card can't be placed in these coordinates");
+            clientModel.printNotifications("Card can't be placed in these coordinates");
         } catch (RequirementsNotMetException e){
-            System.out.println("Gold card requirements not satisfied");
+            clientModel.printNotifications("Gold card requirements not satisfied");
         }catch (IllegalArgumentException e) {
-            System.out.println("Invalid arguments");
+            clientModel.printNotifications("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
-            System.out.println("Not your turn");
+            clientModel.printNotifications("Not your turn");
         } catch (InvalidStateException e){
-            System.out.println("Action not allowed in this state");
+            clientModel.printNotifications("Action not allowed in this state");
         } catch (GameNotExistingException e) {
-            System.out.println("GameNotExists exception");
+            view.drawError("GameNotExists exception");
         }catch (RemoteException e){}
         System.out.flush();
     }
     public void DrawGold(){
         try {
             this.gameController.canDrawGold(nickname);
-            System.out.println("Gold card drawn successfully");
+            clientModel.printNotifications("Gold card drawn successfully");
             this.gameController.drawGold(nickname);
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid arguments");
+            clientModel.printNotifications("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
-            System.out.println("Not your turn");
+            clientModel.printNotifications("Not your turn");
         } catch (InvalidStateException e){
-            System.out.println("Action not allowed in this state");
+            clientModel.printNotifications("Action not allowed in this state");
         } catch (GameNotExistingException e) {
-            System.out.println("GameNotExists exception");
+            view.drawError("GameNotExists exception");
         }  catch (EmptyDeckException e) {
-            System.out.println("Empty deck exception");
+            clientModel.printNotifications("Empty deck exception");
         }catch (RemoteException e){
 
+        }
+        catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
         }
         System.out.flush();
     }
     public void DrawResource(){
         try {
             this.gameController.canDrawResources(nickname);
-            System.out.println("Resource card drawn successfully");
+            clientModel.printNotifications("Resource card drawn successfully");
             this.gameController.drawResources(nickname);
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid arguments");
+            clientModel.printNotifications("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
-            System.out.println("Not your turn");
+            clientModel.printNotifications("Not your turn");
         } catch (InvalidStateException e){
-            System.out.println("Action not allowed in this state");
+            clientModel.printNotifications("Action not allowed in this state");
         } catch (GameNotExistingException e) {
-            System.out.println("GameNotExists exception");
+            view.drawError("GameNotExists exception");
         }  catch (EmptyDeckException e) {
-            System.out.println("Empty deck exception");
-        }catch (RemoteException e){
+            clientModel.printNotifications("Empty deck exception");
+        }catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
+        }
+        catch (RemoteException e){
 
         }
         System.out.flush();
@@ -239,18 +253,21 @@ public class ClientRMI implements Client{
     public void DrawTable(int choice){
         try {
             this.gameController.canDrawTable(nickname,choice);
-            System.out.println("Card drawn successfully");
+            clientModel.printNotifications("Card drawn successfully");
             this.gameController.drawTable(nickname,choice);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid arguments");
+        } catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
+        }
+        catch (IllegalArgumentException e) {
+            clientModel.printNotifications("Invalid arguments");
         } catch (PlayerNotInTurnException e) {
-            System.out.println("Not your turn");
+            clientModel.printNotifications("Not your turn");
         } catch (InvalidStateException e){
-            System.out.println("Action not allowed in this state");
+            clientModel.printNotifications("Action not allowed in this state");
         } catch (GameNotExistingException e) {
-            System.out.println("Game not existing exception");
+            view.drawError("Game not existing exception");
         }  catch (NullCardSelectedException e) {
-            System.out.println("NullCardSelectedException exception");
+            clientModel.printNotifications("NullCardSelectedException exception");
         }catch (RemoteException e){
 
         }
@@ -260,18 +277,21 @@ public class ClientRMI implements Client{
     public void ChooseObjectiveCard(int choice){
         try{
             this.gameController.canSetObjectiveCard(nickname, choice);
-            System.out.println("Objective card selected successfully");
+            clientModel.printNotifications("Objective card selected successfully");
             this.gameController.setObjectiveCard(nickname,choice);
         } catch (GameNotExistingException e) {
-            System.out.println("Game not existing");
-        } catch (PlayerNotInTurnException e) {
-            System.out.println("Not your turn");
+            view.drawError("Game not existing");
+        } catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
+        }
+        catch (PlayerNotInTurnException e) {
+            clientModel.printNotifications("Not your turn");
         }
         catch(InvalidStateException e){
-            System.out.println("Action not allowed in this state");
+            clientModel.printNotifications("Action not allowed in this state");
         }
         catch(IllegalArgumentException e){
-            System.out.println("Invalid arguments");
+            clientModel.printNotifications("Invalid arguments");
         } catch(RemoteException e) {
 
         }
@@ -280,25 +300,28 @@ public class ClientRMI implements Client{
     public void RejoinGame(String nickname){
         try{
             if(!hasJoined){
-                clientModel=new ClientModel(nickname, view);
                 this.gameController.rejoinGame(nickname);
-                System.out.println("Rejoined successfully");
+                clientModel=new ClientModel(nickname, view);
+                //clientModel.printNotifications("Rejoined successfully");
                 hasJoined=true;
                 this.nickname=nickname;
                 this.subscribeToObservers();
                 this.gameController.rejoinedChief(nickname);
             }
             else{
-                System.out.println("Already joined");
+                clientModel.printNotifications("Already joined");
             }
         }
-        catch(IllegalArgumentException e){
-            System.out.println("Player not existing");
+        catch(UnknownPlayerException e){
+            view.drawError(e.getMessage());
         }
         catch (RemoteException e){
 
         } catch (InvalidStateException e) {
-            System.out.println("Action not allowed in this state");
+            view.drawError("Action not allowed in this state");
+        }
+        catch (GameNotExistingException e){
+            view.drawError("Game doesn't exist");
         }
     }
 
@@ -306,22 +329,34 @@ public class ClientRMI implements Client{
     public void sendGroupText(String text){
         try {
             this.gameController.canSendGroupChat(this.nickname, text);
-            System.out.println("Group text sent successfully");
+            clientModel.printNotifications("Group text sent successfully");
             this.gameController.sendGroupText(this.nickname, text);
         } catch (BadTextException | InvalidStateException e1) {
-            System.out.println(e1.getMessage());
+            clientModel.printNotifications(e1.getMessage());
         } catch(RemoteException e){}
+        catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
+        }
+        catch (GameNotExistingException e){
+            view.drawError("Game doesn't exist");
+        }
 
 
     }
     public void sendPrivateText(String receiver, String text){
         try{
             this.gameController.canSendPrivateChat(this.nickname, receiver,text);
-            System.out.println("Private text sent successfully");
+            //System.out.println("Private text sent successfully");
             this.gameController.sendPrivateText(this.nickname, receiver,text);
         } catch (BadTextException | InvalidStateException | PlayerAbsentException | ParametersException e) {
-            System.out.println(e.getMessage());
+            clientModel.printNotifications(e.getMessage());
         } catch(RemoteException e){}
+        catch (UnknownPlayerException e){
+            view.drawError(e.getMessage());
+        }
+        catch (GameNotExistingException e){
+            view.drawError("Game doesn't exist");
+        }
     }
 
     private void subscribeToObservers(){
@@ -335,10 +370,12 @@ public class ClientRMI implements Client{
 
     private void removeFromObservers(){
         try {
-            gameController.removeSub((ChatSub) clientModel);
-            gameController.removeSub((PlayerSub) clientModel);
-            gameController.removeSub((PlayerBoardSub) clientModel);
-            gameController.removeSub((GameSub) clientModel);
+            if(clientModel!=null) {
+                gameController.removeSub((ChatSub) clientModel);
+                gameController.removeSub((PlayerSub) clientModel);
+                gameController.removeSub((PlayerBoardSub) clientModel);
+                gameController.removeSub((GameSub) clientModel);
+            }
         }catch (RemoteException e){}
 
     }
