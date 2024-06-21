@@ -579,8 +579,8 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
     }
 
     @Override
-    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table) throws RemoteException {
-        UpdateCrashedPlayerMessage updateCrashedPlayerMessage=new UpdateCrashedPlayerMessage(nickname,chat,gameState,hand,objectiveCard,boards,points,players,objectiveCards,color,table);
+    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table, ArrayList<Color> colors) throws RemoteException {
+        UpdateCrashedPlayerMessage updateCrashedPlayerMessage=new UpdateCrashedPlayerMessage(nickname,chat,gameState,hand,objectiveCard,boards,points,players,objectiveCards,color,table, colors);
         this.sendMessage(updateCrashedPlayerMessage);
     }
 

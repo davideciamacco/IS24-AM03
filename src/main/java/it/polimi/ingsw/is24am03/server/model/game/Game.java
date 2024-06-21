@@ -1134,11 +1134,15 @@ public class Game{
         ArrayList<Text> chat=new ArrayList<>();
         chat=this.chat.getAll(player);
 
+        ArrayList<Color> colors = new ArrayList<>();
+        for(Player p: players)
+            colors.add(p.getPawncolor());
+
         //devo notificare il sub corrispondente
         for(GameSub gameSub:getGameSubs()){
             try{
                 if(gameSub.getSub().equals(player)){
-                    gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table);
+                    gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table, colors);
                 }
             }catch (RemoteException ignored){}
         }

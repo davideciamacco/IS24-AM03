@@ -113,10 +113,6 @@ public class ClientSocket implements Client{
     public void RejoinGame(String player_name){
         RejoinGameMessage rejoinGameMessage = new RejoinGameMessage(player_name);
         this.nickname = player_name;
-        try{
-            clientModel = new ClientModel(player_name, view);
-        }
-        catch(RemoteException e){}
         this.sendMessage(rejoinGameMessage);
     }
 
@@ -322,7 +318,7 @@ public class ClientSocket implements Client{
 
     private void parse(ConfirmRejoinGameMessage response){
         if(!response.getConfirmRejoin()){
-            this.clientModel.printNotifications(response.getDetails());
+            view.drawError(response.getDetails());
         }
 
 
@@ -449,8 +445,12 @@ public class ClientSocket implements Client{
     }
 
     private void parse(UpdateCrashedPlayerMessage updateCrashedPlayerMessage){
+        try{
+            clientModel = new ClientModel(this.nickname, view);
+        }
+        catch(RemoteException e){}
         try {
-            this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColor(), updateCrashedPlayerMessage.getTable());
+            this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColor(), updateCrashedPlayerMessage.getTable(), updateCrashedPlayerMessage.getColors());
         }catch (RemoteException e){}
     }
 
