@@ -231,7 +231,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * @throws InvalidStateException   if the game state is not suitable for drawing table cards
      */
 
-    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException, UnknownPlayerException{
+    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException, UnknownPlayerException, IllegalArgumentException{
 
         synchronized (gameLock)
         {
