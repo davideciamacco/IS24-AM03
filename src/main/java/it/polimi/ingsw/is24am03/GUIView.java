@@ -422,6 +422,15 @@ public class GUIView extends Application implements ViewInterface {
         });
     }
 
+    @Override
+    public void confirmJoin() {
+
+    }
+
+    public void confirmCreate(){
+
+    }
+
     public void drawError(String message){
         showAlert("Error", message);
     }

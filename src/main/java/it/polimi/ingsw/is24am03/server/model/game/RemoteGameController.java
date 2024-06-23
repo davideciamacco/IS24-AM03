@@ -42,7 +42,7 @@ public void canPickColor(String nickname, String color) throws PlayerNotInTurnEx
     public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException, RemoteException, InvalidStateException, UnknownPlayerException;
     public void canDrawResources(String player) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,RemoteException, EmptyDeckException, UnknownPlayerException;
     public void canDrawGold(String player)throws PlayerNotInTurnException,  UnknownPlayerException,InvalidStateException, GameNotExistingException, EmptyDeckException,RemoteException;
-    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, RemoteException, NullCardSelectedException, UnknownPlayerException;
+    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, RemoteException, NullCardSelectedException, UnknownPlayerException, IllegalArgumentException;
    // public void canPlaceCard(String player, int choice, int i, int j,String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException, RemoteException;
 
 public void canSendGroupChat(String sender, String text) throws  BadTextException,InvalidStateException, RemoteException, UnknownPlayerException, GameNotExistingException;

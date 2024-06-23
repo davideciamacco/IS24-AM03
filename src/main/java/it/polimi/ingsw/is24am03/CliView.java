@@ -1325,7 +1325,13 @@ public class CliView implements ViewInterface{
         System.out.print("\n\n");
     }
 
+    public void confirmCreate(){
+        System.out.println("Game created successfully");
+    }
 
+    public void confirmJoin(){
+        System.out.println("Joined successfully");
+    }
 
     public  void  notifyJoinedPlayer(String joinedPlayer){
         System.out.println(joinedPlayer + " has joined the game\n");

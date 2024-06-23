@@ -108,6 +108,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.drawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
             result = true;
         }
+        catch (IllegalArgumentException e){
+            result=false;
+            description="Choice must be 1/2/3/4";
+        }
         catch (NullCardSelectedException e){
             result=false;
             description="Empty place selected";

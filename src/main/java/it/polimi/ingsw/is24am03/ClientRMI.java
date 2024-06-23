@@ -58,7 +58,7 @@ public class ClientRMI implements Client{
         try {
             clientModel=new ClientModel(nickname,view);
             this.gameController.createGame(nPlayers, nickname, "RMI");
-            //view.drawError("Game created successfully");
+            view.confirmCreate();
            // System.out.println("Game created successfully");
             this.nickname = nickname;
             this.subscribeToObservers();
@@ -78,8 +78,7 @@ public class ClientRMI implements Client{
             if(!hasJoined){
                 clientModel=new ClientModel(nickname, view);
                 this.gameController.addPlayer(nickname, "RMI");
-                view.drawError("Joined successfully");
-                //System.out.println("Joined successfully");
+                view.confirmJoin();
                 hasJoined=true;
                 this.nickname=nickname;
                 this.subscribeToObservers();
@@ -116,7 +115,7 @@ public class ClientRMI implements Client{
     {
         try {
             this.gameController.canPickColor(nickname, color);
-            clientModel.printNotifications("Color picked successfully");
+            //clientModel.printNotifications("Color picked successfully");
             //System.out.println("Color picked successfully");
             this.gameController.pickColor(nickname,color);
             hasJoined=true;
@@ -329,7 +328,7 @@ public class ClientRMI implements Client{
     public void sendGroupText(String text){
         try {
             this.gameController.canSendGroupChat(this.nickname, text);
-            clientModel.printNotifications("Group text sent successfully");
+            //clientModel.printNotifications("Group text sent successfully");
             this.gameController.sendGroupText(this.nickname, text);
         } catch (BadTextException | InvalidStateException e1) {
             clientModel.printNotifications(e1.getMessage());

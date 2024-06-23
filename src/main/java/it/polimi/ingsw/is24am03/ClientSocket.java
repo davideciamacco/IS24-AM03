@@ -31,6 +31,8 @@ public class ClientSocket implements Client{
     public void setCLI(ViewInterface cli){
         this.view=cli;
     }
+
+
     public ClientSocket(String ip, int port, ViewInterface view) {
         this.ip = ip;
         this.port = port;
@@ -49,6 +51,7 @@ public class ClientSocket implements Client{
         this.messagesReceiver();
         this.ParserAgent();
     }
+
 
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
@@ -264,7 +267,9 @@ public class ClientSocket implements Client{
             //chiamo metodo sul local model
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
-            view.drawError(message.getDetails());
+            else {
+                view.drawError(message.getDetails());
+            }
         }
         System.out.flush();
     }
@@ -272,7 +277,9 @@ public class ClientSocket implements Client{
         if (!message.getConfirmPlace()) {
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
-            view.drawError(message.getDetails());
+            else {
+                view.drawError(message.getDetails());
+            }
         }
         System.out.flush();
     }
@@ -280,7 +287,7 @@ public class ClientSocket implements Client{
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
             this.nickname = message.getNickname();
-            //System.out.println("Game created successfully");
+            view.confirmCreate();;
             //qui creo il local model
             try {
                 this.clientModel = new ClientModel(this.nickname, view);
@@ -296,7 +303,8 @@ public class ClientSocket implements Client{
         if (!message.getConfirmChoose()){
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
-            view.drawError(message.getDetails());
+            else
+                view.drawError(message.getDetails());
         }
         System.out.flush();
     }
@@ -380,7 +388,7 @@ public class ClientSocket implements Client{
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             hasJoined = true;
-
+            //view.confirmJoin();
             if (this.clientModel == null) {
                 try {
                     //sono qui perchè non ci sono ancora abbastanza giocatori
@@ -405,7 +413,8 @@ public class ClientSocket implements Client{
         if (!message.getConfirmPickColor()){
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
-            view.drawError(message.getDetails());
+            else
+                view.drawError(message.getDetails());
         }
 
         System.out.flush();
@@ -415,7 +424,8 @@ public class ClientSocket implements Client{
         if (!message.getConfirmStarting()){
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
-            view.drawError(message.getDetails());
+            else
+                view.drawError(message.getDetails());
         }
 
         System.out.flush();
@@ -491,7 +501,8 @@ public class ClientSocket implements Client{
         if(!confirmChatMessage.isConfirmChat()){
             if(clientModel!=null)
                 this.clientModel.printNotifications(confirmChatMessage.getDetails());
-            view.drawError(confirmChatMessage.getDetails());
+            else
+                view.drawError(confirmChatMessage.getDetails());
         }
        // System.out.flush();
     }

@@ -56,5 +56,9 @@ public interface ViewInterface {
 
     public void drawError(String message);
 
+    public void confirmJoin();
+
+    public void confirmCreate();
+
     public void printNotifications(String message);
 }
