@@ -335,7 +335,12 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.pickColor(pickColorMessage.getNickname(),pickColorMessage.getColor());
             result = true;
 
-        } catch (ColorAlreadyPickedException e)
+        } catch (IllegalArgumentException e)
+        {
+            result=false;
+            description="Invalid argument";
+        }
+        catch (ColorAlreadyPickedException e)
         {
             result=false;
             description="Color not available";

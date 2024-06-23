@@ -332,7 +332,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
     //metodo per verificare che player possa scegliere colore
-    public void canPickColor(String player, String color)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,ColorAlreadyPickedException, UnknownPlayerException{
+    public void canPickColor(String player, String color)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,ColorAlreadyPickedException, UnknownPlayerException, IllegalArgumentException{
         Color chosenColor;
         boolean flag=false;
         synchronized (gameLock)
