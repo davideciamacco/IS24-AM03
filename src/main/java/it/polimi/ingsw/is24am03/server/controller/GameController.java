@@ -445,7 +445,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void rejoinGame(String nickname) throws InvalidStateException, GameNotExistingException,UnknownPlayerException {
+    public void rejoinGame(String nickname, String ConnectionType) throws InvalidStateException, GameNotExistingException,UnknownPlayerException {
         int check=-1;
         int i=0;
         while(i<gameModel.getPlayers().size() && check==-1) {
@@ -468,6 +468,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         //System.out.println(gameModel.getNumPlayersConnected());
         if(gameModel.getNumPlayersConnected()==2)
             stopTimer();
+        if(ConnectionType.equals("RMI"))
+            heartBeats.add(new Pair<>(nickname, System.currentTimeMillis()));
         }
 
 

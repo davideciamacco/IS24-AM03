@@ -48,7 +48,7 @@ public void canPickColor(String nickname, String color) throws PlayerNotInTurnEx
 public void canSendGroupChat(String sender, String text) throws  BadTextException,InvalidStateException, RemoteException, UnknownPlayerException, GameNotExistingException;
 public void canSendPrivateChat(String sender, String receiver, String text) throws  UnknownPlayerException,GameNotExistingException,PlayerAbsentException, BadTextException, InvalidStateException, ParametersException, RemoteException;
 
-    void rejoinGame(String nickname) throws RemoteException, InvalidStateException, GameNotExistingException, UnknownPlayerException;
+    void rejoinGame(String nickname, String ConnectionType) throws RemoteException, InvalidStateException, GameNotExistingException, UnknownPlayerException;
 
     void setLastHeartBeat(String nickname) throws RemoteException;
 }

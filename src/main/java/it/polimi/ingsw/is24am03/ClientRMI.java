@@ -300,7 +300,7 @@ public class ClientRMI implements Client{
     public void RejoinGame(String nickname){
         try{
             if(!hasJoined){
-                this.gameController.rejoinGame(nickname);
+                this.gameController.rejoinGame(nickname, "RMI");
                 clientModel=new ClientModel(nickname, view);
                 //clientModel.printNotifications("Rejoined successfully");
                 hasJoined=true;

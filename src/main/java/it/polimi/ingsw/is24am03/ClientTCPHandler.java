@@ -137,7 +137,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.rejoinGame(rejoinGameMessage.getNickname());
+            gameController.rejoinGame(rejoinGameMessage.getNickname(), "TCP");
             result = true;
             this.nickname = rejoinGameMessage.getNickname();
             this.subscribeToObservers();
