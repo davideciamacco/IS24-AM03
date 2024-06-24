@@ -22,7 +22,7 @@ public interface RemoteGameController extends Remote{
     public void canSelectStartingFace(String player, String face)throws PlayerNotInTurnException,InvalidStateException,GameNotExistingException, RemoteException,ArgumentException, UnknownPlayerException;
 
     void pickColor(String nickname, String color) throws /*PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException,*/ RemoteException/*, GameNotExistingException*/;
-public void canPickColor(String nickname, String color) throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException, RemoteException, GameNotExistingException, UnknownPlayerException;
+public void canPickColor(String nickname, String color) throws PlayerNotInTurnException, InvalidStateException, ColorAlreadyPickedException, RemoteException, GameNotExistingException, UnknownPlayerException, IllegalArgumentException;
     public void sendPrivateText(String nickname, String receiver, String text) throws RemoteException;
 
     public void sendGroupText(String nickname, String text) throws RemoteException;
@@ -42,13 +42,13 @@ public void canPickColor(String nickname, String color) throws PlayerNotInTurnEx
     public void canSetObjectiveCard(String player, int choice) throws PlayerNotInTurnException, GameNotExistingException, RemoteException, InvalidStateException, UnknownPlayerException;
     public void canDrawResources(String player) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,RemoteException, EmptyDeckException, UnknownPlayerException;
     public void canDrawGold(String player)throws PlayerNotInTurnException,  UnknownPlayerException,InvalidStateException, GameNotExistingException, EmptyDeckException,RemoteException;
-    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, RemoteException, NullCardSelectedException, UnknownPlayerException;
+    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, RemoteException, NullCardSelectedException, UnknownPlayerException, IllegalArgumentException;
    // public void canPlaceCard(String player, int choice, int i, int j,String face) throws PlayerNotInTurnException, InvalidStateException, RemoteException, GameNotExistingException, CoordinatesOutOfBoundsException, NoCardsAvailableException, RequirementsNotMetException, RemoteException;
 
 public void canSendGroupChat(String sender, String text) throws  BadTextException,InvalidStateException, RemoteException, UnknownPlayerException, GameNotExistingException;
 public void canSendPrivateChat(String sender, String receiver, String text) throws  UnknownPlayerException,GameNotExistingException,PlayerAbsentException, BadTextException, InvalidStateException, ParametersException, RemoteException;
 
-    void rejoinGame(String nickname) throws RemoteException, InvalidStateException, GameNotExistingException, UnknownPlayerException;
+    void rejoinGame(String nickname, String ConnectionType) throws RemoteException, InvalidStateException, GameNotExistingException, UnknownPlayerException;
 
     void setLastHeartBeat(String nickname) throws RemoteException;
 }

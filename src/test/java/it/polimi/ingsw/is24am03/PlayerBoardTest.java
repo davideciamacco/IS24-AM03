@@ -41,7 +41,7 @@ class PlayerBoardTest {
         ArrayList<CornerItem> requirementsList2= new ArrayList<CornerItem>();
         requirementsList2.add(CornerItem.INKWELL);
         requirementsList2.add(CornerItem.INKWELL);
-        PlayableCard card2 = new GoldCard(42, "R", 1, empty, empty, empty, empty, null, null, null, null,requirementsList2, 0, CornerItem.INKWELL);
+        ResourceCard card2 = new GoldCard(42, "R", 1, empty, empty, empty, empty, null, null, null, null,requirementsList2, 0, CornerItem.INKWELL);
         playerBoard.getAvailableItems().put(CornerItem.INKWELL, 0);
         assertFalse(playerBoard.checkRequirements(card2.getRequirements()));
         //    playerBoard.placeCard(card2,41,41,true);
@@ -101,7 +101,7 @@ class PlayerBoardTest {
         list.clear();
         playerBoard.placeStartingCard(card2,true);
         assertEquals(card2,playerBoard.getBoard()[40][40]);
-        PlayableCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
+        ResourceCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
         playerBoard.placeCard(card0, 39, 39, true);
     }
     @Test
@@ -127,14 +127,14 @@ class PlayerBoardTest {
         assertEquals(card2,playerBoard.getBoard()[40][40]);
 
 
-        PlayableCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
+        ResourceCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
         playerBoard.placeCard(card0, 41, 41, true);
         assertEquals(card0,playerBoard.getBoard()[41][41]);
         assertEquals(3, player.getPoints());
 
 
         list.add(CornerItem.MANUSCRIPT);
-        PlayableCard card40 = new GoldCard(40,"R",1,notVisible,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL);
+        ResourceCard card40 = new GoldCard(40,"R",1,notVisible,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL);
         list.clear();
         playerBoard.placeCard(card40, 40, 42, true);
         assertEquals(card40,playerBoard.getBoard()[40][42]);
@@ -174,9 +174,9 @@ class PlayerBoardTest {
         list.clear();
         playerBoard.placeStartingCard(card_80,true);
         assertEquals(card_80,playerBoard.getBoard()[40][40]);
-        PlayableCard card_2 = new ResourceCard(2,"R",0,empty, notVisible, fungi, fungi,empty,empty,empty,empty);
-        PlayableCard card_3 = new ResourceCard(3,"R",0,notVisible, fungi, fungi, empty,empty,empty,empty,empty);
-        PlayableCard card_4 = new ResourceCard(4,"R",0,notVisible, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_2 = new ResourceCard(2,"R",0,empty, notVisible, fungi, fungi,empty,empty,empty,empty);
+        ResourceCard card_3 = new ResourceCard(3,"R",0,notVisible, fungi, fungi, empty,empty,empty,empty,empty);
+        ResourceCard card_4 = new ResourceCard(4,"R",0,notVisible, quill, fungi, plant,empty,empty,empty,empty);
         playerBoard.placeCard(card_2,41,41,true);
         assertEquals(card_2,playerBoard.getBoard()[41][41]);
         playerBoard.placeCard(card_3,42,42,true);
@@ -194,11 +194,11 @@ class PlayerBoardTest {
         playerBoard.getBoard()[79][79]=card_81;
         playerBoard.placeStartingCard(card_81,true);
         assertEquals(card_81,playerBoard.getBoard()[79][79]);
-        PlayableCard card_5 = new ResourceCard(2,"R",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        ResourceCard card_5 = new ResourceCard(2,"R",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
 
         playerBoard.placeCard(card_5,80,80,true);
         assertEquals(card_5,playerBoard.getBoard()[80][80]);
-        PlayableCard card_6 = new ResourceCard(2,"R",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        ResourceCard card_6 = new ResourceCard(2,"R",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
         assertThrows(PositionOccupiedException.class, () -> {
             playerBoard.placeCard(card_6,80,80,false);
         });
@@ -235,10 +235,10 @@ class PlayerBoardTest {
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,true);
-        PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
-        PlayableCard card_3 = new ResourceCard(3,"R",0,notVisible, fungi, fungi, empty,empty,empty,empty,empty);
-        PlayableCard card_4 = new ResourceCard(4,"R",0,notVisible, quill, fungi, plant,empty,empty,empty,empty);
-        PlayableCard card_5 = new ResourceCard(4,"R",0,notVisible, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        ResourceCard card_3 = new ResourceCard(3,"R",0,notVisible, fungi, fungi, empty,empty,empty,empty,empty);
+        ResourceCard card_4 = new ResourceCard(4,"R",0,notVisible, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_5 = new ResourceCard(4,"R",0,notVisible, quill, fungi, plant,empty,empty,empty,empty);
         playerBoard.placeCard(card_2,41,41,true);
         playerBoard.placeCard(card_3,42,42,true);
         playerBoard.placeCard(card_4,43,43,true);
@@ -271,10 +271,10 @@ class PlayerBoardTest {
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,true);
-        PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
-        PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
-        PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
-        PlayableCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        ResourceCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
+        ResourceCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
         playerBoard.placeCard(card_2,41,41,true);
         playerBoard.placeCard(card_3,40,42,true);
         playerBoard.placeCard(card_4,39,43,true);
@@ -307,10 +307,10 @@ class PlayerBoardTest {
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,true);
-        PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
-        PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
-        PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
-        PlayableCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        ResourceCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
+        ResourceCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
         playerBoard.placeCard(card_2,39,39,true);
         playerBoard.placeCard(card_3,38,38,true);
         playerBoard.placeCard(card_4,37,39,true);
@@ -343,10 +343,10 @@ class PlayerBoardTest {
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,true);
-        PlayableCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
-        PlayableCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
-        PlayableCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
-        PlayableCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_2 = new ResourceCard(2,"G",0,empty, fungi, fungi, fungi,empty,empty,empty,empty);
+        ResourceCard card_3 = new ResourceCard(3,"R",0,empty, fungi, fungi, empty,empty,empty,empty,empty);
+        ResourceCard card_4 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
+        ResourceCard card_5 = new ResourceCard(4,"R",0,empty, quill, fungi, plant,empty,empty,empty,empty);
         playerBoard.placeCard(card_2,41,39,true);
         playerBoard.placeCard(card_3,42,38,true);
         playerBoard.placeCard(card_4,43,39,true);
@@ -411,7 +411,7 @@ class PlayerBoardTest {
 
 
 
-        PlayableCard card_40 = new GoldCard(40,"R",1,empty,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL);
+        ResourceCard card_40 = new GoldCard(40,"R",1,empty,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL);
 
         playerBoard.placeCard(card_40,41,41,false);
         assertEquals(card_40,playerBoard.getBoard()[41][41]);
@@ -439,7 +439,7 @@ class PlayerBoardTest {
         assertEquals(1,playerBoard.getAvailableItems().get(CornerItem.PLANT));
         assertEquals(1,playerBoard.getAvailableItems().get(CornerItem.ANIMAL));
         assertEquals(1,playerBoard.getAvailableItems().get(CornerItem.INSECT));
-        PlayableCard card_0 = new ResourceCard(0,"R",0,fungi, fungi, notVisible, fungi,empty,empty,empty,empty);
+        ResourceCard card_0 = new ResourceCard(0,"R",0,fungi, fungi, notVisible, fungi,empty,empty,empty,empty);
         playerBoard.placeCard(card_0,41,41,true);
         assertEquals(4,playerBoard.getAvailableItems().get(CornerItem.FUNGI));
         assertEquals(1,playerBoard.getAvailableItems().get(CornerItem.PLANT));
@@ -470,9 +470,9 @@ class PlayerBoardTest {
         playerBoard.placeStartingCard(card_80,true);
         ObjectiveCard card_87 = new Dshaped(87,2,CornerItem.EMPTY,ObjectiveType.PATTERNDIAGONAL,CornerItem.PLANT,0);
         assertEquals(0,card_87.getDirection());
-        PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
-        PlayableCard card_7 = new ResourceCard(7,"G",1,empty, fungi, empty, empty,empty,empty,empty,empty);
-        PlayableCard card_8 = new ResourceCard(8,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
+        ResourceCard card_7 = new ResourceCard(7,"G",1,empty, fungi, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_8 = new ResourceCard(8,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
         playerBoard.placeCard(card_6,39,41,true);
         playerBoard.placeCard(card_7,38,42,true);
         playerBoard.placeCard(card_8,37,43,true);
@@ -501,13 +501,13 @@ class PlayerBoardTest {
         playerBoard.placeStartingCard(card_80,true);
         ObjectiveCard card_87 = new Dshaped(87,2,CornerItem.EMPTY,ObjectiveType.PATTERNDIAGONAL,CornerItem.PLANT,0);
         assertEquals(0,card_87.getDirection());
-        PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
-        PlayableCard card_7 = new ResourceCard(7,"G",1,empty, fungi, empty, empty,empty,empty,empty,empty);
-        PlayableCard card_8 = new ResourceCard(8,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
-        PlayableCard card_9 = new ResourceCard(9,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
-        PlayableCard card_10 = new ResourceCard(10,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
-        PlayableCard card_11 = new ResourceCard(11,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
-        PlayableCard card_12 = new ResourceCard(11,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
+        ResourceCard card_7 = new ResourceCard(7,"G",1,empty, fungi, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_8 = new ResourceCard(8,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_9 = new ResourceCard(9,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_10 = new ResourceCard(10,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_11 = new ResourceCard(11,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_12 = new ResourceCard(11,"G",1,fungi, plant, empty, empty,empty,empty,empty,empty);
         playerBoard.placeCard(card_6,39,41,true);
         playerBoard.placeCard(card_7,38,42,true);
         playerBoard.placeCard(card_8,37,43,true);
@@ -543,9 +543,9 @@ class PlayerBoardTest {
         StartingCard card_80= new StartingCard(80,0,fungi,plant,animal,insect,empty,plant,empty,insect,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,true);
-        PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
+        ResourceCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
         playerBoard.placeCard(card_6,39,41,true);
-        PlayableCard card_7 = new ResourceCard(7,"G",0,empty, fungi, empty, empty,empty,empty,empty,empty);
+        ResourceCard card_7 = new ResourceCard(7,"G",0,empty, fungi, empty, empty,empty,empty,empty,empty);
         playerBoard.placeCard(card_7,40,42,true);
         assertEquals(card_6,playerBoard.getBoard()[39][41]);
         assertEquals(card_7,playerBoard.getBoard()[40][42]);
@@ -554,7 +554,7 @@ class PlayerBoardTest {
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.ANIMAL);
-        PlayableCard card_43 = new GoldCard(43,"R",2,empty,empty,empty,notVisible,empty,empty,empty,empty,list,1,CornerItem.EMPTY);
+        ResourceCard card_43 = new GoldCard(43,"R",2,empty,empty,empty,notVisible,empty,empty,empty,empty,list,1,CornerItem.EMPTY);
         list.clear();
         playerBoard.getAvailableItems().put(CornerItem.FUNGI, 3);
         playerBoard.getAvailableItems().put(CornerItem.ANIMAL, 1);
@@ -580,7 +580,7 @@ class PlayerBoardTest {
         StartingCard card_80= new StartingCard(80,0,fungi,notVisible,animal,insect,notVisible,notVisible,notVisible,notVisible,list);
         list.clear();
         playerBoard.placeStartingCard(card_80,false);
-        PlayableCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
+        ResourceCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
         assertThrows(CornerNotVisibleException.class, () -> {
             // Qui chiamiamo la funzione che dovrebbe lanciare l'eccezione
             playerBoard.placeCard(card_6,39,41,false);
@@ -607,7 +607,7 @@ class PlayerBoardTest {
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);
-        PlayableCard card_47 = new GoldCard(47,"R",3,quill,empty,empty,empty,empty,empty,empty,empty,list,2,CornerItem.EMPTY);
+        ResourceCard card_47 = new GoldCard(47,"R",3,quill,empty,empty,empty,empty,empty,empty,empty,list,2,CornerItem.EMPTY);
         list.clear();
         playerBoard.placeCard(card_47,41,41,true);
 

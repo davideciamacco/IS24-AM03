@@ -53,28 +53,27 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         }
     }
 
-    public void run(){
+    public void run() {
         Message response;
-        while(active){
+        while (active) {
             try {
                 Message incomingMessage = (Message) inputStream.readObject();
                 response = this.messageParser(incomingMessage);
                 sendMessage(response);
-            }
-            catch(SocketException e){
+            } catch (SocketException e) {
                 //e.printStackTrace();
-                active=false;
-            }
-            catch ( ClassNotFoundException e){
+                active = false;
+            } catch (ClassNotFoundException e) {
                 //e.printStackTrace();
-            }
-            catch (IOException ignored) {
-              //ignored.printStackTrace();
-                active=false;
+            } catch (IOException ignored) {
+                //ignored.printStackTrace();
+                active = false;
             }
         }
-        removeFromObservers();
-        gameController.handleCrashedPlayer(nickname);
+        if (gameController.getGameModel() != null) {
+            removeFromObservers();
+            gameController.handleCrashedPlayer(nickname);
+        }
     }
 
 
@@ -109,6 +108,10 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.drawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
             result = true;
         }
+        catch (IllegalArgumentException e){
+            result=false;
+            description="Choice must be 1/2/3/4";
+        }
         catch (NullCardSelectedException e){
             result=false;
             description="Empty place selected";
@@ -138,7 +141,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         boolean result;
         String description = "";
         try {
-            gameController.rejoinGame(rejoinGameMessage.getNickname());
+            gameController.rejoinGame(rejoinGameMessage.getNickname(), "TCP");
             result = true;
             this.nickname = rejoinGameMessage.getNickname();
             this.subscribeToObservers();
@@ -336,7 +339,12 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
             gameController.pickColor(pickColorMessage.getNickname(),pickColorMessage.getColor());
             result = true;
 
-        } catch (ColorAlreadyPickedException e)
+        } catch (IllegalArgumentException e)
+        {
+            result=false;
+            description="Invalid argument";
+        }
+        catch (ColorAlreadyPickedException e)
         {
             result=false;
             description="Color not available";

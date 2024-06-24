@@ -231,7 +231,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * @throws InvalidStateException   if the game state is not suitable for drawing table cards
      */
 
-    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException, UnknownPlayerException{
+    public void canDrawTable(String player, int choice) throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException, NullCardSelectedException, UnknownPlayerException, IllegalArgumentException{
 
         synchronized (gameLock)
         {
@@ -332,7 +332,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
     //metodo per verificare che player possa scegliere colore
-    public void canPickColor(String player, String color)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,ColorAlreadyPickedException, UnknownPlayerException{
+    public void canPickColor(String player, String color)throws PlayerNotInTurnException, InvalidStateException, GameNotExistingException,ColorAlreadyPickedException, UnknownPlayerException, IllegalArgumentException{
         Color chosenColor;
         boolean flag=false;
         synchronized (gameLock)
@@ -445,7 +445,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    public void rejoinGame(String nickname) throws InvalidStateException, GameNotExistingException,UnknownPlayerException {
+    public void rejoinGame(String nickname, String ConnectionType) throws InvalidStateException, GameNotExistingException,UnknownPlayerException {
         int check=-1;
         int i=0;
         while(i<gameModel.getPlayers().size() && check==-1) {
@@ -468,6 +468,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         //System.out.println(gameModel.getNumPlayersConnected());
         if(gameModel.getNumPlayersConnected()==2)
             stopTimer();
+        if(ConnectionType.equals("RMI"))
+            heartBeats.add(new Pair<>(nickname, System.currentTimeMillis()));
         }
 
 

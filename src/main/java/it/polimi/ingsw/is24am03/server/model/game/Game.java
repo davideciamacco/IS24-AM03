@@ -151,33 +151,9 @@ public class Game{
      */
     public void startGame(){
 
-        //stampo i sub di ogni playerboard dei giocatori
 
-    /*    for(Player p: players){
-            System.out.println("Player subs di player" + p.getNickname());
-            for(int i=0; i<p.getPlayerSubs().size(); i++) {
-
-                try{
-                    System.out.println(p.getPlayerSubs().get(i).getSub());
-                }catch (RemoteException ignored){}
-
-            }
-            System.out.println("Playerboard subs di player" + p.getNickname());
-            for(int i=0; i<p.getPlayerBoard().getPlayerBoardSubs().size(); i++){
-                try{
-                    System.out.println(p.getPlayerBoard().getPlayerBoardSubs().get(i).getSub());
-                }catch (RemoteException ignored){}
-            }
-        }*/
         setOrder();
-        //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
-        //l'ultimo player entrato è già iscritto al gioco
-
-        /*for(GameSub gameSub: gameSubs){
-            try {
-                System.out.println(gameSub.getSub());
-            }catch(RemoteException e){}
-        }*/
+ 
         for(GameSub gameSub: gameSubs){
             try{
                 if(gameSub!=null)
@@ -213,7 +189,7 @@ public class Game{
         //DONE
 
         distributeCards();
-        System.out.println("Primo next turn");
+        //System.out.println("Primo next turn");
         nextTurn();
     }
 
@@ -853,7 +829,7 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
-        System.out.println(players.get(currentPlayer).getNickname());
+        //System.out.println(players.get(currentPlayer).getNickname());
 
         while(!players.get(currentPlayer).getConnected() && numPlayersConnected>1) {
             currentPlayer = (currentPlayer + 1) % (numPlayers);
