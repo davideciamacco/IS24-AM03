@@ -36,6 +36,10 @@ public class CliView implements ViewInterface{
                     "|  \\| | / _ \\ | | | | | | |_) |  / _ \\ | |    | |\\___ \\ \n" +
                     "| |\\  |/ ___ \\| | | |_| |  _ <  / ___ \\| |___ | | ___) |\n" +
                     "|_| \\_/_/   \\_\\_|  \\___/|_| \\_\\/_/   \\_\\_____|___|____/ ");
+            System.out.println("\n \n" +
+                    "'CreateGame <number of players> <nickname>' in order to create a game\n" +
+                    "'Join <nickname>' in order to join a game already created\n" +
+                    "'Rejoin <nickname>' in order to rejoin a game you were playing");
             System.out.println(ANSI_RESET);
             ViewInterface view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
 
