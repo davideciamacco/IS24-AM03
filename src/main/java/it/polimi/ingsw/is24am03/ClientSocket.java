@@ -287,7 +287,7 @@ public class ClientSocket implements Client{
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
             this.nickname = message.getNickname();
-            view.confirmCreate();;
+            view.confirmCreate();
             //qui creo il local model
             try {
                 this.clientModel = new ClientModel(this.nickname, view);
@@ -396,7 +396,7 @@ public class ClientSocket implements Client{
                     if (!message.getDetails().isEmpty()) {
                         //significa che il gioco non può ancora iniziare
                         // e devo solo stampare la descrizione positiva
-                        this.clientModel.printNotifications(message.getDetails());
+                        view.confirmJoin();
                     }
                 }catch (RemoteException e){}
 
