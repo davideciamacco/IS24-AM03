@@ -132,7 +132,9 @@ public class ClientSocket implements Client{
                         queueMessages.wait(1);
                     } catch (IOException | ClassNotFoundException | InterruptedException e ) {
                         //e.printStackTrace();
+                        System.out.println("Server disconnected. Closing client...");
                         active = false;
+                        System.exit(0);
                     }
                 }
             }
