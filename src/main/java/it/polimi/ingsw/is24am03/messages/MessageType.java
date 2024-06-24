@@ -8,6 +8,8 @@ public enum MessageType {
     CREATE_GAME,
     CONFIRM_GAME,
 
+
+
     //join game, confirm join, notify joined player
     JOIN_GAME,
     CONFIRM_JOIN,

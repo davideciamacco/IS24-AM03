@@ -1,0 +1,46 @@
+.scroll {
+    -fx-background-image: url("abstract-surface-wood-texture-background.jpg");
+}
+.clicked{
+    -fx-cursor: hand;
+
+}
+.button-blue{
+    -fx-cursor: hand;
+    -fx-background-color:#0000FF ;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
+
+}
+.button-red{
+    -fx-cursor: hand;
+    -fx-background-color: #e70a36;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
+
+
+}
+.button-green{
+    -fx-cursor: hand;
+    -fx-background-color: #1ab924;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
+
+}
+.button-yellow{
+    -fx-cursor: hand;
+    -fx-background-color: #dfe528;
+    -fx-text-fill: #120d0e;
+    -fx-font-size: 31px;
+}
+.borders{
+    -fx-border-color:  #120d0e;
+}
+.button_place{
+    -fx-background-color: #589d70;
+}
+
+.general_fill{
+ -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, #1fffb2 0.0%, #ffffff 100.0%);
+
+}

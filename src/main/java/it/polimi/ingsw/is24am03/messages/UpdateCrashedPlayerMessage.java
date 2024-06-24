@@ -17,6 +17,7 @@ public class UpdateCrashedPlayerMessage extends Message{
     //stringa del giocatore da notificare//
     private String nickname;
 
+    private ArrayList<Color> colors;
     //chat//
     private ArrayList<Text> chat;
 
@@ -85,13 +86,15 @@ public class UpdateCrashedPlayerMessage extends Message{
         return objectiveCards;
     }
 
-
+    public ArrayList<Color> getColors() {
+        return colors;
+    }
 
     public ArrayList<ResourceCard> getTable() {
         return table;
     }
 
-    public UpdateCrashedPlayerMessage(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color  color, ArrayList<ResourceCard> table) {
+    public UpdateCrashedPlayerMessage(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color  color, ArrayList<ResourceCard> table, ArrayList<Color> colors) {
         super(MessageType.UPDATE_CRASHED_PLAYER);
         this.nickname = nickname; // questo può indicare il current player
         this.chat = chat; //
@@ -104,6 +107,7 @@ public class UpdateCrashedPlayerMessage extends Message{
         this.objectiveCards = objectiveCards; //
         this.color = color; //
         this.table = table; //
+        this.colors = colors;
     }
 
 

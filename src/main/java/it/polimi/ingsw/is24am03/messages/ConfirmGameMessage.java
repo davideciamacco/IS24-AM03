@@ -9,21 +9,33 @@ public class ConfirmGameMessage extends ConfirmMessage {
 
     private final Boolean confirmGameCreation;
 
+
+    public String getNickname() {
+        return nickname;
+    }
+
+
+    private final String nickname;
+
     /**
      * Constructor of
+     *
      * @param confirmGameCreation true if the game has been created successfully, false otherwise
-     * @param details details of the error
+     * @param details             details of the error
      */
-    public ConfirmGameMessage(Boolean confirmGameCreation, String details) {
-        super(MessageType.CONFIRM_GAME,details);
+
+    public ConfirmGameMessage(Boolean confirmGameCreation, String details, String nickname) {
+        super(MessageType.CONFIRM_GAME, details);
         this.confirmGameCreation = confirmGameCreation;
+        this.nickname = nickname;
     }
 
     /**
-     *
      * @return the result of the GameCreation
      */
     public Boolean getConfirmGameCreation() {
         return confirmGameCreation;
     }
+
+
 }

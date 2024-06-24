@@ -7,11 +7,11 @@ public class ConfirmChatMessage extends ConfirmMessage{
     private static final long serialVersionUID= -4956149756751739581L;
 
 
-    public boolean isConfirmChat() {
+    public Boolean isConfirmChat() {
         return confirmChat;
     }
 
-    private boolean confirmChat;
+    private Boolean confirmChat;
 
     public ConfirmChatMessage(Boolean confirmChat, String details){
         super(MessageType.CONFIRM_CHAT, details);

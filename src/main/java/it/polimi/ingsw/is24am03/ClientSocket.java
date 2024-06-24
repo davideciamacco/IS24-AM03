@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is24am03;
 import it.polimi.ingsw.is24am03.messages.*;
+import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,11 +22,18 @@ public class ClientSocket implements Client{
     private final ObjectInputStream inputStream;
     private final Queue<Message> queueMessages;
     private final ExecutorService threadManager;
-    private final CliView view;
+    private  ViewInterface view;
 
     private String nickname;
+    public void setGUI(ViewInterface gui){
+        this.view=gui;
+    }
+    public void setCLI(ViewInterface cli){
+        this.view=cli;
+    }
 
-    public ClientSocket(String ip, int port, CliView view) {
+
+    public ClientSocket(String ip, int port, ViewInterface view) {
         this.ip = ip;
         this.port = port;
         this.queueMessages = new ArrayDeque<>();
@@ -43,25 +52,16 @@ public class ClientSocket implements Client{
         this.ParserAgent();
     }
 
+
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
         this.nickname=nickname;
-        try{
-            clientModel = new ClientModel(nickname, view);
-        }
-        catch(RemoteException e){
-
-        }
         this.sendMessage(requestMessage);
     }
 
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
         this.nickname = nickname;
-        try{
-        clientModel = new ClientModel(nickname, view);
-        }
-        catch(RemoteException e){}
         this.sendMessage(joinMessage);
     }
 
@@ -116,10 +116,6 @@ public class ClientSocket implements Client{
     public void RejoinGame(String player_name){
         RejoinGameMessage rejoinGameMessage = new RejoinGameMessage(player_name);
         this.nickname = player_name;
-        try{
-            clientModel = new ClientModel(player_name, view);
-        }
-        catch(RemoteException e){}
         this.sendMessage(rejoinGameMessage);
     }
 
@@ -135,7 +131,7 @@ public class ClientSocket implements Client{
                         queueMessages.notifyAll();
                         queueMessages.wait(1);
                     } catch (IOException | ClassNotFoundException | InterruptedException e ) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         active = false;
                     }
                 }
@@ -177,7 +173,8 @@ public class ClientSocket implements Client{
             case CONFIRM_DRAW -> this.parse((ConfirmDrawMessage) responseMessage);
             case CONFIRM_REJOIN -> this.parse((ConfirmRejoinGameMessage) responseMessage);
 
-            ///////
+            case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
+
 
             //MESSAGGI UPDATE DEL GIOCO (INTESO COME COMMON TABLE, STATI ETC)
             //TUTTI I MESSAGGI DI UPDATE DI GAME SONO BROADCAST
@@ -192,7 +189,6 @@ public class ClientSocket implements Client{
             case GAME_STATE-> this.parse((ChangeStateMessage) responseMessage);
             //questo notifica a quelli in gioco che un certo player è crashato
             case NOTIFY_CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
-
             //MESSAGGI DI UPDATE RIGUARDANTI UN GIOCATORE
 
             //BROADCAST MESSAGE//
@@ -211,7 +207,7 @@ public class ClientSocket implements Client{
             //CHAT//
             case GROUP_CHAT-> this.parse((GroupChatMessage) responseMessage);
             case PRIVATE_CHAT-> this.parse((PrivateChatMessage) responseMessage);
-            case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
+
 
             case FIRST_COMMON -> this.parse((StartingCommonMessage)responseMessage);
             case AVAILABLE_COLORS -> this.parse((AvailableColorMessage) responseMessage);
@@ -224,6 +220,7 @@ public class ClientSocket implements Client{
     }
 
     //TUTTE LE NOTIFICHE DI UPDATE VERRANNO POI GESTITE CON METODI CHIAMATI SUL LOCAL MODEL /
+
 
     private void parse(LastRoundMessage lastRoundMessage){
         try{
@@ -248,50 +245,71 @@ public class ClientSocket implements Client{
     }
 
     private void parse(NotifyNumPlayersReachedMessage response){
-        try
-        {
-            this.clientModel.NotifyNumbersOfPlayersReached();
-        }catch(RemoteException e){}
+        if(this.clientModel==null) {
+            try {
+                clientModel = new ClientModel(this.nickname, view);
+                this.clientModel.NotifyNumbersOfPlayersReached();
+                //qui notifico il giocatore che è avvenuto il suo join
+                //this.clientModel.printNotifications();
+            } catch (RemoteException e) {
+            }
+        }
+        else {
+            try {
+                this.clientModel.NotifyNumbersOfPlayersReached();
+            } catch (RemoteException e) {
+            }
+        }
     }
 
     private void parse(ConfirmDrawMessage message) {
-        if (message.getconfirmdraw()){
-            System.out.println("Card drawn successfully");
+        if (!message.getconfirmdraw()) {
+            //chiamo metodo sul local model
+            if(clientModel!=null)
+                this.clientModel.printNotifications(message.getDetails());
+            else {
+                view.drawError(message.getDetails());
+            }
         }
-        else
-            System.out.println(message.getDetails());
         System.out.flush();
     }
     private void parse(ConfirmPlaceMessage message) {
         if (!message.getConfirmPlace()) {
-            System.out.println(message.getDetails());
+            if(clientModel!=null)
+                this.clientModel.printNotifications(message.getDetails());
+            else {
+                view.drawError(message.getDetails());
+            }
         }
         System.out.flush();
     }
 
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
-            this.nickname = nickname;
-            System.out.println("Game created successfully");
+            this.nickname = message.getNickname();
+            view.confirmCreate();
             //qui creo il local model
-            /*try {
+            try {
                 this.clientModel = new ClientModel(this.nickname, view);
-            }catch (RemoteException e){}*/
+                //clientModel.printNotifications("Game created successfully");
+            }catch (RemoteException e){}
             hasJoined = true;
         }
         else
-            System.out.println(message.getDetails());
+            view.drawError(message.getDetails());
         System.out.flush();
     }
     private void parse(ConfirmChooseObjectiveMessage message) {
-        if (message.getConfirmChoose()){
-            System.out.println("Objective card selected successfully");
+        if (!message.getConfirmChoose()){
+            if(clientModel!=null)
+                this.clientModel.printNotifications(message.getDetails());
+            else
+                view.drawError(message.getDetails());
         }
-        else
-            System.out.println(message.getDetails());
         System.out.flush();
     }
     private void parse(NotifyCommonTableMessage message) {
+
         try {
             this.clientModel.updateCommonTable(message.getResourceCard(), message.getIndex());
         }catch (RemoteException e){}
@@ -312,10 +330,10 @@ public class ClientSocket implements Client{
     }
 
     private void parse(ConfirmRejoinGameMessage response){
-        if(response.getConfirmRejoin())
-            System.out.println("Rejoined successfully");
-        else
-            System.out.println(response.getDetails());
+        if(!response.getConfirmRejoin()){
+            view.drawError(response.getDetails());
+        }
+
     }
 
     private void parse(JoinedPlayerMessage response){
@@ -363,39 +381,53 @@ public class ClientSocket implements Client{
         try {
             this.clientModel.notifyCrashedPlayer(response.getPlayer());
         } catch (RemoteException ignored) {
-            //System.out.println("Crashato");
         }
     }
 
 
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
-            System.out.println("Joined successfully");
-
             hasJoined = true;
+            //view.confirmJoin();
+            if (this.clientModel == null) {
+                try {
+                    //sono qui perchè non ci sono ancora abbastanza giocatori
+                    this.clientModel = new ClientModel(message.getNickname(), view);
+                    if (!message.getDetails().isEmpty()) {
+                        //significa che il gioco non può ancora iniziare
+                        // e devo solo stampare la descrizione positiva
+                        view.confirmJoin();
+                    }
+                }catch (RemoteException e){}
+
+            }
         }
         else{
-            clientModel=null;
-            System.out.println(message.getDetails());
+            view.drawError(message.getDetails());
+
         }
         System.out.flush();
     }
 
     private void parse(ConfirmPickColorMessage message) {
-        if (message.getConfirmPickColor()){
-            System.out.println("Color picked successfully");
+        if (!message.getConfirmPickColor()){
+            if(clientModel!=null)
+                this.clientModel.printNotifications(message.getDetails());
+            else
+                view.drawError(message.getDetails());
         }
-        else
-            System.out.println(message.getDetails());
+
         System.out.flush();
     }
 
     private void parse(ConfirmStartingCardMessage message) {
-        if (message.getConfirmStarting()){
-            System.out.println("Starting card side chosen successfully");
+        if (!message.getConfirmStarting()){
+            if(clientModel!=null)
+                this.clientModel.printNotifications(message.getDetails());
+            else
+                view.drawError(message.getDetails());
         }
-        else
-            System.out.println(message.getDetails());
+
         System.out.flush();
     }
 
@@ -417,7 +449,6 @@ public class ClientSocket implements Client{
 
     private void parse(ChoiceObjectiveMessage choiceObjectiveMessage){
         try {
-            System.out.println("you chose objective\n");
             this.clientModel.notifyChoiceObjective(choiceObjectiveMessage.getPlayer(), choiceObjectiveMessage.getObjectiveCard());
         } catch (RemoteException e) {
 
@@ -433,9 +464,13 @@ public class ClientSocket implements Client{
     }
 
     private void parse(UpdateCrashedPlayerMessage updateCrashedPlayerMessage){
-        try {
-            this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColor(), updateCrashedPlayerMessage.getTable());
-        }catch (RemoteException e){}
+        try{
+            clientModel = new ClientModel(this.nickname, view);
+            this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColor(), updateCrashedPlayerMessage.getTable(), updateCrashedPlayerMessage.getColors());
+
+        }
+        catch(RemoteException e){}
+
     }
 
     private void parse(PlayerBoardMessage playerBoardMessage){
@@ -463,13 +498,13 @@ public class ClientSocket implements Client{
     }
 
     private void parse(ConfirmChatMessage confirmChatMessage){
-        if(confirmChatMessage.isConfirmChat()){
-            System.out.println("Message sent correctly");
+        if(!confirmChatMessage.isConfirmChat()){
+            if(clientModel!=null)
+                this.clientModel.printNotifications(confirmChatMessage.getDetails());
+            else
+                view.drawError(confirmChatMessage.getDetails());
         }
-        else{
-            System.out.println(confirmChatMessage.getDetails());
-        }
-        System.out.flush();
+       // System.out.flush();
     }
 
     private void sendMessage(Message message) {

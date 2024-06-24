@@ -9,6 +9,7 @@ import java.io.Serializable;
 public abstract class Message implements Serializable {
     private final MessageType messageType;
 
+
     /**
      * Constructor of a Message
      * @param messageType type of the message

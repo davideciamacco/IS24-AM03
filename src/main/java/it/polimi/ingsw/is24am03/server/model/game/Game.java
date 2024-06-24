@@ -150,13 +150,14 @@ public class Game{
      * initializes the common objective cards, shuffles the decks and reveals the first four cards on the table
      */
     public void startGame(){
-        setOrder();
-        //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
-        //l'ultimo player entrato è già iscritto al gioco
 
+
+        setOrder();
+ 
         for(GameSub gameSub: gameSubs){
             try{
-                gameSub.NotifyNumbersOfPlayersReached();
+                if(gameSub!=null)
+                    gameSub.NotifyNumbersOfPlayersReached();
             }catch (RemoteException ignored){}
         }
         //notify turn order//
@@ -167,7 +168,8 @@ public class Game{
         this.gameState = State.STARTING;
         for (GameSub gameSub : gameSubs) {
             try {
-                gameSub.notifyChangeState(gameState);
+                if(gameSub!=null)
+                    gameSub.notifyChangeState(gameState);
             } catch (RemoteException ignored) {
             }
         }
@@ -187,7 +189,7 @@ public class Game{
         //DONE
 
         distributeCards();
-        System.out.println("Primo next turn");
+        //System.out.println("Primo next turn");
         nextTurn();
     }
 
@@ -209,7 +211,8 @@ public class Game{
             //NOTIFY ON CHANGE STATE
             for (GameSub gameSub : gameSubs) {
                 try {
-                    gameSub.notifyChangeState(gameState);
+                    if(gameSub!=null)
+                        gameSub.notifyChangeState(gameState);
                 } catch (RemoteException ignored) {
                 }
             }
@@ -221,7 +224,8 @@ public class Game{
             //NOTIFY ON WINNERS//
             for (GameSub gameSub : gameSubs) {
                 try {
-                    gameSub.notifyWinners(def);
+                    if(gameSub!=null)
+                        gameSub.notifyWinners(def);
                 } catch (RemoteException ignored) {
                 }
             }
@@ -390,7 +394,7 @@ public class Game{
             try {
                 findSub(player).NotifyChangePersonalCards(player, p.getHand());
             } catch (RemoteException ignored) {
-                System.out.println("Errore 1");
+                //System.out.println("Errore 1");
             }
         }
 
@@ -400,7 +404,7 @@ public class Game{
                 try {
                     gameSub.updateCommonTable(null,0);
                 } catch (RemoteException ignored) {
-                    System.out.println("Errore 2");
+                    //System.out.println("Errore 2");
                 }
             }
         }
@@ -411,7 +415,7 @@ public class Game{
                 try {
                     gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
                 }catch (RemoteException ignored){
-                    System.out.println("Errore 3");
+                    //System.out.println("Errore 3");
                 }
             }
         }
@@ -612,9 +616,9 @@ public class Game{
             for(GameSub gameSub: gameSubs){
                 try {
                     if(deck==0)
-                        gameSub.updateCommonTable(resourceDeck.getCards().getFirst(), deck);
+                        gameSub.updateCommonTable(resourceDeck.getCards().get(0), deck);
                     else
-                        gameSub.updateCommonTable(goldDeck.getCards().getFirst(), deck);
+                        gameSub.updateCommonTable(goldDeck.getCards().get(0), deck);
 
                 }catch (RemoteException ignored){}
             }
@@ -654,9 +658,12 @@ public class Game{
         if(!lastRound) {
             this.gameState = State.DRAWING;
             //notifico a tutti il cambiamento dello stato
+
+            //notifico anche del current player
             for (GameSub gameSub : gameSubs) {
                 try {
                     gameSub.notifyChangeState(gameState);
+                    gameSub.notifyCurrentPlayer(players.get(currentPlayer).getNickname());
                 } catch (RemoteException ignored) {
                 }
             }
@@ -766,7 +773,7 @@ public class Game{
                 }
                 //notifico solo al primo client i colori disponibili, ovvero tutti i colori
                 try {
-                    findSub(players.getFirst()).notifyAvailableColors(availableColors);
+                    findSub(players.get(0)).notifyAvailableColors(availableColors);
                 }catch (RemoteException ignored){}
             }
             else if(gameState.equals(State.COLOR)) {
@@ -811,6 +818,7 @@ public class Game{
             }
 
         }
+        //se sono qua o sono all'inizio oppure non sono ancora all'ultimo giocatore
         if(gameState.equals(State.DRAWING)) {
             gameState = State.PLAYING;
             for (GameSub gameSub : gameSubs) {
@@ -821,6 +829,7 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
+        //System.out.println(players.get(currentPlayer).getNickname());
 
         while(!players.get(currentPlayer).getConnected() && numPlayersConnected>1) {
             currentPlayer = (currentPlayer + 1) % (numPlayers);
@@ -891,6 +900,7 @@ public class Game{
         gameSubs.remove(gameSub);
     }
     public void addSub(PlayerSub playerSub){
+        //qui aggiungo il seconod player al primo e a se stesso
         for(Player p: getPlayers()){
             p.getPlayerSubs().add(playerSub);
 
@@ -898,9 +908,10 @@ public class Game{
         //caso in cui io sia all'inizio della partita
         if(gameState==State.WAITING){
             for(int i=0; i<players.size()-1;i++){
-                PlayerSub first = players.get(i).getPlayerSubs().get(i);
+                PlayerSub first = players.get(i).getPlayerSubs().get(0);
                 players.get(players.size()-1).getPlayerSubs().add(first);
             }
+
         }
         /*else{
             for(Player p: players){
@@ -921,14 +932,19 @@ public class Game{
         chat.getChatSubs().remove(chatSub);
     }
     public void addSub(PlayerBoardSub playerBoardSub){
+        //qui iscrivo l'ultimo giocatore alle board degli altri già entrati
         for(Player p: getPlayers()){
             p.getPlayerBoard().getPlayerBoardSubs().add(playerBoardSub);
         }
+
+        //devo iscrivere i giocatori già in gioco alla board dell'ultimo entrato
         //ho ottenuto il sub della playerboard del primo giocatore
+
+        //game state è uguale a starting
         if(gameState==State.WAITING) {
             //DEVO ISCRIVERE I GIOCATORI ALLA LISTA DI PLAYER DAL PRIMO A PLAYER-1
             for(int i=0; i<players.size()-1;i++){
-                PlayerBoardSub first = players.get(i).getPlayerBoard().getPlayerBoardSubs().get(i);
+                PlayerBoardSub first = players.get(i).getPlayerBoard().getPlayerBoardSubs().get(0);
                 players.get(players.size()-1).getPlayerBoard().getPlayerBoardSubs().add(first);
             }
 
@@ -1098,11 +1114,15 @@ public class Game{
         ArrayList<Text> chat=new ArrayList<>();
         chat=this.chat.getAll(player);
 
+        ArrayList<Color> colors = new ArrayList<>();
+        for(Player p: getPlayers())
+            colors.add(p.getPawncolor());
+
         //devo notificare il sub corrispondente
         for(GameSub gameSub:getGameSubs()){
             try{
                 if(gameSub.getSub().equals(player)){
-                    gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table);
+                    gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table, colors);
                 }
             }catch (RemoteException ignored){}
         }
@@ -1120,4 +1140,13 @@ public class Game{
     public void setTimer(boolean b) {
         timer=b;
     }
+
+    public ArrayList<String> extractNicknames(){
+        ArrayList<String> nicknames=new ArrayList<>();
+        for(int i=0; i<getPlayers().size();i++){
+            nicknames.add(getPlayers().get(i).getNickname());
+        }
+        return nicknames;
+    }
+
 }
