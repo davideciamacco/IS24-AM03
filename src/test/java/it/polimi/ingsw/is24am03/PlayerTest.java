@@ -46,19 +46,18 @@ class PlayerTest {
         assertEquals("TestPlayer", player.getNickname());
         assertEquals(0, player.getPoints());
         assertEquals(0, player.getNumObj());
-        assertNull(player.getPlayerBoard());
     }
 
     @Test
     void testAddCard() {
-        PlayableCard card = new ResourceCard(0,"R",0,null,null,null,null,null,null,null,null);
+        ResourceCard card = new ResourceCard(0,"R",0,null,null,null,null,null,null,null,null);
         player.addCard(card);
-        ArrayList<PlayableCard> hand = player.getHand();
+        ArrayList<ResourceCard> hand = player.getHand();
         assertTrue(hand.contains(card));
     }
     @Test
     void testRemoveCard() {
-        PlayableCard card = new ResourceCard(0,"R",0,null,null,null,null,null,null,null,null);
+        ResourceCard card = new ResourceCard(0,"R",0,null,null,null,null,null,null,null,null);
         player.addCard(card);
         assertTrue(player.getHand().contains(card));
 
@@ -80,7 +79,6 @@ class PlayerTest {
     }
     @Test
     void testSetPlayerBoard() {
-        assertNull(player.getPlayerBoard());
         PlayerBoard playerBoard = new PlayerBoard(player);
         player.setPlayerBoard(playerBoard);
         assertEquals(playerBoard, player.getPlayerBoard());

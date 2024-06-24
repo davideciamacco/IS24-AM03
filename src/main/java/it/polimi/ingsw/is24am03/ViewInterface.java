@@ -31,7 +31,7 @@ public interface ViewInterface {
 
     public  void  notifyJoinedPlayer(String joinedPlayer);
     public void notifyWinners(ArrayList<String> winners);
-    public void  notifyTurnOrder(ArrayList<String> order);
+    public void  notifyTurnOrder(ArrayList<String> order, String player);
     public void notifyCurrentPlayer(String current, Map<String,PlayableCard[][]> boards, String player, ArrayList<ResourceCard> hand, State gamestate);
     public void notifyCrashedPlayer(String username);
     public void notifyChangeState(State gameState);
@@ -47,12 +47,23 @@ public interface ViewInterface {
     public void NotifyLastRound();
     public void notifyAvailableColors(ArrayList<Color> colors);
 
+
     public void notifyFinalColors(Map<String, Color> colors, ArrayList<String> players);
     public void drawFinalColors(Map<String,Color> colors, ArrayList<String> players);
     public void UpdateCrashedPlayer(String nickname, String player, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table);
     public void UpdateFirst(Map<String,Integer> points, ArrayList<ResourceCard> commons);
     public void addGroupText(ArrayList<Text> chat, String player);
     public void drawChat(ArrayList<Text> chat, String player);
+
+    public void drawError(String message);
+
+
+    public void restoreChat(ArrayList<Text> chat, String player);
+
+    public void confirmJoin();
+
+    public void confirmCreate();
+
 
     public void printNotifications(String message);
 }

@@ -1,4 +1,6 @@
 package it.polimi.ingsw.is24am03;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 public abstract class GUIController {
@@ -23,5 +25,14 @@ public abstract class GUIController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void showAlert(String title, String content) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setContentText(content);
+            alert.showAndWait();
+        });
     }
 }

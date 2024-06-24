@@ -92,7 +92,7 @@ public class Chat {
     public ArrayList<Text> getAll(String player){
         ArrayList<Text> mex=new ArrayList<>();
         for(Text t: getTexts()){
-          if(t.getRecipient()==null || t.getRecipient().equals(player)){
+          if(t.getRecipient()==null || t.getRecipient().equals(player) || (t.getSender().equals(player) && t.getRecipient()!=null)){
              mex.add(0,t);
           }
         }

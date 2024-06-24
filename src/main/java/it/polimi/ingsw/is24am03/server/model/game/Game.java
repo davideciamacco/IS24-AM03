@@ -151,35 +151,12 @@ public class Game{
      */
     public void startGame(){
 
-        //stampo i sub di ogni playerboard dei giocatori
 
-        for(Player p: players){
-            System.out.println("Player subs di player" + p.getNickname());
-            for(int i=0; i<p.getPlayerSubs().size(); i++) {
-
-                try{
-                    System.out.println(p.getPlayerSubs().get(i).getSub());
-                }catch (RemoteException ignored){}
-
-            }
-            System.out.println("Playerboard subs di player" + p.getNickname());
-            for(int i=0; i<p.getPlayerBoard().getPlayerBoardSubs().size(); i++){
-                try{
-                    System.out.println(p.getPlayerBoard().getPlayerBoardSubs().get(i).getSub());
-                }catch (RemoteException ignored){}
-            }
-        }
         setOrder();
-        //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
-        //l'ultimo player entrato è già iscritto al gioco
-
-        for(GameSub gameSub: gameSubs){
-            try {
-                System.out.println(gameSub.getSub());
-            }catch(RemoteException e){}
-        }
+ 
         for(GameSub gameSub: gameSubs){
             try{
+                if(gameSub!=null)
                     gameSub.NotifyNumbersOfPlayersReached();
             }catch (RemoteException ignored){}
         }
@@ -191,7 +168,8 @@ public class Game{
         this.gameState = State.STARTING;
         for (GameSub gameSub : gameSubs) {
             try {
-                gameSub.notifyChangeState(gameState);
+                if(gameSub!=null)
+                    gameSub.notifyChangeState(gameState);
             } catch (RemoteException ignored) {
             }
         }
@@ -211,7 +189,7 @@ public class Game{
         //DONE
 
         distributeCards();
-        System.out.println("Primo next turn");
+        //System.out.println("Primo next turn");
         nextTurn();
     }
 
@@ -233,7 +211,8 @@ public class Game{
             //NOTIFY ON CHANGE STATE
             for (GameSub gameSub : gameSubs) {
                 try {
-                    gameSub.notifyChangeState(gameState);
+                    if(gameSub!=null)
+                        gameSub.notifyChangeState(gameState);
                 } catch (RemoteException ignored) {
                 }
             }
@@ -245,7 +224,8 @@ public class Game{
             //NOTIFY ON WINNERS//
             for (GameSub gameSub : gameSubs) {
                 try {
-                    gameSub.notifyWinners(def);
+                    if(gameSub!=null)
+                        gameSub.notifyWinners(def);
                 } catch (RemoteException ignored) {
                 }
             }
@@ -849,7 +829,7 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
-        System.out.println(players.get(currentPlayer).getNickname());
+        //System.out.println(players.get(currentPlayer).getNickname());
 
         while(!players.get(currentPlayer).getConnected() && numPlayersConnected>1) {
             currentPlayer = (currentPlayer + 1) % (numPlayers);
@@ -1134,11 +1114,15 @@ public class Game{
         ArrayList<Text> chat=new ArrayList<>();
         chat=this.chat.getAll(player);
 
+        ArrayList<Color> colors = new ArrayList<>();
+        for(Player p: getPlayers())
+            colors.add(p.getPawncolor());
+
         //devo notificare il sub corrispondente
         for(GameSub gameSub:getGameSubs()){
             try{
                 if(gameSub.getSub().equals(player)){
-                    gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table);
+                    gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table, colors);
                 }
             }catch (RemoteException ignored){}
         }
@@ -1156,4 +1140,13 @@ public class Game{
     public void setTimer(boolean b) {
         timer=b;
     }
+
+    public ArrayList<String> extractNicknames(){
+        ArrayList<String> nicknames=new ArrayList<>();
+        for(int i=0; i<getPlayers().size();i++){
+            nicknames.add(getPlayers().get(i).getNickname());
+        }
+        return nicknames;
+    }
+
 }

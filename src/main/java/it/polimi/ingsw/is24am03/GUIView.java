@@ -105,7 +105,6 @@ public class GUIView extends Application implements ViewInterface {
             String fxmlPath = "";
             switch (sceneType) {
                 case WAITING -> fxmlPath="/it/polimi/ingsw/is24am03/lobby-view.fxml";
-                case COLOR -> fxmlPath="/it/polimi/ingsw/is24am03/color-view.fxml";
                 case GAME -> fxmlPath="/it/polimi/ingsw/is24am03/game-view.fxml";
 
             }
@@ -127,24 +126,28 @@ public class GUIView extends Application implements ViewInterface {
         });
     }
 
+    @Override
+    public void drawBoard(PlayableCard[][] playableCards) {
+
+    }
+
    /* @Override
     public void notify(String s) {
 
     }*/
 
-    @Override
-    public void drawBoard(PlayableCard[][] playableCards) {
-      /*  Platform.runLater(()->{
+
+    public void drawBoard(PlayableCard[][] playableCards, String player) {
+        Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
-            gameViewController.drawHand(hand);
-        });*/
+            gameViewController.drawBoard(playableCards,player);
+        });
     }
 
 
 
     @Override
     public void drawHand(ArrayList<ResourceCard> hand) {
-
        //posso passare a game view controller la lista delle carte/ids, tanto dovrà disegnarle sia fronte che retro
     Platform.runLater(()->{
         GameViewController gameViewController=fxmlLoader.getController();
@@ -202,11 +205,18 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyWinners(ArrayList<String> winners) {
+        StringBuilder message = new StringBuilder();
+        for(int i=0; i< winners.size()-1;i++){
+            message.append(winners.get(i)).append("-");
+        }
+        message.append(winners.getLast());
+        message= new StringBuilder("Winners:  " + message);
+        this.printNotifications(message.toString());
 
     }
 
     @Override
-    public void notifyTurnOrder(ArrayList<String> order) {
+    public void notifyTurnOrder(ArrayList<String> order, String player) {
         StringBuilder message = new StringBuilder();
         for(int i=0; i< order.size()-1;i++){
             message.append(order.get(i)).append("-");
@@ -214,7 +224,7 @@ public class GUIView extends Application implements ViewInterface {
         message.append(order.getLast());
         message= new StringBuilder("Turn order is  " + message);
         this.drawTurnOrder(message.toString());
-        this.drawButtons(order);
+        this.drawButtons(order, player);
 
     }
     public void drawTurnOrder(String s){
@@ -224,10 +234,10 @@ public class GUIView extends Application implements ViewInterface {
         });
     }
     //metodo per creare bottoni per le board degli altri giocatori
-    public void drawButtons(ArrayList<String> order){
+    public void drawButtons(ArrayList<String> order, String player){
         Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
-            gameViewController.drawButtons(order);
+            gameViewController.drawButtons(order, player);
         });
     }
 
@@ -235,6 +245,7 @@ public class GUIView extends Application implements ViewInterface {
     public void notifyCurrentPlayer(String current, Map<String, PlayableCard[][]> boards, String player, ArrayList<ResourceCard> hand, State gamestate) {
        //devo cambiare text field current player
         this.drawCurrent(current);
+
         if(current.equals(player)){
             if(gamestate.equals(State.PLAYING)){
                 this.printNotifications("It's your turn, pick a card");
@@ -253,6 +264,8 @@ public class GUIView extends Application implements ViewInterface {
             }
         }
     }
+
+
     public void drawCurrent(String current){
         Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
@@ -286,11 +299,11 @@ public class GUIView extends Application implements ViewInterface {
         if(player.equals(nickname)){
             this.printNotifications("You placed a card successfully");
             this.updateStarting();
-            this.drawBoard(boards.get(player));
+            this.drawBoard(boards.get(player),player);
         }
         else{
             this.printNotifications(player + " placed a card");
-            this.drawBoard(boards.get(player));
+            this.drawBoard(boards.get(player),player);
         }
     }
 
@@ -304,6 +317,15 @@ public class GUIView extends Application implements ViewInterface {
     @Override
     public void ReceiveUpdateOnPoints(String player, int points) {
         this.printNotifications(player + " scored " + points);
+        this.drawPoints(player,points);
+
+    }
+
+    private void drawPoints(String player, int points){
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.drawPoints(player, points);
+        });
     }
 
     @Override
@@ -359,7 +381,7 @@ public class GUIView extends Application implements ViewInterface {
     @Override
     public void NotifyNumbersOfPlayersReached() {
 
-        //deve scrivere messaggio nella lobby
+
 
     }
 
@@ -400,7 +422,7 @@ public class GUIView extends Application implements ViewInterface {
     @Override
     public void addGroupText(ArrayList<Text> chat, String player) {
         this.drawChat(chat, player);
-        this.printNotifications("New group text, check below!");
+
     }
 
     @Override
@@ -419,4 +441,24 @@ public class GUIView extends Application implements ViewInterface {
         });
     }
 
+    @Override
+    public void confirmJoin() {
+
+    }
+
+    public void confirmCreate(){
+
+    }
+
+    public void drawError(String message){
+        showAlert("Error", message);
+    }
+
+    @Override
+    public void restoreChat(ArrayList<Text> chat, String player) {
+        Platform.runLater(()->{
+            GameViewController gameViewController=fxmlLoader.getController();
+            gameViewController.restoreChat(chat, player);
+        });
+    }
 }

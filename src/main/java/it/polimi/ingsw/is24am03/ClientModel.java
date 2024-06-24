@@ -9,6 +9,7 @@ import it.polimi.ingsw.is24am03.server.model.cards.*;
 import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
+import it.polimi.ingsw.is24am03.server.model.player.Player;
 
 import java.io.Serial;
 import java.rmi.server.UnicastRemoteObject;
@@ -40,6 +41,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
    private ResourceCard resourceDeck;
    private ResourceCard goldDeck;
 
+   private ArrayList<Color> colors = new ArrayList<>();
     private ResourceCard card0;
 
     private ResourceCard card1;
@@ -124,7 +126,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
 
 
-        viewInterface.notifyTurnOrder(order);
+        viewInterface.notifyTurnOrder(order, this.player);
 
     }
 
@@ -230,7 +232,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     public synchronized void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)throws RemoteException{
         commonObjective.add(objectiveCard1);
         commonObjective.add(objectiveCard2);
-      viewInterface.notifyCommonObjective(objectiveCard1,objectiveCard2);
+        viewInterface.notifyCommonObjective(objectiveCard1,objectiveCard2);
     }
 
     @Override
@@ -264,16 +266,12 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         }
         if(index==1 || index==0)
             viewInterface.updateCommonTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
-
-
     }
 
     @Override
     public synchronized void NotifyNumbersOfPlayersReached() throws RemoteException {
-
         viewInterface.NotifyNumbersOfPlayersReached();
         viewInterface.drawScene(SceneType.GAME);
-
     }
 
     @Override
@@ -288,12 +286,18 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     @Override
     public void notifyFinalColors(Map<String, Color> colors) throws RemoteException {
+        for(String p: colors.keySet())
+            this.colors.add(colors.get(p));
         viewInterface.notifyFinalColors(colors, players);
     }
 
     @Override
-    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table) throws RemoteException {
+    public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table, ArrayList<Color> colors) throws RemoteException {
+        Map<String, Color> playerscolors=new HashMap<>();
+        for(int i=0; i<players.size(); i++){
+            playerscolors.put(players.get(i),colors.get(i));
 
+        }
         this.current=nickname; //
         this.chat=chat; //
         this.gameState=gameState; //
@@ -309,7 +313,23 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.card1=table.get(3);
         this.card2=table.get(4);
         this.card3=table.get(5);
+        this.colors = colors;
+        viewInterface.drawScene(SceneType.GAME);
+
+        viewInterface.updateCommonTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+        viewInterface.notifyCommonObjective(commonObjective.get(0), commonObjective.get(1));
+        this.NotifyChangePersonalCards(this.player,hand);
+        this.notifyFinalColors(playerscolors);
+        this.notifyChangeState(gameState);
+        viewInterface.notifyCurrentPlayer(current,boards,player, hand, gameState);
+        viewInterface.notifyTurnOrder(this.players, this.player);
+        viewInterface.notifyChoiceObjective(objectiveCard);
+        viewInterface.restoreChat(chat, this.player);
+        //viewInterface.notifyFinalColors(colors, players);
         viewInterface.UpdateCrashedPlayer(nickname, this.player, gameState, hand, objectiveCard, boards, points, players, objectiveCards, color, table);
+        for(String player: this.players) {
+            viewInterface.notifyChangePlayerBoard(player, this.player, this.boards);
+        }
     }
 
     @Override

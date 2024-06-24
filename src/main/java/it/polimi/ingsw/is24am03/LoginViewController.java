@@ -61,14 +61,14 @@ public class LoginViewController extends GUIController {
         String nickname = nicknameCreateField.getText();
         if(numberOfPlayersText.equals("0") || nickname.isEmpty())
         {
-            errorLabel.setText("Error: Number of players and/or nickname cannot be empty.");
+            showAlert("Error", "Number of players and/or nickname cannot be empty.");
         }
         else{
             errorLabel.setText("");
             try{
                 clientController.CreateGame(Integer.parseInt(numberOfPlayersText), nickname);
             } catch(NumberFormatException e){
-                errorLabel.setText("Error: First input must be a number");
+                showAlert("Error", "First input must be a number");
             }
         }
 
@@ -93,7 +93,7 @@ public class LoginViewController extends GUIController {
 
         String nickname = nicknameJoinField.getText();
         if(nickname.isEmpty()){
-            errorLabel.setText("Error: Nickname cannot be empty.");
+            showAlert("Error", "Nickname cannot be empty.");
         }
         else
 
@@ -104,7 +104,7 @@ public class LoginViewController extends GUIController {
     private void onRejoinButtonClick() {
         String nickname =nicknameRejoinField.getText();
         if(nickname.isEmpty()){
-            errorLabel.setText("Error: Nickname cannot be empty.");
+            showAlert("Error", "Nickname cannot be empty.");
         }
         clientController.RejoinGame(nickname);
     }
