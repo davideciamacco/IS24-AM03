@@ -151,36 +151,12 @@ public class Game{
      */
     public void startGame(){
 
-        //stampo i sub di ogni playerboard dei giocatori
-        /*
-        for(Player p: players){
-            System.out.println("Player subs di player" + p.getNickname());
-            for(int i=0; i<p.getPlayerSubs().size(); i++) {
 
-                try{
-                    System.out.println(p.getPlayerSubs().get(i).getSub());
-                }catch (RemoteException ignored){}
-
-            }
-
-            System.out.println("Playerboard subs di player" + p.getNickname());
-            for(int i=0; i<p.getPlayerBoard().getPlayerBoardSubs().size(); i++){
-                try{
-                    System.out.println(p.getPlayerBoard().getPlayerBoardSubs().get(i).getSub());
-                }catch (RemoteException ignored){}
-            }
-        }*/
         setOrder();
-        //notifico a tutti che il gioco sta iniziando perchè ho raggiunto il numero di giocatori
-        //l'ultimo player entrato è già iscritto al gioco
-        /*
-        for(GameSub gameSub: gameSubs){
-            try {
-                System.out.println(gameSub.getSub());
-            }catch(RemoteException e){}
-        }*/
+ 
         for(GameSub gameSub: gameSubs){
             try{
+                if(gameSub!=null)
                     gameSub.NotifyNumbersOfPlayersReached();
             }catch (RemoteException ignored){}
         }
@@ -192,7 +168,8 @@ public class Game{
         this.gameState = State.STARTING;
         for (GameSub gameSub : gameSubs) {
             try {
-                gameSub.notifyChangeState(gameState);
+                if(gameSub!=null)
+                    gameSub.notifyChangeState(gameState);
             } catch (RemoteException ignored) {
             }
         }
@@ -234,7 +211,8 @@ public class Game{
             //NOTIFY ON CHANGE STATE
             for (GameSub gameSub : gameSubs) {
                 try {
-                    gameSub.notifyChangeState(gameState);
+                    if(gameSub!=null)
+                        gameSub.notifyChangeState(gameState);
                 } catch (RemoteException ignored) {
                 }
             }
@@ -246,7 +224,8 @@ public class Game{
             //NOTIFY ON WINNERS//
             for (GameSub gameSub : gameSubs) {
                 try {
-                    gameSub.notifyWinners(def);
+                    if(gameSub!=null)
+                        gameSub.notifyWinners(def);
                 } catch (RemoteException ignored) {
                 }
             }

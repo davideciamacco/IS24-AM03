@@ -126,7 +126,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
 
 
-        viewInterface.notifyTurnOrder(order);
+        viewInterface.notifyTurnOrder(order, this.player);
 
     }
 
@@ -315,14 +315,16 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.card3=table.get(5);
         this.colors = colors;
         viewInterface.drawScene(SceneType.GAME);
+
         viewInterface.updateCommonTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
         viewInterface.notifyCommonObjective(commonObjective.get(0), commonObjective.get(1));
         this.NotifyChangePersonalCards(this.player,hand);
         this.notifyFinalColors(playerscolors);
         this.notifyChangeState(gameState);
         viewInterface.notifyCurrentPlayer(current,boards,player, hand, gameState);
-        viewInterface.notifyTurnOrder(this.players);
+        viewInterface.notifyTurnOrder(this.players, this.player);
         viewInterface.notifyChoiceObjective(objectiveCard);
+        viewInterface.restoreChat(chat, this.player);
         //viewInterface.notifyFinalColors(colors, players);
         viewInterface.UpdateCrashedPlayer(nickname, this.player, gameState, hand, objectiveCard, boards, points, players, objectiveCards, color, table);
         for(String player: this.players) {

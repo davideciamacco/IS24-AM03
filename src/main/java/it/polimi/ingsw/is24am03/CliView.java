@@ -154,15 +154,16 @@ public class CliView implements ViewInterface{
                 int first = text.indexOf(' ');
                 try{
                     check(first);
+                    try {
+                        client.sendPrivateText(inputArray[1],text.substring(first+1).trim());
+                    }catch(Exception ignored){
+                        System.out.println("Missing arguments");
+                    }
 
                 }catch (Exception ignored){
                     System.out.println("Invalid command");
                 }
-                try {
-                    client.sendPrivateText(inputArray[1],text.substring(first+1).trim());
-                }catch(Exception ignored){
-                    System.out.println("Missing arguments");
-                }
+
             }
 
 
@@ -1349,7 +1350,7 @@ public class CliView implements ViewInterface{
     }
 
 
-    public void  notifyTurnOrder(ArrayList<String> order){
+    public void  notifyTurnOrder(ArrayList<String> order, String player){
         StringBuilder message = new StringBuilder();
         for(int i=0; i< order.size()-1;i++){
             message.append(order.get(i)).append("-");
@@ -1625,11 +1626,15 @@ public class CliView implements ViewInterface{
                 System.out.println("************************************");
                 for(int i=chat.size()-1; i>=0; i--){
                     //messaggi che io ho mandato a lui
-                    if(chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getRecipient())){
-                        System.out.println("YOU " + " : " + chat.get(i).getMex() );}
-                    //messaggi che lui ha mandato a me
-                    else if(chat.get(i).getSender().equals(chat.get(0).getRecipient()) && chat.get(i).getRecipient().equals(player)){
-                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex() );}
+                    if(chat.get(i).getRecipient()!=null) {
+                        if (chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getRecipient())) {
+                            System.out.println("YOU " + " : " + chat.get(i).getMex());
+                        }
+                        //messaggi che lui ha mandato a me
+                        else if (chat.get(i).getSender().equals(chat.get(0).getRecipient()) && chat.get(i).getRecipient().equals(player)) {
+                            System.out.println(chat.get(i).getSender() + " : " + chat.get(i).getMex());
+                        }
+                    }
                 }
             }
 
@@ -1639,11 +1644,15 @@ public class CliView implements ViewInterface{
                 System.out.println("************************************");
                 for(int i=chat.size()-1; i>=0; i--){
                     //messa che io ho mandato a lui
-                    if(chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getSender())){
-                        System.out.println("YOU " + " : " + chat.get(i).getMex());}
-                    //mess che lui ha mandato a me
-                    else if(chat.get(i).getSender().equals(chat.get(0).getSender()) && chat.get(i).getRecipient().equals(player)){
-                        System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex());}
+                    if(chat.get(i).getRecipient()!=null) {
+                        if (chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getSender())) {
+                            System.out.println("YOU " + " : " + chat.get(i).getMex());
+                        }
+                        //mess che lui ha mandato a me
+                        else if (chat.get(i).getSender().equals(chat.get(0).getSender()) && chat.get(i).getRecipient().equals(player)) {
+                            System.out.println(chat.get(i).getSender() + " : " + chat.get(i).getMex());
+                        }
+                    }
                 }
 
             }
@@ -1673,5 +1682,10 @@ public class CliView implements ViewInterface{
 
     public void drawError(String message){
         System.out.println(message);
+    }
+
+    @Override
+    public void restoreChat(ArrayList<Text> chat, String player) {
+
     }
 }
