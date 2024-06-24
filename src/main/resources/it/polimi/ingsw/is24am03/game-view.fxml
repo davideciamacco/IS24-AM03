@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchor"  prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.GameViewController">
+<AnchorPane fx:id="anchor" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.GameViewController">
    <children>
       <ScrollPane fx:id="scrollPane2" hbarPolicy="ALWAYS" layoutX="6.0" layoutY="6.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-border-color: #333;" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
@@ -72,156 +78,252 @@
          <content>
             <Pane fx:id="zoom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" styleClass="scroll" stylesheets="@game.css">
                <children>
-                  <ImageView id="ResourceDeck" fx:id="resourceDeck" fitHeight="100.0" fitWidth="500.0" layoutX="588.0" layoutY="245.0" onMouseClicked="#onClickResourceDeck" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" height="151.0" layoutX="791.0" layoutY="99.0" stroke="BLACK" strokeType="INSIDE" width="408.0">
+                     <fill>
+                        <LinearGradient endX="1.0" endY="1.0">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color red="0.11999999731779099" green="1.0" blue="0.697324812412262" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="1.0" green="1.0" blue="1.0" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </LinearGradient>
+                     </fill>
+                  </Rectangle>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" height="182.0" layoutX="74.0" layoutY="795.0" stroke="BLACK" strokeType="INSIDE" width="1358.0">
+                     <fill>
+                        <LinearGradient endX="1.0" endY="1.0">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color red="0.11999999731779099" green="1.0" blue="0.697324812412262" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="1.0" green="1.0" blue="1.0" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </LinearGradient>
+                     </fill>
+                  </Rectangle>
+                  <ImageView id="ResourceDeck" fx:id="resourceDeck" fitHeight="100.0" fitWidth="500.0" layoutX="734.0" layoutY="304.0" onMouseClicked="#onClickResourceDeck" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="goldDeck" fitHeight="100.0" fitWidth="500.0" layoutX="599.0" layoutY="441.0" onMouseClicked="#onClickGoldDeck" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="GoldDeck" fx:id="goldDeck" fitHeight="100.0" fitWidth="500.0" layoutX="734.0" layoutY="431.0" onMouseClicked="#onClickGoldDeck" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="table0" fitHeight="100.0" fitWidth="500.0" layoutX="894.0" layoutY="263.0" onMouseClicked="#onClickTable0" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="ResourceDeck" fx:id="table0" fitHeight="100.0" fitWidth="500.0" layoutX="908.0" layoutY="304.0" onMouseClicked="#onClickTable0" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="table1" fitHeight="100.0" fitWidth="500.0" layoutX="1127.0" layoutY="242.0" onMouseClicked="#onClickTable1" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="ResourceDeck" fx:id="table1" fitHeight="100.0" fitWidth="500.0" layoutX="1080.0" layoutY="303.0" onMouseClicked="#onClickTable1" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="table3" fitHeight="100.0" fitWidth="500.0" layoutX="1109.0" layoutY="453.0" onMouseClicked="#onClickTable3" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="ResourceDeck" fx:id="table3" fitHeight="100.0" fitWidth="500.0" layoutX="1080.0" layoutY="430.0" onMouseClicked="#onClickTable3" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="table2" fitHeight="100.0" fitWidth="500.0" layoutX="863.0" layoutY="450.0" onMouseClicked="#onClickTable2" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="ResourceDeck" fx:id="table2" fitHeight="100.0" fitWidth="500.0" layoutX="908.0" layoutY="430.0" onMouseClicked="#onClickTable2" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="personalFront1" fitHeight="100.0" fitWidth="500.0" layoutX="93.0" layoutY="797.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="GoldDeck" fx:id="personalFront1" fitHeight="100.0" fitWidth="500.0" layoutX="236.0" layoutY="840.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="personalBack1" fitHeight="100.0" fitWidth="500.0" layoutX="329.0" layoutY="794.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="GoldDeck" fx:id="personalBack1" fitHeight="100.0" fitWidth="500.0" layoutX="399.0" layoutY="839.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="personalFront2" fitHeight="100.0" fitWidth="500.0" layoutX="557.0" layoutY="805.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="GoldDeck" fx:id="personalFront2" fitHeight="100.0" fitWidth="500.0" layoutX="626.0" layoutY="838.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="personalBack2" fitHeight="100.0" fitWidth="500.0" layoutX="887.0" layoutY="826.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="GoldDeck" fx:id="personalBack2" fitHeight="100.0" fitWidth="500.0" layoutX="785.0" layoutY="838.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="personalFront3" fitHeight="100.0" fitWidth="500.0" layoutX="1169.0" layoutY="812.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="GoldDeck" fx:id="personalFront3" fitHeight="100.0" fitWidth="500.0" layoutX="1018.0" layoutY="836.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="personalBack3" fitHeight="100.0" fitWidth="500.0" layoutX="1400.0" layoutY="805.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="GoldDeck" fx:id="personalBack3" fitHeight="100.0" fitWidth="500.0" layoutX="1185.0" layoutY="837.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="objective2" fitHeight="100.0" fitWidth="500.0" layoutX="45.0" layoutY="474.0" onMouseClicked="#onClickObjective2" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="GoldDeck" fx:id="objective2" fitHeight="100.0" fitWidth="500.0" layoutX="77.0" layoutY="486.0" onMouseClicked="#onClickObjective2" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="objective1" fitHeight="100.0" fitWidth="500.0" layoutX="44.0" layoutY="345.0" onMouseClicked="#onClickObjective1" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="GoldDeck" fx:id="objective1" fitHeight="100.0" fitWidth="500.0" layoutX="75.0" layoutY="331.0" onMouseClicked="#onClickObjective1" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="startingCardFront" fitHeight="100.0" fitWidth="500.0" layoutX="1650.0" layoutY="452.0" onMouseClicked="#onClickStartingFront" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="GoldDeck" fx:id="startingCardFront" fitHeight="100.0" fitWidth="500.0" layoutX="810.0" layoutY="611.0" onMouseClicked="#onClickStartingFront" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="GoldDeck" fx:id="startingCardBack" fitHeight="100.0" fitWidth="500.0" layoutX="1652.0" layoutY="593.0" onMouseClicked="#onClickStartingBack" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
+                  <ImageView id="GoldDeck" fx:id="startingCardBack" fitHeight="100.0" fitWidth="500.0" layoutX="985.0" layoutY="611.0" onMouseClicked="#onClickStartingBack" pickOnBounds="true" preserveRatio="true" smooth="false" styleClass="clicked">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="commonOb1" fitHeight="100.0" fitWidth="500.0" layoutX="696.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="ResourceDeck" fx:id="commonOb1" fitHeight="100.0" fitWidth="500.0" layoutX="831.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView id="ResourceDeck" fx:id="commonOb2" fitHeight="100.0" fitWidth="500.0" layoutX="898.0" layoutY="121.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView id="ResourceDeck" fx:id="commonOb2" fitHeight="100.0" fitWidth="500.0" layoutX="1009.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <image>
                         <Image url="@carta.jpg" />
                      </image>
                   </ImageView>
-                  <TextField fx:id="finalOb" layoutX="57.0" layoutY="446.0" />
-                  <TextField fx:id="state" layoutX="11.0" layoutY="995.0" prefHeight="26.0" prefWidth="385.0" style="-fx-border-color: #333;">
+                  <TextField fx:id="finalOb" layoutX="36.0" layoutY="440.0" prefHeight="26.0" prefWidth="249.0">
                      <font>
-                        <Font size="31.0" />
+                        <Font name="Comic Sans MS" size="13.0" />
                      </font></TextField>
-                  <TextField fx:id="current" layoutX="416.0" layoutY="994.0" prefHeight="26.0" prefWidth="373.0" style="-fx-border-color: #333;">
+                  <TextField fx:id="state" layoutX="9.0" layoutY="1007.0" prefHeight="26.0" prefWidth="385.0" style="-fx-border-color: #333;">
                      <font>
-                        <Font size="31.0" />
-                     </font></TextField>
-                  <TextField fx:id="turnOrder" layoutX="822.0" layoutY="1003.0" prefHeight="28.0" prefWidth="601.0" style="-fx-border-color: #333;">
+                        <Font name="Comic Sans MS Bold" size="31.0" />
+                     </font>
+                     <effect>
+                        <Blend />
+                     </effect></TextField>
+                  <TextField fx:id="current" layoutX="416.0" layoutY="1006.0" prefHeight="29.0" prefWidth="436.0" style="-fx-border-color: #333;">
                      <font>
-                        <Font size="31.0" />
-                     </font></TextField>
+                        <Font name="Comic Sans MS Bold" size="31.0" />
+                     </font>
+                     <effect>
+                        <Blend />
+                     </effect></TextField>
+                  <TextField fx:id="turnOrder" layoutX="877.0" layoutY="1003.0" prefHeight="28.0" prefWidth="601.0" style="-fx-border-color: #333;">
+                     <font>
+                        <Font name="Comic Sans MS Bold" size="31.0" />
+                     </font>
+                     <effect>
+                        <Blend />
+                     </effect></TextField>
                   <TextField fx:id="notifications" layoutX="475.0" layoutY="10.0" prefHeight="26.0" prefWidth="889.0" style="-fx-border-color: #333;">
                      <font>
-                        <Font size="31.0" />
+                        <Font name="Comic Sans MS Bold" size="31.0" />
+                     </font>
+                     <effect>
+                        <Blend />
+                     </effect></TextField>
+                  <TextField fx:id="indexI" layoutX="1751.0" layoutY="833.0" prefHeight="26.0" prefWidth="40.0" style="-fx-border-color: #333;">
+                     <font>
+                        <Font size="15.0" />
                      </font></TextField>
-                  <TextField fx:id="indexI" layoutX="1645.0" layoutY="831.0" prefHeight="26.0" prefWidth="40.0" style="-fx-border-color: #333;" />
-                  <Label layoutX="1660.0" layoutY="792.0" prefHeight="38.0" prefWidth="8.0" text="i">
+                  <Label layoutX="1768.0" layoutY="792.0" prefHeight="38.0" prefWidth="8.0" text="i">
                      <font>
                         <Font size="31.0" />
                      </font>
                   </Label>
-                  <Label layoutX="1737.0" layoutY="780.0" prefHeight="38.0" prefWidth="8.0" text="j">
+                  <Label layoutX="1835.0" layoutY="790.0" prefHeight="38.0" prefWidth="8.0" text="j">
                      <font>
                         <Font size="31.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="indexJ" layoutX="1716.0" layoutY="831.0" prefHeight="26.0" prefWidth="40.0" style="-fx-border-color: #333;" />
-                  <Label layoutX="1642.0" layoutY="885.0" prefHeight="18.0" prefWidth="68.0" text="SIDE">
+                  <TextField fx:id="indexJ" layoutX="1818.0" layoutY="833.0" prefHeight="26.0" prefWidth="40.0" style="-fx-border-color: #333;">
                      <font>
-                        <Font size="31.0" />
+                        <Font size="15.0" />
+                     </font></TextField>
+                  <Label layoutX="1642.0" layoutY="885.0" prefHeight="18.0" prefWidth="68.0" text="Side">
+                     <font>
+                        <Font name="Comic Sans MS" size="31.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="cardSide" layoutX="1720.0" layoutY="889.0" style="-fx-border-color: #333;" />
-                  <TextField fx:id="cardNumber" layoutX="1721.0" layoutY="948.0" style="-fx-border-color: #333;" />
-                  <Label layoutX="1481.0" layoutY="951.0" text="CARD NUMBER">
+                  <TextField fx:id="cardSide" layoutX="1720.0" layoutY="889.0" style="-fx-border-color: #333;">
                      <font>
-                        <Font size="31.0" />
+                        <Font size="15.0" />
+                     </font></TextField>
+                  <TextField fx:id="cardNumber" layoutX="1721.0" layoutY="948.0" styleClass="borders">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextField>
+                  <Label layoutX="1528.0" layoutY="942.0" text="Card Number">
+                     <font>
+                        <Font name="Comic Sans MS" size="31.0" />
                      </font>
                   </Label>
-                  <Button fx:id="placeCard" layoutX="1515.0" layoutY="1000.0" mnemonicParsing="false" onMouseClicked="#onClickPlaceCard" prefHeight="53.0" prefWidth="337.0" text="Place Card">
+                  <Button fx:id="placeCard" layoutX="1538.0" layoutY="1003.0" mnemonicParsing="false" onMouseClicked="#onClickPlaceCard" prefHeight="53.0" prefWidth="337.0" text="Place Card">
                      <font>
-                        <Font size="31.0" />
+                        <Font name="Comic Sans MS" size="31.0" />
                      </font>
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="button_place" />
+                        <String fx:value="general_fill" />
+                     </styleClass>
                   </Button>
                   <TextField fx:id="color" layoutX="78.0" layoutY="100.0" prefHeight="26.0" prefWidth="416.0">
                      <font>
-                        <Font size="31.0" />
+                        <Font name="Comic Sans MS Bold" size="31.0" />
                      </font>
                   </TextField>
                   <Button fx:id="blue" layoutX="21.0" layoutY="153.0" mnemonicParsing="false" onMouseClicked="#onClickBlue" prefHeight="49.0" prefWidth="124.0" styleClass="button-blue" text="Blue" />
-                  <Button fx:id="red" layoutX="305.0" layoutY="148.0" mnemonicParsing="false" onMouseClicked="#onClickRed" prefHeight="49.0" prefWidth="157.0" styleClass="button-red" text="Red" />
-                  <Button fx:id="yellow" layoutX="484.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#onClickYellow" prefHeight="49.0" prefWidth="116.0" styleClass="button-yellow" text="Yellow" />
-                  <Button fx:id="green" layoutX="156.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#onClickGreen" prefHeight="49.0" prefWidth="138.0" styleClass="button-green" text="Green" />
-                  <Button fx:id="player1" layoutX="1597.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer1" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
-                  <Button fx:id="player2" layoutX="1598.0" layoutY="83.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer2" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
-                  <Button fx:id="player3" layoutX="1601.0" layoutY="160.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer3" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
-                  <Button fx:id="player4" layoutX="1603.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer4" prefHeight="56.0" prefWidth="277.0" styleClass="clicked" text="Button" />
-                  <SplitPane fx:id="chat" dividerPositions="0.8292682926829268" layoutX="202.0" layoutY="522.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
+                  <Button fx:id="red" layoutX="300.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#onClickRed" prefHeight="49.0" prefWidth="113.0" styleClass="button-red" text="Red" />
+                  <Button fx:id="yellow" layoutX="423.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#onClickYellow" prefHeight="49.0" prefWidth="116.0" styleClass="button-yellow" text="Yellow" />
+                  <Button fx:id="green" layoutX="154.0" layoutY="153.0" mnemonicParsing="false" onMouseClicked="#onClickGreen" prefHeight="49.0" prefWidth="138.0" styleClass="button-green" text="Green" />
+                  <Button fx:id="player1" layoutX="1597.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer1" prefHeight="56.0" prefWidth="277.0" text="Button">
+                     <font>
+                        <Font name="Comic Sans MS Bold" size="16.0" />
+                     </font>
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass></Button>
+                  <Button fx:id="player2" layoutX="1598.0" layoutY="83.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer2" prefHeight="56.0" prefWidth="277.0" text="Button">
+                     <font>
+                        <Font name="Comic Sans MS Bold" size="16.0" />
+                     </font>
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass></Button>
+                  <Button fx:id="player3" layoutX="1601.0" layoutY="160.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer3" prefHeight="56.0" prefWidth="277.0" text="Button">
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass>
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font></Button>
+                  <Button fx:id="player4" layoutX="1603.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#onClickPlayer4" prefHeight="56.0" prefWidth="277.0" text="Button">
+                     <font>
+                        <Font name="Comic Sans MS Bold" size="16.0" />
+                     </font>
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass></Button>
+                  <SplitPane fx:id="chat" dividerPositions="0.8292682926829268" layoutX="791.0" layoutY="636.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="105.0" prefWidth="306.0">
                            <children>
@@ -234,14 +336,230 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <Button fx:id="sendGroupChat" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendGroupText" prefHeight="30.0" prefWidth="135.0" text="Send Text" />
-                              <TextField fx:id="groupText" layoutX="161.0" layoutY="6.0" prefHeight="26.0" prefWidth="255.0" />
+                              <Button fx:id="sendGroupChat" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendGroupText" prefHeight="30.0" prefWidth="135.0" text="Send Text">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="15.0" />
+                                 </font></Button>
+                              <TextField fx:id="groupText" layoutX="161.0" layoutY="6.0" prefHeight="26.0" prefWidth="255.0" promptText="write whatever you like" />
                            </children>
                         </AnchorPane>
                     </items>
                   </SplitPane>
-                  <Button fx:id="openGroupChat" layoutX="26.0" layoutY="631.0" mnemonicParsing="false" onMouseClicked="#onClickShowGroupChat" prefHeight="30.0" prefWidth="131.0" styleClass="clicked" text="Show Group Chat" />
-                  <Button fx:id="closeGroupChat" layoutX="25.0" layoutY="681.0" mnemonicParsing="false" onMouseClicked="#onClickCloseGroupChat" prefHeight="30.0" prefWidth="130.0" styleClass="clicked" text="Close Group Chat" />
+                  <Button fx:id="openGroupChat" layoutX="27.0" layoutY="621.0" mnemonicParsing="false" onMouseClicked="#onClickShowGroupChat" prefHeight="30.0" prefWidth="165.0" text="Open Group Chat">
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass>
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font></Button>
+                  <Button fx:id="closeGroupChat" layoutX="25.0" layoutY="681.0" mnemonicParsing="false" onMouseClicked="#onClickCloseGroupChat" prefHeight="30.0" prefWidth="167.0" text="Close Group Chat">
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass>
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font></Button>
+                  <Label layoutX="81.0" layoutY="803.0" prefHeight="18.0" prefWidth="273.0" text="YOUR PERSONAL CARDS">
+                     <font>
+                        <Font name="Chalkboard Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="794.0" layoutY="104.0" prefHeight="22.0" prefWidth="403.0" text="               COMMON OBJECTIVES" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="265.0" layoutY="949.0" prefHeight="23.0" prefWidth="75.0" text="1 FRONT" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="822.0" layoutY="950.0" prefHeight="23.0" prefWidth="75.0" text="2 BACK" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="657.0" layoutY="951.0" prefHeight="23.0" prefWidth="75.0" text="2 FRONT" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="434.0" layoutY="951.0" prefHeight="23.0" prefWidth="75.0" text="1 BACK" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="1058.0" layoutY="951.0" prefHeight="23.0" prefWidth="75.0" text="3 FRONT" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="1220.0" layoutY="952.0" prefHeight="23.0" prefWidth="75.0" text="3 BACK" textAlignment="CENTER">
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="openChatP1" layoutX="1671.0" layoutY="316.0" mnemonicParsing="false" onMouseClicked="#onClickOpenPrivateChat" prefHeight="30.0" prefWidth="185.0" text="Open">
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass>
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Button>
+                  <SplitPane fx:id="splitChatP1" dividerPositions="0.8292682926829268" layoutX="1110.0" layoutY="198.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
+                     <items>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="201.0" prefWidth="472.0">
+                           <children>
+                              <ScrollPane fx:id="scrollChatP1" layoutX="2.0" layoutY="8.0" prefHeight="188.0" prefWidth="431.0">
+                                 <content>
+                                    <VBox fx:id="messagesP1" prefHeight="177.0" prefWidth="425.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Button fx:id="sendChatP1" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendPrivateChat" prefHeight="30.0" prefWidth="85.0" text="Send">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="15.0" />
+                                 </font>
+                              </Button>
+                              <TextField fx:id="chatP1" layoutX="105.0" layoutY="5.0" prefHeight="26.0" prefWidth="193.0" promptText="write whatever you like" />
+                              <Button fx:id="closeChatP1" layoutX="309.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickClosePrivateChat" prefHeight="30.0" prefWidth="114.0" text="Close chat">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="16.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                     </items>
+                  </SplitPane>
+                  <Button fx:id="openChatP2" layoutX="1677.0" layoutY="366.0" mnemonicParsing="false" onMouseClicked="#onClickOpenPrivateChat" prefHeight="30.0" prefWidth="179.0" text="Close chat">
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass>
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Button>
+                  <SplitPane fx:id="splitChatP2" dividerPositions="0.8292682926829268" layoutX="1427.0" layoutY="480.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
+                     <items>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="105.0" prefWidth="306.0">
+                           <children>
+                              <ScrollPane fx:id="scrollChatP2" layoutX="2.0" layoutY="8.0" prefHeight="188.0" prefWidth="431.0">
+                                 <content>
+                                    <VBox fx:id="messagesP2" prefHeight="177.0" prefWidth="425.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Button fx:id="sendChatP2" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendPrivateChat" prefHeight="30.0" prefWidth="122.0" text="Send">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="15.0" />
+                                 </font>
+                              </Button>
+                              <TextField fx:id="chatP2" layoutX="140.0" layoutY="7.0" prefHeight="26.0" prefWidth="159.0" promptText="write whatever you like" />
+                              <Button fx:id="closeChatP2" layoutX="303.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#onClickClosePrivateChat" prefHeight="30.0" prefWidth="135.0" text="Close chat">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                     </items>
+                  </SplitPane>
+                  <Button fx:id="openChatP3" layoutX="1674.0" layoutY="424.0" mnemonicParsing="false" onMouseClicked="#onClickOpenPrivateChat" prefHeight="30.0" prefWidth="179.0" text="Close chat">
+                     <styleClass>
+                        <String fx:value="clicked" />
+                        <String fx:value="general_fill" />
+                     </styleClass>
+                     <font>
+                        <Font name="Comic Sans MS" size="16.0" />
+                     </font>
+                  </Button>
+                  <SplitPane fx:id="splitChatP3" dividerPositions="0.8292682926829268" layoutX="1208.0" layoutY="735.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
+                     <items>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="105.0" prefWidth="306.0">
+                           <children>
+                              <ScrollPane fx:id="scrollChatP3" layoutX="2.0" layoutY="8.0" prefHeight="188.0" prefWidth="431.0">
+                                 <content>
+                                    <VBox fx:id="messagesP3" prefHeight="177.0" prefWidth="425.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Button fx:id="sendChatP3" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendPrivateChat" prefHeight="30.0" prefWidth="93.0" text="Send ">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="15.0" />
+                                 </font>
+                              </Button>
+                              <TextField fx:id="chatP3" layoutX="113.0" layoutY="6.0" prefHeight="26.0" prefWidth="213.0" promptText="write whatever you like" />
+                              <Button fx:id="closeChatP3" layoutX="332.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#onClickClosePrivateChat" prefHeight="30.0" prefWidth="93.0" text="Close chat">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                     </items>
+                  </SplitPane>
+                  <ImageView fx:id="plank" fitHeight="562.0" fitWidth="363.0" layoutX="329.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@punte.png" />
+                     </image></ImageView>
+                  <ImageView fx:id="bluePawn" fitHeight="61.0" fitWidth="54.0" layoutX="391.0" layoutY="690.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@bluepawn.png" />
+                     </image></ImageView>
+                  <ImageView fx:id="redPawn" fitHeight="61.0" fitWidth="54.0" layoutX="395.0" layoutY="691.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@redpawn.png" />
+                     </image></ImageView>
+                  <ImageView fx:id="greenPawn" fitHeight="61.0" fitWidth="54.0" layoutX="391.0" layoutY="690.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@greenpawn.png" />
+                     </image></ImageView>
+                  <ImageView fx:id="yellowPawn" fitHeight="61.0" fitWidth="54.0" layoutX="395.0" layoutY="690.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@yellowpawn.png" />
+                     </image></ImageView>
                </children>
                <rotationAxis>
                   <Point3D />

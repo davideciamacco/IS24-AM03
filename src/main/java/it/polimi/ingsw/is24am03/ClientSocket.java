@@ -264,7 +264,9 @@ public class ClientSocket implements Client{
             //chiamo metodo sul local model
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
-            view.drawError(message.getDetails());
+            else {
+                view.drawError(message.getDetails());
+            }
         }
         System.out.flush();
     }
@@ -272,7 +274,9 @@ public class ClientSocket implements Client{
         if (!message.getConfirmPlace()) {
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
-            view.drawError(message.getDetails());
+            else {
+                view.drawError(message.getDetails());
+            }
         }
         System.out.flush();
     }
@@ -491,7 +495,8 @@ public class ClientSocket implements Client{
         if(!confirmChatMessage.isConfirmChat()){
             if(clientModel!=null)
                 this.clientModel.printNotifications(confirmChatMessage.getDetails());
-            view.drawError(confirmChatMessage.getDetails());
+            else
+                view.drawError(confirmChatMessage.getDetails());
         }
        // System.out.flush();
     }
