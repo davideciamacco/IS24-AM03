@@ -263,9 +263,9 @@ public class GameViewController extends GUIController implements Initializable {
             Image card22 = new Image(getClass().getResource(findBackUrl(hand.get(1).getId())).toExternalForm());
             personalBack2.setImage(card22);
 
-            Image card3 = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card3 = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             personalFront3.setImage(card3);
-            Image card33 = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card33 = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             personalBack3.setImage(card33);
 
 
@@ -301,7 +301,7 @@ public class GameViewController extends GUIController implements Initializable {
         //deck risorsa
         if (resourceDeck == null) {
             //lo metto a empty
-            Image card = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.resourceDeck.setImage(card);
         } else {
             //se face ==true prendo il fronte
@@ -314,7 +314,7 @@ public class GameViewController extends GUIController implements Initializable {
 
         //deck oro
         if (goldDeck == null) {
-            Image card = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.goldDeck.setImage(card);
 
         } else {
@@ -327,7 +327,7 @@ public class GameViewController extends GUIController implements Initializable {
 
         //carta table0
         if (card0 == null) {
-            Image card = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table0.setImage(card);
         } else {
             if (card0.getFace()) {
@@ -343,7 +343,7 @@ public class GameViewController extends GUIController implements Initializable {
 
         //carta table1
         if (card1 == null) {
-            Image card = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table1.setImage(card);
         } else {
             if (card1.getFace()) {
@@ -358,7 +358,7 @@ public class GameViewController extends GUIController implements Initializable {
 
         //carta table2
         if (card2 == null) {
-            Image card = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table2.setImage(card);
         } else {
             if (card2.getFace()) {
@@ -373,7 +373,7 @@ public class GameViewController extends GUIController implements Initializable {
 
         //carta table 3
         if (card3 == null) {
-            Image card = new Image("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png");
+            Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table3.setImage(card);
 
         } else {
