@@ -59,33 +59,7 @@ public class Chat {
     }
     //return messages sent to a player - broadcast messages
 
-    /**
-     * Method used to retrieve group chat messages; it is used to update the player's chat after crashing
-     *
-     */
-    public ArrayList<Text> getGroupChat(String player){
-        ArrayList<Text> groupChat= new ArrayList<>();
-        for(Text t: getTexts()){
-            if(t.getRecipient()==null){
-                groupChat.add(t);
-            }
-        }
-        return groupChat;
-    }
 
-    /**
-     * Method used to retrieve private chat messages; it's used to update the player's private chats after crashing
-     *
-     */
-    public ArrayList<Text> getPrivateChat(String receiver, String sender){
-        ArrayList<Text> privateChat= new ArrayList<>();
-        for(Text t: getTexts()){
-            if((t.getRecipient().equals(receiver) && t.getSender().equals(sender))||(t.getRecipient().equals(sender) && t.getSender().equals(receiver))){
-                privateChat.add(t);
-            }
-        }
-        return privateChat;
-    }
     //creo metodo per estrarre tutti i messaggi di gruppo e tutti i messaggi di cui un player è stato recipient o sender.
     //tutti i messaggi in cui recipient è uguale a null (sono inclusi anche quelli mandati sul gruppo dal player in questione
     //tutti i messaggi in cui il player è il recipient

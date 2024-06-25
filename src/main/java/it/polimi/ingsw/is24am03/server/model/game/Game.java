@@ -888,6 +888,10 @@ public class Game{
         return lastRound;
     }
 
+    public void setLastRound(){
+        lastRound = true;
+    }
+
     public void setGameState(State state){
         this.gameState = state;
     }
@@ -1137,9 +1141,6 @@ public class Game{
         numPlayersConnected=value;
     }
 
-    public void setTimer(boolean b) {
-        timer=b;
-    }
 
     public ArrayList<String> extractNicknames(){
         ArrayList<String> nicknames=new ArrayList<>();

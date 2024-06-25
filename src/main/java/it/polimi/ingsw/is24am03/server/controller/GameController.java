@@ -448,13 +448,14 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void rejoinGame(String nickname, String ConnectionType) throws InvalidStateException, GameNotExistingException,UnknownPlayerException {
         int check=-1;
         int i=0;
+        if(gameModel == null)
+            throw new GameNotExistingException();
         while(i<gameModel.getPlayers().size() && check==-1) {
             if (gameModel.getPlayers().get(i).getNickname().equals(nickname) && !gameModel.getPlayers().get(i).getConnected())
                 check = i;
             i++;
         }
-        if(gameModel == null)
-            throw new GameNotExistingException();
+
         if(check==-1){
             throw new UnknownPlayerException("You aren't part of a game");
         }
@@ -518,7 +519,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
     private void startHeartbeatChecker() {
-        long heartbeatInterval = 5000; // 100 seconds
+        long heartbeatInterval = 5000; // 5 seconds
         heartbeatScheduler.scheduleAtFixedRate(this::checkHeartBeats, heartbeatInterval, heartbeatInterval, TimeUnit.MILLISECONDS);
     }
 
@@ -604,5 +605,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             //creo notifica per il player in questione
             gameModel.manageUpdate(player);
         }
+    }
+
+    public boolean isTimer() {
+        return timer;
     }
 }

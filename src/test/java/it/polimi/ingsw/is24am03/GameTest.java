@@ -1,8 +1,6 @@
 package it.polimi.ingsw.is24am03;
 
-import it.polimi.ingsw.is24am03.Subscribers.GameSub;
-import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
-import it.polimi.ingsw.is24am03.Subscribers.Subscriber;
+import it.polimi.ingsw.is24am03.Subscribers.*;
 import it.polimi.ingsw.is24am03.server.model.cards.Corner;
 import it.polimi.ingsw.is24am03.server.model.cards.GoldCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
@@ -42,7 +40,7 @@ class GameTest {
         assertNotNull(game.getStartingDeck());
         assertEquals(1, game.getPlayers().size());
         assertEquals("Giacomo", game.getPlayers().get(0).getNickname());
-
+        assertEquals(1, game.getNumPlayersConnected());
         assertFalse(game.getGoldDeck().isEmpty());
         assertFalse(game.getResourceDeck().isEmpty());
         assertFalse(game.getObjectiveDeck().isEmpty());
@@ -108,6 +106,14 @@ class GameTest {
         GameSub gs21 = new GeneralSubscriber("Player2");
         PlayerSub ps11 = new GeneralSubscriber("Player1");
         PlayerSub ps21 = new GeneralSubscriber("Player2");
+        PlayerBoardSub pb11 = new GeneralSubscriber("Player1");
+        PlayerBoardSub pb21 = new GeneralSubscriber("Player2");
+        ChatSub cs11 = new GeneralSubscriber("Player1");
+        ChatSub cs21 = new GeneralSubscriber("Player2");
+        game.addSub(pb11);
+        game.addSub(pb21);
+        game.addSub(cs11);
+        game.addSub(cs21);
         game.addSub(gs11);
         game.addSub(gs21);
         game.addSub(ps11);
@@ -205,12 +211,40 @@ class GameTest {
     void endGame() {
         Game game = new Game(2, "Player1");
         game.addPlayer("Player2");
+        GameSub gs1 = new GeneralSubscriber("Player1");
+        GameSub gs2 = new GeneralSubscriber("Player2");
+        PlayerSub ps1 = new GeneralSubscriber("Player1");
+        PlayerSub ps2 = new GeneralSubscriber("Player2");
+        game.addSub(gs1);
+        game.addSub(gs2);
+        game.addSub(ps1);
+        game.addSub(ps2);
+        game.startGame();
         game.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game.getPlayers().get(0)));
         game.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game.getPlayers().get(1)));
-
         game.endGame();
 
         assertEquals(State.ENDING, game.getGameState());
+
+
+        Game game1 = new Game(2, "Player1");
+        game1.addPlayer("Player2");
+        GameSub gs11 = new GeneralSubscriber("Player1");
+        GameSub gs12 = new GeneralSubscriber("Player2");
+        PlayerSub ps11 = new GeneralSubscriber("Player1");
+        PlayerSub ps12 = new GeneralSubscriber("Player2");
+        game1.addSub(gs11);
+        game1.addSub(gs12);
+        game1.addSub(ps11);
+        game1.addSub(ps12);
+        game1.startGame();
+        game1.setNumPlayersConnected(2);
+        game1.getPlayers().get(0).setPoints(10);
+        game1.getPlayers().get(1).setPoints(2);
+        game1.endGame();
+        assertTrue(game1.getPlayers().get(0).isWinner());
+        assertEquals(State.ENDING, game.getGameState());
+
     }
 
 
@@ -342,6 +376,71 @@ class GameTest {
         //game6.getTableCards().set(0, null);
         //assertThrows(NullCardSelectedException.class, () -> game6.drawTable(game6.getPlayers().get(0).getNickname(), 1));
 
+        Game game7 = new Game(2, "Giorgio");
+        game7.addPlayer("Marco");
+        GameSub gs71 = new GeneralSubscriber("Giorgio");
+        GameSub gs72 = new GeneralSubscriber("Marco");
+        PlayerSub ps71 = new GeneralSubscriber("Giorgio");
+        PlayerSub ps72 = new GeneralSubscriber("Marco");
+        game7.addSub(gs71);
+        game7.addSub(gs72);
+        game7.addSub(ps71);
+        game7.addSub(ps72);
+        game7.startGame();
+        assertDoesNotThrow(() -> game7.drawTable(game7.getPlayers().get(0).getNickname(), 2));
+        assertEquals(4, game7.getTableCards().size());
+
+        game7.getResourceDeck().setEmpty();
+        assertDoesNotThrow(() -> game7.drawTable(game7.getPlayers().get(1).getNickname(), 2));
+        assertNotNull(game7.getTableCards().get(1));
+
+        game7.getGoldDeck().setEmpty();
+        assertDoesNotThrow(() -> game7.drawTable(game7.getPlayers().get(1).getNickname(), 2));
+        assertNull(game7.getTableCards().get(1));
+
+        Game game8 = new Game(2, "Giorgio");
+        game8.addPlayer("Marco");
+        GameSub gs81 = new GeneralSubscriber("Giorgio");
+        GameSub gs82 = new GeneralSubscriber("Marco");
+        PlayerSub ps81 = new GeneralSubscriber("Giorgio");
+        PlayerSub ps82 = new GeneralSubscriber("Marco");
+        game8.addSub(gs81);
+        game8.addSub(gs82);
+        game8.addSub(ps81);
+        game8.addSub(ps82);
+        game8.startGame();
+        assertDoesNotThrow(() -> game8.drawTable(game8.getPlayers().get(0).getNickname(), 3));
+        assertEquals(4, game8.getTableCards().size());
+
+        game8.getGoldDeck().setEmpty();
+        assertDoesNotThrow(() -> game8.drawTable(game8.getPlayers().get(1).getNickname(), 3));
+        assertNotNull(game8.getTableCards().get(2));
+
+        game8.getResourceDeck().setEmpty();
+        assertDoesNotThrow(() -> game8.drawTable(game8.getPlayers().get(1).getNickname(), 3));
+        assertNull(game8.getTableCards().get(2));
+
+        Game game9 = new Game(2, "Giorgio");
+        game9.addPlayer("Marco");
+        GameSub gs91 = new GeneralSubscriber("Giorgio");
+        GameSub gs92 = new GeneralSubscriber("Marco");
+        PlayerSub ps91 = new GeneralSubscriber("Giorgio");
+        PlayerSub ps92 = new GeneralSubscriber("Marco");
+        game9.addSub(gs91);
+        game9.addSub(gs92);
+        game9.addSub(ps91);
+        game9.addSub(ps92);
+        game9.startGame();
+        assertDoesNotThrow(() -> game9.drawTable(game9.getPlayers().get(0).getNickname(), 4));
+        assertEquals(4, game9.getTableCards().size());
+
+        game9.getGoldDeck().setEmpty();
+        assertDoesNotThrow(() -> game9.drawTable(game9.getPlayers().get(1).getNickname(), 4));
+        assertNotNull(game9.getTableCards().get(3));
+
+        game9.getResourceDeck().setEmpty();
+        assertDoesNotThrow(() -> game9.drawTable(game9.getPlayers().get(1).getNickname(), 4));
+        assertNull(game9.getTableCards().get(3));
     }
 
 
@@ -365,7 +464,32 @@ class GameTest {
         game.selectStartingFace(currentPlayer.getNickname(), false);
         assertEquals(currentPlayer.getStartingCard(), currentPlayer.getPlayerBoard().getBoard()[40][40]);
         game.nextTurn();
+        assertThrows(Exception.class, ()->game.placeCard(currentPlayer.getNickname(), 0, 10, 10, true));
         assertDoesNotThrow(()->game.placeCard(currentPlayer.getNickname(), 0, 41, 41, true));
+
+
+        Game game1 = new Game(2, "Player1");
+        game1.addPlayer("Player2");
+        GameSub gs11 = new GeneralSubscriber("Player1");
+        GameSub gs12 = new GeneralSubscriber("Player2");
+        PlayerSub ps11 = new GeneralSubscriber("Player1");
+        PlayerSub ps12 = new GeneralSubscriber("Player2");
+        game1.addSub(gs11);
+        game1.addSub(gs12);
+        game1.addSub(ps11);
+        game1.addSub(ps12);
+        game1.startGame();
+        game1.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game1.getPlayers().get(0)));
+        game1.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game1.getPlayers().get(1)));
+        Player currentPlayer1 = game.getPlayers().get(game1.getCurrentPlayer());
+        game1.selectStartingFace(currentPlayer1.getNickname(), false);
+        game1.selectStartingFace(currentPlayer1.getNickname(), false);
+        game1.setGameState(State.PLAYING);
+        game1.setLastRound();
+        assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 41, 41, true));
+        assertEquals(State.PLAYING, game1.getGameState());
+        assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 41, 41, true));
+        assertEquals(State.ENDING, game1.getGameState());
     }
 
 
@@ -395,6 +519,24 @@ class GameTest {
     }
 
     @Test
+    void setColor(){
+        Game game = new Game(2, "Player1");
+        game.addPlayer("Player2");
+        GameSub gs1 = new GeneralSubscriber("Player1");
+        GameSub gs2 = new GeneralSubscriber("Player2");
+        PlayerSub ps1 = new GeneralSubscriber("Player1");
+        PlayerSub ps2 = new GeneralSubscriber("Player2");
+        game.addSub(gs1);
+        game.addSub(gs2);
+        game.addSub(ps1);
+        game.addSub(ps2);
+        game.startGame();
+        game.setGameState(State.COLOR);
+        assertDoesNotThrow(()->game.setColor(Color.RED));
+        assertFalse(game.getAvailableColors().contains(Color.RED));
+    }
+
+    @Test
     void setObjectiveCard() {
         Game game = new Game(2, "Player1");
         game.addPlayer("Player2");
@@ -420,5 +562,15 @@ class GameTest {
         assertNotNull(currentPlayer.getObjective1());
         assertNotNull(currentPlayer.getObjective2());
         assertEquals(currentPlayer.getObjective2(), currentPlayer.getObjectiveCard());
+    }
+
+    @Test
+    void extractNicknames(){
+        Game game = new Game(2, "Player1");
+        game.addPlayer("Player2");
+        ArrayList<String> nicknames = new ArrayList<>();
+        nicknames.add("Player1");
+        nicknames.add("Player2");
+        assertEquals(nicknames, game.extractNicknames());
     }
 }

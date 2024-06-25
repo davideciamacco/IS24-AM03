@@ -4,6 +4,7 @@ package it.polimi.ingsw.is24am03;
 import it.polimi.ingsw.is24am03.server.model.cards.Corner;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
+import it.polimi.ingsw.is24am03.server.model.decks.GoldDeck;
 import it.polimi.ingsw.is24am03.server.model.decks.ResourceDeck;
 import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import org.junit.jupiter.api.Test;
@@ -137,5 +138,9 @@ class ResourceDeckTest {
 
     }
 
+    void drawCard(){
+        ResourceDeck d=new ResourceDeck();
+        d.getCards().get(0).drawCard();
+    }
 }
 

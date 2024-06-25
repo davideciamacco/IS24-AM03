@@ -72,6 +72,12 @@ class GoldDeckTest {
         }
     }
 
+    @Test
+    void drawCard(){
+        GoldDeck d=new GoldDeck();
+        d.getCards().get(0).drawCard();
+    }
+
 
 
 
