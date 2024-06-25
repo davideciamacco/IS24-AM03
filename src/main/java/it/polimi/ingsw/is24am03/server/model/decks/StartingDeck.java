@@ -28,6 +28,7 @@ public class StartingDeck extends Deck {
         Corner insect =new Corner("I");
         Corner plant =new Corner("P");
         Corner empty =new Corner("E");
+        Corner notVisible =new Corner("X");
 
         ArrayList<CornerItem> list = new ArrayList<CornerItem>();
         ArrayList<CornerItem> list1 = new ArrayList<CornerItem>();
@@ -57,13 +58,13 @@ public class StartingDeck extends Deck {
         list4.add(CornerItem.ANIMAL);
         list4.add(CornerItem.INSECT);
         list4.add(CornerItem.PLANT);
-        StartingCard card_84= new StartingCard(84,0,insect,fungi,animal,plant,empty,empty,empty,empty,list4);
+        StartingCard card_84= new StartingCard(84,0,insect,fungi,animal,plant,empty,empty,notVisible,notVisible,list4);
 
 
         list5.add(CornerItem.ANIMAL);
         list5.add(CornerItem.PLANT);
         list5.add(CornerItem.FUNGI);
-        StartingCard card_85= new StartingCard(85,0,fungi,animal,insect,plant,empty,empty,empty,empty,list5);
+        StartingCard card_85= new StartingCard(85,0,fungi,animal,insect,plant,empty,empty,notVisible,notVisible,list5);
 
 
         cards.add(card_80);

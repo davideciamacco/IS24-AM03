@@ -159,30 +159,32 @@ public class PlayerBoard {
      * @param i The x-coordinate of the card placement.
      * @param j The y-coordinate of the card placement.
      */
-    public void giveCardPoints(PlayableCard c, int i, int j){
-        int type,scoringType,n=0;
-        type= c.getType();
-        if(type==1){
-            player.addPoints(c.getPoints());
-        }else{
-            scoringType=c.getScoringType();
-            if(scoringType==0){
-                n=availableItems.get(c.getObject());
-                for(i=0; i<n; i++)
-                    player.addPoints(c.getPoints());
-            }else if(scoringType==1){
-                if(board[i-1][j-1]!=null)
-                    n++;
-                if(board[i+1][j+1]!=null)
-                    n++;
-                if(board[i-1][j+1]!=null)
-                    n++;
-                if(board[i+1][j-1]!=null)
-                    n++;
-                for(i=0; i<n; i++)
-                    player.addPoints(c.getPoints());
-            }else if(scoringType==2){
+    public void giveCardPoints(PlayableCard c, int i, int j) {
+        int type, scoringType, n = 0;
+        type = c.getType();
+        if (c.getFace()) {
+            if (type == 1) {
                 player.addPoints(c.getPoints());
+            } else {
+                scoringType = c.getScoringType();
+                if (scoringType == 0) {
+                    n = availableItems.get(c.getObject());
+                    for (i = 0; i < n; i++)
+                        player.addPoints(c.getPoints());
+                } else if (scoringType == 1) {
+                    if (board[i - 1][j - 1] != null)
+                        n++;
+                    if (board[i + 1][j + 1] != null)
+                        n++;
+                    if (board[i - 1][j + 1] != null)
+                        n++;
+                    if (board[i + 1][j - 1] != null)
+                        n++;
+                    for (i = 0; i < n; i++)
+                        player.addPoints(c.getPoints());
+                } else if (scoringType == 2) {
+                    player.addPoints(c.getPoints());
+                }
             }
         }
     }

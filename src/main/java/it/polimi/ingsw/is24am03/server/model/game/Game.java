@@ -610,7 +610,8 @@ public class Game{
         catch(Exception e){
             throw e;
         }
-            p.getPlayerBoard().notifyChangePlayerBoard(player, p.getPlayerBoard().getBoard()[i][j], i, j);
+
+        p.getPlayerBoard().notifyChangePlayerBoard(player, p.getPlayerBoard().getBoard()[i][j], i, j);
 
         for(PlayerSub playerSub: p.getPlayerSubs()){
             try{

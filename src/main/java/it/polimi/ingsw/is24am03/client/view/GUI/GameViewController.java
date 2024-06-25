@@ -761,11 +761,8 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     public void drawPoints(String player, int points){
-        int pointsold=this.points.get(player);
-        pointsold=pointsold+points;
-        this.points.put(player, pointsold);
-        ArrayList<Integer> coord =this.coords.get(pointsold);
-        //trovo pawn player
+        this.points.put(player, points);
+        ArrayList<Integer> coord =this.coords.get(points);
         this.pawns.get(player).setLayoutX(coord.get(0));
         this.pawns.get(player).setLayoutY(coord.get(1));
 

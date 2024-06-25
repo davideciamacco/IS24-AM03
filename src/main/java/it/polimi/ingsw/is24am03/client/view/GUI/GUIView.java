@@ -298,7 +298,7 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void ReceiveUpdateOnPoints(String player, int points) {
-        this.printNotifications(player + " scored " + points);
+        this.printNotifications(player + "has reached" + points);
         this.drawPoints(player,points);
 
     }
