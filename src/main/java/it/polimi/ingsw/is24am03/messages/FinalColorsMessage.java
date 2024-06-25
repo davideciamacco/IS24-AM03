@@ -9,16 +9,14 @@ public class FinalColorsMessage extends Message{
 
     @Serial
     private final static long serialVersionUID= 4272961920308559455L;
-
-    public Map<String, Color> getColors() {
-        return colors;
-    }
-
     private Map<String, Color> colors;
 
     public FinalColorsMessage(Map<String,Color> colors){
         super(MessageType.FINAL_COLORS);
         this.colors=colors;
+    }
+    public Map<String, Color> getColors() {
+        return colors;
     }
 
 }

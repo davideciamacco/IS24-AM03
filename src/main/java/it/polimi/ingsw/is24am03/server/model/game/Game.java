@@ -160,10 +160,6 @@ public class Game{
                     gameSub.NotifyNumbersOfPlayersReached();
             }catch (RemoteException ignored){}
         }
-        //notify turn order//
-
-
-        //NOTIFY CHANGE STATE
 
         this.gameState = State.STARTING;
         for (GameSub gameSub : gameSubs) {
@@ -179,17 +175,7 @@ public class Game{
         resourceDeck.shuffle();
         setCommonObjective();
         initializeTable();
-        //NOFITY COMMON CARDS//
-
-        //WE NOTIFY FIRST ON THE FIRST CARD IN RESOURCE DECK AND IN GOLD DECK
-        //DONE
-
-        //NOTIFY ON COMMON OBJECTIVE
-
-        //DONE
-
         distributeCards();
-        //System.out.println("Primo next turn");
         nextTurn();
     }
 
@@ -211,7 +197,6 @@ public class Game{
             }
         }
         else{
-            //NOTIFY ON CHANGE STATE
             for (GameSub gameSub : gameSubs) {
                 try {
                     if(gameSub!=null)
@@ -219,15 +204,11 @@ public class Game{
                 } catch (RemoteException ignored) {
                 }
             }
-            //DONE
-            giveObjectivePoints();
-            //SALVO RISULTATO DI CHECK WINNER E LO NOTIFICO//
-            winners= checkWinner().stream().map(Player::getNickname).toList();
 
-            //DONE
+            giveObjectivePoints();
+            winners= checkWinner().stream().map(Player::getNickname).toList();
         }
         ArrayList<String> def= new ArrayList<>(winners);
-        //NOTIFY ON WINNERS//
         for (GameSub gameSub : gameSubs) {
             try {
                 if(gameSub!=null)
@@ -270,19 +251,16 @@ public class Game{
             p.addCard(goldDeck.drawCard());
             p.setStartingCard(startingDeck.drawCard());
             p.setObjectiveCard(objectiveDeck.drawCard(), objectiveDeck.drawCard());
-            //NOTIFY FIRST HAND, comprende anche la starting card e le due objetive cards//
-            //trovo il sub corrispondente al player a cui devo notificare le proprie carte
         }
 
-        //dopo aver distribuito le carte devo:
         ArrayList<ResourceCard> commons=new ArrayList<>();
-            commons.add(resourceDeck.getCards().get(0));
-            commons.add(goldDeck.getCards().get(0));
-            commons.add(tableCards.get(0));
+        commons.add(resourceDeck.getCards().get(0));
+        commons.add(goldDeck.getCards().get(0));
+        commons.add(tableCards.get(0));
         commons.add(tableCards.get(1));
         commons.add(tableCards.get(2));
         commons.add(tableCards.get(3));
-        //1: notificare il nuovo stato della board, le carte di resource deck e gold deck sono cambiate
+
         for(GameSub gameSub: gameSubs){
             try {
                 gameSub.UpdateFirst(commons);
@@ -354,9 +332,7 @@ public class Game{
     public void addPlayer(String player) {
         Player playerToAdd = new Player(player);
         players.add(playerToAdd);
-        //se questo è il primo giocatore allora non devo notificare
         if(players.size()>1){
-            //NOTIFY ON JOINED PLAYER, notifico a tutti tranne il player appena entrato
             for (GameSub gameSub : gameSubs) {
                 try {
                         gameSub.notifyJoinedPlayer(player);
@@ -388,12 +364,11 @@ public class Game{
      * Add a resource card to the selected player
      * @param player represents the player who is drawing
      */
-    public void drawResources(String player) /* throws EmptyDeckException*/ {
+    public void drawResources(String player){
         //if(resourceDeck.isEmpty())
           //  throw new EmptyDeckException("There aren't other cards in the selected deck");
         Player p=findPlayer(player);
         p.addCard(resourceDeck.drawCard());
-        //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
         if(p.getConnected()) {
             try {
                 findSub(player).NotifyChangePersonalCards(player, p.getHand());
@@ -401,8 +376,6 @@ public class Game{
                 //System.out.println("Errore 1");
             }
         }
-
-        //SE IL DECK RISORSA è EMPTY NOTIFY ON EMPTY DECK
         if(resourceDeck.isEmpty()){
             for (GameSub gameSub : gameSubs) {
                 try {
@@ -412,9 +385,7 @@ public class Game{
                 }
             }
         }
-        //DONE
         if(!resourceDeck.isEmpty()){
-            //DOPO PESCA HO NOTIFY_RESOURCE_DECK CHE MI AGGIORNA LA CARTA PRESENTE NEL MAZZO RESOURCE
             for(GameSub gameSub: gameSubs){
                 try {
                     gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
@@ -423,9 +394,6 @@ public class Game{
                 }
             }
         }
-
-        //DONE
-
         if(resourceDeck.isEmpty() && goldDeck.isEmpty())
             ending=true;
         nextTurn();
@@ -435,7 +403,7 @@ public class Game{
      * Add a gold card to the selected player
      * @param player represents the player who is drawing
      */
-    public void drawGold(String player) /*throws EmptyDeckException*/ {
+    public void drawGold(String player){
        // if(goldDeck.isEmpty())
          //   throw new EmptyDeckException("There aren't other cards in the selected deck");
         findPlayer(player).addCard(goldDeck.drawCard());
@@ -449,7 +417,7 @@ public class Game{
             }
         }
 
-        //SE IL DECK GOLD è EMPTY NOTIFY ON EMPTY DECK
+
         if(goldDeck.isEmpty()){
             for(GameSub gameSub: gameSubs){
                 try {
@@ -457,9 +425,7 @@ public class Game{
                 }catch (RemoteException ignored){}
             }
         }
-        //DONE
 
-        //SE DOPO PESCA GOLD DECK NON è VUOTO ALLORA AGGIORNO GOLD DECK
         if(!goldDeck.isEmpty()){
             for(GameSub gameSub: gameSubs){
                 try {
@@ -467,7 +433,6 @@ public class Game{
                 }catch (RemoteException ignored){}
             }
         }
-        //DONE
         if(resourceDeck.isEmpty() && goldDeck.isEmpty())
             ending=true;
         nextTurn();
@@ -600,7 +565,6 @@ public class Game{
     }
 
     public void handledrawTable(Deck d, ResourceCard resourceCard, int index, int deck) {
-        //notify common cards, notifico i sub di game che c'è una nuova carta in posizione index (0,1,2,3)
         for (GameSub gameSub : gameSubs) {
             try {
                 gameSub.updateCommonTable(resourceCard,index);
@@ -608,7 +572,6 @@ public class Game{
             }
         }
 
-        //check che il deck corrispondente sia vuoto o meno
         if (d.isEmpty()) {
             for (GameSub gameSub : gameSubs) {
                 try {
@@ -647,23 +610,17 @@ public class Game{
         catch(Exception e){
             throw e;
         }
-        //notifico tutti i sub della playerboard di p che player ha piazzato una carta
-
             p.getPlayerBoard().notifyChangePlayerBoard(player, p.getPlayerBoard().getBoard()[i][j], i, j);
 
-        //notifico a tutti i sub del player che ha appena giocato l'update dei punti
         for(PlayerSub playerSub: p.getPlayerSubs()){
             try{
                 playerSub.ReceiveUpdateOnPoints(player,p.getPoints());
             }catch (RemoteException ignored){}
         }
-        if(p.getPoints()>=20)
+        if(p.getPoints()>=2)
             ending=true;
         if(!lastRound) {
             this.gameState = State.DRAWING;
-            //notifico a tutti il cambiamento dello stato
-
-            //notifico anche del current player
             for (GameSub gameSub : gameSubs) {
                 try {
                     gameSub.notifyChangeState(gameState);
@@ -681,7 +638,6 @@ public class Game{
                     } catch (RemoteException ignored) {
                     }
                 }
-                //notifico a quello che ha pescato il cambiamento delle sue carte, ora sono solo due
                 endGame();
             }
             else {
@@ -715,9 +671,7 @@ public class Game{
     {
         Player p = players.get(currentPlayer);
         p.getPlayerBoard().placeStartingCard(p.getStartingCard(), face);
-        //notifico tutti i sub della playerboard di p che ha piazzato una carta
         p.getPlayerBoard().notifyChangePlayerBoard(player, p.getPlayerBoard().getBoard()[40][40], 40,40);
-
         nextTurn();
     }
 
@@ -738,10 +692,7 @@ public class Game{
             if (availableColors.get(i).equals(color))
                 availableColors.remove(i);
         }
-        //NOTIFICO IL PROSSIMO PLAYER DEI COLORI RIMASTI
-
         nextTurn();
-        //se lo stato è cambiato significa che ho finito, se è ancora color mando al current player la notifica dei colori disponibili
         if(gameState==State.COLOR){
             try {
                 findSub(players.get(currentPlayer).getNickname()).notifyAvailableColors(availableColors);
@@ -766,23 +717,18 @@ public class Game{
                 roundNumber++;
             }
             else if(gameState.equals(State.STARTING)) {
-                //System.out.println("Color");
                 gameState = State.COLOR;
-                //NOTIFICO A TUTTI CHE SIAMO NELLO STATO DI SCELTA DEL COLORE
                 for (GameSub gameSub : gameSubs) {
                     try {
                         gameSub.notifyChangeState(gameState);
                     } catch (RemoteException ignored) {
                     }
                 }
-                //notifico solo al primo client i colori disponibili, ovvero tutti i colori
                 try {
                     findSub(players.get(0)).notifyAvailableColors(availableColors);
                 }catch (RemoteException ignored){}
             }
             else if(gameState.equals(State.COLOR)) {
-                //qui notifico a tutti dei colori dei giocatori
-                //creo mappa stringa nome, colore
                 Map<String, Color> colors=new HashMap<>();
                 for(Player p: players){
                     colors.put(p.getNickname(),p.getPawncolor());
@@ -822,7 +768,6 @@ public class Game{
             }
 
         }
-        //se sono qua o sono all'inizio oppure non sono ancora all'ultimo giocatore
         if(gameState.equals(State.DRAWING)) {
             gameState = State.PLAYING;
             for (GameSub gameSub : gameSubs) {
@@ -833,8 +778,6 @@ public class Game{
             }
         }
         currentPlayer = (currentPlayer+1)%(numPlayers);
-        //System.out.println(players.get(currentPlayer).getNickname());
-
         while(!players.get(currentPlayer).getConnected() && numPlayersConnected>1) {
             currentPlayer = (currentPlayer + 1) % (numPlayers);
         }
@@ -900,7 +843,6 @@ public class Game{
         this.gameState = state;
     }
 
-    //UPDATES FOR OBSERVERS//
     public void addSub(GameSub gameSub){
         gameSubs.add(gameSub);
     }
@@ -908,12 +850,10 @@ public class Game{
         gameSubs.remove(gameSub);
     }
     public void addSub(PlayerSub playerSub){
-        //qui aggiungo il seconod player al primo e a se stesso
         for(Player p: getPlayers()){
             p.getPlayerSubs().add(playerSub);
 
         }
-        //caso in cui io sia all'inizio della partita
         if(gameState==State.WAITING){
             for(int i=0; i<players.size()-1;i++){
                 PlayerSub first = players.get(i).getPlayerSubs().get(0);
@@ -931,7 +871,6 @@ public class Game{
         for(Player p: getPlayers()){
             p.getPlayerSubs().remove(playerSub);
         }
-        //però tutti gli altri sub devono
     }
     public void addSub(ChatSub chatSub){
         chat.getChatSubs().add(chatSub);
@@ -940,23 +879,14 @@ public class Game{
         chat.getChatSubs().remove(chatSub);
     }
     public void addSub(PlayerBoardSub playerBoardSub){
-        //qui iscrivo l'ultimo giocatore alle board degli altri già entrati
         for(Player p: getPlayers()){
             p.getPlayerBoard().getPlayerBoardSubs().add(playerBoardSub);
         }
-
-        //devo iscrivere i giocatori già in gioco alla board dell'ultimo entrato
-        //ho ottenuto il sub della playerboard del primo giocatore
-
-        //game state è uguale a starting
         if(gameState==State.WAITING) {
-            //DEVO ISCRIVERE I GIOCATORI ALLA LISTA DI PLAYER DAL PRIMO A PLAYER-1
             for(int i=0; i<players.size()-1;i++){
                 PlayerBoardSub first = players.get(i).getPlayerBoard().getPlayerBoardSubs().get(0);
                 players.get(players.size()-1).getPlayerBoard().getPlayerBoardSubs().add(first);
             }
-
-
         }/*
         else{
             for(Player p: players){
@@ -970,17 +900,9 @@ public class Game{
         }
     }
     public void sendPrivateMessage(String sender, String receiver, String message) {
-        //controllo su stato del gioco
-
-        //se il player è crashato non posso mandare messaggio
-        //
-        //controllo su sender==null receiver==null  oppure sono vuoti, bad text exception
-
-
         Text t=new Text(sender, receiver,message);
         chat.NotifyChat(t);
     }
-    //nel game faccio tutti i controlli sul messaggio
     public void sendGroupMessage(String sender, String message){
         Text t=new Text(sender,message);
         chat.NotifyChat(t);
@@ -1009,7 +931,6 @@ public class Game{
             }
         }
         PlayerSub ps=null;
-        //una volta trovato il giocatore ritorno il sub corrispondente a esso
         for(PlayerSub playerSub: x.getPlayerSubs()){
             try{
                 if(playerSub.getSub().equals(x.getNickname())){
@@ -1031,48 +952,39 @@ public class Game{
     }
 
     public void manageUpdate(String player){
-        //trovo copia arraylist carte giocatore
         ArrayList<ResourceCard> hand=new ArrayList<>();
         hand=findPlayer(player).getHand();
-
-        //array di carte del tavolo
         ArrayList<ResourceCard> table=new ArrayList<>();
-        //indice 0: deck risorsa
         if(resourceDeck.isEmpty()){
             table.add(0,null);
         }
         else{
             table.add(0,resourceDeck.getCards().get(0));
         }
-        //indice 1: deck oro
         if(goldDeck.isEmpty()){
             table.add(1,null);
         }
         else{
             table.add(1,goldDeck.getCards().get(0));
         }
-        //indice 2: prima carta
         if(tableCards.get(0)==null){
             table.add(2,null);
         }
         else{
             table.add(2,tableCards.get(0));
         }
-        //indice 3: seconda carta
         if(tableCards.get(1)==null){
             table.add(3,null);
         }
         else{
             table.add(3,tableCards.get(1));
         }
-        //indice 4: terza carta
         if(tableCards.get(2)==null){
             table.add(4,null);
         }
         else{
             table.add(4,tableCards.get(2));
         }
-        //indice 5: quarta carta
         if(tableCards.get(3)==null){
             table.add(5,null);
         }
@@ -1080,53 +992,33 @@ public class Game{
             table.add(5,tableCards.get(3));
         }
 
-        //array di obiettivi comuni
         ArrayList<ObjectiveCard> objectiveCards =new ArrayList<>();
         objectiveCards=commonObjective;
-
-        //colore giocatore
         Color color;
         color=findPlayer(player).getPawncolor();
-
-        //current player
         String current;
         current=getPlayers().get(currentPlayer).getNickname();
-
-        //obiettivo personale giocatore
         ObjectiveCard objectiveCard;
         objectiveCard=findPlayer(player).getObjectiveCard();
-
-        //mappa di stringa: player-playerboard
         Map<String, PlayableCard[][]> boards=new HashMap<>();
         for(Player p: getPlayers()){
             boards.put(p.getNickname(), p.getPlayerBoard().getBoard());
         }
-
-        //mappa di player-punti
         Map<String, Integer> points=new HashMap<>();
         for(Player p: getPlayers()){
             points.put(p.getNickname(),p.getPoints());
         }
-
-        //array list di giocatori
         ArrayList<String> order=new ArrayList<>();
         for (Player p : players) {
             order.add(p.getNickname());
         }
-
-        //game state
         State gameState;
         gameState=getGameState();
-
-        //array list di messaggi
         ArrayList<Text> chat=new ArrayList<>();
         chat=this.chat.getAll(player);
-
         ArrayList<Color> colors = new ArrayList<>();
         for(Player p: getPlayers())
             colors.add(p.getPawncolor());
-
-        //devo notificare il sub corrispondente
         for(GameSub gameSub:getGameSubs()){
             try{
                 if(gameSub.getSub().equals(player)){

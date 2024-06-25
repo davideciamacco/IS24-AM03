@@ -4,7 +4,6 @@ import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 
 import java.io.Serial;
 
-//sent after a player choose his secret objective
 
 public class ChoiceObjectiveMessage extends Message{
     @Serial
@@ -12,19 +11,18 @@ public class ChoiceObjectiveMessage extends Message{
 
     private String player;
 
-    public String getPlayer() {
-        return player;
-    }
-
-    public ObjectiveCard getObjectiveCard() {
-        return objectiveCard;
-    }
-
     private ObjectiveCard objectiveCard;
 
     public ChoiceObjectiveMessage(String player, ObjectiveCard objectiveCard){
         super(MessageType.UPDATE_PERSONAL_OBJECTIVE);
         this.player=player;
         this.objectiveCard=objectiveCard;
+    }
+    public String getPlayer() {
+        return player;
+    }
+
+    public ObjectiveCard getObjectiveCard() {
+        return objectiveCard;
     }
 }

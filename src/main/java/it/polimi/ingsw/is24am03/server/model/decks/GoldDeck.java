@@ -1,7 +1,4 @@
 package it.polimi.ingsw.is24am03.server.model.decks;
-
-
-
 import it.polimi.ingsw.is24am03.server.model.cards.GoldCard;
 import it.polimi.ingsw.is24am03.server.model.cards.Corner;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
@@ -35,20 +32,16 @@ public class GoldDeck extends Deck {
         Corner notVisible =new Corner("X");
 
         ArrayList<CornerItem> list = new ArrayList<>();
-
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.FUNGI);
         list.add(CornerItem.ANIMAL);
         ResourceCard card_40 = new GoldCard(40,"R",1,notVisible,empty,quill,empty,empty,empty,empty,empty,list,0,CornerItem.QUILL);
 
-
         ArrayList<CornerItem> list1 = new ArrayList<>();
-
         list1.add(CornerItem.FUNGI);
         list1.add(CornerItem.FUNGI);
         list1.add(CornerItem.ANIMAL);
         ResourceCard card_41 = new GoldCard(41,"R",1,empty,inkwell,empty,notVisible,empty,empty,empty,empty,list1,0,CornerItem.INKWELL);
-
 
         ArrayList<CornerItem> list2 = new ArrayList<>();
         list2.add(CornerItem.FUNGI);
@@ -56,16 +49,12 @@ public class GoldDeck extends Deck {
         list2.add(CornerItem.INSECT);
         ResourceCard card_42 = new GoldCard(42,"R",1,manuscript,empty,notVisible,empty,empty,empty,empty,empty,list2,0,CornerItem.MANUSCRIPT);
 
-
         ArrayList<CornerItem> list3 = new ArrayList<>();
-
         list3.add(CornerItem.FUNGI);
         list3.add(CornerItem.FUNGI);
         list3.add(CornerItem.FUNGI);
         list3.add(CornerItem.ANIMAL);
         ResourceCard card_43 = new GoldCard(43,"R",2,empty,empty,empty,notVisible,empty,empty,empty,empty,list3,1,CornerItem.EMPTY);
-
-
 
         ArrayList<CornerItem> list4 = new ArrayList<>();
         list4.add(CornerItem.FUNGI);
@@ -75,24 +64,19 @@ public class GoldDeck extends Deck {
         ResourceCard card_44 = new GoldCard(44,"R",2,empty,empty,notVisible,empty,empty,empty,empty,empty,list4,1,CornerItem.EMPTY);
 
         ArrayList<CornerItem> list5 = new ArrayList<>();
-
         list5.add(CornerItem.FUNGI);
         list5.add(CornerItem.FUNGI);
         list5.add(CornerItem.FUNGI);
         list5.add(CornerItem.INSECT);
         ResourceCard card_45 = new GoldCard(45,"R",2,empty,notVisible,empty,empty,empty,empty,empty,empty,list5,1,CornerItem.EMPTY);
 
-
         ArrayList<CornerItem> list6 = new ArrayList<>();
-
         list6.add(CornerItem.FUNGI);
         list6.add(CornerItem.FUNGI);
         list6.add(CornerItem.FUNGI);
         ResourceCard card_46 = new GoldCard(46,"R",3,empty,notVisible,notVisible,inkwell,empty,empty,empty,empty,list6,2,CornerItem.EMPTY);
 
-
         ArrayList<CornerItem> list7 = new ArrayList<>();
-
         list7.add(CornerItem.FUNGI);
         list7.add(CornerItem.FUNGI);
         list7.add(CornerItem.FUNGI);
@@ -119,7 +103,6 @@ public class GoldDeck extends Deck {
         ResourceCard card_50 = new GoldCard(50,"G",1,quill,empty,notVisible,empty,empty,empty,empty,empty,list10,0,CornerItem.QUILL);
 
         ArrayList<CornerItem> list11 = new ArrayList<>();
-
         list11.add(CornerItem.PLANT);
         list11.add(CornerItem.PLANT);
         list11.add(CornerItem.FUNGI);
@@ -139,7 +122,6 @@ public class GoldDeck extends Deck {
         ResourceCard card_53 = new GoldCard(53,"G",2,notVisible,empty,empty,empty,empty,empty,empty,empty,list13,1,CornerItem.EMPTY);
 
         ArrayList<CornerItem> list14 = new ArrayList<>();
-
         list14.add(CornerItem.PLANT);
         list14.add(CornerItem.PLANT);
         list14.add(CornerItem.PLANT);
@@ -165,11 +147,11 @@ public class GoldDeck extends Deck {
         list17.add(CornerItem.PLANT);
         list17.add(CornerItem.PLANT);
         ResourceCard card_57 = new GoldCard(57,"G",3,manuscript,empty,notVisible,notVisible,empty,empty,empty,empty,list17,2,CornerItem.EMPTY);
+
         ArrayList<CornerItem> list18 = new ArrayList<>();
         list18.add(CornerItem.PLANT);
         list18.add(CornerItem.PLANT);
         list18.add(CornerItem.PLANT);
-
         ResourceCard card_58 = new GoldCard(58,"G",3,notVisible,inkwell,empty,notVisible,empty,empty,empty,empty,list18,2,CornerItem.EMPTY);
 
         ArrayList<CornerItem> list19 = new ArrayList<>();
@@ -307,7 +289,6 @@ public class GoldDeck extends Deck {
         list79.add(CornerItem.INSECT);
         list79.add(CornerItem.INSECT);
         list79.add(CornerItem.INSECT);
-
         ResourceCard card_79 = new GoldCard(79,"P",5,empty,empty,notVisible,notVisible,empty,empty,empty,empty,list79,2,CornerItem.EMPTY);
 
         cards.add(card_40);

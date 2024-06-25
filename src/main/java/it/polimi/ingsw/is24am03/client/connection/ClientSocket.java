@@ -1,6 +1,7 @@
-package it.polimi.ingsw.is24am03;
+package it.polimi.ingsw.is24am03.client.connection;
+import it.polimi.ingsw.is24am03.client.view.ViewInterface;
+import it.polimi.ingsw.is24am03.client.clientModel.ClientModel;
 import it.polimi.ingsw.is24am03.messages.*;
-import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,6 +15,9 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ *
+ */
 public class ClientSocket implements Client{
     private boolean hasJoined;
     private ClientModel clientModel;
@@ -24,17 +28,16 @@ public class ClientSocket implements Client{
     private final ObjectInputStream inputStream;
     private final Queue<Message> queueMessages;
     private final ExecutorService threadManager;
-    private  ViewInterface view;
-
+    private ViewInterface view;
     private String nickname;
-    public void setGUI(ViewInterface gui){
-        this.view=gui;
-    }
-    public void setCLI(ViewInterface cli){
-        this.view=cli;
-    }
 
 
+    /**
+     *
+     * @param ip
+     * @param port
+     * @param view
+     */
     public ClientSocket(String ip, int port, ViewInterface view) {
         this.ip = ip;
         this.port = port;
@@ -42,7 +45,6 @@ public class ClientSocket implements Client{
         this.threadManager = Executors.newCachedThreadPool();
         this.view = view;
         this.hasJoined = false;
-
         try {
             this.connection = new Socket(ip, port);
             this.connection.setSoTimeout(500);
@@ -56,67 +58,133 @@ public class ClientSocket implements Client{
         this.ParserAgent();
     }
 
+    /**
+     *
+     * @param gui
+     */
+    public void setGUI(ViewInterface gui){
+        this.view=gui;
+    }
 
+    /**
+     *
+     * @param cli
+     */
+    public void setCLI(ViewInterface cli){
+        this.view=cli;
+    }
+
+    /**
+     *
+     * @param nPlayers
+     * @param nickname
+     */
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
         this.nickname=nickname;
         this.sendMessage(requestMessage);
     }
 
+    /**
+     *
+     * @param nickname
+     */
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
         this.nickname = nickname;
         this.sendMessage(joinMessage);
     }
 
+    /**
+     *
+     * @param color
+     */
     @Override
     public void PickColor(String color) {
         PickColorMessage colorMessage = new PickColorMessage(nickname, color);
         this.sendMessage(colorMessage);
     }
 
+    /**
+     *
+     * @param face
+     */
     public void ChooseStartingCardSide(String face){
         ChooseStartingMessage startingMessage= new ChooseStartingMessage(nickname,face);
         this.sendMessage(startingMessage);
     }
 
+    /**
+     *
+     * @param choice
+     * @param i
+     * @param j
+     * @param face
+     */
     public void PlaceCard(int choice, int i, int j, String face){
         PlaceCardMessage placeCardMessage = new PlaceCardMessage(nickname, choice, i, j, face);
         this.sendMessage(placeCardMessage);
     }
 
+    /**
+     *
+     */
     public void DrawGold(){
         DrawGoldMessage drawGoldMessage = new DrawGoldMessage(nickname);
         this.sendMessage(drawGoldMessage);
     }
 
+    /**
+     *
+     */
     public void DrawResource(){
         DrawResourceMessage drawResourceMessage = new DrawResourceMessage(nickname);
         this.sendMessage(drawResourceMessage);
     }
 
+    /**
+     *
+     * @param choice
+     */
     public void DrawTable(int choice){
         DrawTableMessage drawTableMessage = new DrawTableMessage(nickname, choice);
         this.sendMessage(drawTableMessage);
     }
 
+    /**
+     *
+     * @param choice
+     */
     public void ChooseObjectiveCard(int choice){
         ChooseObjectiveMessage chooseObjectiveMessage = new ChooseObjectiveMessage(nickname, choice);
         this.sendMessage(chooseObjectiveMessage);
     }
 
+    /**
+     *
+     * @param text
+     */
     @Override
     public void sendGroupText(String text) {
         GroupChatMessage groupChatMessage= new GroupChatMessage(nickname, text);
         this.sendMessage(groupChatMessage);
     }
 
+    /**
+     *
+     * @param receiver
+     * @param text
+     */
     @Override
     public void sendPrivateText(String receiver, String text) {
         PrivateChatMessage privateChatMessage= new PrivateChatMessage(nickname, receiver, text);
         this.sendMessage(privateChatMessage);
     }
 
+    /**
+     *
+     * @param player_name
+     */
     public void RejoinGame(String player_name){
         RejoinGameMessage rejoinGameMessage = new RejoinGameMessage(player_name);
         this.nickname = player_name;
@@ -124,6 +192,9 @@ public class ClientSocket implements Client{
     }
 
 
+    /**
+     *
+     */
     private void messagesReceiver()  {
         threadManager.execute( () -> {
             boolean active = true;
@@ -145,7 +216,6 @@ public class ClientSocket implements Client{
                     }
 
                     catch (IOException | ClassNotFoundException | InterruptedException e ) {
-                        //e.printStackTrace();
                         System.out.println("BBBB");
                         //System.out.println("Server disconnected. Closing client...");
                         active = false;
@@ -157,6 +227,9 @@ public class ClientSocket implements Client{
     }
 
 
+    /**
+     *
+     */
     private void ParserAgent(){
         threadManager.execute( () -> {
             while(this.connection.isConnected()){
@@ -175,13 +248,16 @@ public class ClientSocket implements Client{
         });
     }
 
+    /**
+     *
+     * @param responseMessage
+     */
     private void parse(Message responseMessage){
 
     //    if(responseMessage == null) return;
 
         switch (responseMessage.getMessageType()){
 
-            //MESSAGGI DI CONFERMA
             case CONFIRM_GAME -> this.parse((ConfirmGameMessage) responseMessage);
             case CONFIRM_JOIN -> this.parse((ConfirmJoinGameMessage) responseMessage);
             case CONFIRM_PICK -> this.parse((ConfirmPickColorMessage) responseMessage);
@@ -190,13 +266,7 @@ public class ClientSocket implements Client{
             case CONFIRM_PLACE -> this.parse((ConfirmPlaceMessage) responseMessage);
             case CONFIRM_DRAW -> this.parse((ConfirmDrawMessage) responseMessage);
             case CONFIRM_REJOIN -> this.parse((ConfirmRejoinGameMessage) responseMessage);
-
             case CONFIRM_CHAT -> this.parse((ConfirmChatMessage)responseMessage);
-
-
-            //MESSAGGI UPDATE DEL GIOCO (INTESO COME COMMON TABLE, STATI ETC)
-            //TUTTI I MESSAGGI DI UPDATE DI GAME SONO BROADCAST
-
             case UPDATE_COMMON_TABLE -> this.parse((NotifyCommonTableMessage)responseMessage);
             case COMMON_OBJECTIVE-> this.parse((CommonObjectiveMessage) responseMessage);
             case NOTIFY_WINNERS-> this.parse((WinnersMessage) responseMessage);
@@ -205,28 +275,15 @@ public class ClientSocket implements Client{
             case NOTIFY_CURRENT_PLAYER -> this.parse((CurrentPlayerMessage) responseMessage);
             case TURN_ORDER-> this.parse((TurnOrderMessage) responseMessage);
             case GAME_STATE-> this.parse((ChangeStateMessage) responseMessage);
-            //questo notifica a quelli in gioco che un certo player è crashato
             case NOTIFY_CRASHED_PLAYER-> this.parse((CrashedPlayerMessage) responseMessage);
-            //MESSAGGI DI UPDATE RIGUARDANTI UN GIOCATORE
-
-            //BROADCAST MESSAGE//
-
             case UPDATE_POINTS-> this.parse((UpdatePointsMessage) responseMessage);
-            //PRIVATE MESSAGES//
             case UPDATE_PERSONAL_CARDS-> this.parse((PersonalCardsMessage) responseMessage);
-            //message choice objective is sent after the player chose his secret objective
             case UPDATE_PERSONAL_OBJECTIVE-> this.parse((ChoiceObjectiveMessage) responseMessage);
-            //first-hand message contains first hand of the player + objective cards+ starting card
             case FIRST_HAND-> this.parse((FirstHandMessage) responseMessage);
-            //MESSAGGIO DI UPDATE PER IL PLAYER CRASHATO RITORNATO IN GIOCO//
             case UPDATE_CRASHED_PLAYER -> this.parse((UpdateCrashedPlayerMessage)responseMessage);
-            //PLAYER BOARD MESSAGE, E' UN MESSAGGIO BROADCAST//
             case UPDATE_PLAYER_BOARD-> this.parse((PlayerBoardMessage) responseMessage);
-            //CHAT//
             case GROUP_CHAT-> this.parse((GroupChatMessage) responseMessage);
             case PRIVATE_CHAT-> this.parse((PrivateChatMessage) responseMessage);
-
-
             case FIRST_COMMON -> this.parse((StartingCommonMessage)responseMessage);
             case AVAILABLE_COLORS -> this.parse((AvailableColorMessage) responseMessage);
             case FINAL_COLORS -> this.parse((FinalColorsMessage)responseMessage);
@@ -237,38 +294,55 @@ public class ClientSocket implements Client{
         }
     }
 
-    //TUTTE LE NOTIFICHE DI UPDATE VERRANNO POI GESTITE CON METODI CHIAMATI SUL LOCAL MODEL /
-
-
+    /**
+     *
+     * @param lastRoundMessage
+     */
     private void parse(LastRoundMessage lastRoundMessage){
         try{
             this.clientModel.NotifyLastRound();
         }catch (RemoteException e){}
     }
+
+    /**
+     *
+     * @param response
+     */
     private void parse(FinalColorsMessage response){
         try{
             this.clientModel.notifyFinalColors(response.getColors());
         }catch (RemoteException e){}
     }
+
+    /**
+     *
+     * @param response
+     */
     private void parse(StartingCommonMessage response){
         try{
             this.clientModel.UpdateFirst(response.getCommons());
         }catch (RemoteException e){}
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(AvailableColorMessage response){
         try {
             this.clientModel.notifyAvailableColors(response.getColors());
         }catch(RemoteException e){}
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(NotifyNumPlayersReachedMessage response){
         if(this.clientModel==null) {
             try {
                 clientModel = new ClientModel(this.nickname, view);
                 this.clientModel.NotifyNumbersOfPlayersReached();
-                //qui notifico il giocatore che è avvenuto il suo join
-                //this.clientModel.printNotifications();
             } catch (RemoteException e) {
             }
         }
@@ -280,9 +354,12 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param message
+     */
     private void parse(ConfirmDrawMessage message) {
         if (!message.getconfirmdraw()) {
-            //chiamo metodo sul local model
             if(clientModel!=null)
                 this.clientModel.printNotifications(message.getDetails());
             else {
@@ -291,6 +368,11 @@ public class ClientSocket implements Client{
         }
         System.out.flush();
     }
+
+    /**
+     *
+     * @param message
+     */
     private void parse(ConfirmPlaceMessage message) {
         if (!message.getConfirmPlace()) {
             if(clientModel!=null)
@@ -302,14 +384,16 @@ public class ClientSocket implements Client{
         System.out.flush();
     }
 
+    /**
+     *
+     * @param message
+     */
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
             this.nickname = message.getNickname();
             view.confirmCreate();
-            //qui creo il local model
             try {
                 this.clientModel = new ClientModel(this.nickname, view);
-                //clientModel.printNotifications("Game created successfully");
             }catch (RemoteException e){}
             hasJoined = true;
         }
@@ -317,6 +401,11 @@ public class ClientSocket implements Client{
             view.drawError(message.getDetails());
         System.out.flush();
     }
+
+    /**
+     *
+     * @param message
+     */
     private void parse(ConfirmChooseObjectiveMessage message) {
         if (!message.getConfirmChoose()){
             if(clientModel!=null)
@@ -326,12 +415,21 @@ public class ClientSocket implements Client{
         }
         System.out.flush();
     }
-    private void parse(NotifyCommonTableMessage message) {
 
+    /**
+     *
+     * @param message
+     */
+    private void parse(NotifyCommonTableMessage message) {
         try {
             this.clientModel.updateCommonTable(message.getResourceCard(), message.getIndex());
         }catch (RemoteException e){}
     }
+
+    /**
+     *
+     * @param responseMessage
+     */
     private void parse(CommonObjectiveMessage responseMessage){
         try {
             this.clientModel.notifyCommonObjective(responseMessage.getObjectiveCard1(), responseMessage.getObjectiveCard2());
@@ -339,6 +437,11 @@ public class ClientSocket implements Client{
 
         }
     }
+
+    /**
+     *
+     * @param response
+     */
     private void parse(WinnersMessage response){
         try {
             this.clientModel.notifyWinners(response.getWinners());
@@ -347,6 +450,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(ConfirmRejoinGameMessage response){
         if(!response.getConfirmRejoin()){
             view.drawError(response.getDetails());
@@ -354,14 +461,21 @@ public class ClientSocket implements Client{
 
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(JoinedPlayerMessage response){
         try {
             this.clientModel.notifyJoinedPlayer(response.getPlayer());
         } catch (RemoteException e) {
-
         }
-
     }
+
+    /**
+     *
+     * @param response
+     */
     private void parse (RejoinedPlayerMessage response){
         try {
             this.clientModel.notifyRejoinedPlayer(response.getPlayer());
@@ -371,6 +485,10 @@ public class ClientSocket implements Client{
        // System.out.println(response.getPlayer()+"has rejoined the game");
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(CurrentPlayerMessage response){
         try {
             this.clientModel.notifyCurrentPlayer(response.getCurrentPlayer());
@@ -379,6 +497,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(TurnOrderMessage response){
         try {
             this.clientModel.notifyTurnOrder(response.getTurnOrder());
@@ -387,6 +509,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(ChangeStateMessage response){
         try {
             this.clientModel.notifyChangeState(response.getState());
@@ -395,6 +521,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(CrashedPlayerMessage response){
         try {
             this.clientModel.notifyCrashedPlayer(response.getPlayer());
@@ -402,31 +532,32 @@ public class ClientSocket implements Client{
         }
     }
 
-
+    /**
+     *
+     * @param message
+     */
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             hasJoined = true;
-            //view.confirmJoin();
             if (this.clientModel == null) {
                 try {
-                    //sono qui perchè non ci sono ancora abbastanza giocatori
                     this.clientModel = new ClientModel(message.getNickname(), view);
                     if (!message.getDetails().isEmpty()) {
-                        //significa che il gioco non può ancora iniziare
-                        // e devo solo stampare la descrizione positiva
                         view.confirmJoin();
                     }
                 }catch (RemoteException e){}
-
             }
         }
         else{
             view.drawError(message.getDetails());
-
         }
         System.out.flush();
     }
 
+    /**
+     *
+     * @param message
+     */
     private void parse(ConfirmPickColorMessage message) {
         if (!message.getConfirmPickColor()){
             if(clientModel!=null)
@@ -438,6 +569,10 @@ public class ClientSocket implements Client{
         System.out.flush();
     }
 
+    /**
+     *
+     * @param message
+     */
     private void parse(ConfirmStartingCardMessage message) {
         if (!message.getConfirmStarting()){
             if(clientModel!=null)
@@ -445,10 +580,13 @@ public class ClientSocket implements Client{
             else
                 view.drawError(message.getDetails());
         }
-
         System.out.flush();
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(UpdatePointsMessage response){
         try {
             this.clientModel.ReceiveUpdateOnPoints(response.getPlayer(),response.getPoints());
@@ -457,6 +595,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param response
+     */
     private void parse(PersonalCardsMessage response){
         try {
             this.clientModel.NotifyChangePersonalCards(response.getPlayer(), response.getHand());
@@ -465,6 +607,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param choiceObjectiveMessage
+     */
     private void parse(ChoiceObjectiveMessage choiceObjectiveMessage){
         try {
             this.clientModel.notifyChoiceObjective(choiceObjectiveMessage.getPlayer(), choiceObjectiveMessage.getObjectiveCard());
@@ -473,6 +619,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param firstHandMessage
+     */
     private void parse(FirstHandMessage firstHandMessage){
         try {
             this.clientModel.notifyFirstHand(firstHandMessage.getPlayableCard1(), firstHandMessage.getPlayableCard2(), firstHandMessage.getPlayableCard3(), firstHandMessage.getStartingCard(), firstHandMessage.getObjectiveCard1(), firstHandMessage.getObjectiveCard2());
@@ -481,16 +631,23 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param updateCrashedPlayerMessage
+     */
     private void parse(UpdateCrashedPlayerMessage updateCrashedPlayerMessage){
         try{
             clientModel = new ClientModel(this.nickname, view);
             this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColor(), updateCrashedPlayerMessage.getTable(), updateCrashedPlayerMessage.getColors());
-
         }
         catch(RemoteException e){}
 
     }
 
+    /**
+     *
+     * @param playerBoardMessage
+     */
     private void parse(PlayerBoardMessage playerBoardMessage){
         try {
             this.clientModel.notifyChangePlayerBoard(playerBoardMessage.getPlayer(),playerBoardMessage.getPlayableCard(), playerBoardMessage.getI(), playerBoardMessage.getJ());
@@ -500,6 +657,10 @@ public class ClientSocket implements Client{
 
     }
 
+    /**
+     *
+     * @param groupChatMessage
+     */
     private void parse(GroupChatMessage groupChatMessage){
         try {
             this.clientModel.ReceiveGroupText(groupChatMessage.getSender(),groupChatMessage.getText());
@@ -507,6 +668,11 @@ public class ClientSocket implements Client{
 
         }
     }
+
+    /**
+     *
+     * @param privateChatMessage
+     */
     private void parse(PrivateChatMessage privateChatMessage){
         try {
             this.clientModel.ReceivePrivateText(privateChatMessage.getSender(), privateChatMessage.getRecipient(),privateChatMessage.getText());
@@ -515,6 +681,10 @@ public class ClientSocket implements Client{
         }
     }
 
+    /**
+     *
+     * @param confirmChatMessage
+     */
     private void parse(ConfirmChatMessage confirmChatMessage){
         if(!confirmChatMessage.isConfirmChat()){
             if(clientModel!=null)
@@ -525,6 +695,10 @@ public class ClientSocket implements Client{
        // System.out.flush();
     }
 
+    /**
+     *
+     * @param message
+     */
     private void sendMessage(Message message) {
         synchronized (outputStream) {
             try {

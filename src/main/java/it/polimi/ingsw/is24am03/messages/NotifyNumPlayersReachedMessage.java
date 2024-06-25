@@ -8,13 +8,12 @@ public class NotifyNumPlayersReachedMessage extends Message{
 
     private String message;
 
-    public String getMessage() {
-        return message;
-    }
-
     public NotifyNumPlayersReachedMessage(){
         super(MessageType.NOTIFY_NUM_PLAYERS_REACHED);
         this.message="The numbers of players has been reached, in a few moments the game will start";
+    }
+    public String getMessage() {
+        return message;
     }
 
 

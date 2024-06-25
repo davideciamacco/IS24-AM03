@@ -1,5 +1,5 @@
 
-package it.polimi.ingsw.is24am03;
+package it.polimi.ingsw.is24am03.client.view.GUI;
 
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
@@ -20,8 +20,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 
 import java.net.URL;
@@ -30,13 +28,18 @@ import java.util.*;
 
 public class GameViewController extends GUIController implements Initializable {
 
+    private Map<Button, String> chatButtons=new HashMap<>();
+    private Map <String, Integer> points;
+    private Map<String,Pane> boards;
+    private double scaleValue=1.0;
+    private final double scaleIncrement=0.1;
+    private final double maxScale = 3.0;
+
+    private Map<Integer, ArrayList<Integer>> coords;
+    private Map<String, ImageView> pawns;
+
     @FXML
     private AnchorPane anchor;
-
-    @Override
-    public void postNotification(String title, String desc) {
-
-    }
 
     @FXML
     private ImageView redPawn;
@@ -52,8 +55,6 @@ public class GameViewController extends GUIController implements Initializable {
 
     @FXML
     private ImageView plank;
-
-    private Map<String, ImageView> pawns;
 
     @FXML
     private Pane zoom;
@@ -74,13 +75,9 @@ public class GameViewController extends GUIController implements Initializable {
     private ImageView resourceDeck;
 
     @FXML
-    private TextField choicheObjective;
-
-    @FXML
     private TextField indexI;
 
     @FXML
-
     private TextField indexJ;
 
     @FXML
@@ -92,8 +89,6 @@ public class GameViewController extends GUIController implements Initializable {
     @FXML
     private TextField cardNumber;
 
-    @FXML
-    private Button objectiveChoice;
 
     @FXML
     private ImageView goldDeck;
@@ -131,10 +126,6 @@ public class GameViewController extends GUIController implements Initializable {
     @FXML
     private ImageView startingCardBack;
 
-
-    @FXML
-    private GridPane grid;
-
     @FXML
     private TextField notifications;
     @FXML
@@ -149,7 +140,6 @@ public class GameViewController extends GUIController implements Initializable {
     @FXML
     private ImageView commonOb2;
 
-
     @FXML
     private TextField state;
 
@@ -158,18 +148,138 @@ public class GameViewController extends GUIController implements Initializable {
 
     @FXML
     private TextField turnOrder;
+    @FXML
+    private Button sendChatP1;
 
+    @FXML
+    private Button openChatP1;
+    @FXML
+    private Button closeChatP1;
+
+    @FXML
+    private TextField chatP1;
+
+    @FXML
+    private ScrollPane scrollChatP1;
+
+    @FXML
+    private SplitPane splitChatP1;
+
+    @FXML
+    private VBox messagesP1;
+
+    @FXML
+    private Button sendChatP2;
+    @FXML
+    private TextField chatP2;
+
+    @FXML
+    private Button openChatP2;
+    @FXML
+    private Button closeChatP2;
+
+    @FXML
+    private ScrollPane scrollChatP2;
+
+    @FXML
+    private SplitPane splitChatP2;
+
+    @FXML
+    private VBox messagesP2;
+
+    @FXML
+    private Button sendChatP3;
+
+    @FXML
+    private Button openChatP3;
+
+    @FXML
+    private Button closeChatP3;
+    @FXML
+    private TextField chatP3;
+    @FXML
+    private ScrollPane scrollChatP3;
+
+    @FXML
+    private SplitPane splitChatP3;
+
+    @FXML
+    private VBox messagesP3;
 
 
     @FXML
-    private Pane board;
+    private ScrollPane groupChat;
 
-    private final double maxScale = 3.0;
+    @FXML
+    private SplitPane chat;
+
+    @FXML
+    private Button sendGroupChat;
+
+    @FXML
+    private Button openGroupChat;
+
+    @FXML
+    private Button closeGroupChat;
+
+    @FXML
+    private TextField groupText;
+
+    @FXML
+    private VBox messages;
+
+    @FXML
+    private TextField color;
+    @FXML
+    private Button green;
+    @FXML
+    private Button blue;
+    @FXML
+    private Button yellow;
+    @FXML
+    private Button red;
+
+    @FXML
+    private Button player1;
+    @FXML
+    private Button player2;
+    @FXML
+    private Button player3;
+    @FXML
+    private Button player4;
+    @FXML
+    private Button goBack1;
+    @FXML
+    private Button goBack2;
+    @FXML
+    private Button goBack3;
+    @FXML
+    private Button goBack4;
+
+    @FXML
+    private ScrollPane game;
+
+    @FXML
+    private ScrollPane scrollPane1;
+
+    @FXML
+    private ScrollPane scrollPane2;
+
+
+    @FXML
+    private ScrollPane scrollPane3;
+
+    @FXML
+    private ScrollPane scrollPane4;
 
     @FXML
     private void onClickPlaceCard(MouseEvent mouseEvent){
         try{
             clientController.PlaceCard(Integer.parseInt(String.valueOf(this.cardNumber.getText())), Integer.parseInt(String.valueOf(this.indexI.getText())), Integer.parseInt(String.valueOf(this.indexJ.getText())), String.valueOf(this.cardSide.getText()));
+            this.cardNumber.setText("");
+            this.indexI.setText("");
+            this.indexJ.setText("");
+            this.cardSide.setText("");
         }catch (Exception e){
             this.drawNotifications("Missing Arguments");
         }
@@ -210,13 +320,6 @@ public class GameViewController extends GUIController implements Initializable {
 
     }
 
-    private Map<Integer, ArrayList<Integer>> coords;
-
-
-
-
-
-
     @FXML
     private void onClickObjective1(MouseEvent mouseEvent){
         clientController.ChooseObjectiveCard(1);
@@ -229,14 +332,11 @@ public class GameViewController extends GUIController implements Initializable {
 
 
     public void drawHand(ArrayList<ResourceCard> hand) {
-        //devo scorrere le carte in hand e per ciascuna devo trovare sia fronte che retro
-
-        //distinguo il caso in cui la hand è solo di due e invece quando è di tre carte
         if (hand.size() == 3) {
-            //fronte
+
             Image card = new Image(getClass().getResource(findFrontUrl(hand.get(0).getId())).toExternalForm());
             personalFront1.setImage(card);
-            //retro
+
             Image card1 = new Image(getClass().getResource(findBackUrl(hand.get(0).getId())).toExternalForm());
             personalBack1.setImage(card1);
 
@@ -254,7 +354,7 @@ public class GameViewController extends GUIController implements Initializable {
         } else if (hand.size() == 2) {
             Image card = new Image(getClass().getResource(findFrontUrl(hand.get(0).getId())).toExternalForm());
             personalFront1.setImage(card);
-            //retro
+
             Image card1 = new Image(getClass().getResource(findBackUrl(hand.get(0).getId())).toExternalForm());
             personalBack1.setImage(card1);
 
@@ -298,34 +398,21 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     public void drawTable(Map<String, Integer> playerPoints, ResourceCard resourceDeck, ResourceCard goldDeck, ResourceCard card0, ResourceCard card1, ResourceCard card2, ResourceCard card3) {
-        //deck risorsa
+
         if (resourceDeck == null) {
-            //lo metto a empty
             Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.resourceDeck.setImage(card);
         } else {
-            //se face ==true prendo il fronte
-
                 Image card = new Image(getClass().getResource(findBackUrl(resourceDeck.getId())).toExternalForm());
                 this.resourceDeck.setImage(card);
-
-
         }
-
-        //deck oro
         if (goldDeck == null) {
             Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.goldDeck.setImage(card);
-
         } else {
                 Image card = new Image(getClass().getResource(findBackUrl(goldDeck.getId())).toExternalForm());
                 this.goldDeck.setImage(card);
-            }
-
-
-
-
-        //carta table0
+        }
         if (card0 == null) {
             Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table0.setImage(card);
@@ -337,11 +424,7 @@ public class GameViewController extends GUIController implements Initializable {
                 Image card = new Image(findBackUrl(card0.getId()));
                 this.table0.setImage(card);
             }
-
-
         }
-
-        //carta table1
         if (card1 == null) {
             Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table1.setImage(card);
@@ -353,10 +436,7 @@ public class GameViewController extends GUIController implements Initializable {
                 Image card = new Image(getClass().getResource(findBackUrl(card1.getId())).toExternalForm());
                 this.table1.setImage(card);
             }
-
         }
-
-        //carta table2
         if (card2 == null) {
             Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table2.setImage(card);
@@ -370,12 +450,9 @@ public class GameViewController extends GUIController implements Initializable {
             }
 
         }
-
-        //carta table 3
         if (card3 == null) {
             Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
             this.table3.setImage(card);
-
         } else {
             if (card3.getFace()) {
                 Image card = new Image(getClass().getResource(findFrontUrl(card3.getId())).toExternalForm());
@@ -384,7 +461,6 @@ public class GameViewController extends GUIController implements Initializable {
                 Image card = new Image(getClass().getResource(findBackUrl(card3.getId())).toExternalForm());
                 this.table3.setImage(card);
             }
-
         }
     }
 
@@ -394,49 +470,38 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     private String findFrontUrl(int id) {
-        //metodo che mi restituisce l'url del fronte della carta corrispondente
         String url = null;
         if (id >= 0 && id <= 9) {
-            //significa che ho una carta risorsa rossa
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + (id) + ".png";
 
         }
         if (id > 9 && id <= 19) {
-            //risorsa verde
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
 
         if (id > 19 && id <= 29) {
-            //risorsa blu
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
 
         if (id > 29 && id <= 39) {
-            //risorsa viola
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
         if (id >= 40 && id <= 49) {
-            //oro rossa
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
         if (id >= 50 && id <= 59) {
-            //oro verde
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
         if (id >= 60 && id <= 69) {
-            //oro blu
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
         if (id >= 70 && id <= 79) {
-            //oro viola
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
         if (id >= 80 && id <= 85) {
-            //starting card
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
         if (id >= 86 && id <= 101) {
-            //carta obiettivo
             url = "/it/polimi/ingsw/is24am03/Cards/Fronts/" + id + ".png";
         }
         return url;
@@ -445,75 +510,40 @@ public class GameViewController extends GUIController implements Initializable {
     private String findBackUrl(int id) {
         String url = null;
         if (id >= 0 && id <= 9) {
-            //significa che ho una carta risorsa rossa
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/RES_RED.png";
 
         }
         if (id > 9 && id <= 19) {
-            //risorsa verde
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/RES_GREEN.png";
         }
 
         if (id > 19 && id <= 29) {
-            //risorsa blu
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/RES_BLUE.png";
         }
 
         if (id > 29 && id <= 39) {
-            //risorsa viola
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/RES_PURPLE.png";
         }
         if (id >= 40 && id <= 49) {
-            //oro rossa
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/GOLD_RED.png";
         }
         if (id >= 50 && id <= 59) {
-            //oro verde
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/GOLD_GREEN.png";
         }
         if (id >= 60 && id <= 69) {
-            //oro blu
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/GOLD_BLUE.png";
         }
         if (id >= 70 && id <= 79) {
-            //oro viola
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/GOLD_PURPLE.png";
         }
         if (id >= 80 && id <= 85) {
-            //starting card
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/" + id + ".png";
         }
         if (id >= 86 && id <= 101) {
-            //carta obiettivo
             url = "/it/polimi/ingsw/is24am03/Cards/Backs/OBJECTIVE.png";
         }
         return url;
-
     }
-
-   @FXML
-
-    private double scaleValue=1.0;
-    private final double scaleIncrement=0.1;
-
-    private final double minScale=0.5;
-
-
-    @FXML
-    private TextField color;
-
-
-
-    @FXML
-    private Button green;
-    @FXML
-    private Button blue;
-    @FXML
-    private Button yellow;
-    @FXML
-    private Button red;
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -521,12 +551,7 @@ public class GameViewController extends GUIController implements Initializable {
         zoom.setOnScroll(this::handleZoom);
         this.coords=new HashMap<>();
         this.points=new HashMap<>();
-        /*this.plank=new ImageView(new Image(getClass().getResource("/it/polimi/ingsw/is24am03/punte.png").toExternalForm()));
-        this.redPawn=new ImageView(new Image(getClass().getResource("/it/polimi/ingsw/is24am03/redpawn.png").toExternalForm()));
-        this.yellowPawn=new ImageView(new Image(getClass().getResource("/it/polimi/ingsw/is24am03/yellowpawn.png").toExternalForm()));
-        this.bluePawn= new ImageView(new Image(getClass().getResource("/it/polimi/ingsw/is24am03/bluepawn.png").toExternalForm()));
-        this.greenPawn=new ImageView(new Image(getClass().getResource("/it/polimi/ingsw/is24am03/greenpawn.png").toExternalForm()));*/
-         this.plank.setVisible(true);
+        this.plank.setVisible(true);
         this.pawns=new HashMap<>();
         this.initializeCoord();
         p1.setOnScroll(this::handleZoom);
@@ -584,7 +609,6 @@ public class GameViewController extends GUIController implements Initializable {
         Scale scale = new Scale(scaleValue, scaleValue, event.getX(), event.getY());
         Pane zoomPane = (Pane) event.getSource();
         zoomPane.getTransforms().setAll(scale);
-
         event.consume();
     }
 
@@ -652,7 +676,6 @@ public class GameViewController extends GUIController implements Initializable {
         setInvisible();
         this.notifications.clear();
     }
-
     @FXML
     private void onClickGoBack(MouseEvent mouseEvent){
         this.p1.setVisible(false);
@@ -748,77 +771,26 @@ public class GameViewController extends GUIController implements Initializable {
 
     }
 
-    private Map <String, Integer> points;
-
-    @FXML
-    private Button player1;
-    @FXML
-    private Button player2;
-    @FXML
-    private Button player3;
-    @FXML
-    private Button player4;
-    @FXML
-    private Button goBack1;
-    @FXML
-    private Button goBack2;
-    @FXML
-    private Button goBack3;
-    @FXML
-    private Button goBack4;
-
-    @FXML
-    private ScrollPane game;
-
-    @FXML
-    private ScrollPane scrollPane1;
-
-    @FXML
-    private ScrollPane scrollPane2;
-
-
-    @FXML
-    private ScrollPane scrollPane3;
-
-    @FXML
-    private ScrollPane scrollPane4;
-
-
-    private Map<String,Pane> boards;
-
-
     public void drawBoard(PlayableCard[][] board, String player) {
-        // Dimensioni della finestra
         double startX = 960;
         double startY = 540;
-
-        // Costanti per dimensioni delle carte e padding
         final int GRID_SIZE = 40;
         final int CARD_WIDTH = 50;
         final double CARD_HEIGHT = 38.5;
         final double PADDING_X = 39.25;
         final double PADDING_Y = 22;
-        final double LABEL_OFFSET_X = 8; // Ridotto ulteriormente l'offset per i label lungo l'asse X
-        final double LABEL_OFFSET_Y = 8; // Ridotto ulteriormente l'offset per i label lungo l'asse Y
-
-        // Coordinate del centro della matrice
+        final double LABEL_OFFSET_X = 8;
+        final double LABEL_OFFSET_Y = 8;
         int centerX = board.length / 2;
         int centerY = board[0].length / 2;
-
-        // Set per tenere traccia delle posizioni occupate e delle posizioni valide per piazzare una carta
         Set<Position> occupiedPositions = new HashSet<>();
         Set<Position> validPositions = new HashSet<>();
         Map<Position, Label> positionLabels = new HashMap<>();
 
-        // Itera sui livelli concentrici
         for (int level = 0; level <= Math.max(centerX, centerY); level++) {
-            // Esplora tutti gli elementi del livello attuale
             for (int x = centerX - level; x <= centerX + level; x++) {
                 for (int y = centerY - level; y <= centerY + level; y++) {
-                    // Controlla se l'elemento (x, y) è valido e si trova sul bordo del livello attuale
-                    if (x >= 0 && x < board.length && y >= 0 && y < board[0].length &&
-                            (Math.abs(x - centerX) == level || Math.abs(y - centerY) == level)) {
-
+                    if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && (Math.abs(x - centerX) == level || Math.abs(y - centerY) == level)) {
                         PlayableCard card = board[x][y];
                         if (card != null) {
                             Image cardImage;
@@ -828,7 +800,6 @@ public class GameViewController extends GUIController implements Initializable {
                                 cardImage = new Image(getClass().getResource(findBackUrl(card.getId())).toExternalForm());
                             }
                             ImageView imageView = new ImageView(cardImage);
-                            // Calcolare la posizione della carta
                             double posX = startX + (y - centerY) * PADDING_X;
                             double posY = startY + (x - centerX) * PADDING_Y;
                             imageView.setLayoutX(posX);
@@ -846,7 +817,6 @@ public class GameViewController extends GUIController implements Initializable {
                                 this.p4.getChildren().add(imageView);
                             }
 
-                            // Rimuovi il label se esiste
                             Position pos = new Position(x, y);
                             if (positionLabels.containsKey(pos)) {
                                 Label label = positionLabels.get(pos);
@@ -862,7 +832,6 @@ public class GameViewController extends GUIController implements Initializable {
                                 positionLabels.remove(pos);
                             }
 
-                            // Aggiungi la posizione occupata
                             occupiedPositions.add(pos);
                         }
                     }
@@ -870,7 +839,6 @@ public class GameViewController extends GUIController implements Initializable {
             }
         }
 
-        // Trova le posizioni valide per piazzare nuove carte
         for (Position pos : occupiedPositions) {
             int[][] directions = { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
             for (int[] dir : directions) {
@@ -882,14 +850,12 @@ public class GameViewController extends GUIController implements Initializable {
             }
         }
 
-        // Aggiungi i label nelle posizioni valide
         for (Position pos : validPositions) {
             String coordinateText = "(" + pos.x + ", " + pos.y + ")";
             Label label = new Label(coordinateText);
             double posX = startX + (pos.y - centerY) * PADDING_X;
             double posY = startY + (pos.x - centerX) * PADDING_Y;
 
-            // Aggiungi offset per evitare la sovrapposizione
             if (pos.x < centerX) {
                 posY -= LABEL_OFFSET_Y;
             } else {
@@ -915,12 +881,10 @@ public class GameViewController extends GUIController implements Initializable {
                 this.p4.getChildren().add(label);
             }
 
-            // Memorizza il label nella posizione
             positionLabels.put(pos, label);
         }
     }
 
-    // Classe interna per rappresentare una posizione nella griglia
     private static class Position {
         int x, y;
 
@@ -929,7 +893,6 @@ public class GameViewController extends GUIController implements Initializable {
             this.y = y;
         }
 
-        // Override di equals e hashCode per poter utilizzare Position in un HashSet
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -944,20 +907,14 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
-
     @FXML
     private void onClickPlayer1(MouseEvent mouseEvent){
-        //metodo per mostrare pane giocatore
         this.game.setVisible(false);
         this.p1.setPrefHeight(1080);
         this.p1.setPrefWidth(1920);
         this.p1.setVisible(true);
         this.scrollPane1.setVisible(true);
         this.goBack1.setVisible(true);
-        //devo disegnare il pane di p1
-
-
-
     }
 
     @FXML
@@ -968,7 +925,6 @@ public class GameViewController extends GUIController implements Initializable {
         this.p2.setVisible(true);
         this.scrollPane2.setVisible(true);
         this.goBack2.setVisible(true);
-
     }
     @FXML
     private void onClickPlayer3(MouseEvent mouseEvent){
@@ -978,7 +934,6 @@ public class GameViewController extends GUIController implements Initializable {
         this.p3.setVisible(true);
         this.scrollPane3.setVisible(true);
         this.goBack3.setVisible(true);
-
     }
     @FXML
     private void onClickPlayer4(MouseEvent mouseEvent){
@@ -988,7 +943,6 @@ public class GameViewController extends GUIController implements Initializable {
         this.p4.setVisible(true);
         this.scrollPane4.setVisible(true);
         this.goBack4.setVisible(true);
-
     }
 
     @FXML
@@ -1031,108 +985,6 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
-/*
-* Attributi per gestire la chat con il giocatore 1
-* */
-    @FXML
-    private Button sendChatP1;
-
-    @FXML
-    private Button openChatP1;
-    @FXML
-    private Button closeChatP1;
-
-
-    @FXML
-    private TextField chatP1;
-
-    @FXML
-    private ScrollPane scrollChatP1;
-
-    @FXML
-    private SplitPane splitChatP1;
-
-    @FXML
-    private VBox messagesP1;
-
-/**********************************/
-    @FXML
-    private Button sendChatP2;
-    @FXML
-    private TextField chatP2;
-
-    @FXML
-    private Button openChatP2;
-    @FXML
-    private Button closeChatP2;
-
-
-    @FXML
-    private ScrollPane scrollChatP2;
-
-    @FXML
-    private SplitPane splitChatP2;
-
-    @FXML
-    private VBox messagesP2;
-    ////////////////////////////////////
-
-    @FXML
-    private Button sendChatP3;
-
-    @FXML
-    private Button openChatP3;
-
-@FXML
-private Button closeChatP3;
-    @FXML
-    private TextField chatP3;
-    @FXML
-    private ScrollPane scrollChatP3;
-
-    @FXML
-    private SplitPane splitChatP3;
-
-    @FXML
-    private VBox messagesP3;
-
-
-    @FXML
-    private ScrollPane groupChat;
-
-    /*
-    @FXML
-    private ScrollPane scrollPane1;
-
-
-    @FXML
-    private ScrollPane scrollPane2;
-
-    @FXML
-    private ScrollPane scrollPane3;
-
-    @FXML
-    private ScrollPane scrollPane4;
-*/
-
-    @FXML
-    private SplitPane chat;
-
-    @FXML
-    private Button sendGroupChat;
-
-    @FXML
-    private Button openGroupChat;
-
-    @FXML
-    private Button closeGroupChat;
-
-    @FXML
-    private TextField groupText;
-
-    @FXML
-    private VBox messages;
-
     @FXML
     private void onClickSendGroupText(MouseEvent mouseEvent){
         try{
@@ -1170,15 +1022,8 @@ private Button closeChatP3;
 
     }
 
-
-    private Map<Button, String> chatButtons=new HashMap<>();
-
-
-
     public void drawChat(ArrayList<Text> chat, String player){
         if(chat.get(0).getRecipient()==null){
-            //stampo tutti i messaggi precedenti se ce ne sono, che abbiano receiver nullo
-
             if(chat.get(0).getSender().equals(player)){
                 Label text=new Label(chat.get(0).getMex());
                 text.setText("YOU: " + chat.get(0).getMex());
@@ -1203,7 +1048,6 @@ private Button closeChatP3;
                    Label text=new Label(chat.get(0).getMex());
                    text.setText("YOU: "+ chat.get(0).getMex());
                    text.setWrapText(true);
-                   //trovo la chat corrispondente
                     if(messagesP1.getId().equals(recipient)){
                         messagesP1.getChildren().add(text);
                         scrollChatP1.layout();
@@ -1223,7 +1067,6 @@ private Button closeChatP3;
             }
 
             if(chat.get(0).getRecipient().equals(player)) {
-                //stampo tutti i loro vecchi messaggi
                 this.drawNotifications("YOU HAVE A NEW TEXT FROM " + chat.get(0).getSender());
                 String sender=chat.get(0).getSender();
                 String mex=chat.get(0).getMex();
@@ -1250,13 +1093,7 @@ private Button closeChatP3;
             }
         }
 
-
-
-
     public void drawButtons(ArrayList<String> players, String player){
-        //in questo metodo associo a ogni giocatore il suo pane corrispondente e disegno i bottoni corretti per le chat
-        //ottengo array di giocatori senza player
-    //creo una copia dell'array dei giocatori
         this.boards=new HashMap<>();
         ArrayList<String> nicknames=new ArrayList<>();
         for(String s: players){
@@ -1271,13 +1108,11 @@ private Button closeChatP3;
             boards.put(players.get(1), p2);
             this.openChatP1.setText("Chat with " +nicknames.get(0));
             chatButtons.put(sendChatP1, nicknames.get(0));
-            //assegno a vbox e scroll pane i players come id
             this.messagesP1.setId(nicknames.get(0));
             this.scrollChatP1.setId(nicknames.get(0));
             this.openChatP1.setVisible(true);
             this.player1.setVisible(true);
             this.player2.setVisible(true);
-
         }
         else if(players.size()==3){
             this.player1.setText(players.get(0));
@@ -1299,8 +1134,6 @@ private Button closeChatP3;
             this.player1.setVisible(true);
             this.player2.setVisible(true);
             this.player3.setVisible(true);
-
-
         }
         else{
             this.player1.setText(players.get(0));
@@ -1330,18 +1163,12 @@ private Button closeChatP3;
             this.player2.setVisible(true);
             this.player3.setVisible(true);
             this.player4.setVisible(true);
-
         }
-
-
     }
 
     public void restoreChat(ArrayList<Text> chat, String player){
-        //ridisegno chat di gruppo
         for(int i=chat.size()-1; i>=0; i--){
             if(chat.get(i).getRecipient()==null){
-                //stampo tutti i messaggi precedenti se ce ne sono, che abbiano receiver nullo
-
                 if(chat.get(i).getSender().equals(player)){
                     Label text=new Label(chat.get(i).getMex());
                     text.setText("YOU: " + chat.get(i).getMex());
@@ -1362,8 +1189,6 @@ private Button closeChatP3;
             }
 
             else{
-                //trovo i messaggi private del button1
-                //se il recipient è p1 e il sender è player || se il recipient è player e il sender è p1
                 if(chat.get(i).getRecipient().equals(messagesP1.getId()) && chat.get(i).getSender().equals(player)
                 || chat.get(i).getRecipient().equals(player) && chat.get(i).getSender().equals(messagesP1.getId())){
                     if(chat.get(i).getSender().equals(player)){
@@ -1392,43 +1217,33 @@ private Button closeChatP3;
                 else if(chat.get(i).getRecipient().equals(messagesP2.getId()) && chat.get(i).getSender().equals(player)
                         || chat.get(i).getRecipient().equals(player) && chat.get(i).getSender().equals(messagesP2.getId())){
                     if(chat.get(i).getSender().equals(player)){
-
                         Label text=new Label(chat.get(i).getMex());
                         text.setText("YOU: "+ chat.get(i).getMex());
                         text.setWrapText(true);
-                        //trovo la chat corrispondente
-
-                            messagesP2.getChildren().add(text);
-                            scrollChatP2.layout();
-                            scrollChatP2.setVvalue(1.0);
+                        messagesP2.getChildren().add(text);
+                        scrollChatP2.layout();
+                        scrollChatP2.setVvalue(1.0);
 
                     }
-
                     else{
                         String sender=chat.get(i).getSender();
                         String mex=chat.get(i).getMex();
                         Label text=new Label();
                         text.setText(sender + " : " + mex);
                         text.setWrapText(true);
-                            messagesP2.getChildren().add(text);
-                            scrollChatP2.layout();
-                            scrollChatP2.setVvalue(1.0);
-
+                        messagesP2.getChildren().add(text);
+                        scrollChatP2.layout();
+                        scrollChatP2.setVvalue(1.0);
                     }
-
                 }
                 else{
                     if(chat.get(i).getSender().equals(player)){
-
                         Label text=new Label(chat.get(i).getMex());
                         text.setText("YOU: "+ chat.get(i).getMex());
                         text.setWrapText(true);
-                        //trovo la chat corrispondente
-
                         messagesP3.getChildren().add(text);
                         scrollChatP3.layout();
                         scrollChatP3.setVvalue(1.0);
-
                     }
 
                     else{
@@ -1451,132 +1266,42 @@ private Button closeChatP3;
     }
 
     private void initializeCoord(){
-       Map<Integer, ArrayList<Integer>> coords;
-       ArrayList<Integer> zero=new ArrayList<>();
-        ArrayList<Integer> one=new ArrayList<>();
-        one.add(459);
-        one.add(686);
-        ArrayList<Integer> two=new ArrayList<>();
-        two.add(521);
-        two.add(686);
-        ArrayList<Integer> three=new ArrayList<>();
-        three.add(552);
-        three.add(637);
-        ArrayList<Integer> four=new ArrayList<>();
-        four.add(481);
-        four.add(637);
-        ArrayList<Integer> five=new ArrayList<>();
-        five.add(429);
-        five.add(637);
-        ArrayList<Integer> six=new ArrayList<>();
-        six.add(370);
-        six.add(637);
-        ArrayList<Integer> seven=new ArrayList<>();
-        seven.add(367);
-        seven.add(582);
-        ArrayList<Integer> eight=new ArrayList<>();
-        eight.add(436);
-        eight.add(582);
-        ArrayList<Integer> nine=new ArrayList<>();
-        nine.add(497);
-        nine.add(582);
-        ArrayList<Integer> ten=new ArrayList<>();
-        ten.add(552);
-        ten.add(582);
-        ArrayList<Integer> eleven=new ArrayList<>();
-        eleven.add(550);
-        eleven.add(526);
-        ArrayList<Integer> twelve=new ArrayList<>();
-        twelve.add(483);
-        twelve.add(526);
-        ArrayList<Integer> thirteen=new ArrayList<>();
-        thirteen.add(427);
-        thirteen.add(526);
-        ArrayList<Integer> fourteen=new ArrayList<>();
-        fourteen.add(368);
-        fourteen.add(526);
-        ArrayList<Integer> fiftheen=new ArrayList<>();
-        fiftheen.add(372);
-        fiftheen.add(236);
-        ArrayList<Integer> sixt=new ArrayList<>();
-        sixt.add(429);
-        sixt.add(236);
-        ArrayList<Integer> sevent=new ArrayList<>();
-        sevent.add(487);
-        sevent.add(236);
-        ArrayList<Integer> eighte=new ArrayList<>();
-        eighte.add(546);
-        eighte.add(236);
-        ArrayList<Integer> ninet=new ArrayList<>();
-        ninet.add(550);
-        ninet.add(410);
-        ArrayList<Integer> twenty=new ArrayList<>();
-        ArrayList<Integer> tone=new ArrayList<>();
-        ArrayList<Integer> ttwo=new ArrayList<>();
-        ArrayList<Integer> tthree=new ArrayList<>();
-        ArrayList<Integer> tfour=new ArrayList<>();
-        ArrayList<Integer> tfive=new ArrayList<>();
-        ArrayList<Integer> tsix=new ArrayList<>();
-        ArrayList<Integer> tseven=new ArrayList<>();
-        ArrayList<Integer> teight=new ArrayList<>();
-        ArrayList<Integer> tnine=new ArrayList<>();
-        twenty.add( 457);
-        twenty.add(395);
-        tone.add(370);
-        tone.add(417);
-        ttwo.add(366);
-        ttwo.add(367);
-        tthree.add(373);
-        tthree.add(311);
-        tfour.add(399);
-        tfour.add(264);
-        tfive.add(456);
-        tfive.add(250);
-        tsix.add(515);
-        tsix.add(258);
-        tseven.add(545);
-        tseven.add(307);
-        teight.add(540);
-        teight.add(363);
-        tnine.add(449);
-        tnine.add(323);
-       zero.add(394);
-       zero.add(686);
-       this.coords.put(0, zero);
-       this.coords.put(1,one);
-       this.coords.put(2, two);
-        this.coords.put(3, three);
-        this.coords.put(4, four);
-        this.coords.put(5, five);
-        this.coords.put(6, six);
-        this.coords.put(7, seven);
-        this.coords.put(8, eight);
-        this.coords.put(9, nine);
-        this.coords.put(10, ten);
-        this.coords.put(11, eleven);
-        this.coords.put(12, twelve);
-        this.coords.put(13, thirteen);
-        this.coords.put(14, fourteen);
-        this.coords.put(15, fiftheen);
-        this.coords.put(16, sixt);
-        this.coords.put(17, sevent);
-        this.coords.put(18, eighte);
-        this.coords.put(19, ninet);
-        this.coords.put(20, twenty);
-        this.coords.put(21, tone);
-        this.coords.put(22, ttwo);
-        this.coords.put(23, tthree);
-        this.coords.put(24, tfour);
-        this.coords.put(25, tfive);
-        this.coords.put(26, tsix);
-        this.coords.put(27, tseven);
-        this.coords.put(28, teight);
-        this.coords.put(29, tnine);
-
-
+        this.coords.put(0, Points.ZERO.coordPoints());
+       this.coords.put(1,Points.ONE.coordPoints());
+       this.coords.put(2, Points.TWO.coordPoints());
+        this.coords.put(3, Points.THREE.coordPoints());
+        this.coords.put(4, Points.FOUR.coordPoints());
+        this.coords.put(5, Points.FIVE.coordPoints());
+        this.coords.put(6, Points.SIX.coordPoints());
+        this.coords.put(7, Points.SEVEN.coordPoints());
+        this.coords.put(8, Points.EIGHT.coordPoints());
+        this.coords.put(9, Points.NINE.coordPoints());
+        this.coords.put(10, Points.TEN.coordPoints());
+        this.coords.put(11, Points.ELEVEN.coordPoints());
+        this.coords.put(12, Points.TWELVE.coordPoints());
+        this.coords.put(13, Points.THIRTEEN.coordPoints());
+        this.coords.put(14, Points.FOURTEEN.coordPoints());
+        this.coords.put(15, Points.FIFTEEN.coordPoints());
+        this.coords.put(16, Points.SIXTEEN.coordPoints());
+        this.coords.put(17, Points.SEVENTEEN.coordPoints());
+        this.coords.put(18, Points.EIGHTEEN.coordPoints());
+        this.coords.put(19, Points.NINETEEN.coordPoints());
+        this.coords.put(20, Points.TWENTY.coordPoints());
+        this.coords.put(21, Points.TWENTY_ONE.coordPoints());
+        this.coords.put(22, Points.TWENTY_TWO.coordPoints());
+        this.coords.put(23, Points.TWENTY_THREE.coordPoints());
+        this.coords.put(24, Points.TWENTY_FOUR.coordPoints());
+        this.coords.put(25, Points.TWENTY_FIVE.coordPoints());
+        this.coords.put(26, Points.TWENTY_SIX.coordPoints());
+        this.coords.put(27, Points.TWENTY_SEVEN.coordPoints());
+        this.coords.put(28, Points.TWENTY_EIGHT.coordPoints());
+        this.coords.put(29, Points.TWENTY_NINE.coordPoints());
     }
 
+    @Override
+    public void postNotification(String title, String desc) {
 
+    }
 }
 
 

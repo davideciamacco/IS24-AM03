@@ -9,12 +9,11 @@ public class CurrentPlayerMessage extends Message{
 
     private String currentPlayer;
 
-    public String getCurrentPlayer() {
-        return currentPlayer;
-    }
-
     public CurrentPlayerMessage(String currentPlayer){
         super(MessageType.NOTIFY_CURRENT_PLAYER);
         this.currentPlayer=currentPlayer;
+    }
+    public String getCurrentPlayer() {
+        return currentPlayer;
     }
 }

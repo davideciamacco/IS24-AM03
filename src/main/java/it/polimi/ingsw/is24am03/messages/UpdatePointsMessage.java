@@ -2,6 +2,7 @@ package it.polimi.ingsw.is24am03.messages;
 import java.io.Serial;
 public class UpdatePointsMessage extends Message{
 
+    @Serial
     private static final long serialVersionUID= -6938808360605758472L;
 
     private String player;

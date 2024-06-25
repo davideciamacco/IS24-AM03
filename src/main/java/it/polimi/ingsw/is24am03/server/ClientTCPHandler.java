@@ -1,5 +1,5 @@
 
-package it.polimi.ingsw.is24am03;
+package it.polimi.ingsw.is24am03.server;
 
 import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
 import it.polimi.ingsw.is24am03.Subscribers.GameSub;
@@ -97,14 +97,12 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         return outputMessage;
     }
 
-    //idea 1: rendere void il metodo che prende messaggi di input
 
     private Message parse(DrawTableMessage DrawTableMessage){
         boolean result;
         String description = "";
         try {
             gameController.canDrawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
-            //se sono qui è perchè non ho riscontrato eccezioni
             gameController.drawTable(DrawTableMessage.getNickname(),DrawTableMessage.getChoice());
             result = true;
         }
@@ -281,20 +279,13 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         String description = "";
         try {
             if(!joinGameMessage.getHasJoined()) {
-                //lo aggiungo subito e metto la condizione in add player che lui non sia notificato della sua entrata
-                    //posso iscrivere il sub al gioco
-
                     gameController.addPlayer(joinGameMessage.getNickname(), "TCP");
                     this.nickname= joinGameMessage.getNickname();
-
                     this.subscribeToObservers();
-                    //se il messaggio non è empty significa che il gioco non può iniziare e devo stampargli Joined successfully
                     if(gameController.getGameModel().getNumPlayers()!=gameController.getGameModel().getPlayers().size()){
                         description="Joined successfully";
                     }
                     gameController.canStart();
-                    //voglio che gli arrivi un mex di
-                    //qui arriva la notifica di conferma dopo che il player si è unito alla partita
                     result = true;
             }
             else

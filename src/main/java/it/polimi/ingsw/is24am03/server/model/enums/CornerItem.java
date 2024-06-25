@@ -8,6 +8,7 @@ import java.io.Serializable;
  * The empty value stands for an empty corner.
  */
 public enum CornerItem implements Serializable {
+
     ANIMAL,
     FUNGI,
     INSECT,

@@ -23,6 +23,7 @@ class GameControllerTest {
     void createGame() throws RemoteException {
         GameController gc1 = new GameController();
         assertDoesNotThrow(() -> gc1.createGame(3, "HostPlayer", "TCP"));
+        assertThrows(GameAlreadyCreatedException.class, ()->gc1.createGame(3,"Host", "TCP"));
         assertNotNull(gc1.getGameModel());
         assertEquals(3, gc1.getGameModel().getNumPlayers());
         assertEquals("HostPlayer", gc1.getGameModel().getPlayers().get(0).getNickname());
@@ -68,6 +69,9 @@ class GameControllerTest {
         currentPlayer1.setPlayerBoard(new PlayerBoard(currentPlayer1));
         assertDoesNotThrow(() -> gc5.canSelectStartingFace(currentPlayer2.getNickname(), "BACK"));
         gc5.selectStartingFace(currentPlayer2.getNickname(), "BACK");
+        gc5.getGameModel().getPlayers().get(0).setConnected(false);
+        gc5.getGameModel().getPlayers().get(1).setConnected(false);
+        assertThrows(UnknownPlayerException.class, ()->gc5.canSelectStartingFace("Player1", "FRONT"));
     }
 
     @Test
@@ -396,6 +400,7 @@ class GameControllerTest {
     void canSendPrivateChat() throws RemoteException{
         GameController gc = new GameController();
         assertThrows(GameNotExistingException.class, ()->gc.canSendPrivateChat("Player1", "Player2", "Ciao"));
+
         assertDoesNotThrow(() -> gc.createGame(2, "Player1", "TCP"));
         assertDoesNotThrow(() -> gc.addPlayer("Player2", "TCP"));
         GameSub gs1 = new GeneralSubscriber("Player1");

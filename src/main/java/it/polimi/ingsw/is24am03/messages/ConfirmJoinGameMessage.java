@@ -5,6 +5,8 @@ import java.io.Serial;
 
 public class ConfirmJoinGameMessage extends ConfirmMessage {
 
+    @Serial
+    private static final long serialVersionUID= -5532929506798931356L;
     private final Boolean confirmJoinGame;
 
     private final String nickname;

@@ -1,9 +1,11 @@
-package it.polimi.ingsw.is24am03;
+package it.polimi.ingsw.is24am03.client.connection;
 
 import it.polimi.ingsw.is24am03.Subscribers.ChatSub;
 import it.polimi.ingsw.is24am03.Subscribers.GameSub;
 import it.polimi.ingsw.is24am03.Subscribers.PlayerBoardSub;
 import it.polimi.ingsw.is24am03.Subscribers.PlayerSub;
+import it.polimi.ingsw.is24am03.client.view.ViewInterface;
+import it.polimi.ingsw.is24am03.client.clientModel.ClientModel;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.game.RemoteGameController;
 
@@ -14,9 +16,10 @@ import java.rmi.registry.Registry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.CompletableFuture;
 
-
+/**
+ *
+ */
 public class ClientRMI implements Client{
     Registry registry;
     private RemoteGameController gameController;
@@ -29,6 +32,12 @@ public class ClientRMI implements Client{
     private final ScheduledExecutorService heartbeatScheduler = Executors.newScheduledThreadPool(1);
 
 
+    /**
+     *
+     * @param hostName
+     * @param portNumber
+     * @param view
+     */
     public ClientRMI(String hostName, int portNumber, ViewInterface view) {
         boolean connected = false;
         this.hasJoined=false;
@@ -41,7 +50,6 @@ public class ClientRMI implements Client{
                 this.registry = LocateRegistry.getRegistry(hostName, portNumber);
                 String remoteObjectName = "game_controller";
                 temp = (RemoteGameController) registry.lookup(remoteObjectName);
-
                 connected = true;
             }
             catch(RemoteException e){}
@@ -52,14 +60,17 @@ public class ClientRMI implements Client{
         addShutdownHook();
     }
 
-
+    /**
+     *
+     * @param nPlayers
+     * @param nickname
+     */
     public void CreateGame(int nPlayers, String nickname){
 
         try {
             clientModel=new ClientModel(nickname,view);
             this.gameController.createGame(nPlayers, nickname, "RMI");
             view.confirmCreate();
-           // System.out.println("Game created successfully");
             this.nickname = nickname;
             this.subscribeToObservers();
             hasJoined=true;
@@ -68,11 +79,14 @@ public class ClientRMI implements Client{
         } catch (GameAlreadyCreatedException e) {
             view.drawError("Game already created");
         } catch (RemoteException e){
-
         }
         System.out.flush();
     }
 
+    /**
+     *
+     * @param nickname
+     */
     public void JoinGame(String nickname){
         try{
             if(!hasJoined){
@@ -105,18 +119,17 @@ public class ClientRMI implements Client{
             view.drawError("Game not existing");
         }
         catch (RemoteException e)
-        {
-
-        }
+        {}
         System.out.flush();
     }
 
-    public void PickColor(String color)
-    {
+    /**
+     *
+     * @param color
+     */
+    public void PickColor(String color){
         try {
             this.gameController.canPickColor(nickname, color);
-            //clientModel.printNotifications("Color picked successfully");
-            //System.out.println("Color picked successfully");
             this.gameController.pickColor(nickname,color);
             hasJoined=true;
         } catch (IllegalArgumentException e) {
@@ -129,18 +142,20 @@ public class ClientRMI implements Client{
             clientModel.printNotifications("Color not available");
         } catch (RemoteException e)
         {
-
         } catch (GameNotExistingException e) {
             view.drawError("Game not existing");
         }
         catch (UnknownPlayerException e){
             view.drawError(e.getMessage());
         }
-
         System.out.flush();
     }
-    public void ChooseStartingCardSide(String face)
-    {
+
+    /**
+     *
+     * @param face
+     */
+    public void ChooseStartingCardSide(String face){
         try {
             this.gameController.canSelectStartingFace(nickname,face);
             clientModel.printNotifications("Starting card side chosen successfully");
@@ -157,27 +172,40 @@ public class ClientRMI implements Client{
             view.drawError(e.getMessage());
         } catch (RemoteException e)
         {
-
         }catch (UnknownPlayerException e){
             clientModel.printNotifications(e.getMessage());
         }
         System.out.flush();
     }
 
+    /**
+     *
+     * @param view
+     */
     @Override
     public void setGUI(ViewInterface view) {
             this.view=view;
     }
 
+    /**
+     *
+     * @param view
+     */
     @Override
     public void setCLI(ViewInterface view) {
         this.view=view;
     }
 
+    /**
+     *
+     * @param choice
+     * @param i
+     * @param j
+     * @param face
+     */
     public void PlaceCard(int choice,int i,int j,String face){
         try {
             this.gameController.placeCard(nickname,choice,i,j,face);
-            //System.out.println("Card placed successfully");
         }catch (ArgumentException e){
             clientModel.printNotifications("Invalid command");
         } catch (UnknownPlayerException e){
@@ -202,6 +230,10 @@ public class ClientRMI implements Client{
         }catch (RemoteException e){}
         System.out.flush();
     }
+
+    /**
+     *
+     */
     public void DrawGold(){
         try {
             this.gameController.canDrawGold(nickname);
@@ -225,6 +257,10 @@ public class ClientRMI implements Client{
         }
         System.out.flush();
     }
+
+    /**
+     *
+     */
     public void DrawResource(){
         try {
             this.gameController.canDrawResources(nickname);
@@ -249,6 +285,10 @@ public class ClientRMI implements Client{
         System.out.flush();
     }
 
+    /**
+     *
+     * @param choice
+     */
     public void DrawTable(int choice){
         try {
             this.gameController.canDrawTable(nickname,choice);
@@ -273,6 +313,10 @@ public class ClientRMI implements Client{
         System.out.flush();
     }
 
+    /**
+     *
+     * @param choice
+     */
     public void ChooseObjectiveCard(int choice){
         try{
             this.gameController.canSetObjectiveCard(nickname, choice);
@@ -296,12 +340,15 @@ public class ClientRMI implements Client{
         }
     }
 
+    /**
+     *
+     * @param nickname
+     */
     public void RejoinGame(String nickname){
         try{
             if(!hasJoined){
                 this.gameController.rejoinGame(nickname, "RMI");
                 clientModel=new ClientModel(nickname, view);
-                //clientModel.printNotifications("Rejoined successfully");
                 hasJoined=true;
                 this.nickname=nickname;
                 this.subscribeToObservers();
@@ -324,11 +371,13 @@ public class ClientRMI implements Client{
         }
     }
 
-    //metodi per gestire invio messaggio chat
+    /**
+     *
+      * @param text
+     */
     public void sendGroupText(String text){
         try {
             this.gameController.canSendGroupChat(this.nickname, text);
-            //clientModel.printNotifications("Group text sent successfully");
             this.gameController.sendGroupText(this.nickname, text);
         } catch (BadTextException | InvalidStateException e1) {
             clientModel.printNotifications(e1.getMessage());
@@ -339,13 +388,16 @@ public class ClientRMI implements Client{
         catch (GameNotExistingException e){
             view.drawError("Game doesn't exist");
         }
-
-
     }
+
+    /**
+     *
+     * @param receiver
+     * @param text
+     */
     public void sendPrivateText(String receiver, String text){
         try{
             this.gameController.canSendPrivateChat(this.nickname, receiver,text);
-            //System.out.println("Private text sent successfully");
             this.gameController.sendPrivateText(this.nickname, receiver,text);
         } catch (BadTextException | InvalidStateException | PlayerAbsentException | ParametersException e) {
             clientModel.printNotifications(e.getMessage());
@@ -358,6 +410,9 @@ public class ClientRMI implements Client{
         }
     }
 
+    /**
+     *
+     */
     private void subscribeToObservers(){
         try {
             gameController.addToObserver((GameSub) clientModel);
@@ -367,6 +422,9 @@ public class ClientRMI implements Client{
         }catch (RemoteException e){}
     }
 
+    /**
+     *
+     */
     private void removeFromObservers(){
         try {
             if(clientModel!=null) {
@@ -379,11 +437,17 @@ public class ClientRMI implements Client{
 
     }
 
+    /**
+     *
+     */
     private void startHeartbeatSender() {
-        long heartbeatInterval = 5000; // 5 seconds
+        long heartbeatInterval = 5000;
         heartbeatScheduler.scheduleAtFixedRate(this::sendHeartbeat, 0, heartbeatInterval, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     *
+     */
     private void sendHeartbeat() {
         try {
             gameController.setLastHeartBeat(nickname);
@@ -391,6 +455,9 @@ public class ClientRMI implements Client{
         }
     }
 
+    /**
+     *
+     */
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             removeFromObservers();

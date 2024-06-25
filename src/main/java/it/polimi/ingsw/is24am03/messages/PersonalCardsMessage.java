@@ -11,15 +11,6 @@ public class PersonalCardsMessage extends Message{
     private final static long serialVersionUID= 2076020660851296694L;
 
     private String player;
-
-    public String getPlayer() {
-        return player;
-    }
-
-    public ArrayList<ResourceCard> getHand() {
-        return hand;
-    }
-
     private ArrayList<ResourceCard> hand;
 
 
@@ -27,6 +18,13 @@ public class PersonalCardsMessage extends Message{
         super(MessageType.UPDATE_PERSONAL_CARDS);
         this.player=player;
         this.hand=hand;
+    }
+    public String getPlayer() {
+        return player;
+    }
+
+    public ArrayList<ResourceCard> getHand() {
+        return hand;
     }
 
 }
