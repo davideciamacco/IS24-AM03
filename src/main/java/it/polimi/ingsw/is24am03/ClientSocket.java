@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -43,6 +45,8 @@ public class ClientSocket implements Client{
 
         try {
             this.connection = new Socket(ip, port);
+            this.connection.setSoTimeout(500);
+            this.connection.setKeepAlive(false);
             this.outputStream = new ObjectOutputStream(connection.getOutputStream());
             this.inputStream = new ObjectInputStream(connection.getInputStream());
         } catch (IOException e) {
@@ -127,14 +131,25 @@ public class ClientSocket implements Client{
                 synchronized (queueMessages) {
                     try {
                         Message incomingMessage = (Message) inputStream.readObject();
+                        System.out.println("AAAA");
                         queueMessages.add(incomingMessage);
                         queueMessages.notifyAll();
                         queueMessages.wait(1);
-                    } catch (IOException | ClassNotFoundException | InterruptedException e ) {
+                    }
+                    catch (SocketTimeoutException ignored){
+                    }
+
+                    catch (SocketException e){
+                        System.out.println("Ciao");
+                        active=false;
+                    }
+
+                    catch (IOException | ClassNotFoundException | InterruptedException e ) {
                         //e.printStackTrace();
-                        System.out.println("Server disconnected. Closing client...");
+                        System.out.println("BBBB");
+                        //System.out.println("Server disconnected. Closing client...");
                         active = false;
-                        System.exit(0);
+                        //System.exit(0);
                     }
                 }
             }
@@ -156,6 +171,7 @@ public class ClientSocket implements Client{
                     //System.out.println("Client riceve da server");
                 }
             }
+            System.out.println("CCCC");
         });
     }
 
@@ -517,6 +533,7 @@ public class ClientSocket implements Client{
                 outputStream.reset();
                 //System.out.println("Client invia a server");
             } catch (IOException ignored) {
+                System.out.println("Server giù");
             }
         }
     }
