@@ -393,7 +393,6 @@ public class ClientRMI implements Client{
 
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Arresto");
             removeFromObservers();
         }));
     }
