@@ -329,7 +329,9 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         viewInterface.UpdateCrashedPlayer(nickname, this.player, gameState, hand, objectiveCard, boards, points, players, objectiveCards, color, table);
         for(String player: this.players) {
             viewInterface.notifyChangePlayerBoard(player, this.player, this.boards);
+            viewInterface.ReceiveUpdateOnPoints(player, playerPoints.get(player));
         }
+        viewInterface.printNotifications("Rejoined successfully");
     }
 
     @Override
