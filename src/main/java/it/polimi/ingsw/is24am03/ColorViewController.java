@@ -1,4 +1,5 @@
 package it.polimi.ingsw.is24am03;
+import it.polimi.ingsw.is24am03.client.view.GUI.GUIController;
 import it.polimi.ingsw.is24am03.server.model.exceptions.ColorAlreadyPickedException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
