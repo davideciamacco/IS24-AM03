@@ -201,10 +201,13 @@ public class Game{
     public void endGame() {
         gameState = State.ENDING;
         int i;
+        List<String> winners = new ArrayList<>();
         if(numPlayersConnected==1) {
             for(i=0; i<numPlayers; i++) {
-                if(players.get(i).getConnected())
+                if(players.get(i).getConnected()) {
                     players.get(i).setWinner(true);
+                    winners.add(players.get(i).getNickname());
+                }
             }
         }
         else{
@@ -219,17 +222,18 @@ public class Game{
             //DONE
             giveObjectivePoints();
             //SALVO RISULTATO DI CHECK WINNER E LO NOTIFICO//
-            List<String> winners= checkWinner().stream().map(Player::getNickname).toList();
-            ArrayList<String> def= new ArrayList<>(winners);
-            //NOTIFY ON WINNERS//
-            for (GameSub gameSub : gameSubs) {
-                try {
-                    if(gameSub!=null)
-                        gameSub.notifyWinners(def);
-                } catch (RemoteException ignored) {
-                }
-            }
+            winners= checkWinner().stream().map(Player::getNickname).toList();
+
             //DONE
+        }
+        ArrayList<String> def= new ArrayList<>(winners);
+        //NOTIFY ON WINNERS//
+        for (GameSub gameSub : gameSubs) {
+            try {
+                if(gameSub!=null)
+                    gameSub.notifyWinners(def);
+            } catch (RemoteException ignored) {
+            }
         }
 
     }
