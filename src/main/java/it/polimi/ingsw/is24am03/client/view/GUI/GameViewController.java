@@ -783,7 +783,7 @@ public class GameViewController extends GUIController implements Initializable {
         Set<Position> occupiedPositions = new HashSet<>();
         Set<Position> validPositions = new HashSet<>();
         Map<Position, Label> positionLabels = new HashMap<>();
-
+    int z;
         // Aggiunta dei label per gli angoli visibili
         for (int level = 0; level <= Math.max(centerX, centerY); level++) {
             for (int x = centerX - level; x <= centerX + level; x++) {
@@ -791,77 +791,80 @@ public class GameViewController extends GUIController implements Initializable {
                     if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && (Math.abs(x - centerX) == level || Math.abs(y - centerY) == level)) {
                         PlayableCard card = board[x][y];
                         if (card != null) {
-                            boolean[] visibleCorners = new boolean[4];
+
+                            ArrayList<Boolean> visibleCorners = new ArrayList<>();
                             if (card.getFace()) {
-                                System.out.println("1");
-                                for (int z = 0; z < 4; z++) {
-                                    visibleCorners[z] = card.getFrontCorner(z).isVisible();
+                                for (z = 0; z < 4; z++) {
+                                    visibleCorners.add(card.getFrontCorner(z).isVisible());
                                 }
                             } else {
-                                for (int z = 0; z < 4; z++) {
-                                    visibleCorners[z] = card.getBackCorner(z).isVisible();
+                                for ( z = 0; z < 4; z++) {
+                                    visibleCorners.add(card.getBackCorner(z).isVisible());
                                 }
                             }
 
                             double posX = startX + (y - centerY) * PADDING_X;
                             double posY = startY + (x - centerX) * PADDING_Y;
+                            for (z = 0; z < 4; z++) {
+                                if (visibleCorners.get(z)) {
 
-                            for (int z = 0; z < 4; z++) {
-                                if (visibleCorners[z]) {
-                                    System.out.println("2");
                                     int labelX = x;
                                     int labelY = y;
 
                                     if (z == 0) {
-                                        labelX++;
-                                        labelY++;
-                                    } else if (z == 1) {
-                                        labelX++;
-                                        labelY--;
-                                    } else if (z == 2) {
                                         labelX--;
+                                        labelY--;
+                                    } else if (z == 1) {
+                                        labelX--;
+                                        labelY++;
+                                    } else if (z == 2) {
+                                        labelX++;
                                         labelY++;
                                     } else if (z == 3) {
-                                        labelX--;
+                                        labelX++;
                                         labelY--;
                                     }
 
-                                    String cornerLabel = "(" + labelX + ", " + labelY + ")";
-                                    Label label = new Label(cornerLabel);
-                                    label.setStyle("-fx-font-size: 8px;");
+                                    // Verifica se l'angolo è visibile prima di aggiungere il label
+                                    if (labelX >= 0 && labelX < board.length && labelY >= 0 && labelY < board[0].length) {
+                                        String cornerLabel = "(" + labelX + ", " + labelY + ")";
+                                        Label label = new Label(cornerLabel);
+                                        label.setStyle("-fx-font-size: 8px;");
 
-                                    double labelPosX = posX + LABEL_GLOBAL_OFFSET_X;
-                                    double labelPosY = posY + LABEL_GLOBAL_OFFSET_Y;
+                                        double labelPosX = posX + LABEL_GLOBAL_OFFSET_X;
+                                        double labelPosY = posY + LABEL_GLOBAL_OFFSET_Y;
 
-                                    // Calcola l'offset per posizionare il label vicino all'angolo
-                                    if (z == 0) { // Angolo in basso a destra (BR)
-                                        labelPosX += CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
-                                        labelPosY += CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
-                                    } else if (z == 1) { // Angolo in alto a destra (TR)
-                                        labelPosX += CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
-                                        labelPosY -= CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
-                                    } else if (z == 2) { // Angolo in basso a sinistra (BL)
-                                        labelPosX -= CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
-                                        labelPosY += CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
-                                    } else if (z == 3) { // Angolo in alto a sinistra (TL)
-                                        labelPosX -= CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
-                                        labelPosY -= CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
+                                        // Calcola l'offset per posizionare il label vicino all'angolo
+                                        if (z == 0) {
+                                            labelPosX -= CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
+                                            labelPosY -= CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
+                                        } else if (z == 1) {
+                                            labelPosX += CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
+                                            labelPosY -= CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
+                                        } else if (z == 2) { // Angolo in basso a DX
+                                            labelPosX += CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
+                                            labelPosY += CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
+                                        } else if (z == 3) { // Angolo in basso a sx
+                                            labelPosX -= CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
+                                            labelPosY += CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
+                                        }
+
+                                        label.setLayoutX(labelPosX);
+                                        label.setLayoutY(labelPosY);
+
+                                        // Aggiungi il label alla giusta area giocatore
+                                        if (player.equals(player1.getText())) {
+                                            this.p1.getChildren().add(label);
+                                        } else if (player.equals(player2.getText())) {
+                                            this.p2.getChildren().add(label);
+                                        } else if (player.equals(player3.getText())) {
+                                            this.p3.getChildren().add(label);
+                                        } else if (player.equals(player4.getText())) {
+                                            this.p4.getChildren().add(label);
+                                        }
+
+                                        positionLabels.put(new Position(x, y), label);
                                     }
-
-                                    label.setLayoutX(labelPosX);
-                                    label.setLayoutY(labelPosY);
-
-                                    if (player.equals(player1.getText())) {
-                                        this.p1.getChildren().add(label);
-                                    } else if (player.equals(player2.getText())) {
-                                        this.p2.getChildren().add(label);
-                                    } else if (player.equals(player3.getText())) {
-                                        this.p3.getChildren().add(label);
-                                    } else if (player.equals(player4.getText())) {
-                                        this.p4.getChildren().add(label);
-                                    }
-
-                                    positionLabels.put(new Position(x, y), label);
                                 }
                             }
                         }
@@ -870,7 +873,6 @@ public class GameViewController extends GUIController implements Initializable {
             }
         }
 
-        // Aggiunta delle carte
         for (int level = 0; level <= Math.max(centerX, centerY); level++) {
             for (int x = centerX - level; x <= centerX + level; x++) {
                 for (int y = centerY - level; y <= centerY + level; y++) {
@@ -891,6 +893,7 @@ public class GameViewController extends GUIController implements Initializable {
                             imageView.setFitHeight(CARD_HEIGHT);
                             imageView.setFitWidth(CARD_WIDTH);
 
+                            // Aggiungi l'immagine alla giusta area giocatore
                             if (player.equals(player1.getText())) {
                                 this.p1.getChildren().add(imageView);
                             } else if (player.equals(player2.getText())) {
@@ -909,42 +912,8 @@ public class GameViewController extends GUIController implements Initializable {
             }
         }
 
-        // Aggiunta dei label per posizioni valide
-        for (Position pos : validPositions) {
-            String coordinateText = "(" + pos.x + ", " + pos.y + ")";
-            Label label = new Label(coordinateText);
-            double posX = startX + (pos.y - centerY) * PADDING_X + LABEL_GLOBAL_OFFSET_X;
-            double posY = startY + (pos.x - centerX) * PADDING_Y + LABEL_GLOBAL_OFFSET_Y;
-
-            // Calcola l'offset per posizionare il label vicino alla posizione
-            if (pos.x < centerX) {
-                posY -= LABEL_OFFSET_DIAGONAL;
-            } else {
-                posY += LABEL_OFFSET_DIAGONAL;
-            }
-
-            if (pos.y < centerY) {
-                posX -= LABEL_OFFSET_DIAGONAL;
-            } else {
-                posX += LABEL_OFFSET_DIAGONAL;
-            }
-
-            label.setLayoutX(posX);
-            label.setLayoutY(posY);
-
-            if (player.equals(player1.getText())) {
-                this.p1.getChildren().add(label);
-            } else if (player.equals(player2.getText())) {
-                this.p2.getChildren().add(label);
-            } else if (player.equals(player3.getText())) {
-                this.p3.getChildren().add(label);
-            } else if (player.equals(player4.getText())) {
-                this.p4.getChildren().add(label);
-            }
-
-            positionLabels.put(pos, label);
-        }
     }
+
 
     private static class Position {
         int x, y;
