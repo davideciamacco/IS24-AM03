@@ -439,4 +439,7 @@ public class GUIView extends Application implements ViewInterface {
             gameViewController.restoreChat(chat, player);
         });
     }
+    public void printUpdatedPoints(Map<String, Integer>updatedPoints){
+
+    }
 }

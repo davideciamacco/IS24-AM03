@@ -77,4 +77,6 @@ public interface ViewInterface {
     public void confirmJoin();
     public void confirmCreate();
     public void printNotifications(String message);
+
+    public void printUpdatedPoints(Map<String, Integer>updatedPoints);
 }
