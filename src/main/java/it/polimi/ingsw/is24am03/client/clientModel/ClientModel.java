@@ -197,6 +197,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     public synchronized void ReceiveUpdateOnPoints(String player, int points)throws RemoteException {
         playerPoints.put(player, points);
         viewInterface.ReceiveUpdateOnPoints(player, points);
+        viewInterface.printUpdatedPoints(playerPoints);
     }
 
     /**
