@@ -476,7 +476,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     public void startTimer() {
 
-        long limit = 20;
+        long limit = 60;
 
         Runnable task = () -> {
             if(gameModel.getNumPlayersConnected()<2)

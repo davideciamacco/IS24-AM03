@@ -63,6 +63,10 @@ public class ServerMain{
             } catch(IOException e) {
                 break;
             }
+            catch (RuntimeException e){
+                System.exit(0);
+            }
+
         }
         executor.shutdown();
     }

@@ -33,7 +33,12 @@ public class Launch {
             } else if (connectionType.equals("--GUI")) {
 
                 if (args[3].equals("--TCP")) {
-                    client = new ClientSocket(host, port, view); // Pass null for now, we will set the view later
+                    try{
+                        client = new ClientSocket(host, port, view);
+                    }
+                    catch(RuntimeException e){
+                        System.exit(0);
+                    }// Pass null for now, we will set the view later
                 } else if (args[3].equals("--RMI")) {
                     client = new ClientRMI(host, port, view); // Pass null for now, we will set the view later
                 }
