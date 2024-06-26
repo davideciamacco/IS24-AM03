@@ -46,8 +46,13 @@ public class Launch {
             } else {
                 System.err.println("Invalid connection type. Use --CLI or --GUI.");
             }
-        } else {
+        } else if (args.length == 3) {
             ServerMain.main(args);
+        }
+        else{
+            System.out.println("Missing arguments\n" +
+                    "Server usage: <IP Address> <TCP port> <RMI port>\n" +
+                    "Client usage: --<CLI/GUI> <IP Address> <port> --<TCP/RMI>");
         }
     }
 }
