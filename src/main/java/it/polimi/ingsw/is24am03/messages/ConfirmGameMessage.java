@@ -7,13 +7,10 @@ import java.io.Serial;
  */
 public class ConfirmGameMessage extends ConfirmMessage {
 
+    @Serial
+    private static final long serialVersionUID= -1973642975562019779L;
+
     private final Boolean confirmGameCreation;
-
-
-    public String getNickname() {
-        return nickname;
-    }
-
 
     private final String nickname;
 
@@ -37,5 +34,8 @@ public class ConfirmGameMessage extends ConfirmMessage {
         return confirmGameCreation;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
 
 }

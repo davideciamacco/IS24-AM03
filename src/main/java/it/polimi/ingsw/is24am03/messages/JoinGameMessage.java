@@ -8,6 +8,8 @@ import java.io.Serial;
 
 public class JoinGameMessage extends Message {
 
+    @Serial
+    private final static long serialVersionUID= -1263752023810866829L;
     private final String nickname;
     private final boolean hasJoined;
     public JoinGameMessage(String nickname,boolean hasJoined) {

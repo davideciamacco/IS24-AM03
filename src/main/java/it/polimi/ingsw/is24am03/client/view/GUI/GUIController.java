@@ -1,4 +1,5 @@
-package it.polimi.ingsw.is24am03;
+package it.polimi.ingsw.is24am03.client.view.GUI;
+import it.polimi.ingsw.is24am03.client.connection.Client;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;

@@ -8,6 +8,18 @@ public class PlayerBoardMessage extends Message{
 
     @Serial
     private static final long serialVersionUID= 7441040663307013718L;
+    private String player;
+    private PlayableCard playableCard;
+    private int i;
+    private int j;
+
+    public PlayerBoardMessage(String player, PlayableCard playableCard, int i, int j) {
+        super(MessageType.UPDATE_PLAYER_BOARD);
+        this.player = player;
+        this.playableCard = playableCard;
+        this.i = i;
+        this.j = j;
+    }
 
     public String getPlayer() {
         return player;
@@ -23,18 +35,5 @@ public class PlayerBoardMessage extends Message{
 
     public int getJ() {
         return j;
-    }
-
-    private String player;
-    private PlayableCard playableCard;
-    private int i;
-    private int j;
-
-    public PlayerBoardMessage(String player, PlayableCard playableCard, int i, int j) {
-        super(MessageType.UPDATE_PLAYER_BOARD);
-        this.player = player;
-        this.playableCard = playableCard;
-        this.i = i;
-        this.j = j;
     }
 }

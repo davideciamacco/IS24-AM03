@@ -19,7 +19,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchor" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.GameViewController">
+<AnchorPane fx:id="anchor" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.client.view.GUI.GameViewController">
    <children>
       <ScrollPane fx:id="scrollPane2" hbarPolicy="ALWAYS" layoutX="6.0" layoutY="6.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-border-color: #333;" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
@@ -208,21 +208,21 @@
                      <font>
                         <Font name="Comic Sans MS" size="13.0" />
                      </font></TextField>
-                  <TextField fx:id="state" layoutX="9.0" layoutY="1007.0" prefHeight="26.0" prefWidth="385.0" style="-fx-border-color: #333;">
+                  <TextField fx:id="state" layoutX="9.0" layoutY="1007.0" prefHeight="29.0" prefWidth="442.0" style="-fx-border-color: #333;">
                      <font>
                         <Font name="Comic Sans MS Bold" size="31.0" />
                      </font>
                      <effect>
                         <Blend />
                      </effect></TextField>
-                  <TextField fx:id="current" layoutX="416.0" layoutY="1006.0" prefHeight="29.0" prefWidth="436.0" style="-fx-border-color: #333;">
+                  <TextField fx:id="current" layoutX="468.0" layoutY="1007.0" prefHeight="29.0" prefWidth="436.0" style="-fx-border-color: #333;">
                      <font>
                         <Font name="Comic Sans MS Bold" size="31.0" />
                      </font>
                      <effect>
                         <Blend />
                      </effect></TextField>
-                  <TextField fx:id="turnOrder" layoutX="877.0" layoutY="1003.0" prefHeight="28.0" prefWidth="601.0" style="-fx-border-color: #333;">
+                  <TextField fx:id="turnOrder" layoutX="929.0" layoutY="1003.0" prefHeight="29.0" prefWidth="593.0" style="-fx-border-color: #333;">
                      <font>
                         <Font name="Comic Sans MS Bold" size="31.0" />
                      </font>
@@ -323,32 +323,6 @@
                         <String fx:value="clicked" />
                         <String fx:value="general_fill" />
                      </styleClass></Button>
-                  <SplitPane fx:id="chat" dividerPositions="0.8292682926829268" layoutX="791.0" layoutY="636.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
-                    <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="105.0" prefWidth="306.0">
-                           <children>
-                              <ScrollPane fx:id="groupChat" layoutX="2.0" layoutY="8.0" prefHeight="188.0" prefWidth="431.0">
-                                 <content>
-                                    <VBox fx:id="messages" prefHeight="177.0" prefWidth="425.0" />
-                                 </content>
-                              </ScrollPane>
-                           </children>
-                        </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                           <children>
-                              <Button fx:id="sendGroupChat" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendGroupText" prefHeight="30.0" prefWidth="135.0" text="Send Text">
-                                 <styleClass>
-                                    <String fx:value="clicked" />
-                                    <String fx:value="general_fill" />
-                                 </styleClass>
-                                 <font>
-                                    <Font name="Comic Sans MS" size="15.0" />
-                                 </font></Button>
-                              <TextField fx:id="groupText" layoutX="161.0" layoutY="6.0" prefHeight="26.0" prefWidth="255.0" promptText="write whatever you like" />
-                           </children>
-                        </AnchorPane>
-                    </items>
-                  </SplitPane>
                   <Button fx:id="openGroupChat" layoutX="27.0" layoutY="621.0" mnemonicParsing="false" onMouseClicked="#onClickShowGroupChat" prefHeight="30.0" prefWidth="165.0" text="Open Group Chat">
                      <styleClass>
                         <String fx:value="clicked" />
@@ -560,6 +534,32 @@
                      <image>
                         <Image url="@yellowpawn.png" />
                      </image></ImageView>
+                  <SplitPane fx:id="chat" dividerPositions="0.8292682926829268" layoutX="240.0" layoutY="595.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="437.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="105.0" prefWidth="306.0">
+                           <children>
+                              <ScrollPane fx:id="groupChat" layoutX="2.0" layoutY="8.0" prefHeight="188.0" prefWidth="431.0">
+                                 <content>
+                                    <VBox fx:id="messages" prefHeight="177.0" prefWidth="425.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Button fx:id="sendGroupChat" layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#onClickSendGroupText" prefHeight="30.0" prefWidth="135.0" text="Send Text">
+                                 <styleClass>
+                                    <String fx:value="clicked" />
+                                    <String fx:value="general_fill" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="Comic Sans MS" size="15.0" />
+                                 </font></Button>
+                              <TextField fx:id="groupText" layoutX="161.0" layoutY="6.0" prefHeight="26.0" prefWidth="255.0" promptText="write whatever you like" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
                </children>
                <rotationAxis>
                   <Point3D />

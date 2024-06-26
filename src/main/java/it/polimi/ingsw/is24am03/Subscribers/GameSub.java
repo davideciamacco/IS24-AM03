@@ -17,18 +17,14 @@ public interface GameSub extends Subscriber {
 
     public void notifyJoinedPlayer(String player) throws RemoteException;
 
-    //notify winners
     public void notifyWinners(ArrayList<String> winners) throws RemoteException;
 
-    //notify turn order
     public void notifyTurnOrder(ArrayList<String> order) throws RemoteException;
 
-    //notify current player
     public void notifyCurrentPlayer(String current) throws RemoteException;
 
     public void notifyCrashedPlayer(String username) throws RemoteException;
 
-    //notify changed game status
     public void notifyChangeState(State gameState) throws RemoteException;
 
     public void notifyRejoinedPlayer(String rejoinedPlayer) throws RemoteException;

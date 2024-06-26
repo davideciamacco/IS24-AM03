@@ -4,6 +4,23 @@ import java.io.Serializable;
 
 public class Text implements Serializable {
 
+    private String sender;
+    private String recipient;
+
+    private String mex;
+
+
+    public Text(String sender, String mex){
+        this.sender=sender;
+        this.recipient=null;
+        this.mex=mex;
+    }
+
+    public Text(String sender, String recipient,String mex){
+        this.sender=sender;
+        this.recipient=recipient;
+        this.mex=mex;
+    }
     public String getSender() {
         return sender;
     }
@@ -14,29 +31,6 @@ public class Text implements Serializable {
 
     public String getMex() {
         return mex;
-    }
-
-    //stringa mittente
-    private String sender;
-
-
-    //stringa destinatario
-    private String recipient;
-
-    //stringa messaggio
-    private String mex;
-
-    //metodo per costruire messaggio privato
-    public Text(String sender, String mex){
-        this.sender=sender;
-        this.recipient=null;
-        this.mex=mex;
-    }
-    //metodo per costruire messaggio di gruppo
-    public Text(String sender, String recipient,String mex){
-        this.sender=sender;
-        this.recipient=recipient;
-        this.mex=mex;
     }
 
 }

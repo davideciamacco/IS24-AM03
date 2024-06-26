@@ -1,32 +1,38 @@
-package it.polimi.ingsw.is24am03;
-import it.polimi.ingsw.is24am03.client.ConnectionType;
+package it.polimi.ingsw.is24am03.client.view.CLI;
 
-import java.io.IOException;
 //import java.rmi.RemoteException;
+import it.polimi.ingsw.is24am03.SceneType;
+import it.polimi.ingsw.is24am03.client.view.ViewInterface;
+import it.polimi.ingsw.is24am03.client.connection.Client;
 import it.polimi.ingsw.is24am03.server.model.cards.*;
 import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
-import it.polimi.ingsw.is24am03.server.model.player.PlayerBoard;
 
 
-import java.util.*;
+        import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
-public class CliView implements ViewInterface{
+/**
+ *
+ */
+public class CliView implements ViewInterface {
     private final ExecutorService inputReader;
     private final Scanner inputScan;
     private static Client client;
     private Map<String, String> commands;
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         try{
             String ANSI_RESET = "\033[0m";
-            String ANSI_GREEN = "\033[0;32m";
-            System.out.println(ANSI_GREEN);
+
+            System.out.println("\033[0;32m");
             System.out.println("  ____ ___  ____  _______  __                           \n" +
                     " / ___/ _ \\|  _ \\| ____\\ \\/ /                           \n" +
                     "| |  | | | | | | |  _|  \\  /                            \n" +
@@ -49,9 +55,14 @@ public class CliView implements ViewInterface{
             System.exit(-1);
         }
     }
-    public static void setClient(Client client1){
-        client=client1;
-    }
+
+
+    /**
+     *
+     * @param ip
+     * @param port
+     * @param connectionType
+     */
     public CliView(String ip, int port, String connectionType) {
         inputScan = new Scanner(System.in);
         inputReader = Executors.newCachedThreadPool();
@@ -69,6 +80,18 @@ public class CliView implements ViewInterface{
         });
     }
 
+    /**
+     *
+     * @param client1
+     */
+    public static void setClient(Client client1){
+        client=client1;
+    }
+
+    /**
+     *
+     * @param cliInput
+     */
     private void handle(String cliInput) {
 
         String[] inputArray = cliInput.split("\\s+");
@@ -169,8 +192,6 @@ public class CliView implements ViewInterface{
                 }
 
             }
-
-
             default -> {
                 System.out.println("Invalid Command");
             }
@@ -178,13 +199,21 @@ public class CliView implements ViewInterface{
     }
 
 
-
+    /**
+     *
+     * @param i
+     * @throws Exception
+     */
     private void check(int i) throws Exception{
         if(i==-1){
             throw new Exception();
         }
     }
 
+    /**
+     *
+     * @param card
+     */
     private void drawRequirements(ResourceCard card){
         if (card.getId() == 40)
             System.out.print("--FFA--");
@@ -269,6 +298,12 @@ public class CliView implements ViewInterface{
         }
     }
 
+    /**
+     *
+     * @param card
+     * @param corner
+     * @param face
+     */
     private void drawCorner(PlayableCard card, int corner, boolean face)
     {
         if(face){
@@ -333,6 +368,10 @@ public class CliView implements ViewInterface{
         }
     }
 
+    /**
+     *
+     * @param hand
+     */
     public void drawHand(ArrayList<ResourceCard> hand) {
         System.out.println("FRONT:         BACK:");
         System.out.println("\n");
@@ -341,6 +380,16 @@ public class CliView implements ViewInterface{
         }
     }
 
+    /**
+     *
+     * @param points
+     * @param topResDeck
+     * @param topGoldDeck
+     * @param tableCard1
+     * @param tableCard2
+     * @param tableCard3
+     * @param tableCard4
+     */
     public void drawTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
         System.out.print("\n");
         System.out.println("---COMMON TABLE---\n");
@@ -577,10 +626,12 @@ public class CliView implements ViewInterface{
     }
 
 
-    public void drawAvailableColors(ArrayList<Color> colors)
-    {
+    /**
+     *
+     * @param colors
+     */
+    public void drawAvailableColors(ArrayList<Color> colors) {
         String ANSI_RESET = "\033[0m";
-
         String ANSI_RED = "\033[0;31m";
         String ANSI_GREEN = "\033[0;32m";
         String ANSI_YELLOW = "\033[0;33m";
@@ -603,9 +654,11 @@ public class CliView implements ViewInterface{
         System.out.print("\n");
     }
 
+    /**
+     *
+     * @param startCard
+     */
     public void drawStarting(StartingCard startCard){
-      //  System.out.println("----STARTING CARD----\n");
-
         System.out.println("FRONT:         BACK:");
         System.out.println("\n");
         if (startCard.getId() == 80) {
@@ -639,10 +692,13 @@ public class CliView implements ViewInterface{
             System.out.println("P---S---I      └---S---┘ ");
             System.out.println("\n");
         }
-       // System.out.println("---END STARTING CARD---\n");
 
     }
 
+    /**
+     *
+     * @param obj
+     */
     public void drawObjective(ObjectiveCard obj){
         if(obj.getId()==86){
             System.out.println("2 points for each group of 3 cards of the fungi kingdom placed diagonally as follows:");
@@ -741,6 +797,11 @@ public class CliView implements ViewInterface{
 
     }
 
+
+    /**
+     *
+     * @param board
+     */
     public void drawBoard(PlayableCard[][] board) {
         int firstsx = 81;
         int lastdx = -1;
@@ -1330,19 +1391,33 @@ public class CliView implements ViewInterface{
         System.out.print("\n\n");
     }
 
+    /**
+     *
+     */
     public void confirmCreate(){
         System.out.println("Game created successfully");
     }
 
+    /**
+     *
+     */
     public void confirmJoin(){
         System.out.println("Joined successfully");
     }
 
+    /**
+     *
+     * @param joinedPlayer
+     */
     public  void  notifyJoinedPlayer(String joinedPlayer){
         System.out.println(joinedPlayer + " has joined the game\n");
     }
 
 
+    /**
+     *
+     * @param winners
+     */
     public void notifyWinners(ArrayList<String> winners){
         StringBuilder message = new StringBuilder();
         for(int i=0; i< winners.size()-1;i++){
@@ -1354,6 +1429,11 @@ public class CliView implements ViewInterface{
     }
 
 
+    /**
+     *
+     * @param order
+     * @param player
+     */
     public void  notifyTurnOrder(ArrayList<String> order, String player){
         StringBuilder message = new StringBuilder();
         for(int i=0; i< order.size()-1;i++){
@@ -1365,6 +1445,14 @@ public class CliView implements ViewInterface{
     }
 
 
+    /**
+     *
+     * @param current
+     * @param boards
+     * @param player
+     * @param hand
+     * @param gamestate
+     */
     public void notifyCurrentPlayer(String current, Map<String,PlayableCard[][]> boards, String player, ArrayList<ResourceCard> hand,State gamestate){
         System.out.println("Current player is: " + current);
         if(gamestate.equals(State.PLAYING)){
@@ -1405,16 +1493,20 @@ public class CliView implements ViewInterface{
                 System.out.println("IN ORDER TO DRAW A CARD FROM THE COMMON TABLE TYPE: 'DrawTable 1/2/3/4'");
             }
         }
-
-
-
-
     }
 
+    /**
+     *
+     * @param username
+     */
     public void notifyCrashedPlayer(String username){
         System.out.println(username + " has crashed");
     }
 
+    /**
+     *
+     * @param gameState
+     */
     public void notifyChangeState(State gameState){
         System.out.println("Game state has changed, now is: " + gameState.toString());
     /*    if(gameState.equals(State.DRAWING)){
@@ -1437,10 +1529,20 @@ public class CliView implements ViewInterface{
 
     }
 
+    /**
+     *
+     * @param rejoinedPlayer
+     */
     public void notifyRejoinedPlayer(String rejoinedPlayer){
         System.out.println(rejoinedPlayer + " has rejoined the game");
     }
 
+    /**
+     *
+     * @param player
+     * @param nickname
+     * @param boards
+     */
     public void notifyChangePlayerBoard(String player, String nickname, Map<String,PlayableCard[][]>boards){
         if(player.equals(nickname)){
             System.out.println("You placed a card successfully\n");
@@ -1453,24 +1555,42 @@ public class CliView implements ViewInterface{
 
     }
 
+    /**
+     *
+     * @param player
+     * @param points
+     */
     public void ReceiveUpdateOnPoints(String player, int points){
         System.out.println("Update on "+player+" points! He/She reached "+ points +" points!");
     }
 
+    /**
+     *
+     * @param p
+     */
     public  void NotifyChangePersonalCards(ArrayList<ResourceCard> p){
         System.out.println("------YOUR UPDATED HAND------");
         this.drawHand(p);
         System.out.println("------END PERSONAL HAND------");
-
-
     }
 
+    /**
+     *
+     * @param o
+     */
     public void notifyChoiceObjective(ObjectiveCard o){
         System.out.println("------YOUR PERSONAL OBJECTIVE------");
         this.drawObjective(o);
         System.out.println("------END PERSONAL OBJECTIVE------");
     }
 
+    /**
+     *
+     * @param hand
+     * @param startingCard
+     * @param o1
+     * @param o2
+     */
     public void notifyFirstHand(ArrayList<ResourceCard> hand, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2){
         System.out.println("------YOUR PERSONAL HAND------");
         this.drawHand(hand);
@@ -1485,6 +1605,11 @@ public class CliView implements ViewInterface{
     }
 
 
+    /**
+     *
+     * @param objectiveCard1
+     * @param objectiveCard2
+     */
     public void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2){
         System.out.println("------THESE ARE THE COMMON OBJECTIVES, EVERY TIME YOU COMPLETE ONE OF THEM YOU WILL GAIN EXTRA POINTS------");
         this.drawObjective(objectiveCard1);
@@ -1493,20 +1618,40 @@ public class CliView implements ViewInterface{
         System.out.println("\n");
     }
 
+    /**
+     *
+     * @param points
+     * @param topResDeck
+     * @param topGoldDeck
+     * @param tableCard1
+     * @param tableCard2
+     * @param tableCard3
+     * @param tableCard4
+     */
     public void updateCommonTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4){
         System.out.println("------HERE IS THE UPDATED COMMON BOARD WITH EACH PLAYERS' POINTS------");
         this.drawTable(points,topResDeck,topGoldDeck,tableCard1,tableCard2,tableCard3,tableCard4);
         System.out.println("----------------------------------------------------------------------");
     }
 
+    /**
+     *
+     */
     public void NotifyNumbersOfPlayersReached(){
         System.out.println("------THERE ARE ENOUGH PLAYERS! THE GAME WILL START IN A FEW MOMENTS------");
     }
 
+    /**
+     *
+     */
     public void NotifyLastRound(){
         System.out.println("------LAST ROUND IS STARTING, DURING THIS ROUND DRAWING WON'T BE ALLOWED------");
     }
 
+    /**
+     *
+     * @param colors
+     */
     public void notifyAvailableColors(ArrayList<Color> colors){
         System.out.println("------CHOOSE A COLOR FROM THE AVAILABLE ONES------");
         System.out.println("COMMAND: 'Color COLOR'");
@@ -1515,6 +1660,11 @@ public class CliView implements ViewInterface{
 
     }
 
+    /**
+     *
+     * @param colors
+     * @param players
+     */
     public void drawFinalColors(Map<String,Color> colors, ArrayList<String> players){
         String ANSI_RESET = "\033[0m";
         String ANSI_RED = "\033[0;31m";
@@ -1539,6 +1689,11 @@ public class CliView implements ViewInterface{
 
     }
 
+    /**
+     *
+     * @param colors
+     * @param players
+     */
     public void notifyFinalColors(Map<String, Color> colors, ArrayList<String> players){
         System.out.println("------FINAL COLORS------");
         this.drawFinalColors(colors, players);
@@ -1546,6 +1701,20 @@ public class CliView implements ViewInterface{
 
     }
 
+    /**
+     *
+     * @param nickname
+     * @param player
+     * @param gameState
+     * @param hand
+     * @param objectiveCard
+     * @param boards
+     * @param points
+     * @param players
+     * @param objectiveCards
+     * @param color
+     * @param table
+     */
     public void UpdateCrashedPlayer(String nickname, String player, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table){
         System.out.println("---------------------------------------------------------------------");
         System.out.println("HERE ARE SOME UPDATES YOU MIGHT'VE MISSED WHILE GONE!");
@@ -1585,29 +1754,42 @@ public class CliView implements ViewInterface{
     }
 
 
+    /**
+     *
+     * @param points
+     * @param commons
+     */
     public void UpdateFirst(Map<String,Integer> points, ArrayList<ResourceCard> commons){
         this.drawTable(points,commons.get(0),commons.get(1),commons.get(2),commons.get(3),commons.get(4),commons.get(5));
     }
 
+    /**
+     *
+     * @param chat
+     * @param player
+     */
     public void addGroupText(ArrayList<Text> chat, String player){
         this.drawChat(chat,player);
     }
+
+    /**
+     *
+     * @param chat
+     * @param player
+     */
     public void drawChat(ArrayList<Text> chat, String player){
 
         if(chat.get(0).getRecipient()==null){
-            //stampo tutti i messaggi precedenti se ce ne sono, che abbiano receiver nullo
             if(findNumber(chat)>=2){
                 System.out.println("----PREVIOUS GROUP CHAT MESSAGES----");
             }
             for(int i=chat.size()-1; i>0; i--){
                 if(chat.get(i).getSender().equals(player) && chat.get(i).getRecipient()==null){
                     System.out.println(chat.get(i).getSender() + " (YOU) : " + chat.get(i).getMex());
-
                 }
                 else {
                     if(chat.get(i).getRecipient()==null){
                         System.out.println( chat.get(i).getSender() + " : " + chat.get(i).getMex());}
-
                 }
             }
             if(findNumber(chat)>=2){
@@ -1625,16 +1807,13 @@ public class CliView implements ViewInterface{
         }
         else{
             if(chat.get(0).getSender().equals(player)){
-                //trovo tutti i messaggi scambiati con il player destinatario
                 System.out.println("YOU SENT A TEXT TO "+ chat.get(0).getRecipient() + "THIS IS YOUR PRIVATE CHAT WITH: " + chat.get(0).getRecipient());
                 System.out.println("************************************");
                 for(int i=chat.size()-1; i>=0; i--){
-                    //messaggi che io ho mandato a lui
                     if(chat.get(i).getRecipient()!=null) {
                         if (chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getRecipient())) {
                             System.out.println("YOU " + " : " + chat.get(i).getMex());
                         }
-                        //messaggi che lui ha mandato a me
                         else if (chat.get(i).getSender().equals(chat.get(0).getRecipient()) && chat.get(i).getRecipient().equals(player)) {
                             System.out.println(chat.get(i).getSender() + " : " + chat.get(i).getMex());
                         }
@@ -1643,16 +1822,13 @@ public class CliView implements ViewInterface{
             }
 
             if(chat.get(0).getRecipient().equals(player)) {
-                //stampo tutti i loro vecchi messaggi
                 System.out.println("YOU HAVE A NEW TEXT FROM " + chat.get(0).getSender() + " THIS IS YOUR PRIVATE CHAT WITH: " + chat.get(0).getSender());
                 System.out.println("************************************");
                 for(int i=chat.size()-1; i>=0; i--){
-                    //messa che io ho mandato a lui
                     if(chat.get(i).getRecipient()!=null) {
                         if (chat.get(i).getSender().equals(player) && chat.get(i).getRecipient().equals(chat.get(0).getSender())) {
                             System.out.println("YOU " + " : " + chat.get(i).getMex());
                         }
-                        //mess che lui ha mandato a me
                         else if (chat.get(i).getSender().equals(chat.get(0).getSender()) && chat.get(i).getRecipient().equals(player)) {
                             System.out.println(chat.get(i).getSender() + " : " + chat.get(i).getMex());
                         }
@@ -1664,6 +1840,11 @@ public class CliView implements ViewInterface{
     }
 
 
+    /**
+     *
+     * @param chat
+     * @return
+     */
     private int findNumber(ArrayList<Text> chat){
         int number=0;
         for(Text t: chat){
@@ -1674,22 +1855,43 @@ public class CliView implements ViewInterface{
         return number;
     }
 
-
+    /**
+     *
+     * @param message
+     */
    public void printNotifications(String message){
        System.out.println(message);
    }
 
+    /**
+     *
+     * @param sceneType
+     */
     @Override
-    public void drawScene(SceneType sceneType) {
+    public void drawScene(SceneType sceneType) {}
 
-    }
-
+    /**
+     *
+     * @param message
+     */
     public void drawError(String message){
         System.out.println(message);
     }
 
+    /**
+     *
+     * @param chat
+     * @param player
+     */
     @Override
-    public void restoreChat(ArrayList<Text> chat, String player) {
+    public void restoreChat(ArrayList<Text> chat, String player) {}
+
+    public void printUpdatedPoints(Map<String, Integer>updatedPoints){
+        System.out.println("\033[0;32m");
+        System.out.println("UPDATED POINTS\n");
+        for(String s: updatedPoints.keySet())
+            System.out.println(s+ " : " +updatedPoints.get(s));
+        System.out.println("\033[0m");
 
     }
 }

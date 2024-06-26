@@ -34,7 +34,6 @@ class PlayerTest {
     }
     @Test
     void testSetObjective(){
-
         ObjectiveCard card_94 = new ObjectiveList(94,2, CornerItem.FUNGI, ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_95 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         player.setObjectiveCard(card_94,card_95);

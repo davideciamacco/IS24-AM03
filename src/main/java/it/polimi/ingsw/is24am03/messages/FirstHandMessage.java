@@ -9,7 +9,24 @@ import java.io.Serial;
 public class FirstHandMessage extends Message{
     @Serial
     private final static long serialVersionUID= -8425798425233292433L;
+    private ResourceCard playableCard1;
 
+    private ResourceCard playableCard2;
+
+    private ResourceCard playableCard3;
+    private StartingCard startingCard;
+    private ObjectiveCard objectiveCard1;
+    private ObjectiveCard objectiveCard2;
+
+    public FirstHandMessage(ResourceCard playableCard1, ResourceCard playableCard2, ResourceCard playableCard3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2){
+        super(MessageType.FIRST_HAND);
+        this.playableCard1=playableCard1;
+        this.playableCard2=playableCard2;
+        this.playableCard3=playableCard3;
+        this.startingCard=startingCard;
+        this.objectiveCard1=o1;
+        this.objectiveCard2=o2;
+    }
     public ResourceCard getPlayableCard1() {
         return playableCard1;
     }
@@ -32,24 +49,5 @@ public class FirstHandMessage extends Message{
 
     public ObjectiveCard getObjectiveCard2() {
         return objectiveCard2;
-    }
-
-    private ResourceCard playableCard1;
-
-    private ResourceCard playableCard2;
-
-    private ResourceCard playableCard3;
-    private StartingCard startingCard;
-    private ObjectiveCard objectiveCard1;
-    private ObjectiveCard objectiveCard2;
-
-    public FirstHandMessage(ResourceCard playableCard1, ResourceCard playableCard2, ResourceCard playableCard3, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2){
-        super(MessageType.FIRST_HAND);
-        this.playableCard1=playableCard1;
-        this.playableCard2=playableCard2;
-        this.playableCard3=playableCard3;
-        this.startingCard=startingCard;
-        this.objectiveCard1=o1;
-        this.objectiveCard2=o2;
     }
 }

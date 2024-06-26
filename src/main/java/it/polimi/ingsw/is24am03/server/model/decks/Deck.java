@@ -7,6 +7,7 @@ import it.polimi.ingsw.is24am03.server.model.cards.Card;
  *ObjectiveDeck and StartingDeck.
  */
 public abstract class Deck {
+
     /**
      * This method allows us to shuffle a deck of cards.
      */

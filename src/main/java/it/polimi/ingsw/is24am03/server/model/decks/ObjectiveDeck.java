@@ -31,12 +31,10 @@ public class ObjectiveDeck extends Deck {
         ObjectiveCard card_87 = new Dshaped(87,2,CornerItem.PLANT,ObjectiveType.PATTERNDIAGONAL,CornerItem.PLANT,0);
         ObjectiveCard card_88 = new Dshaped(88,2,CornerItem.ANIMAL,ObjectiveType.PATTERNDIAGONAL,CornerItem.ANIMAL,1);
         ObjectiveCard card_89 = new Dshaped(89,2,CornerItem.INSECT,ObjectiveType.PATTERNDIAGONAL,CornerItem.INSECT,0);
-
         ObjectiveCard card_90 = new Lshaped(90,3,CornerItem.FUNGI,ObjectiveType.PATTERNL,CornerItem.FUNGI,2,CornerItem.PLANT);
         ObjectiveCard card_91 = new Lshaped(91,3,CornerItem.PLANT,ObjectiveType.PATTERNL,CornerItem.PLANT,3,CornerItem.INSECT);
         ObjectiveCard card_92 = new Lshaped(92,3,CornerItem.ANIMAL,ObjectiveType.PATTERNL,CornerItem.ANIMAL,1,CornerItem.FUNGI);
         ObjectiveCard card_93 = new Lshaped(93,3,CornerItem.INSECT,ObjectiveType.PATTERNL,CornerItem.INSECT,0,CornerItem.ANIMAL);
-
         ObjectiveCard card_94 = new ObjectiveList(94,2,CornerItem.FUNGI,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_95 = new ObjectiveList(95,2,CornerItem.PLANT,ObjectiveType.ITEM,CornerItem.EMPTY,3);
         ObjectiveCard card_96 = new ObjectiveList(96,2,CornerItem.ANIMAL,ObjectiveType.ITEM,CornerItem.EMPTY,3);

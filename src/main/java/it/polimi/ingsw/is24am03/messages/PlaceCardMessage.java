@@ -1,6 +1,10 @@
 package it.polimi.ingsw.is24am03.messages;
 
+import java.io.Serial;
+
 public class PlaceCardMessage extends Message{
+    @Serial
+    private final static long serialVersionUID= 6919820400982672104L;
     private final String face;
     private final String player;
     private final int i,j;

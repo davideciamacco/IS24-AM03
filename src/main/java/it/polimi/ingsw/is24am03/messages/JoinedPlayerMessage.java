@@ -5,17 +5,16 @@ import java.util.ArrayList;
 
 public class JoinedPlayerMessage extends Message{
 
-@Serial
+    @Serial
     private static final long serialVersionUID= 1842763004088165760L;
 
-private String player;
-
-    public String getPlayer() {
-        return player;
-    }
+    private String player;
 
     public JoinedPlayerMessage(String player){
     super(MessageType.JOINED_PLAYER);
     this.player=player;
-}
+    }
+    public String getPlayer() {
+        return player;
+    }
 }

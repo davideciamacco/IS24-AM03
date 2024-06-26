@@ -11,12 +11,13 @@ public class ChangeStateMessage extends Message{
 
     private State state;
 
-    public State getState() {
-        return state;
-    }
+
 
     public ChangeStateMessage(State state){
         super(MessageType.GAME_STATE);
         this.state=state;
+    }
+    public State getState() {
+        return state;
     }
 }

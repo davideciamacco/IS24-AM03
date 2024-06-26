@@ -1,5 +1,8 @@
-package it.polimi.ingsw.is24am03;
+package it.polimi.ingsw.is24am03.client.view.GUI;
 
+import it.polimi.ingsw.is24am03.SceneType;
+import it.polimi.ingsw.is24am03.client.view.ViewInterface;
+import it.polimi.ingsw.is24am03.client.connection.Client;
 import it.polimi.ingsw.is24am03.server.model.cards.ObjectiveCard;
 import it.polimi.ingsw.is24am03.server.model.cards.PlayableCard;
 import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
@@ -7,22 +10,15 @@ import it.polimi.ingsw.is24am03.server.model.cards.StartingCard;
 import it.polimi.ingsw.is24am03.server.model.chat.Text;
 import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
-import it.polimi.ingsw.is24am03.server.model.game.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.awt.Taskbar;
 import java.awt.Toolkit;
 import java.awt.Taskbar.Feature;
@@ -81,7 +77,6 @@ public class GUIView extends Application implements ViewInterface {
             this.stage.setScene(scene);
             this.stage.show();
         } catch (IOException e) {
-            //e.printStackTrace();
         }
 
     }
@@ -131,12 +126,6 @@ public class GUIView extends Application implements ViewInterface {
 
     }
 
-   /* @Override
-    public void notify(String s) {
-
-    }*/
-
-
     public void drawBoard(PlayableCard[][] playableCards, String player) {
         Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
@@ -148,7 +137,6 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void drawHand(ArrayList<ResourceCard> hand) {
-       //posso passare a game view controller la lista delle carte/ids, tanto dovrà disegnarle sia fronte che retro
     Platform.runLater(()->{
         GameViewController gameViewController=fxmlLoader.getController();
         gameViewController.drawHand(hand);
@@ -200,7 +188,6 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyJoinedPlayer(String joinedPlayer) {
-        //this.printNotifications(j);
     }
 
     @Override
@@ -233,7 +220,6 @@ public class GUIView extends Application implements ViewInterface {
             gameViewController.drawTurnOrder(s);
         });
     }
-    //metodo per creare bottoni per le board degli altri giocatori
     public void drawButtons(ArrayList<String> order, String player){
         Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
@@ -243,7 +229,6 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyCurrentPlayer(String current, Map<String, PlayableCard[][]> boards, String player, ArrayList<ResourceCard> hand, State gamestate) {
-       //devo cambiare text field current player
         this.drawCurrent(current);
 
         if(current.equals(player)){
@@ -293,9 +278,6 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyChangePlayerBoard(String player, String nickname, Map<String, PlayableCard[][]> boards) {
-
-        //questo viene usato anche per la starting card, il primo player è quello che ha messo la carta, il secondo è il player
-        //del local model corrispondente
         if(player.equals(nickname)){
             this.printNotifications("You placed a card successfully");
             this.updateStarting();
@@ -316,7 +298,7 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void ReceiveUpdateOnPoints(String player, int points) {
-        this.printNotifications(player + " scored " + points);
+        this.printNotifications(player + "has reached" + points);
         this.drawPoints(player,points);
 
     }
@@ -335,7 +317,6 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void notifyChoiceObjective(ObjectiveCard o) {
-        //devo comunicare a gui view di eliminare immagine relativa all'obiettivo non scelto
         this.drawFinalObjective(o);
 
 
@@ -380,9 +361,6 @@ public class GUIView extends Application implements ViewInterface {
 
     @Override
     public void NotifyNumbersOfPlayersReached() {
-
-
-
     }
 
     @Override
@@ -460,5 +438,8 @@ public class GUIView extends Application implements ViewInterface {
             GameViewController gameViewController=fxmlLoader.getController();
             gameViewController.restoreChat(chat, player);
         });
+    }
+    public void printUpdatedPoints(Map<String, Integer>updatedPoints){
+
     }
 }

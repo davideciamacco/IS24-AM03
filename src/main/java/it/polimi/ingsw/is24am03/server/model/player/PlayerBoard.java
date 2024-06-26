@@ -21,6 +21,7 @@ public class PlayerBoard {
     private static final int MAX_ROWS = 81;
     private static final int MAX_COLS = 81;
     private final Player player;
+    private ArrayList<PlayerBoardSub> playerBoardSubs;
     private final PlayableCard[][] board;
     private final Map<CornerItem, Integer> availableItems;
     /**
@@ -158,31 +159,32 @@ public class PlayerBoard {
      * @param i The x-coordinate of the card placement.
      * @param j The y-coordinate of the card placement.
      */
-    public void giveCardPoints(PlayableCard c, int i, int j){
-        int type,scoringType,n=0;
-        type= c.getType();
-        if(type==1){
-            //resource card
-            player.addPoints(c.getPoints());
-        }else{
-            scoringType=c.getScoringType();
-            if(scoringType==0){
-                n=availableItems.get(c.getObject());
-                for(i=0; i<n; i++)
-                    player.addPoints(c.getPoints());
-            }else if(scoringType==1){
-                if(board[i-1][j-1]!=null)
-                    n++;
-                if(board[i+1][j+1]!=null)
-                    n++;
-                if(board[i-1][j+1]!=null)
-                    n++;
-                if(board[i+1][j-1]!=null)
-                    n++;
-                for(i=0; i<n; i++)
-                    player.addPoints(c.getPoints());
-            }else if(scoringType==2){
+    public void giveCardPoints(PlayableCard c, int i, int j) {
+        int type, scoringType, n = 0;
+        type = c.getType();
+        if (c.getFace()) {
+            if (type == 1) {
                 player.addPoints(c.getPoints());
+            } else {
+                scoringType = c.getScoringType();
+                if (scoringType == 0) {
+                    n = availableItems.get(c.getObject());
+                    for (i = 0; i < n; i++)
+                        player.addPoints(c.getPoints());
+                } else if (scoringType == 1) {
+                    if (board[i - 1][j - 1] != null)
+                        n++;
+                    if (board[i + 1][j + 1] != null)
+                        n++;
+                    if (board[i - 1][j + 1] != null)
+                        n++;
+                    if (board[i + 1][j - 1] != null)
+                        n++;
+                    for (i = 0; i < n; i++)
+                        player.addPoints(c.getPoints());
+                } else if (scoringType == 2) {
+                    player.addPoints(c.getPoints());
+                }
             }
         }
     }
@@ -369,8 +371,6 @@ public class PlayerBoard {
      * Places a card on the board.
      *
      * @param c    The card to be placed.
-
-
      * @param face The orientation of the card (true if face up, false if face down).
      * @return 0 if the operation is successful.
      * @throws IllegalArgumentException If the coordinates are out of bounds, the position is already occupied,
@@ -484,20 +484,9 @@ public class PlayerBoard {
     public Map<CornerItem, Integer> getAvailableItems() {
         return availableItems;
     }
-
-
-    //METODI PER LISTENERS//
-
     public ArrayList<PlayerBoardSub> getPlayerBoardSubs() {
         return playerBoardSubs;
     }
-
-    private ArrayList<PlayerBoardSub> playerBoardSubs;
-   // private void addSub(PlayerBoardSub playerBoardSub){
-      //  this.playerBoardSubs.add(playerBoardSub);
-   // }
-
-    //metodo che notifica tutti i sub di una certa player board
     public void notifyChangePlayerBoard(String player, PlayableCard p, int i ,int j) {
         for (PlayerBoardSub playerBoardSub : getPlayerBoardSubs()) {
             try {

@@ -13,14 +13,15 @@ public class AvailableColorMessage extends Message{
 
     private ArrayList<Color> colors;
 
-    public ArrayList<Color> getColors() {
-        return colors;
-    }
+
 
     public AvailableColorMessage(ArrayList<Color> colors){
         super(MessageType.AVAILABLE_COLORS);
         this.colors=colors;
     }
 
+    public ArrayList<Color> getColors() {
+        return colors;
+    }
 
 }

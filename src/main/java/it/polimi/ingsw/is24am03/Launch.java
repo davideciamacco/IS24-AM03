@@ -1,7 +1,21 @@
 package it.polimi.ingsw.is24am03;
 
+import it.polimi.ingsw.is24am03.client.view.ViewInterface;
+import it.polimi.ingsw.is24am03.client.connection.Client;
+import it.polimi.ingsw.is24am03.client.connection.ClientRMI;
+import it.polimi.ingsw.is24am03.client.connection.ClientSocket;
+import it.polimi.ingsw.is24am03.client.view.CLI.CliView;
+import it.polimi.ingsw.is24am03.client.view.GUI.GUIView;
+
+/**
+ *
+ */
 public class Launch {
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Client client = null;
         ViewInterface view= null;
@@ -20,9 +34,9 @@ public class Launch {
             }
             if (connectionType.equals("--CLI")) {
                     if (args[3].equals("--TCP")) {
-                        client = new ClientSocket(host, port, view); // Pass null for now, we will set the view later
+                        client = new ClientSocket(host, port, view);
                     } else if (args[3].equals("--RMI")) {
-                        client = new ClientRMI(host, port, view); // Pass null for now, we will set the view later
+                        client = new ClientRMI(host, port, view);
                     }
                     if (client != null) {
                         CliView.setClient(client);
@@ -38,12 +52,12 @@ public class Launch {
                     }
                     catch(RuntimeException e){
                         System.exit(0);
-                    }// Pass null for now, we will set the view later
+                    }
                 } else if (args[3].equals("--RMI")) {
-                    client = new ClientRMI(host, port, view); // Pass null for now, we will set the view later
+                    client = new ClientRMI(host, port, view);
                 }
                 if (client != null) {
-                    GUIView.setClient(client);  // Pass the client to GUIView
+                    GUIView.setClient(client);
                     GUIView.main(newArgs);
                 } else {
                     System.err.println("Invalid connection type.");

@@ -11,6 +11,13 @@ public class PrivateChatMessage extends Message {
 
     private String text;
 
+    public PrivateChatMessage(String sender, String recipient, String text){
+        super(MessageType.PRIVATE_CHAT);
+        this.recipient=recipient;
+        this.sender=sender;
+        this.text=text;
+
+    }
     public String getSender() {
         return sender;
     }
@@ -21,13 +28,6 @@ public class PrivateChatMessage extends Message {
 
     public String getText() {
         return text;
-    }
-    public PrivateChatMessage(String sender, String recipient, String text){
-        super(MessageType.PRIVATE_CHAT);
-        this.recipient=recipient;
-        this.sender=sender;
-        this.text=text;
-
     }
 
 
