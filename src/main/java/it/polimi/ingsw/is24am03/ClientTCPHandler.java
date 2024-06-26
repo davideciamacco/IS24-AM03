@@ -55,6 +55,20 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
 
     public void run() {
         Message response;
+
+        Timer heartbeatTimer = new Timer(true);
+        final long HEARTBEAT_INTERVAL = 1000;
+
+        // TimerTask per inviare heartbeat periodicamente
+        TimerTask heartbeatTask = new TimerTask() {
+            @Override
+            public void run() {
+                sendMessage(new HeartbeatMessage("HEARTBEAT"));
+            }
+        };
+
+        heartbeatTimer.scheduleAtFixedRate(heartbeatTask, 0, HEARTBEAT_INTERVAL);
+
         while (active) {
             try {
                 Message incomingMessage = (Message) inputStream.readObject();
@@ -70,12 +84,14 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
                 active = false;
             }
         }
+
+        heartbeatTimer.cancel();
+
         if (gameController.getGameModel() != null) {
             removeFromObservers();
             gameController.handleCrashedPlayer(nickname);
         }
     }
-
 
     private Message messageParser(Message inputMessage){
         Message outputMessage=null;

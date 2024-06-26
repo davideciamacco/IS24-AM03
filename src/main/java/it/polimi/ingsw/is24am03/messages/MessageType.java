@@ -8,7 +8,7 @@ public enum MessageType {
     CREATE_GAME,
     CONFIRM_GAME,
 
-
+    HEARTBEAT,
 
     //join game, confirm join, notify joined player
     JOIN_GAME,
