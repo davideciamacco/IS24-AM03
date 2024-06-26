@@ -137,14 +137,14 @@ public class ClientSocket implements Client{
                     }
                     catch (SocketTimeoutException e){
                         System.out.println("Server disconnected. Closing client...");
+                        //System.out.println(this.view);
                         active=false;
                         System.exit(0);
                     }
                     catch (IOException | ClassNotFoundException | InterruptedException e ) {
-                        //e.printStackTrace();
-                        //System.out.println("Server disconnected. Closing client...");
+                        System.out.println("Server disconnected. Closing client...");
                         active = false;
-                        //System.exit(0);
+                        System.exit(0);
                     }
                 }
             }
