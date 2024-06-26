@@ -416,7 +416,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 startTimer();
                 System.out.println("Timer avviato");
             }
-            for (int i = 0; i < gameModel.getNumPlayers(); i++) {
+            for (int i = 0; i < gameModel.getNumPlayers() && i< gameModel.getPlayers().size(); i++) {
                 if (gameModel.getPlayers().get(i).getNickname().equals(nickname)) {
                     gameModel.getPlayers().get(i).setConnected(false);
                 }
@@ -485,7 +485,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
 
     public void startTimer() {
-        long limit = 20;
+
+
+        long limit = 60;
+
         Runnable task = () -> {
             if(gameModel.getNumPlayersConnected()<2)
             {

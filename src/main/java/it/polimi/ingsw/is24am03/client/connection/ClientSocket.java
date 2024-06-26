@@ -47,7 +47,7 @@ public class ClientSocket implements Client{
         this.hasJoined = false;
         try {
             this.connection = new Socket(ip, port);
-            this.connection.setSoTimeout(500);
+            this.connection.setSoTimeout(2000);
             this.connection.setKeepAlive(false);
             this.outputStream = new ObjectOutputStream(connection.getOutputStream());
             this.inputStream = new ObjectInputStream(connection.getInputStream());
@@ -202,24 +202,20 @@ public class ClientSocket implements Client{
                 synchronized (queueMessages) {
                     try {
                         Message incomingMessage = (Message) inputStream.readObject();
-                        System.out.println("AAAA");
                         queueMessages.add(incomingMessage);
                         queueMessages.notifyAll();
                         queueMessages.wait(1);
                     }
-                    catch (SocketTimeoutException ignored){
-                    }
-
-                    catch (SocketException e){
-                        System.out.println("Ciao");
+                    catch (SocketTimeoutException e){
+                        System.out.println("Server disconnected. Closing client...");
+                        //System.out.println(this.view);
                         active=false;
+                        System.exit(0);
                     }
-
                     catch (IOException | ClassNotFoundException | InterruptedException e ) {
-                        System.out.println("BBBB");
-                        //System.out.println("Server disconnected. Closing client...");
+                        System.out.println("Server disconnected. Closing client...");
                         active = false;
-                        //System.exit(0);
+                        System.exit(0);
                     }
                 }
             }
@@ -244,7 +240,6 @@ public class ClientSocket implements Client{
                     //System.out.println("Client riceve da server");
                 }
             }
-            System.out.println("CCCC");
         });
     }
 
@@ -707,7 +702,8 @@ public class ClientSocket implements Client{
                 outputStream.reset();
                 //System.out.println("Client invia a server");
             } catch (IOException ignored) {
-                System.out.println("Server giù");
+                System.out.println("Server disconnected. Closing client...");
+                System.exit(0);
             }
         }
     }

@@ -30,6 +30,7 @@ public class CliView implements ViewInterface {
      */
     public static void main(String[] args) {
         try{
+            String ANSI_RESET = "\033[0m";
 
             System.out.println("\033[0;32m");
             System.out.println("  ____ ___  ____  _______  __                           \n" +
@@ -44,8 +45,8 @@ public class CliView implements ViewInterface {
             System.out.println("\n \n" +
                     "'CreateGame <number of players> <nickname>' in order to create a game\n" +
                     "'Join <nickname>' in order to join a game already created\n" +
-                    "'Rejoin <nickname>' in order to rejoin a game you were playing");
-            System.out.println("\033[0m");
+                    "'RejoinGame <nickname>' in order to rejoin a game you were playing");
+            System.out.println(ANSI_RESET);
             ViewInterface view = new CliView(args[0], Integer.parseInt(args[1]), args[2]);
 
         }

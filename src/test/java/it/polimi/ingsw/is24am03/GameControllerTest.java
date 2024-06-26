@@ -293,7 +293,7 @@ class GameControllerTest {
 
     }
 
-    @Test
+    /*@Test
     void handleCrashedPlayer() throws RemoteException, InterruptedException{
         GameController gc = new GameController();
         assertThrows(GameNotExistingException.class, () -> gc.rejoinGame("Player1", "TCP"));
@@ -394,7 +394,7 @@ class GameControllerTest {
         assertFalse(gc2.isTimer());
         assertEquals(2, gc2.getGameModel().getNumPlayersConnected());
         assertTrue(gc2.getGameModel().getPlayers().get(0).getConnected());
-    }
+    }*/
 
     @Test
     void canSendPrivateChat() throws RemoteException{

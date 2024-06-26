@@ -17,9 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- *
- */
 public class ClientRMI implements Client{
     Registry registry;
     private RemoteGameController gameController;
@@ -419,7 +416,7 @@ public class ClientRMI implements Client{
             gameController.addToObserver((ChatSub) clientModel);
             gameController.addToObserver((PlayerSub) clientModel);
             gameController.addToObserver((PlayerBoardSub) clientModel);
-        }catch (RemoteException e){}
+        }catch (RemoteException ignored){}
     }
 
     /**
@@ -433,7 +430,7 @@ public class ClientRMI implements Client{
                 gameController.removeSub((PlayerBoardSub) clientModel);
                 gameController.removeSub((GameSub) clientModel);
             }
-        }catch (RemoteException e){}
+        }catch (RemoteException ignored){}
 
     }
 
@@ -452,6 +449,8 @@ public class ClientRMI implements Client{
         try {
             gameController.setLastHeartBeat(nickname);
         } catch (RemoteException e) {
+            System.out.println("Server disconnected. Closing client...");
+            System.exit(0);
         }
     }
 

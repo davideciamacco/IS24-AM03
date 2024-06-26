@@ -47,7 +47,12 @@ public class Launch {
             } else if (connectionType.equals("--GUI")) {
 
                 if (args[3].equals("--TCP")) {
-                    client = new ClientSocket(host, port, view);
+                    try{
+                        client = new ClientSocket(host, port, view);
+                    }
+                    catch(RuntimeException e){
+                        System.exit(0);
+                    }
                 } else if (args[3].equals("--RMI")) {
                     client = new ClientRMI(host, port, view);
                 }
@@ -60,8 +65,13 @@ public class Launch {
             } else {
                 System.err.println("Invalid connection type. Use --CLI or --GUI.");
             }
-        } else {
+        } else if (args.length == 3) {
             ServerMain.main(args);
+        }
+        else{
+            System.out.println("Missing arguments\n" +
+                    "Server usage: <IP Address> <TCP port> <RMI port>\n" +
+                    "Client usage: --<CLI/GUI> <IP Address> <port> --<TCP/RMI>");
         }
     }
 }
