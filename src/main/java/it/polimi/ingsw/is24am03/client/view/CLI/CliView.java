@@ -107,7 +107,6 @@ public class CliView implements ViewInterface {
                 try {
                     client.CreateGame(Integer.parseInt(inputArray[1]), inputArray[2]);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     System.out.println("Command for creating a game must be: 'CreateGame 2/3/4 <yournickname>'");
                 }
 
