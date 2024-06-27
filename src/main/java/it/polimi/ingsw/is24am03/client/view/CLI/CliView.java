@@ -1181,6 +1181,365 @@ public class CliView implements ViewInterface {
                         // System.out.println("\n");
                         // System.out.println(board[i][j].getFront().get(3).getValue());
                         // System.out.println("\n");
+
+
+                        if (board[i][j].getFace()) {
+                            if (!board[i][j].getFront().get(3).getValue()) {
+                                if (!board[i][j].getFrontCorner(3).isVisible()) {
+                                    output3 = output3 + "└";
+                                } else if (board[i][j].getFrontCorner(3).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i][j].getFrontCorner(3).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i][j].getFrontCorner(3).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i][j].getFrontCorner(3).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i][j].getFrontCorner(3).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i][j].getFrontCorner(3).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i][j].getFrontCorner(3).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            } else {
+                                if (board[i + 1][j - 1] != null) {
+                                    if (board[i + 1][j - 1].getFace()) {
+                                        if (!board[i + 1][j - 1].getFrontCorner(1).isVisible()) {
+                                            output3 = output3 + "┐";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    } else {
+                                        if (!board[i + 1][j - 1].getBackCorner(1).isVisible()) {
+                                            output3 = output3 + "┐";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if (!board[i][j].getBack().get(3).getValue()) {
+                                if (!board[i][j].getBackCorner(3).isVisible()) {
+                                    output3 = output3 + "└";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            } else {
+                                if (board[i + 1][j - 1] != null) {
+                                    if (board[i + 1][j - 1].getFace()) {
+                                        if (!board[i + 1][j - 1].getFrontCorner(1).isVisible()) {
+                                            output3 = output3 + "┐";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j - 1].getFrontCorner(1).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    } else {
+                                        if (!board[i + 1][j - 1].getBackCorner(1).isVisible()) {
+                                            output3 = output3 + "┐";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (board[i][j].getFace() && board[i][j].getType() == -1) {
+                            if (board[i][j].getId() == 40)
+                                output3 = output3 + "--FFA--";
+                            else if (board[i][j].getId() == 41) {
+                                output3 = output3 + "--FFP--";
+                            } else if (board[i][j].getId() == 42) {
+                                output3 = output3 + "--FFI--";
+                            } else if (board[i][j].getId() == 43) {
+                                output3 = output3 + "-FF-FA-";
+                            } else if (board[i][j].getId() == 44) {
+                                output3 = output3 + "-FF-FP-";
+                            } else if (board[i][j].getId() == 45) {
+                                output3 = output3 + "-FF-FI-";
+                            } else if (board[i][j].getId() == 46) {
+                                output3 = output3 + "--FFF--";
+                            } else if (board[i][j].getId() == 47) {
+                                output3 = output3 + "--FFF--";
+                            } else if (board[i][j].getId() == 48) {
+                                output3 = output3 + "--FFF--";
+                            } else if (board[i][j].getId() == 49) {
+                                output3 = output3 + "-FFFFF-";
+                            } else if (board[i][j].getId() == 50) {
+                                output3 = output3 + "--PPI--";
+                            } else if (board[i][j].getId() == 51) {
+                                output3 = output3 + "--PPF--";
+                            } else if (board[i][j].getId() == 52) {
+                                output3 = output3 + "--PPA--";
+                            } else if (board[i][j].getId() == 53) {
+                                output3 = output3 + "-PP-PI--";
+                            } else if (board[i][j].getId() == 54) {
+                                output3 = output3 + "-PP-PA-";
+                            } else if (board[i][j].getId() == 55) {
+                                output3 = output3 + "-PP-PF--";
+                            } else if (board[i][j].getId() == 56) {
+                                output3 = output3 + "--PPP--";
+                            } else if (board[i][j].getId() == 57) {
+                                output3 = output3 + "--PPP--";
+                            } else if (board[i][j].getId() == 58) {
+                                output3 = output3 + "--PPP--";
+                            } else if (board[i][j].getId() == 59) {
+                                output3 = output3 + "-PPPPP-";
+                            } else if (board[i][j].getId() == 60) {
+                                output3 = output3 + "--AAI--";
+                            } else if (board[i][j].getId() == 61) {
+                                output3 = output3 + "--AAP--";
+                            } else if (board[i][j].getId() == 62) {
+                                output3 = output3 + "--AAF--";
+                            } else if (board[i][j].getId() == 63) {
+                                output3 = output3 + "-AA-AI-";
+                            } else if (board[i][j].getId() == 64) {
+                                output3 = output3 + "-AA-AF-";
+                            } else if (board[i][j].getId() == 65) {
+                                output3 = output3 + "-AA-AP-";
+                            } else if (board[i][j].getId() == 66) {
+                                output3 = output3 + "--AAA--";
+                            } else if (board[i][j].getId() == 67) {
+                                output3 = output3 + "--AAA--";
+                            } else if (board[i][j].getId() == 68) {
+                                output3 = output3 + "--AAA--";
+                            } else if (board[i][j].getId() == 69) {
+                                output3 = output3 + "-AAAAA-";
+                            } else if (board[i][j].getId() == 70) {
+                                output3 = output3 + "--IIP--";
+                            } else if (board[i][j].getId() == 71) {
+                                output3 = output3 + "--IIA--";
+                            } else if (board[i][j].getId() == 72) {
+                                output3 = output3 + "--IIF--";
+                            } else if (board[i][j].getId() == 73) {
+                                output3 = output3 + "-II-IA-";
+                            } else if (board[i][j].getId() == 74) {
+                                output3 = output3 + "-II-IP-";
+                            } else if (board[i][j].getId() == 75) {
+                                output3 = output3 + "-II-IF-";
+                            } else if (board[i][j].getId() == 76) {
+                                output3 = output3 + "--III--";
+                            } else if (board[i][j].getId() == 77) {
+                                output3 = output3 + "--III--";
+                            } else if (board[i][j].getId() == 78) {
+                                output3 = output3 + "--III--";
+                            } else if (board[i][j].getId() == 79) {
+                                output3 = output3 + "-IIIII-";
+                            }
+                        } else if(board[i][j].getType()==1)
+                            output3 = output3 + "-------";
+                        else
+                            output3 = output3 + "---S---";
+
+                        if (board[i][j].getFace()) {
+                            if (!board[i][j].getFront().get(2).getValue()) {
+                                if (!board[i][j].getFrontCorner(2).isVisible()) {
+                                    output3 = output3 + "┘";
+                                } else if (board[i][j].getFrontCorner(2).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i][j].getFrontCorner(2).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i][j].getFrontCorner(2).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i][j].getFrontCorner(2).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i][j].getFrontCorner(2).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i][j].getFrontCorner(2).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i][j].getFrontCorner(2).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            } else {
+                                if (board[i + 1][j + 1] != null) {
+                                    if (board[i + 1][j + 1].getFace()) {
+                                        if (!board[i + 1][j + 1].getFrontCorner(0).isVisible()) {
+                                            output3 = output3 + "┌";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    } else {
+                                        if (!board[i + 1][j + 1].getBackCorner(0).isVisible()) {
+                                            output3 = output3 + "┐";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            if (!board[i][j].getBack().get(2).getValue()) {
+                                if (!board[i][j].getBackCorner(2).isVisible()) {
+                                    output3 = output3 + "┘";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            } else {
+                                if (board[i + 1][j + 1] != null) {
+                                    if (board[i + 1][j + 1].getFace()) {
+                                        if (!board[i + 1][j + 1].getFrontCorner(0).isVisible()) {
+                                            output3 = output3 + "┌";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    } else {
+                                        if (!board[i + 1][j + 1].getBackCorner(0).isVisible()) {
+                                            output3 = output3 + "┌";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                                            output3 = output3 + "F";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                                            output3 = output3 + "A";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.INSECT)) {
+                                            output3 = output3 + "I";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.PLANT)) {
+                                            output3 = output3 + "P";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                            output3 = output3 + "M";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.EMPTY)) {
+                                            output3 = output3 + "O";
+                                        } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.QUILL)) {
+                                            output3 = output3 + "Q";
+                                        } else {
+                                            output3 = output3 + "B";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        /*
                         if (!board[i][j].getFront().get(3).getValue()) {
                             if (board[i][j].getFace()) {
                                 if (!board[i][j].getFrontCorner(3).isVisible()) {
@@ -1357,6 +1716,7 @@ public class CliView implements ViewInterface {
                         else
                             output3 = output3 + "---S---";
 
+
                         if (!board[i][j].getFront().get(2).getValue()) {
                             if (board[i][j].getFace()) {
                                 if (!board[i][j].getFrontCorner(2).isVisible()) {
@@ -1444,6 +1804,9 @@ public class CliView implements ViewInterface {
                             }
 
                         }
+                        */
+
+
 
                     }
                 }
