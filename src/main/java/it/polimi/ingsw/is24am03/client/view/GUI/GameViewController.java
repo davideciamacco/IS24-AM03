@@ -25,16 +25,13 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.*;
 
-
+/**
+ * Controller for the GUI during the game
+ */
 public class GameViewController extends GUIController implements Initializable {
-
     private Map<Button, String> chatButtons=new HashMap<>();
     private Map <String, Integer> points;
     private Map<String,Pane> boards;
-    private double scaleValue=1.0;
-    private final double scaleIncrement=0.1;
-    private final double maxScale = 3.0;
-
     private Map<Integer, ArrayList<Integer>> coords;
     private Map<String, ImageView> pawns;
 
@@ -88,7 +85,6 @@ public class GameViewController extends GUIController implements Initializable {
 
     @FXML
     private TextField cardNumber;
-
 
     @FXML
     private ImageView goldDeck;
@@ -272,6 +268,65 @@ public class GameViewController extends GUIController implements Initializable {
     @FXML
     private ScrollPane scrollPane4;
 
+    /**
+     * Initializes the game scene
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        zoom.setOnScroll(this::handleZoom);
+        this.coords=new HashMap<>();
+        this.points=new HashMap<>();
+        this.plank.setVisible(true);
+        this.pawns=new HashMap<>();
+        this.initializeCoord();
+        p1.setOnScroll(this::handleZoom);
+        p2.setOnScroll(this::handleZoom);
+        p3.setOnScroll(this::handleZoom);
+        p4.setOnScroll(this::handleZoom);
+        this.finalOb.setVisible(false);
+        this.points=new HashMap<>();
+        this.color.setVisible(false);
+        this.green.setVisible(false);
+        this.blue.setVisible(false);
+        this.red.setVisible(false);
+        this.yellow.setVisible(false);
+        this.player1.setVisible(false);
+        this.player2.setVisible(false);
+        this.player3.setVisible(false);
+        this.player4.setVisible(false);
+        this.p1.setVisible(false);
+        this.scrollPane1.setVisible(false);
+        this.p2.setVisible(false);
+        this.scrollPane2.setVisible(false);
+        this.p3.setVisible(false);
+        this.scrollPane3.setVisible(false);
+        this.p4.setVisible(false);
+        this.scrollPane4.setVisible(false);
+        this.goBack1.setVisible(false);
+        this.goBack2.setVisible(false);
+        this.goBack3.setVisible(false);
+        this.goBack4.setVisible(false);
+        this.boards=new HashMap<>();
+        this.chat.setVisible(false);
+        this.bluePawn.setVisible(false);
+        this.yellowPawn.setVisible(false);
+        this.greenPawn.setVisible(false);
+        this.redPawn.setVisible(false);
+        this.closeGroupChat.setVisible(false);
+        this.openChatP1.setVisible(false);
+        this.openChatP2.setVisible(false);
+        this.openChatP3.setVisible(false);
+        this.splitChatP1.setVisible(false);
+        this.splitChatP2.setVisible(false);
+        this.splitChatP3.setVisible(false);
+    }
+
+    /**
+     * Manages the click by a player on the button Place Card and checks the format of the argument related to the side chosen, the card number chosen and the indexes
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickPlaceCard(MouseEvent mouseEvent){
         try{
@@ -284,52 +339,89 @@ public class GameViewController extends GUIController implements Initializable {
             this.drawNotifications("Missing Arguments");
         }
     }
+
+    /**
+     * Manages the click on the resource deck in order to draw a card from it
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickResourceDeck(MouseEvent mouseEvent) {
         clientController.DrawResource();
 
     }
 
+    /**
+     * Manages the click on the gold deck in order to draw a card from it
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickGoldDeck(MouseEvent mouseEvent) {
         clientController.DrawGold();
 
     }
 
+    /**
+     * Manages the click on the first card in the common table in order to draw it
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickTable0(MouseEvent mouseEvent) {
         clientController.DrawTable(1);
 
     }
 
+    /**
+     * Manages the click on the second card in the common table in order to draw it
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickTable1(MouseEvent mouseEvent) {
         clientController.DrawTable(2);
 
     }
 
+    /**
+     * Manages the click on the third card in the common table in order to draw it
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickTable2(MouseEvent mouseEvent) {
         clientController.DrawTable(3);
 
     }
 
+    /**
+     * Manages the click on the fourth card in the common table in order to draw it
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickTable3(MouseEvent mouseEvent) {
         clientController.DrawTable(4);
 
     }
 
+    /**
+     * Manages the click on the first objective card assigned to the player in order to choose it as the player's secret objective
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickObjective1(MouseEvent mouseEvent){
         clientController.ChooseObjectiveCard(1);
     }
 
+    /**
+     * Manages the click on the second objective card assigned to the player in order to choose it as the player's secret objective
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickObjective2(MouseEvent mouseEvent){
         clientController.ChooseObjectiveCard(2);
     }
 
+    /**
+     * Draws the personal playable cards of the player.
+     * @param hand contains the cards which a player can place
+     */
 
     public void drawHand(ArrayList<ResourceCard> hand) {
         if (hand.size() == 3) {
@@ -372,6 +464,10 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
+    /**
+     * Draws both sides of the starting card assigned to the player
+     * @param startingCard refers to the starting card
+     */
     public void drawStarting(StartingCard startingCard) {
         Image card = new Image(getClass().getResource(findFrontUrl(startingCard.getId())).toExternalForm());
         startingCardFront.setImage(card);
@@ -379,16 +475,27 @@ public class GameViewController extends GUIController implements Initializable {
         startingCardBack.setImage(card1);
     }
 
+    /**
+     * Draws the first objective assigned to the player
+     * @param objectiveCard objective card assigned to the player
+     */
     public void drawObjective1(ObjectiveCard objectiveCard) {
         Image card = new Image(getClass().getResource(findFrontUrl(objectiveCard.getId())).toExternalForm());
         objective1.setImage(card);
     }
-
+    /**
+     * Draws the second objective assigned to the player
+     * @param objectiveCard objective card assigned to the player
+     */
     public void drawObjective2(ObjectiveCard objectiveCard) {
         Image card = new Image(getClass().getResource(findFrontUrl(objectiveCard.getId())).toExternalForm());
         objective2.setImage(card);
     }
 
+    /**
+     * Draws the common objective cards
+     * @param commons contains the objective cards
+     */
     public void drawCommonObjective(ArrayList<ObjectiveCard> commons) {
         Image card1 = new Image(getClass().getResource(findFrontUrl(commons.get(0).getId())).toExternalForm());
         commonOb1.setImage(card1);
@@ -397,7 +504,17 @@ public class GameViewController extends GUIController implements Initializable {
 
     }
 
-    public void drawTable(Map<String, Integer> playerPoints, ResourceCard resourceDeck, ResourceCard goldDeck, ResourceCard card0, ResourceCard card1, ResourceCard card2, ResourceCard card3) {
+    /**
+     * Draws the drawable cards in the common table
+     *
+     * @param resourceDeck card on top of the resource deck
+     * @param goldDeck card on top of the gold deck
+     * @param card0 first card in the common table
+     * @param card1 second card in the common table
+     * @param card2 third card in the common table
+     * @param card3 fourth card in the common table
+     */
+    public void drawTable(ResourceCard resourceDeck, ResourceCard goldDeck, ResourceCard card0, ResourceCard card1, ResourceCard card2, ResourceCard card3) {
 
         if (resourceDeck == null) {
             Image card = new Image(getClass().getResource("/it/polimi/ingsw/is24am03/Cards/Backs/EMPTY.png").toExternalForm());
@@ -464,11 +581,19 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
+    /**
+     * Sets the starting card to not visible after the player has chosen its face
+     */
     public void updateStarting(){
         this.startingCardBack.setVisible(false);
         this.startingCardFront.setVisible(false);
     }
 
+    /**
+     * Retrieves the correct url associated to the front side of a certain card
+     * @param id id of the card
+     * @return the url position of the card
+     */
     private String findFrontUrl(int id) {
         String url = null;
         if (id >= 0 && id <= 9) {
@@ -507,6 +632,11 @@ public class GameViewController extends GUIController implements Initializable {
         return url;
     }
 
+    /**
+     * Retrieves the correct url location associated to the back side of a certain card
+     * @param id id of the card
+     * @return the location of the card
+     */
     private String findBackUrl(int id) {
         String url = null;
         if (id >= 0 && id <= 9) {
@@ -545,59 +675,16 @@ public class GameViewController extends GUIController implements Initializable {
         return url;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        zoom.setOnScroll(this::handleZoom);
-        this.coords=new HashMap<>();
-        this.points=new HashMap<>();
-        this.plank.setVisible(true);
-        this.pawns=new HashMap<>();
-        this.initializeCoord();
-        p1.setOnScroll(this::handleZoom);
-        p2.setOnScroll(this::handleZoom);
-        p3.setOnScroll(this::handleZoom);
-        p4.setOnScroll(this::handleZoom);
-        this.finalOb.setVisible(false);
-        this.points=new HashMap<>();
-        this.color.setVisible(false);
-        this.green.setVisible(false);
-        this.blue.setVisible(false);
-        this.red.setVisible(false);
-        this.yellow.setVisible(false);
-        this.player1.setVisible(false);
-        this.player2.setVisible(false);
-        this.player3.setVisible(false);
-        this.player4.setVisible(false);
-        this.p1.setVisible(false);
-        this.scrollPane1.setVisible(false);
-        this.p2.setVisible(false);
-        this.scrollPane2.setVisible(false);
-        this.p3.setVisible(false);
-        this.scrollPane3.setVisible(false);
-        this.p4.setVisible(false);
-        this.scrollPane4.setVisible(false);
-        this.goBack1.setVisible(false);
-        this.goBack2.setVisible(false);
-        this.goBack3.setVisible(false);
-        this.goBack4.setVisible(false);
-        this.boards=new HashMap<>();
-        this.chat.setVisible(false);
-        this.bluePawn.setVisible(false);
-        this.yellowPawn.setVisible(false);
-        this.greenPawn.setVisible(false);
-        this.redPawn.setVisible(false);
-        this.closeGroupChat.setVisible(false);
-        this.openChatP1.setVisible(false);
-        this.openChatP2.setVisible(false);
-        this.openChatP3.setVisible(false);
-        this.splitChatP1.setVisible(false);
-        this.splitChatP2.setVisible(false);
-        this.splitChatP3.setVisible(false);
-    }
 
 
+    /**
+     * Implements zoom handling on the main pane
+     * @param event scroll event
+     */
     private void handleZoom(ScrollEvent event){
+        double scaleValue=1.0;
+        double scaleIncrement=0.1;
+        double maxScale = 3.0;
         double deltaY = event.getDeltaY();
         if (deltaY < 0) {
             scaleValue -= scaleIncrement;
@@ -605,52 +692,90 @@ public class GameViewController extends GUIController implements Initializable {
             scaleValue += scaleIncrement;
         }
         scaleValue = Math.max(1.0, Math.min(scaleValue, maxScale));
-
         Scale scale = new Scale(scaleValue, scaleValue, event.getX(), event.getY());
         Pane zoomPane = (Pane) event.getSource();
         zoomPane.getTransforms().setAll(scale);
         event.consume();
     }
 
+    /**
+     * Handles the click on the front of the starting card
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickStartingFront(MouseEvent mouseEvent){
         clientController.ChooseStartingCardSide("FRONT");
     }
 
+    /**
+     * Handles the click on the back of the starting card
+     * @param mouseEvent click event
+     */
     @FXML
     private void onClickStartingBack(MouseEvent mouseEvent){
         clientController.ChooseStartingCardSide("BACK");
     }
 
-    public void drawFinalObjective(ObjectiveCard o){
+    /**
+     * Draws the secret objective card chosen by the player
+     * @param objectiveCard the chosen secret objective
+     */
+    public void drawFinalObjective(ObjectiveCard objectiveCard){
         this.finalOb.setVisible(true);
         this.finalOb.setText("This is your secret objective");
-        Image card = new Image(getClass().getResource(findFrontUrl(o.getId())).toExternalForm());
+        Image card = new Image(getClass().getResource(findFrontUrl(objectiveCard.getId())).toExternalForm());
         this.objective2.setImage(card);
         this.objective1.setVisible(false);
         this.objective2.setDisable(true);
         this.notifications.clear();
     }
 
+    /**
+     * Draws the updated game state
+     * @param s updated game state
+     */
     public void drawState(State s){
         this.state.setText("Game state:" + s.toString());
     }
+
+    /**
+     * Draws the turn order
+     * @param s list of the players ordered by the turn order
+     */
     public void drawTurnOrder(String s){
             this.turnOrder.setText(s);
     }
+
+    /**
+     *
+     * @param s
+     */
     public void drawCurrent(String s){
         this.current.setText("Current player is:" + s);
     }
+
+    /**
+     *
+     * @param s
+     */
     public void drawNotifications(String s){
         this.notifications.setText(s);
     }
 
+    /**
+     *
+     */
     private void setInvisible(){
         this.blue.setVisible(false);
         this.red.setVisible(false);
         this.yellow.setVisible(false);
         this.green.setVisible(false);
     }
+
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickRed(MouseEvent mouseEvent){
         clientController.PickColor("RED");
@@ -658,24 +783,42 @@ public class GameViewController extends GUIController implements Initializable {
         this.notifications.clear();
 
     }
+
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickBlue(MouseEvent mouseEvent){
         clientController.PickColor("BLUE");
         setInvisible();
         this.notifications.clear();
     }
+
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickGreen(MouseEvent mouseEvent){
         clientController.PickColor("GREEN");
         setInvisible();
         this.notifications.clear();
     }
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickYellow(MouseEvent mouseEvent){
         clientController.PickColor("YELLOW");
         setInvisible();
         this.notifications.clear();
     }
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickGoBack(MouseEvent mouseEvent){
         this.p1.setVisible(false);
@@ -695,6 +838,11 @@ public class GameViewController extends GUIController implements Initializable {
         this.closeGroupChat.setVisible(false);
 
     }
+
+    /**
+     *
+     * @param colors
+     */
     public void drawAvailableColors(ArrayList<Color> colors){
         this.color.setText("Pick a color");
 
@@ -718,6 +866,11 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param colors
+     * @param players
+     */
     public void drawFinalColors(Map<String,Color> colors, ArrayList<String> players){
         this.color.setText("Final colors");
         this.blue.setVisible(false);
@@ -760,6 +913,11 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param points
+     */
     public void drawPoints(String player, int points){
         this.points.put(player, points);
         ArrayList<Integer> coord =this.coords.get(points);
@@ -768,6 +926,11 @@ public class GameViewController extends GUIController implements Initializable {
 
     }
 
+    /**
+     *
+     * @param board
+     * @param player
+     */
     public void drawBoard(PlayableCard[][] board, String player) {
         double startX = 960;
         double startY = 540;
@@ -781,17 +944,14 @@ public class GameViewController extends GUIController implements Initializable {
         int centerX = board.length / 2;
         int centerY = board[0].length / 2;
         Set<Position> occupiedPositions = new HashSet<>();
-        Set<Position> validPositions = new HashSet<>();
         Map<Position, Label> positionLabels = new HashMap<>();
     int z;
-        // Aggiunta dei label per gli angoli visibili
         for (int level = 0; level <= Math.max(centerX, centerY); level++) {
             for (int x = centerX - level; x <= centerX + level; x++) {
                 for (int y = centerY - level; y <= centerY + level; y++) {
                     if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && (Math.abs(x - centerX) == level || Math.abs(y - centerY) == level)) {
                         PlayableCard card = board[x][y];
                         if (card != null) {
-
                             ArrayList<Boolean> visibleCorners = new ArrayList<>();
                             if (card.getFace()) {
                                 for (z = 0; z < 4; z++) {
@@ -915,14 +1075,27 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
 
+    /**
+     *
+     */
     private static class Position {
         int x, y;
 
+        /**
+         *
+         * @param x
+         * @param y
+         */
         Position(int x, int y) {
             this.x = x;
             this.y = y;
         }
 
+        /**
+         *
+         * @param o
+         * @return
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -931,22 +1104,20 @@ public class GameViewController extends GUIController implements Initializable {
             return x == position.x && y == position.y;
         }
 
+        /**
+         *
+         * @return
+         */
         @Override
         public int hashCode() {
             return Objects.hash(x, y);
         }
     }
 
-
-
-
-
-
-
-
-
-
-
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickPlayer1(MouseEvent mouseEvent){
         this.game.setVisible(false);
@@ -957,6 +1128,10 @@ public class GameViewController extends GUIController implements Initializable {
         this.goBack1.setVisible(true);
     }
 
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickPlayer2(MouseEvent mouseEvent){
         this.game.setVisible(false);
@@ -966,6 +1141,10 @@ public class GameViewController extends GUIController implements Initializable {
         this.scrollPane2.setVisible(true);
         this.goBack2.setVisible(true);
     }
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickPlayer3(MouseEvent mouseEvent){
         this.game.setVisible(false);
@@ -975,6 +1154,10 @@ public class GameViewController extends GUIController implements Initializable {
         this.scrollPane3.setVisible(true);
         this.goBack3.setVisible(true);
     }
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickPlayer4(MouseEvent mouseEvent){
         this.game.setVisible(false);
@@ -984,21 +1167,30 @@ public class GameViewController extends GUIController implements Initializable {
         this.scrollPane4.setVisible(true);
         this.goBack4.setVisible(true);
     }
-
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickShowGroupChat(MouseEvent mouseEvent){
         this.chat.setVisible(true);
         this.openGroupChat.setVisible(false);
         this.closeGroupChat.setVisible(true);
     }
-
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickCloseGroupChat(MouseEvent mouseEvent){
         this.chat.setVisible(false);
         this.openGroupChat.setVisible(true);
         this.closeGroupChat.setVisible(false);
     }
-
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickOpenPrivateChat(MouseEvent mouseEvent){
         if(mouseEvent.getSource() ==openChatP1){
@@ -1011,7 +1203,10 @@ public class GameViewController extends GUIController implements Initializable {
             this.splitChatP3.setVisible(true);
         }
     }
-
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickClosePrivateChat(MouseEvent mouseEvent){
         if(mouseEvent.getSource()==closeChatP1){
@@ -1024,7 +1219,10 @@ public class GameViewController extends GUIController implements Initializable {
             this.splitChatP3.setVisible(false);
         }
     }
-
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickSendGroupText(MouseEvent mouseEvent){
         try{
@@ -1034,7 +1232,10 @@ public class GameViewController extends GUIController implements Initializable {
             this.drawNotifications("Missing arguments");
         }
     }
-
+    /**
+     *
+     * @param mouseEvent
+     */
     @FXML
     private void onClickSendPrivateChat(MouseEvent mouseEvent){
 
@@ -1062,6 +1263,11 @@ public class GameViewController extends GUIController implements Initializable {
 
     }
 
+    /**
+     * Draw latest text message received or sent by this player
+     * @param chat all text messages that includes the player as sender or receiver
+     * @param player local player associated to the view
+     */
     public void drawChat(ArrayList<Text> chat, String player){
         if(chat.get(0).getRecipient()==null){
             if(chat.get(0).getSender().equals(player)){
@@ -1133,6 +1339,11 @@ public class GameViewController extends GUIController implements Initializable {
             }
         }
 
+    /**
+     * Draws chat buttons and boards' buttons, on which a player can click a see another player's board
+     * @param players turn order of the game
+     * @param player nickname of the local player for which a certain button's configuration is drawn
+     */
     public void drawButtons(ArrayList<String> players, String player){
         this.boards=new HashMap<>();
         ArrayList<String> nicknames=new ArrayList<>();
@@ -1206,6 +1417,11 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
+    /**
+     * Draws the old text messages in the private chats and in the group chat after a player rejoined the game
+     * @param chat list of all text messages where the player is the recipient or the sender
+     * @param player the rejoined player
+     */
     public void restoreChat(ArrayList<Text> chat, String player){
         for(int i=chat.size()-1; i>=0; i--){
             if(chat.get(i).getRecipient()==null){
@@ -1305,10 +1521,13 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
 
+    /**
+     * Initialized the coordinates X,Y used to draw the player's pawn on the scoreboard
+     */
     private void initializeCoord(){
         this.coords.put(0, Points.ZERO.coordPoints());
-       this.coords.put(1,Points.ONE.coordPoints());
-       this.coords.put(2, Points.TWO.coordPoints());
+        this.coords.put(1,Points.ONE.coordPoints());
+        this.coords.put(2, Points.TWO.coordPoints());
         this.coords.put(3, Points.THREE.coordPoints());
         this.coords.put(4, Points.FOUR.coordPoints());
         this.coords.put(5, Points.FIVE.coordPoints());
@@ -1338,10 +1557,7 @@ public class GameViewController extends GUIController implements Initializable {
         this.coords.put(29, Points.TWENTY_NINE.coordPoints());
     }
 
-    @Override
-    public void postNotification(String title, String desc) {
 
-    }
 }
 
 

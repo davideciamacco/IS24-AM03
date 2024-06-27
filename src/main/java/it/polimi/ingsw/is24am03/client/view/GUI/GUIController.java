@@ -13,14 +13,6 @@ public abstract class GUIController {
         GUIController.clientController = clientController;
     }
 
-    public void setManager(GUIView manager){
-        this.manager = manager;
-    }
-
-    public abstract void postNotification(String title, String desc);
-    protected  Client getClientController(){
-        return GUIController.clientController;
-    }
 
     protected GUIView getManager() {return manager;}
 

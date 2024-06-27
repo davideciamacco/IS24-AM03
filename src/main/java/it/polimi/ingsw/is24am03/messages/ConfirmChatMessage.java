@@ -9,13 +9,7 @@ public class ConfirmChatMessage extends ConfirmMessage{
     @Serial
     private static final long serialVersionUID= -4956149756751739581L;
 
-    /**
-     *
-     * @return the result about the request of sending a chat message
-     */
-    public Boolean isConfirmChat() {
-        return confirmChat;
-    }
+
 
     private Boolean confirmChat;
 
@@ -29,5 +23,12 @@ public class ConfirmChatMessage extends ConfirmMessage{
         this.confirmChat=confirmChat;
     }
 
+    /**
+     *
+     * @return the result about the request of sending a chat message
+     */
+    public Boolean isConfirmChat() {
+        return confirmChat;
+    }
 
 }

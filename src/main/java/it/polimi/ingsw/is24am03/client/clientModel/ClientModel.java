@@ -65,7 +65,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
      * List which contains the common objectives of the game
      */
     private ArrayList<ObjectiveCard> commonObjective;
-    //private Map<String, Boolean> playersState;
     /**
      * Reference to the current player
      */
@@ -127,7 +126,6 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
         this.card2=null;
         this.card3=null;
         this.commonObjective=new ArrayList<>();
-        //this.playersState=new HashMap<>();
         this.hand=new ArrayList<>();
         this.objectiveCard1=null;
         this.objectiveCard2=null;
@@ -319,7 +317,7 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
 
     /**
      * Updates the common objectives of the game
-     * @param objectiveCard1 first commmon objective card
+     * @param objectiveCard1 first common objective card
      * @param objectiveCard2 secondo common objective card
      * @throws RemoteException RMI Exception
      */
@@ -404,20 +402,20 @@ public class ClientModel extends UnicastRemoteObject implements ChatSub, GameSub
     }
 
     /**
-     * Stores latest update
-     * @param nickname
-     * @param chat
-     * @param gameState
-     * @param hand
-     * @param objectiveCard
-     * @param boards
-     * @param points
-     * @param players
-     * @param objectiveCards
-     * @param color
-     * @param table
-     * @param colors
-     * @throws RemoteException
+     * Updates the player who rejoined the game after crashing.
+     * @param nickname the current player
+     * @param chat text messages from the group chat and text messages of which the player was the sender or the receiver
+     * @param gameState current game state
+     * @param hand player's personal cards
+     * @param objectiveCard player's secret objective card
+     * @param boards updated boards of each player
+     * @param points updated score of each player
+     * @param players turn order of the game
+     * @param objectiveCards common objective cards
+     * @param color color of the local player
+     * @param table contains the cards located in the common table
+     * @param colors color of each player associated to his nickname
+     * @throws RemoteException RMI Exception
      */
     @Override
     public void UpdateCrashedPlayer(String nickname, ArrayList<Text> chat, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table, ArrayList<Color> colors) throws RemoteException {

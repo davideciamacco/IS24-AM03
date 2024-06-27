@@ -34,7 +34,7 @@ public class GUIView extends Application implements ViewInterface {
     private FXMLLoader fxmlLoader;
     private Scene scene;
     private Stage stage;
-    private String connectionType;
+    //private String connectionType;
 
     public static void setClient(Client client) {
         controller = client;
@@ -174,7 +174,7 @@ public class GUIView extends Application implements ViewInterface {
     public void drawTable(Map<String, Integer> playerPoints, ResourceCard resourceDeck, ResourceCard goldDeck, ResourceCard card0, ResourceCard card1, ResourceCard card2, ResourceCard card3) {
         Platform.runLater(()->{
             GameViewController gameViewController=fxmlLoader.getController();
-            gameViewController.drawTable(playerPoints,resourceDeck,goldDeck,card0,card1,card2,card3);
+            gameViewController.drawTable(resourceDeck,goldDeck,card0,card1,card2,card3);
         });
     }
 

@@ -70,22 +70,6 @@ public class LoginViewController extends GUIController {
                 showAlert("Error", "First input must be a number");
             }
         }
-
-
-        /*
-        // Implementa la logica per inviare il comando generico
-        Stri
-
-        if (command.isEmpty()) {
-            errorLabel.setText("Error:");
-            errorLabelDesc.setText("Command cannot be empty.");
-        } else {
-            String[] inputArray = command.split("\\s+");
-            String command1 = inputArray[0];
-
-            if(command1.equals("CreateGame"))
-                 clientController.CreateGame(Integer.parseInt(inputArray[1]), inputArray[2]);
-        }*/
     }
 
     /**
@@ -118,8 +102,8 @@ public class LoginViewController extends GUIController {
      * @param title
      * @param desc
      */
-    @Override
-    public void postNotification(String title, String desc) {}
+/*    @Override
+    public void postNotification(String title, String desc) {}*/
 
     /**
      *

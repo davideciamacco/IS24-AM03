@@ -12,8 +12,6 @@ public class CommonObjectiveMessage extends Message{
     @Serial
     private static final long serialVersionUID= 1429328338949447966L;
 
-
-
     private ObjectiveCard objectiveCard1;
     private ObjectiveCard objectiveCard2;
 
