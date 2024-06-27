@@ -36,9 +36,9 @@ Legend:
 | RMI             | :green_circle: |
 | TCP             | :green_circle: |
 | CLI             | :green_circle: |
-| GUI             | :clock1:       |
+| GUI             | :green_circle:       |
 | Chat            | :green_circle: |
-| Game Resiliance | :clock1:       |
+| Game Resiliance | :green_circle:     |
 | Persistence     | :stop_sign:    |
 | Multi Game      | :stop_sign:    |
 

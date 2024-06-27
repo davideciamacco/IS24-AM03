@@ -224,23 +224,6 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    /**
-     * Checks if a player can draw gold.
-     *
-     * @param player the nickname of the player
-     * @throws PlayerNotInTurnException
-
-
-    /**
-     * Draws gold for the player from the gold deck.
-     *
-     //* @param player   the player who is drawing gold
-     //* @param goldDeck the gold deck from which gold is drawn
-     * @throws PlayerNotInTurnException if the player is not currently in turn
-    //* @throws FullHandException        if the player's hand is already full
-     * @throws InvalidStateException   if the game state is not suitable for drawing gold
-     */
-    //metodo per fare check che player possa pescare da gold
 
     /**
      * Checks if the specified player can draw a gold card based on game rules and current state.
