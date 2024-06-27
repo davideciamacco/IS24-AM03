@@ -15,7 +15,7 @@ This repository contains the digital java implementation of the game **Codex Nat
 Assemble the pages of the Codex Naturalis, the secret manuscript which lists the species of the four kingdoms that live in the primary forests. Play and place your cards to use resources, fulfill the objectives to create the most elaborate manuscript. When a player reaches 20 points or more, the end of the game is triggered.
 
 ## Authors
-Politecnico di Miliano - Prof. Margara Section - **Group AM03** 
+Politecnico di Miliano - Prof. Margara Section - **Group AM03**
 -  **10775655 Davide Ciamacco**   ([@davideciamacco](https://github.com/davideciamacco)) _davide.ciamacco@mail.polimi.it_
 -  **10764548 Andrea Callari** ([@andreacalllari](https://github.com/andreacallari)) _andrea.callari@mail.polimi.it_
 -  **10764758 Simone Checchia** ([@Simogithub02](https://github.com/Simogithub02)) _simone.checchia@mail.polimi.it_
@@ -35,12 +35,13 @@ Legend:
 | Controller      | :green_circle: |
 | RMI             | :green_circle: |
 | TCP             | :green_circle: |
-| CLI             | :clock1:|
-| GUI             | :stop_sign: |
+| CLI             | :green_circle: |
+| GUI             | :green_circle:       |
 | Chat            | :green_circle: |
-| Game Resiliance |:clock1:|
-| Persistence     | :clock1:    |
-| Multi Game      | :stop_sign: |
+| Game Resiliance | :green_circle:     |
+| Persistence     | :stop_sign:    |
+| Multi Game      | :stop_sign:    |
+
 
 
 
@@ -65,5 +66,6 @@ The rules of the game can be found on the [deliverables directory]().
 ## Requirements
 
 ## License
-All rights to **Codex Naturalis** are owned by [Cranio Creations](https://www.craniocreations.it/),  which provided the graphical 
+All rights to **Codex Naturalis** are owned by [Cranio Creations](https://www.craniocreations.it/),  which provided the graphical
+
 resources to be used for educational purposes only.

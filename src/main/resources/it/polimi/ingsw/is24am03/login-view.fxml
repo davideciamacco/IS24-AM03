@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="800.0" prefWidth="1200.0" styleClass="anchor" stylesheets="@login.view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is24am03.client.view.GUI.LoginViewController">
+    <!-- Fine Logo -->
+
+
+    <center>
+        <!-- 3 bottoni per scegliere azione da compiere con ToggleButton -->
+        <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml/21">
+            <HBox alignment="CENTER" spacing="10">
+                <ToggleButton fx:id="CreateGame" style="-fx-font-weight: bold; -fx-background-color: #333;" styleClass="button-login" text="Create Game" textFill="WHITE">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="action" />
+                    </toggleGroup>
+               <font>
+                  <Font size="31.0" />
+               </font>
+                </ToggleButton>
+                <ToggleButton fx:id="JoinGame" style="-fx-font-weight: bold; -fx-background-color: #333;" styleClass="button-login" text="Join Game" textFill="WHITE" toggleGroup="$action">
+               <font>
+                  <Font size="31.0" />
+               </font></ToggleButton>
+                <ToggleButton fx:id="RejoinGame" style="-fx-font-weight: bold; -fx-background-color: #333;" styleClass="button-login" text="Rejoin Game" textFill="WHITE" toggleGroup="$action">
+               <font>
+                  <Font size="31.0" />
+               </font></ToggleButton>
+            </HBox>
+
+            <!-- CreateGame interface -->
+            <VBox fx:id="CreateBox" alignment="CENTER" prefHeight="159.0" prefWidth="509.0" spacing="10" translateY="100.0" visible="false">
+                <Label style="-fx-font-weight: bold; -fx-background-color: #fff; -fx-border-color: #333;" text="Number of players" textFill="#bf1313">
+               <font>
+                  <Font size="31.0" />
+               </font></Label>
+                <!-- number of players -->
+                <HBox alignment="CENTER" spacing="10">
+                    <ToggleButton fx:id="ply2" style="-fx-background-color: #333; -fx-font-weight: bold;" styleClass="button-login" text="2" textFill="WHITE">
+                        <toggleGroup>
+                            <ToggleGroup fx:id="numPlayers" />
+                        </toggleGroup>
+                  <font>
+                     <Font size="31.0" />
+                  </font>
+                    </ToggleButton>
+                    <ToggleButton fx:id="ply3" style="-fx-background-color: #333; -fx-font-weight: bold;" styleClass="button-login" text="3" textFill="WHITE" toggleGroup="$numPlayers">
+                  <font>
+                     <Font size="31.0" />
+                  </font></ToggleButton>
+                    <ToggleButton fx:id="ply4" style="-fx-background-color: #333; -fx-font-weight: bold;" styleClass="button-login" text="4" textFill="WHITE" toggleGroup="$numPlayers">
+                  <font>
+                     <Font size="31.0" />
+                  </font></ToggleButton>
+                </HBox>
+
+                <Label style="-fx-border-color: #333; -fx-font-weight: bold; -fx-background-color: #fff;" text="Nickname" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font></Label>
+                <!-- nickname -->
+                <TextField fx:id="nicknameCreateField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="15.0" prefWidth="20.0">
+               <font>
+                  <Font size="31.0" />
+               </font></TextField>
+                <Button fx:id="doneCreate" style="-fx-background-color: #333; -fx-font-weight: bold;" styleClass="button-login" text="Done" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font></Button>
+
+
+
+            </VBox>
+
+      
+                  <!-- JoinGame interface -->
+            <VBox fx:id="JoinBox" alignment="CENTER" spacing="10" visible="false">
+                <Label style="-fx-border-color: #333; -fx-font-weight: bold; -fx-background-color: #fff;" text="Nickname" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font></Label>
+                <!-- nickname -->
+                <TextField fx:id="nicknameJoinField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="15.0" prefWidth="20.0">
+               <font>
+                  <Font size="31.0" />
+               </font></TextField>
+                <Button fx:id="doneJoin" style="-fx-background-color: #333; -fx-font-weight: bold;" styleClass="button-login" text="Done" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font></Button>
+
+
+            </VBox>
+
+
+            <!-- RejoinGame interface -->
+            <VBox fx:id="RejoinBox" alignment="CENTER" spacing="10" translateY="-150.0" visible="false">
+                <Label style="-fx-border-color: #333; -fx-font-weight: bold; -fx-background-color: #fff;" text="Nickname" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font></Label>
+                <!-- nickname -->
+                <TextField fx:id="nicknameRejoinField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="15.0" prefWidth="20.0">
+               <font>
+                  <Font size="31.0" />
+               </font></TextField>
+                <Button fx:id="doneRejoin" style="-fx-background-color: #333; -fx-font-weight: bold;" styleClass="button-login" text="Done" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font></Button>
+
+
+
+            </VBox>
+            <Label fx:id="errorLabel" alignment="CENTER" prefHeight="27.0" prefWidth="480.0" textFill="#eb1e1e">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Label>
+        </VBox>
+    </center>
+</BorderPane>
