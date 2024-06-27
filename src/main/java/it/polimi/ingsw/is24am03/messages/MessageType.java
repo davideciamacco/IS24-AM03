@@ -10,7 +10,6 @@ public enum MessageType {
 
     HEARTBEAT,
 
-    //join game, confirm join, notify joined player
 
     JOIN_GAME,
     CONFIRM_JOIN,
