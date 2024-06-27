@@ -1403,7 +1403,7 @@ public class CliView implements ViewInterface {
 
                         } else {
                             if (board[i+1][j+1]!=null && board[i + 1][j + 1].getFace()) {
-                                if (!board[i + 1][j + 1].getFrontCorner(1).isVisible()) {
+                                if (!board[i + 1][j + 1].getFrontCorner(0).isVisible()) {
                                     output3 = output3 + "┌";
                                 } else if (board[i + 1][j + 1].getFrontCorner(0).getItem().equals(CornerItem.FUNGI)) {
                                     output3 = output3 + "F";
@@ -1423,7 +1423,7 @@ public class CliView implements ViewInterface {
                                     output3 = output3 + "B";
                                 }
                             } else{
-                                if (!board[i + 1][j + 1].getBackCorner(1).isVisible()) {
+                                if (!board[i + 1][j + 1].getBackCorner(0).isVisible()) {
                                     output3 = output3 + "┌";
                                 } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.FUNGI)) {
                                     output3 = output3 + "F";
