@@ -38,7 +38,6 @@ public class PlayerBoard {
         }
         this.playerBoardSubs=new ArrayList<>();
     }
-    //
     /**
      * Checks the visibility of corners when placing a card.
      *
@@ -368,13 +367,11 @@ public class PlayerBoard {
         }
     }
     /**
-     * Places a card on the board.
+     * Places a starting card on the player board at the center position.
+     * If the card is placed face-down, it rotates it to face-up before placing.
      *
-     * @param c    The card to be placed.
-     * @param face The orientation of the card (true if face up, false if face down).
-     * @return 0 if the operation is successful.
-     * @throws IllegalArgumentException If the coordinates are out of bounds, the position is already occupied,
-     *                                  there are no cards to attach to, or if the card requirements are not met.
+     * @param c The starting card to be placed.
+     * @param face True if the card is placed face-up, false if face-down.
      */
     public void placeStartingCard(StartingCard c, boolean face){
         if (!face) {
@@ -382,8 +379,15 @@ public class PlayerBoard {
         }
         board[40][40] = c;
         increaseItemCount(c);
-
     }
+
+    /**
+     * Place a card on the player board at the specified coordinates.
+     * @param c Card to be placed
+     * @param i x coordinate
+     * @param j y coordinate
+     * @param face front or back of the card
+     */
     public void placeCard(ResourceCard c, int i, int j, boolean face) {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
             throw new CoordinatesOutOfBoundsException();
@@ -460,42 +464,81 @@ public class PlayerBoard {
         giveCardPoints(c, i, j);
         player.removeCard(c);
     }
+    /**
+     * Updates the coverage of adjacent corners on the board based on the specified coordinates.
+     *
+     * @param i The row index of the board.
+     * @param j The column index of the board.
+     */
     private void updateAdjacentCornerCoverage(int i, int j) {
-
         if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && board[i + 1][j + 1] != null) {
-            board[i + 1][j + 1].setCornerCoverage(0, true); // Imposta come coperto l'angolo 0 della carta adiacente in basso a destra
+            board[i + 1][j + 1].setCornerCoverage(0, true); // Sets corner 0 of the card adjacent bottom-right as covered
         }
         if (i + 1 < MAX_ROWS && j - 1 >= 0 && board[i + 1][j - 1] != null) {
-            board[i + 1][j - 1].setCornerCoverage(1, true); // Imposta come coperto l'angolo 1 della carta adiacente in basso a sinistra
+            board[i + 1][j - 1].setCornerCoverage(1, true); // Sets corner 1 of the card adjacent bottom-left as covered
         }
         if (i - 1 >= 0 && j + 1 < MAX_COLS && board[i - 1][j + 1] != null) {
-            board[i - 1][j + 1].setCornerCoverage(3, true); // Imposta come coperto l'angolo 3 della carta adiacente in alto a destra
+            board[i - 1][j + 1].setCornerCoverage(3, true); // Sets corner 3 of the card adjacent top-right as covered
         }
         if (i - 1 >= 0 && j - 1 >= 0 && board[i - 1][j - 1] != null) {
-            board[i - 1][j - 1].setCornerCoverage(2, true); // Imposta come coperto l'angolo 2 della carta adiacente in alto a sinistra
+            board[i - 1][j - 1].setCornerCoverage(2, true); // Sets corner 2 of the card adjacent top-left as covered
         }
     }
-    public Player getPlayer(){
+
+    /**
+     * Retrieves the player associated with this player board.
+     *
+     * @return The player object.
+     */
+    public Player getPlayer() {
         return player;
     }
+
+    /**
+     * Retrieves the board containing playable cards.
+     *
+     * @return The 2D array representing the player board.
+     */
     public PlayableCard[][] getBoard() {
         return board;
     }
+
+    /**
+     * Retrieves the map of available items on the player board.
+     *
+     * @return The map containing available items and their counts.
+     */
     public Map<CornerItem, Integer> getAvailableItems() {
         return availableItems;
     }
+
+    /**
+     * Retrieves the list of subscribers observing changes to this player board.
+     *
+     * @return The list of player board subscribers.
+     */
     public ArrayList<PlayerBoardSub> getPlayerBoardSubs() {
         return playerBoardSubs;
     }
-    public void notifyChangePlayerBoard(String player, PlayableCard p, int i ,int j) {
+
+    /**
+     * Notifies all subscribers of a change in the player board state.
+     *
+     * @param player The player making the change.
+     * @param p The playable card being modified.
+     * @param i The row index of the card on the board.
+     * @param j The column index of the card on the board.
+     */
+    public void notifyChangePlayerBoard(String player, PlayableCard p, int i, int j) {
         for (PlayerBoardSub playerBoardSub : getPlayerBoardSubs()) {
             try {
                 playerBoardSub.notifyChangePlayerBoard(player, p, i, j);
             } catch (RemoteException ignored) {
-
+                // Handle RemoteException if subscriber is unreachable
             }
         }
     }
+
 
 }
 

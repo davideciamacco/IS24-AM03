@@ -100,9 +100,13 @@ public class StartingDeck extends Deck {
     }
 
 
-    public ArrayList<StartingCard> getCards(){
+    /**
+     * Retrieves the list of starting cards.
+     *
+     * @return ArrayList of StartingCard objects.
+     */
+    public ArrayList<StartingCard> getCards() {
         return cards;
     }
-
 
 }

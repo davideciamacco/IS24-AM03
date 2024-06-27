@@ -20,7 +20,7 @@ public class GoldDeck extends Deck {
     private final ArrayList<ResourceCard> cards;
 
     /**
-     * Class' constructor.
+     * Class constructor.
      */
     public GoldDeck() {
         this.cards = new ArrayList<>();
@@ -353,17 +353,25 @@ public class GoldDeck extends Deck {
      * This method checks whether the deck is empty.
      * @return true is the deck is empty, otherwise false.
      */
-
     @Override
     public boolean isEmpty(){
         return cards.isEmpty();
     }
 
-    public void setEmpty(){
+
+    /**
+     * Clears the list of cards, making it empty.
+     */
+    public void setEmpty() {
         cards.clear();
     }
 
-    public ArrayList<ResourceCard> getCards(){
+    /**
+     * Retrieves the list of resource cards.
+     *
+     * @return ArrayList of ResourceCard objects.
+     */
+    public ArrayList<ResourceCard> getCards() {
         return cards;
     }
 }

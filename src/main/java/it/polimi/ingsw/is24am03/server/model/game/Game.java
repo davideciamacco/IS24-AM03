@@ -565,6 +565,14 @@ public class Game{
         nextTurn();
     }
 
+    /**
+     * Handles updating all subscribed game clients with changes to the common table.
+     *
+     * @param d The deck from which the card is drawn.
+     * @param resourceCard The resource card drawn.
+     * @param index The index where the resource card is placed on the common table.
+     * @param deck Indicates which deck the card is drawn from (0 for resource deck, 1 for gold deck).
+     */
     public void handledrawTable(Deck d, ResourceCard resourceCard, int index, int deck) {
         for (GameSub gameSub : gameSubs) {
             try {
@@ -667,8 +675,19 @@ public class Game{
         Collections.shuffle(players);
     }
 
+    /**
+     * Retrieves the current state of the game.
+     *
+     * @return The current state of the game.
+     */
     public State getGameState() {return gameState;}
 
+    /**
+     * Allows a player to select a starting face for their player board.
+     *
+     * @param player The nickname of the player making the selection.
+     * @param face The face (true/false) selected by the player.
+     */
     public void selectStartingFace(String player, boolean face)
     {
         Player p = players.get(currentPlayer);
@@ -677,6 +696,12 @@ public class Game{
         nextTurn();
     }
 
+    /**
+     * Sets the objective card choice for a player and notifies the appropriate subscriber.
+     *
+     * @param player The nickname of the player setting the objective card.
+     * @param choice The index of the objective card choice.
+     */
     public void setObjectiveCard(String player, int choice) {
         Player p = players.get(currentPlayer);
         p.setObjectiveChoice(choice);
@@ -687,6 +712,12 @@ public class Game{
         nextTurn();
     }
 
+    /**
+     * Sets the pawn color for the current player and updates available colors.
+     * Notifies subscribers if in the COLOR state.
+     *
+     * @param color The color to set as the player's pawn color.
+     */
     public void setColor(Color color){
         Player p = players.get(currentPlayer);
         p.setPawncolor(color);
@@ -703,6 +734,11 @@ public class Game{
         }
     }
 
+    /**
+     * Retrieves the list of players currently participating in the game.
+     *
+     * @return An ArrayList containing all players in the game.
+     */
     public ArrayList<Player> getPlayers() {
         return players;
     }
@@ -793,64 +829,142 @@ public class Game{
 
     }
 
+    /**
+     * Retrieves the list of available colors that players can choose from.
+     *
+     * @return An ArrayList containing the available colors.
+     */
     public ArrayList<Color> getAvailableColors(){
         return availableColors;
     }
 
+    /**
+     * Retrieves the index of the current player in the game.
+     *
+     * @return The index of the current player.
+     */
     public int getCurrentPlayer(){
         return currentPlayer;
     }
 
+    /**
+     * Sets the game ending flag to true.
+     * This is typically used to indicate that the game is ending or has ended.
+     */
     public void setEnding(){
         this.ending=true;
     }
 
+    /**
+     * Retrieves the gold deck used in the game.
+     *
+     * @return The GoldDeck object representing the deck of gold cards.
+     */
     public GoldDeck getGoldDeck() {
         return goldDeck;
     }
 
+    /**
+     * Retrieves the resource deck used in the game.
+     *
+     * @return The ResourceDeck object representing the deck of resource cards.
+     */
     public ResourceDeck getResourceDeck() {
         return resourceDeck;
     }
 
+    /**
+     * Retrieves the starting deck used in the game.
+     *
+     * @return The StartingDeck object representing the deck of starting cards.
+     */
     public StartingDeck getStartingDeck() {
         return startingDeck;
     }
 
+    /**
+     * Retrieves the objective deck used in the game.
+     *
+     * @return The ObjectiveDeck object representing the deck of objective cards.
+     */
     public ObjectiveDeck getObjectiveDeck() {
         return objectiveDeck;
     }
 
+    /**
+     * Retrieves the list of cards currently on the table in the game.
+     *
+     * @return An ArrayList containing the cards currently on the table.
+     */
     public ArrayList<ResourceCard> getTableCards() {
         return tableCards;
     }
 
+    /**
+     * Retrieves the list of common objective cards in the game.
+     *
+     * @return An ArrayList containing the common objective cards.
+     */
     public ArrayList<ObjectiveCard> getCommonObjective() {
         return commonObjective;
     }
 
+    /**
+     * Checks if the game ending flag is set.
+     *
+     * @return true if the game ending flag is set; otherwise, false.
+     */
     public boolean isEnding() {
         return ending;
     }
 
+    /**
+     * Checks if the game is in the last round.
+     *
+     * @return true if it is the last round of the game; otherwise, false.
+     */
     public boolean isLastRound() {
         return lastRound;
     }
 
+    /**
+     * Sets the flag indicating that the game is in the last round to true.
+     */
     public void setLastRound(){
         lastRound = true;
     }
 
+    /**
+     * Sets the current state of the game.
+     *
+     * @param state The state to set for the game.
+     */
     public void setGameState(State state){
         this.gameState = state;
     }
 
+    /**
+     * Adds a GameSub subscriber to the game.
+     *
+     * @param gameSub The GameSub object to add as a subscriber.
+     */
     public void addSub(GameSub gameSub){
         gameSubs.add(gameSub);
     }
+    /**
+     * Removes a GameSub subscriber from the game.
+     *
+     * @param gameSub The GameSub object to remove as a subscriber.
+     */
     public void removeSub(GameSub gameSub){
         gameSubs.remove(gameSub);
     }
+    /**
+     * Adds a PlayerSub subscriber to all players in the game and sets up
+     * subscriptions according to game state rules.
+     *
+     * @param playerSub The PlayerSub object to add as a subscriber.
+     */
     public void addSub(PlayerSub playerSub){
         for(Player p: getPlayers()){
             p.getPlayerSubs().add(playerSub);
@@ -869,17 +983,38 @@ public class Game{
             }
         }*/
     }
+    /**
+     * Removes a PlayerSub subscriber from all players in the game.
+     *
+     * @param playerSub The PlayerSub object to remove as a subscriber.
+     */
     public void removeSub(PlayerSub playerSub){
         for(Player p: getPlayers()){
             p.getPlayerSubs().remove(playerSub);
         }
     }
+    /**
+     * Adds a ChatSub subscriber to the game-wide chat.
+     *
+     * @param chatSub The ChatSub object to add as a subscriber.
+     */
     public void addSub(ChatSub chatSub){
         chat.getChatSubs().add(chatSub);
     }
+    /**
+     * Removes a ChatSub subscriber from the game-wide chat.
+     *
+     * @param chatSub The ChatSub object to remove as a subscriber.
+     */
     public void removeSub(ChatSub chatSub){
         chat.getChatSubs().remove(chatSub);
     }
+    /**
+     * Adds a PlayerBoardSub subscriber to all player boards in the game and sets up
+     * subscriptions according to game state rules.
+     *
+     * @param playerBoardSub The PlayerBoardSub object to add as a subscriber.
+     */
     public void addSub(PlayerBoardSub playerBoardSub){
         for(Player p: getPlayers()){
             p.getPlayerBoard().getPlayerBoardSubs().add(playerBoardSub);
@@ -896,20 +1031,43 @@ public class Game{
             }
         }*/
     }
+    /**
+     * Removes a PlayerBoardSub subscriber from all player boards in the game.
+     *
+     * @param playerBoardSub The PlayerBoardSub object to remove as a subscriber.
+     */
     public void removeSub(PlayerBoardSub playerBoardSub){
         for(Player p: getPlayers()){
             p.getPlayerBoard().getPlayerBoardSubs().remove(playerBoardSub);
         }
     }
+    /**
+     * Sends a private message from one player to another.
+     *
+     * @param sender The nickname of the sender of the message.
+     * @param receiver The nickname of the receiver of the message.
+     * @param message The content of the private message.
+     */
     public void sendPrivateMessage(String sender, String receiver, String message) {
         Text t=new Text(sender, receiver,message);
         chat.NotifyChat(t);
     }
+    /**
+     * Sends a group message to all players in the game.
+     *
+     * @param sender The nickname of the sender of the message.
+     * @param message The content of the group message.
+     */
     public void sendGroupMessage(String sender, String message){
         Text t=new Text(sender,message);
         chat.NotifyChat(t);
     }
-
+    /**
+     * Finds the corresponding PlayerSub subscriber for a given Player.
+     *
+     * @param p The Player object for which to find the PlayerSub subscriber.
+     * @return The PlayerSub object associated with the given Player, or null if not found.
+     */
     public PlayerSub findSub(Player p) {
         PlayerSub player=null;
         for (PlayerSub playerSub : p.getPlayerSubs()) {
@@ -922,7 +1080,12 @@ public class Game{
         }
         return player;
     }
-
+    /**
+     * Finds the corresponding PlayerSub subscriber for a player with the given nickname.
+     *
+     * @param nickname The nickname of the player for which to find the PlayerSub subscriber.
+     * @return The PlayerSub object associated with the player's nickname, or null if not found.
+     */
     public PlayerSub findSub(String nickname){
         //cerco nella lista dei giocatori il giocatore corrispondente
         Player x=null;
@@ -942,7 +1105,12 @@ public class Game{
         }
         return ps;
     }
-
+    /**
+     * Finds and retrieves the player object corresponding to the given nickname.
+     *
+     * @param player The nickname of the player to find.
+     * @return The Player object associated with the given nickname, or null if not found.
+     */
     public Player findPlayer(String player){
         Player pl=null;
         for(Player p: players){
@@ -953,6 +1121,12 @@ public class Game{
         return pl;
     }
 
+    /**
+     * Manages the update for a specific player, preparing relevant game state data
+     * and notifying subscribed GameSubs about the updated player state.
+     *
+     * @param player The nickname of the player to update.
+     */
     public void manageUpdate(String player){
         ArrayList<ResourceCard> hand=new ArrayList<>();
         hand=findPlayer(player).getHand();
@@ -1033,16 +1207,28 @@ public class Game{
         }
 
     }
-
+    /**
+     * Retrieves the number of players currently connected to the game.
+     *
+     * @return The number of players connected to the game.
+     */
     public int getNumPlayersConnected(){
         return numPlayersConnected;
     }
-
+    /**
+     * Sets the number of players connected to the game.
+     *
+     * @param value The number of players connected to set.
+     */
     public void setNumPlayersConnected(int value){
         numPlayersConnected=value;
     }
 
-
+    /**
+     * Extracts and returns the nicknames of all players in the game.
+     *
+     * @return An ArrayList containing the nicknames of all players.
+     */
     public ArrayList<String> extractNicknames(){
         ArrayList<String> nicknames=new ArrayList<>();
         for(int i=0; i<getPlayers().size();i++){

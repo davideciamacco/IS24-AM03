@@ -145,11 +145,20 @@ public class ResourceDeck extends Deck {
         return cards.isEmpty();
     }
 
-    public ArrayList<ResourceCard> getCards(){
+    /**
+     * Retrieves the list of resource cards.
+     *
+     * @return ArrayList of ResourceCard objects.
+     */
+    public ArrayList<ResourceCard> getCards() {
         return cards;
     }
 
-    public void setEmpty(){
+    /**
+     * Clears the list of resource cards, making it empty.
+     */
+    public void setEmpty() {
         cards.clear();
     }
+
 }

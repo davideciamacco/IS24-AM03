@@ -16,9 +16,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- *
+ * Represents a client-side socket connection to interact with a server for a game.
+ * Manages communication using object serialization over TCP/IP.
  */
-public class ClientSocket implements Client{
+public class ClientSocket implements Client {
+
     private boolean hasJoined;
     private ClientModel clientModel;
     private final String ip;
@@ -31,12 +33,12 @@ public class ClientSocket implements Client{
     private ViewInterface view;
     private String nickname;
 
-
     /**
-     *
-     * @param ip
-     * @param port
-     * @param view
+     * Constructs a ClientSocket object to connect to the specified server IP and port,
+     * using the provided ViewInterface for interaction.
+     * @param ip The IP address of the server
+     * @param port The port number of the server
+     * @param view The ViewInterface implementation (either GUI or CLI)
      */
     public ClientSocket(String ip, int port, ViewInterface view) {
         this.ip = ip;
@@ -45,6 +47,7 @@ public class ClientSocket implements Client{
         this.threadManager = Executors.newCachedThreadPool();
         this.view = view;
         this.hasJoined = false;
+
         try {
             this.connection = new Socket(ip, port);
             this.connection.setSoTimeout(2000);
@@ -54,30 +57,31 @@ public class ClientSocket implements Client{
         } catch (IOException e) {
             throw new RuntimeException("Connection Failed! Please restart the game");
         }
+
         this.messagesReceiver();
         this.ParserAgent();
     }
 
     /**
-     *
-     * @param gui
+     * Sets the GUI view for this client.
+     * @param gui The GUI view to set
      */
     public void setGUI(ViewInterface gui){
         this.view=gui;
     }
 
     /**
-     *
-     * @param cli
+     * Sets the CLI view for this client.
+     * @param cli The CLI view to set
      */
     public void setCLI(ViewInterface cli){
         this.view=cli;
     }
 
     /**
-     *
-     * @param nPlayers
-     * @param nickname
+     * Sends a request to the server to create a new game with the specified number of players and nickname.
+     * @param nPlayers The number of players in the game
+     * @param nickname The nickname chosen by the player
      */
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
@@ -86,8 +90,8 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param nickname
+     * Sends a request to the server to join an existing game with the specified nickname.
+     * @param nickname The nickname chosen by the player
      */
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
@@ -96,8 +100,8 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param color
+     * Sends a request to the server to pick a color for the game.
+     * @param color The color chosen by the player
      */
     @Override
     public void PickColor(String color) {
@@ -106,8 +110,8 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param face
+     * Sends a request to the server to choose a starting card side for the game.
+     * @param face The face of the card chosen by the player
      */
     public void ChooseStartingCardSide(String face){
         ChooseStartingMessage startingMessage= new ChooseStartingMessage(nickname,face);
@@ -115,11 +119,11 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param choice
-     * @param i
-     * @param j
-     * @param face
+     * Sends a request to the server to place a card on the board.
+     * @param choice The choice made by the player
+     * @param i The row index for placing the card
+     * @param j The column index for placing the card
+     * @param face The face of the card to be placed
      */
     public void PlaceCard(int choice, int i, int j, String face){
         PlaceCardMessage placeCardMessage = new PlaceCardMessage(nickname, choice, i, j, face);
@@ -127,7 +131,7 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
+     * Sends a request to the server to draw a gold card.
      */
     public void DrawGold(){
         DrawGoldMessage drawGoldMessage = new DrawGoldMessage(nickname);
@@ -135,7 +139,7 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
+     * Sends a request to the server to draw a resource card.
      */
     public void DrawResource(){
         DrawResourceMessage drawResourceMessage = new DrawResourceMessage(nickname);
@@ -143,8 +147,8 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param choice
+     * Sends a request to the server to draw cards from the table.
+     * @param choice The choice made by the player
      */
     public void DrawTable(int choice){
         DrawTableMessage drawTableMessage = new DrawTableMessage(nickname, choice);
@@ -152,8 +156,8 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param choice
+     * Sends a request to the server to choose an objective card.
+     * @param choice The choice made by the player
      */
     public void ChooseObjectiveCard(int choice){
         ChooseObjectiveMessage chooseObjectiveMessage = new ChooseObjectiveMessage(nickname, choice);
@@ -161,8 +165,8 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param text
+     * Sends a group chat message to the server.
+     * @param text The text message to send
      */
     @Override
     public void sendGroupText(String text) {
@@ -171,9 +175,9 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param receiver
-     * @param text
+     * Sends a private chat message to a specific recipient.
+     * @param receiver The recipient of the message
+     * @param text The text message to send
      */
     @Override
     public void sendPrivateText(String receiver, String text) {
@@ -182,8 +186,8 @@ public class ClientSocket implements Client{
     }
 
     /**
-     *
-     * @param player_name
+     * Sends a request to the server for a player to rejoin the game.
+     * @param player_name The name of the player requesting to rejoin
      */
     public void RejoinGame(String player_name){
         RejoinGameMessage rejoinGameMessage = new RejoinGameMessage(player_name);
@@ -191,9 +195,8 @@ public class ClientSocket implements Client{
         this.sendMessage(rejoinGameMessage);
     }
 
-
     /**
-     *
+     * Receives incoming messages from the server and adds them to the message queue.
      */
     private void messagesReceiver()  {
         threadManager.execute( () -> {
@@ -208,7 +211,6 @@ public class ClientSocket implements Client{
                     }
                     catch (SocketTimeoutException e){
                         System.out.println("Server disconnected. Closing client...");
-                        //System.out.println(this.view);
                         active=false;
                         System.exit(0);
                     }
@@ -222,9 +224,8 @@ public class ClientSocket implements Client{
         });
     }
 
-
     /**
-     *
+     * Monitors the message queue for incoming messages and processes them accordingly.
      */
     private void ParserAgent(){
         threadManager.execute( () -> {
@@ -237,15 +238,14 @@ public class ClientSocket implements Client{
                         } catch (InterruptedException ignored) {}
                     }
                     this.parse(queueMessages.poll());
-                    //System.out.println("Client riceve da server");
                 }
             }
         });
     }
 
     /**
-     *
-     * @param responseMessage
+     * Parses a received message and performs corresponding actions based on message type.
+     * @param responseMessage The message to parse
      */
     private void parse(Message responseMessage){
 
@@ -288,10 +288,10 @@ public class ClientSocket implements Client{
             }
         }
     }
-
     /**
+     * Parses a LastRoundMessage and notifies the client model.
      *
-     * @param lastRoundMessage
+     * @param lastRoundMessage The LastRoundMessage to parse.
      */
     private void parse(LastRoundMessage lastRoundMessage){
         try{
@@ -300,8 +300,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a FinalColorsMessage and notifies the client model with the final colors.
      *
-     * @param response
+     * @param response The FinalColorsMessage to parse.
      */
     private void parse(FinalColorsMessage response){
         try{
@@ -310,8 +311,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a StartingCommonMessage and updates the client model with initial commons.
      *
-     * @param response
+     * @param response The StartingCommonMessage to parse.
      */
     private void parse(StartingCommonMessage response){
         try{
@@ -320,8 +322,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses an AvailableColorMessage and notifies the client model with available colors.
      *
-     * @param response
+     * @param response The AvailableColorMessage to parse.
      */
     private void parse(AvailableColorMessage response){
         try {
@@ -330,8 +333,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a NotifyNumPlayersReachedMessage and notifies the client model about the number of players reached.
      *
-     * @param response
+     * @param response The NotifyNumPlayersReachedMessage to parse.
      */
     private void parse(NotifyNumPlayersReachedMessage response){
         if(this.clientModel==null) {
@@ -350,8 +354,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmDrawMessage and handles the drawing confirmation.
      *
-     * @param message
+     * @param message The ConfirmDrawMessage to parse.
      */
     private void parse(ConfirmDrawMessage message) {
         if (!message.getconfirmdraw()) {
@@ -365,8 +370,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmPlaceMessage and handles the placement confirmation.
      *
-     * @param message
+     * @param message The ConfirmPlaceMessage to parse.
      */
     private void parse(ConfirmPlaceMessage message) {
         if (!message.getConfirmPlace()) {
@@ -380,8 +386,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmGameMessage and handles the confirmation of game creation.
      *
-     * @param message
+     * @param message The ConfirmGameMessage to parse.
      */
     private void parse(ConfirmGameMessage message) {
         if (message.getConfirmGameCreation()){
@@ -389,7 +396,7 @@ public class ClientSocket implements Client{
             view.confirmCreate();
             try {
                 this.clientModel = new ClientModel(this.nickname, view);
-            }catch (RemoteException e){}
+            } catch (RemoteException e){}
             hasJoined = true;
         }
         else
@@ -398,8 +405,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmChooseObjectiveMessage and handles the confirmation of objective choice.
      *
-     * @param message
+     * @param message The ConfirmChooseObjectiveMessage to parse.
      */
     private void parse(ConfirmChooseObjectiveMessage message) {
         if (!message.getConfirmChoose()){
@@ -412,8 +420,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a NotifyCommonTableMessage and updates the common table in the client model.
      *
-     * @param message
+     * @param message The NotifyCommonTableMessage to parse.
      */
     private void parse(NotifyCommonTableMessage message) {
         try {
@@ -422,8 +431,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a CommonObjectiveMessage and notifies the client model about common objectives.
      *
-     * @param responseMessage
+     * @param responseMessage The CommonObjectiveMessage to parse.
      */
     private void parse(CommonObjectiveMessage responseMessage){
         try {
@@ -434,8 +444,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a WinnersMessage and notifies the client model about winners.
      *
-     * @param response
+     * @param response The WinnersMessage to parse.
      */
     private void parse(WinnersMessage response){
         try {
@@ -446,19 +457,20 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmRejoinGameMessage and handles the confirmation of rejoining the game.
      *
-     * @param response
+     * @param response The ConfirmRejoinGameMessage to parse.
      */
     private void parse(ConfirmRejoinGameMessage response){
         if(!response.getConfirmRejoin()){
             view.drawError(response.getDetails());
         }
-
     }
 
     /**
+     * Parses a JoinedPlayerMessage and notifies the client model about a new player who joined.
      *
-     * @param response
+     * @param response The JoinedPlayerMessage to parse.
      */
     private void parse(JoinedPlayerMessage response){
         try {
@@ -468,21 +480,22 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a RejoinedPlayerMessage and notifies the client model about a player who rejoined.
      *
-     * @param response
+     * @param response The RejoinedPlayerMessage to parse.
      */
-    private void parse (RejoinedPlayerMessage response){
+    private void parse(RejoinedPlayerMessage response){
         try {
             this.clientModel.notifyRejoinedPlayer(response.getPlayer());
         } catch (RemoteException e) {
 
         }
-       // System.out.println(response.getPlayer()+"has rejoined the game");
     }
 
     /**
+     * Parses a CurrentPlayerMessage and notifies the client model about the current player.
      *
-     * @param response
+     * @param response The CurrentPlayerMessage to parse.
      */
     private void parse(CurrentPlayerMessage response){
         try {
@@ -493,8 +506,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a TurnOrderMessage and notifies the client model about the turn order.
      *
-     * @param response
+     * @param response The TurnOrderMessage to parse.
      */
     private void parse(TurnOrderMessage response){
         try {
@@ -505,8 +519,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ChangeStateMessage and notifies the client model about a state change.
      *
-     * @param response
+     * @param response The ChangeStateMessage to parse.
      */
     private void parse(ChangeStateMessage response){
         try {
@@ -517,8 +532,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a CrashedPlayerMessage and notifies the client model about a crashed player.
      *
-     * @param response
+     * @param response The CrashedPlayerMessage to parse.
      */
     private void parse(CrashedPlayerMessage response){
         try {
@@ -528,8 +544,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmJoinGameMessage and handles the confirmation of joining a game.
      *
-     * @param message
+     * @param message The ConfirmJoinGameMessage to parse.
      */
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
@@ -550,8 +567,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmPickColorMessage and handles the confirmation of picking a color.
      *
-     * @param message
+     * @param message The ConfirmPickColorMessage to parse.
      */
     private void parse(ConfirmPickColorMessage message) {
         if (!message.getConfirmPickColor()){
@@ -565,8 +583,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmStartingCardMessage and handles the confirmation of starting card selection.
      *
-     * @param message
+     * @param message The ConfirmStartingCardMessage to parse.
      */
     private void parse(ConfirmStartingCardMessage message) {
         if (!message.getConfirmStarting()){
@@ -579,8 +598,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses an UpdatePointsMessage and notifies the client model about updated points for a player.
      *
-     * @param response
+     * @param response The UpdatePointsMessage to parse.
      */
     private void parse(UpdatePointsMessage response){
         try {
@@ -591,8 +611,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a PersonalCardsMessage and notifies the client model about changes in a player's personal cards.
      *
-     * @param response
+     * @param response The PersonalCardsMessage to parse.
      */
     private void parse(PersonalCardsMessage response){
         try {
@@ -603,8 +624,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ChoiceObjectiveMessage and notifies the client model about a player's chosen objective card.
      *
-     * @param choiceObjectiveMessage
+     * @param choiceObjectiveMessage The ChoiceObjectiveMessage to parse.
      */
     private void parse(ChoiceObjectiveMessage choiceObjectiveMessage){
         try {
@@ -615,8 +637,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a FirstHandMessage and notifies the client model about the initial hand and cards for a player.
      *
-     * @param firstHandMessage
+     * @param firstHandMessage The FirstHandMessage to parse.
      */
     private void parse(FirstHandMessage firstHandMessage){
         try {
@@ -627,8 +650,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses an UpdateCrashedPlayerMessage and updates the client model with information about a crashed player.
      *
-     * @param updateCrashedPlayerMessage
+     * @param updateCrashedPlayerMessage The UpdateCrashedPlayerMessage to parse.
      */
     private void parse(UpdateCrashedPlayerMessage updateCrashedPlayerMessage){
         try{
@@ -640,8 +664,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a PlayerBoardMessage and notifies the client model about changes in a player's board.
      *
-     * @param playerBoardMessage
+     * @param playerBoardMessage The PlayerBoardMessage to parse.
      */
     private void parse(PlayerBoardMessage playerBoardMessage){
         try {
@@ -653,8 +678,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a GroupChatMessage and notifies the client model about a received group chat message.
      *
-     * @param groupChatMessage
+     * @param groupChatMessage The GroupChatMessage to parse.
      */
     private void parse(GroupChatMessage groupChatMessage){
         try {
@@ -665,8 +691,9 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a PrivateChatMessage and notifies the client model about a received private chat message.
      *
-     * @param privateChatMessage
+     * @param privateChatMessage The PrivateChatMessage to parse.
      */
     private void parse(PrivateChatMessage privateChatMessage){
         try {
@@ -677,22 +704,23 @@ public class ClientSocket implements Client{
     }
 
     /**
+     * Parses a ConfirmChatMessage and handles the confirmation of a chat message.
      *
-     * @param confirmChatMessage
+     * @param confirmChatMessage The ConfirmChatMessage to parse.
      */
-    private void parse(ConfirmChatMessage confirmChatMessage){
-        if(!confirmChatMessage.isConfirmChat()){
-            if(clientModel!=null)
+    private void parse(ConfirmChatMessage confirmChatMessage) {
+        if (!confirmChatMessage.isConfirmChat()) {
+            if (clientModel != null)
                 this.clientModel.printNotifications(confirmChatMessage.getDetails());
             else
                 view.drawError(confirmChatMessage.getDetails());
         }
-       // System.out.flush();
     }
 
     /**
+     * Sends a Message object to the server via the output stream.
      *
-     * @param message
+     * @param message The Message object to be sent.
      */
     private void sendMessage(Message message) {
         synchronized (outputStream) {
