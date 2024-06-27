@@ -54,7 +54,6 @@ public class ClientRMI implements Client{
         }
         this.gameController = temp;
         startHeartbeatSender();
-        addShutdownHook();
     }
 
     /**
@@ -454,14 +453,6 @@ public class ClientRMI implements Client{
         }
     }
 
-    /**
-     *
-     */
-    private void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            removeFromObservers();
-        }));
-    }
 }
 
 

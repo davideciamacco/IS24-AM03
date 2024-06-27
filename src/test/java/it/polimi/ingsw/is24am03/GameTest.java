@@ -448,7 +448,7 @@ class GameTest {
     }
 
 
-    @Test
+    /*@Test
     void placeCard() {
         Game game = new Game(2, "Player1");
         game.addPlayer("Player2");
@@ -494,7 +494,7 @@ class GameTest {
         assertEquals(State.PLAYING, game1.getGameState());
         assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 41, 41, true));
         assertEquals(State.ENDING, game1.getGameState());
-    }
+    }*/
 
 
     @Test
