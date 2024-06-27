@@ -76,7 +76,7 @@ public class ClientTCPHandler implements Runnable, ChatSub, PlayerSub, GameSub, 
         TimerTask heartbeatTask = new TimerTask() {
             @Override
             public void run() {
-                sendMessage(new HeartbeatMessage());
+                sendMessage(new HeartbeatMessage("HEARTBEAT"));
             }
         };
 

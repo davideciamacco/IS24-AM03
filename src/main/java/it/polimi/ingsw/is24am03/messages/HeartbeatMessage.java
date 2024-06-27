@@ -8,8 +8,8 @@ public class HeartbeatMessage extends Message {
     /**
      * Constructor of a HeartBeatMessage
      */
-    public HeartbeatMessage() {
-
-        super(MessageType.HEARTBEAT);
+        public HeartbeatMessage(String heartbeat) {
+            super(MessageType.HEARTBEAT);
+        }
     }
-}
+

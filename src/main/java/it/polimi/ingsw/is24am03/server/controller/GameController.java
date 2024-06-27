@@ -934,4 +934,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         System.out.println("Fuori da rejoinedChief\n");
     }
 
+    public boolean isTimer(){
+        return timer;
+    }
+
 }
