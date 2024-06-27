@@ -4,6 +4,9 @@ import it.polimi.ingsw.is24am03.server.model.cards.ResourceCard;
 
 import java.io.Serial;
 
+/**
+ * This message represents the notification to all players connected in game that one of the six cards on the game table has changed
+ */
 public class NotifyCommonTableMessage extends Message{
 
     @Serial

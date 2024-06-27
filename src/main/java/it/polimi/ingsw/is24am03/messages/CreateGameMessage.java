@@ -16,8 +16,9 @@ public class CreateGameMessage extends Message {
     private final String nickname;
 
     /**
-     * Constrcutor of a CreateGameMessage
+     * Constructor of a CreateGameMessage
      * @param playerNumber number of player of the game
+     * @param nickname nickname of the player who sent the request to create the game
      */
     public CreateGameMessage(int playerNumber,String nickname) {
         super(MessageType.CREATE_GAME);
@@ -34,7 +35,7 @@ public class CreateGameMessage extends Message {
 
     /**
      *
-     * @return the nickname of the player who created the game
+     * @return the nickname of the player who tried to create the game
      */
     public String getNickname() {
         return nickname;

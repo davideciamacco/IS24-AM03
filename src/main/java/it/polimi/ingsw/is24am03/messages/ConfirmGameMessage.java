@@ -15,10 +15,11 @@ public class ConfirmGameMessage extends ConfirmMessage {
     private final String nickname;
 
     /**
-     * Constructor of
+     * Constructor of a ConfirmGameMessage
      *
      * @param confirmGameCreation true if the game has been created successfully, false otherwise
-     * @param details             details of the error
+     * @param details a string containing the explanation for why the request failed
+     * @param nickname nickname of the player who sent the request to create the game
      */
 
     public ConfirmGameMessage(Boolean confirmGameCreation, String details, String nickname) {
@@ -28,12 +29,16 @@ public class ConfirmGameMessage extends ConfirmMessage {
     }
 
     /**
-     * @return the result of the GameCreation
+     * @return the result of the creation of the game
      */
     public Boolean getConfirmGameCreation() {
         return confirmGameCreation;
     }
 
+    /**
+     *
+     * @return the nickname of the player who tried to create the game
+     */
     public String getNickname() {
         return nickname;
     }

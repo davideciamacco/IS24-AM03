@@ -1,7 +1,15 @@
 package it.polimi.ingsw.is24am03.messages;
 
+/**
+ * This message represents the heartbeat used to check TCP connection between client and server
+ */
 public class HeartbeatMessage extends Message {
-    public HeartbeatMessage(String heartbeat) {
+
+    /**
+     * Constructor of a HeartBeatMessage
+     */
+    public HeartbeatMessage() {
+
         super(MessageType.HEARTBEAT);
     }
 }
