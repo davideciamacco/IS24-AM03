@@ -55,15 +55,13 @@ git clone https://github.com/davideciamacco/IS24-AM03.git
 ## Running the game
 
 ### Run as a Server
-
+```
+java -jar IS24-AM03.jar 127.0.0.1 123456 1099
+```
 ### Run as a Client
-
-### Useful tips
-
-## Rules
-The rules of the game can be found on the [deliverables directory]().
-
-## Requirements
+```
+java -jar IS24-AM03.jar --CLI 127.0.0.1 123456 --TCP
+```
 
 ## License
 All rights to **Codex Naturalis** are owned by [Cranio Creations](https://www.craniocreations.it/),  which provided the graphical
