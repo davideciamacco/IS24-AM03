@@ -12,14 +12,12 @@ import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
+import java.util.*;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import java.util.List;
 
 
 /**
@@ -44,6 +42,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
      * Using the GameInterface type for gameModel allows flexibility.
      */
     private Game gameModel = null;
+
+    private Map<String, GameSub> gameSubs = new HashMap<>();
+    private Map<String, ChatSub> chatSubs = new HashMap<>();
+    private Map<String, PlayerBoardSub> playerboardSubs = new HashMap<>();
+    private Map<String, PlayerSub> playerSubs = new HashMap<>();
+
 
     boolean timer;
     /**
@@ -410,6 +414,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     public void handleCrashedPlayer(String nickname){
         synchronized (gameLock) {
+            if(gameModel.getGameState().equals(State.STARTING) || gameModel.getGameState().equals(State.OBJECTIVE) || gameModel.getGameState().equals(State.COLOR)){
+                System.out.println("Disconnessione durante Pre-Partita");
+                System.exit(0);
+            }
             gameModel.setNumPlayersConnected(gameModel.getNumPlayersConnected() - 1);
             System.out.println(gameModel.getNumPlayersConnected());
             if (gameModel.getNumPlayersConnected() <= 1) {
@@ -485,8 +493,6 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
 
     public void startTimer() {
-
-
         long limit = 60;
 
         Runnable task = () -> {
@@ -522,7 +528,17 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         long currentTime = System.currentTimeMillis();
         for (int i=0; i<heartBeats.size(); i++) {
             if (currentTime - heartBeats.get(i).getValue() > 5000) {
+                System.out.println("QUI CI ARRIVO");
+                removeSub(gameSubs.get(heartBeats.get(i).getKey()));
+                System.out.println("Remove 1");
+                removeSub(playerSubs.get(heartBeats.get(i).getKey()));
+                System.out.println("Remove2");
+                removeSub(playerboardSubs.get(heartBeats.get(i).getKey()));
+                System.out.println("Remove 3");
+                removeSub(chatSubs.get(heartBeats.get(i).getKey()));
+                System.out.println("PRIMA DI HANDLE");
                 handleCrashedPlayer(heartBeats.get(i).getKey());
+                System.out.println("ARRIVO ANCHE QUA");
                 heartBeats.remove(i);
                 i--;
             }
@@ -538,15 +554,102 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         return gameModel;
     }
 
-    public void addToObserver(GameSub gameSub){ synchronized (gameLock){gameModel.addSub(gameSub);}}
-    public void addToObserver(PlayerSub playerSub){  synchronized (gameLock){gameModel.addSub(playerSub);}}
-    public void addToObserver(ChatSub chatSub){ synchronized (gameLock){gameModel.addSub(chatSub);}}
-    public void addToObserver(PlayerBoardSub playerBoardSub) { synchronized (gameLock){gameModel.addSub(playerBoardSub);}}
+    public void addToObserver(GameSub gameSub) {
+        synchronized (gameLock){
+            gameModel.addSub(gameSub);
+            try {
+                gameSubs.put(gameSub.getSub(), gameSub);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    public void addToObserver(PlayerSub playerSub){
+        synchronized (gameLock){
+        gameModel.addSub(playerSub);
+        try {
+            playerSubs.put(playerSub.getSub(), playerSub);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    public void removeSub(GameSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
-    public void removeSub(PlayerSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
-    public void removeSub(PlayerBoardSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
-    public void removeSub(ChatSub gameSub){synchronized (gameLock){gameModel.removeSub(gameSub);}}
+    }
+    public void addToObserver(ChatSub chatSub){
+        synchronized (gameLock) {
+            gameModel.addSub(chatSub);
+            try {
+                chatSubs.put(chatSub.getSub(), chatSub);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    public void addToObserver(PlayerBoardSub playerBoardSub) {
+        synchronized (gameLock) {
+            gameModel.addSub(playerBoardSub);
+            try {
+                playerboardSubs.put(playerBoardSub.getSub(), playerBoardSub);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void removeSub(GameSub gameSub){
+        synchronized (gameLock){
+            System.out.println("Acquisisco il lock");
+            gameModel.removeSub(gameSub);
+            System.out.println("Rimuovo il gamesub "+ gameSubs.size());
+            Iterator<Map.Entry<String, GameSub>> iterator = gameSubs.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, GameSub> entry = iterator.next();
+                if (entry.getValue().equals(gameSub)) {
+                    iterator.remove();
+                    System.out.println("Rimosso sub: " + entry.getKey());
+                }
+            }
+        }
+    }
+    public void removeSub(PlayerSub gameSub){
+        synchronized (gameLock){
+            gameModel.removeSub(gameSub);
+            Iterator<Map.Entry<String, GameSub>> iterator = gameSubs.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, GameSub> entry = iterator.next();
+                if (entry.getValue().equals(gameSub)) {
+                    iterator.remove();
+                    System.out.println("Rimosso sub: " + entry.getKey());
+                }
+            }
+        }
+    }
+    public void removeSub(PlayerBoardSub gameSub){
+        synchronized (gameLock){
+            gameModel.removeSub(gameSub);
+            Iterator<Map.Entry<String, GameSub>> iterator = gameSubs.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, GameSub> entry = iterator.next();
+                if (entry.getValue().equals(gameSub)) {
+                    iterator.remove();
+                    System.out.println("Rimosso sub: " + entry.getKey());
+                }
+            }
+        }
+    }
+    public void removeSub(ChatSub gameSub){
+        synchronized (gameLock){
+            gameModel.removeSub(gameSub);
+            Iterator<Map.Entry<String, GameSub>> iterator = gameSubs.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, GameSub> entry = iterator.next();
+                if (entry.getValue().equals(gameSub)) {
+                    iterator.remove();
+                    System.out.println("Rimosso sub: " + entry.getKey());
+                }
+            }
+        }
+    }
 
     public void sendGroupText(String sender, String text) {
         synchronized (chatLock){
@@ -596,17 +699,30 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
     public void rejoinedChief(String player){
-
+        System.out.println("Sono in rejoinedChief\n");
         synchronized (gameLock){
+           //int i=0;
+            System.out.println("la dimensione è"+gameModel.getGameSubs().size());
             for(GameSub gameSub: gameModel.getGameSubs()){
+                //System.out.println(gameSub.getSub());
                 try {
                     if (!gameSub.getSub().equals(player)) {
+                        System.out.println("ciao"+gameSub.getSub());
                         gameSub.notifyRejoinedPlayer(player);
                     }
-                }catch (RemoteException ignored){}
+                }catch (RemoteException e){
+                    System.out.println("Ecce di rejoinedChief");
+                    System.out.println(e);
+                }
+                finally {
+                    //i++;
+                }
             }
+            System.out.println("Prima di manageupdate");
             gameModel.manageUpdate(player);
+            System.out.println("Dopo manageupdate");
         }
+        System.out.println("Fuori da rejoinedChief\n");
     }
 
     public boolean isTimer() {

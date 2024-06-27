@@ -14,6 +14,7 @@ import it.polimi.ingsw.is24am03.server.model.enums.Color;
 import it.polimi.ingsw.is24am03.server.model.enums.State;
 import it.polimi.ingsw.is24am03.server.model.exceptions.*;
 import it.polimi.ingsw.is24am03.server.model.player.Player;
+import javafx.util.Pair;
 
 import java.lang.reflect.Array;
 import java.util.concurrent.Executors;
@@ -140,7 +141,7 @@ public class Game{
         this.commonObjective = new ArrayList<ObjectiveCard>();
         this.availableColors = new ArrayList<Color>(List.of(Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW));
         this.chat=new Chat();
-        this.gameSubs=new ArrayList<>();
+        this.gameSubs=new ArrayList<GameSub>();
         this.numPlayersConnected = 1;
         addPlayer(host);
     }
@@ -1025,7 +1026,10 @@ public class Game{
                 if(gameSub.getSub().equals(player)){
                     gameSub.UpdateCrashedPlayer(current,chat,gameState,hand,objectiveCard,boards,points,order,objectiveCards,color,table, colors);
                 }
-            }catch (RemoteException ignored){}
+            }catch (RemoteException e){
+                System.out.println("Eccezione dentro manage update");
+                System.out.println(e);
+            }
         }
 
     }
