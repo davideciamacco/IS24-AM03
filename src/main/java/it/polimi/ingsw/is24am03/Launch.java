@@ -8,17 +8,23 @@ import it.polimi.ingsw.is24am03.client.view.CLI.CliView;
 import it.polimi.ingsw.is24am03.client.view.GUI.GUIView;
 
 /**
- *
+ * The main entry point of the application. Handles command-line arguments to determine
+ * whether to start a server or a client (CLI/GUI), and initializes the appropriate client
+ * with the specified connection type (TCP/RMI).
  */
 public class Launch {
 
     /**
+     * Main method that initializes and starts the appropriate client based on the provided
+     * command-line arguments.
      *
-     * @param args
+     * @param args Command-line arguments:
+     *             For server: <IP Address> <TCP port> <RMI port>
+     *             For client: --<CLI/GUI> <IP Address> <port> --<TCP/RMI>
      */
     public static void main(String[] args) {
         Client client = null;
-        ViewInterface view= null;
+        ViewInterface view = null;
         int port;
 
         if (args.length == 4) {
@@ -33,29 +39,26 @@ public class Launch {
                 return;
             }
             if (connectionType.equals("--CLI")) {
-                    if (args[3].equals("--TCP")) {
-                        try{
-                            client = new ClientSocket(host, port, view);
-                        }
-                        catch(RuntimeException e){
-                            System.exit(0);
-                        }
-                    } else if (args[3].equals("--RMI")) {
-                        client = new ClientRMI(host, port, view);
-                    }
-                    if (client != null) {
-                        CliView.setClient(client);
-                        CliView.main(newArgs);
-                    } else {
-                        System.err.println("Invalid connection type.");
-                    }
-            } else if (connectionType.equals("--GUI")) {
-
                 if (args[3].equals("--TCP")) {
-                    try{
+                    try {
                         client = new ClientSocket(host, port, view);
+                    } catch (RuntimeException e) {
+                        System.exit(0);
                     }
-                    catch(RuntimeException e){
+                } else if (args[3].equals("--RMI")) {
+                    client = new ClientRMI(host, port, view);
+                }
+                if (client != null) {
+                    CliView.setClient(client);
+                    CliView.main(newArgs);
+                } else {
+                    System.err.println("Invalid connection type.");
+                }
+            } else if (connectionType.equals("--GUI")) {
+                if (args[3].equals("--TCP")) {
+                    try {
+                        client = new ClientSocket(host, port, view);
+                    } catch (RuntimeException e) {
                         System.exit(0);
                     }
                 } else if (args[3].equals("--RMI")) {
@@ -72,8 +75,7 @@ public class Launch {
             }
         } else if (args.length == 3) {
             ServerMain.main(args);
-        }
-        else{
+        } else {
             System.out.println("Missing arguments\n" +
                     "Server usage: <IP Address> <TCP port> <RMI port>\n" +
                     "Client usage: --<CLI/GUI> <IP Address> <port> --<TCP/RMI>");

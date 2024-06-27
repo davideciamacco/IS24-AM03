@@ -88,5 +88,12 @@ public class ObjectiveDeck extends Deck {
         return cards.isEmpty();
     }
 
-    public ArrayList<ObjectiveCard> getCards(){ return cards;}
+    /**
+     * Retrieves the list of objective cards.
+     *
+     * @return ArrayList of ObjectiveCard objects.
+     */
+    public ArrayList<ObjectiveCard> getCards() {
+        return cards;
+    }
 }

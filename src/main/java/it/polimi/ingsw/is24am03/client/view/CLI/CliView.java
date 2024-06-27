@@ -25,8 +25,9 @@ public class CliView implements ViewInterface {
     private Map<String, String> commands;
 
     /**
+     * Main entry point of the application.
      *
-     * @param args
+     * @param args Command-line arguments passed to the application.
      */
     public static void main(String[] args) {
         try{
@@ -58,10 +59,11 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Constructs a CLI view for interacting with a server over a specified IP address and port.
      *
-     * @param ip
-     * @param port
-     * @param connectionType
+     * @param ip             The IP address of the server.
+     * @param port           The port number of the server.
+     * @param connectionType The type of connection to establish with the server.
      */
     public CliView(String ip, int port, String connectionType) {
         inputScan = new Scanner(System.in);
@@ -81,16 +83,18 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Sets the client instance to be used by the class.
      *
-     * @param client1
+     * @param client1 The client instance to set.
      */
     public static void setClient(Client client1){
         client=client1;
     }
 
     /**
+     * Handles the given command line input.
      *
-     * @param cliInput
+     * @param cliInput The command line input to be handled.
      */
     private void handle(String cliInput) {
 
@@ -201,9 +205,10 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Checks if the given integer equals -1 and throws an exception if true.
      *
-     * @param i
-     * @throws Exception
+     * @param i The integer to check.
+     * @throws Exception If the integer equals -1.
      */
     private void check(int i) throws Exception{
         if(i==-1){
@@ -212,8 +217,9 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Draws the requirements of a resource card.
      *
-     * @param card
+     * @param card The resource card whose requirements are to be drawn.
      */
     private void drawRequirements(ResourceCard card){
         if (card.getId() == 40)
@@ -300,10 +306,11 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Draws a specific corner of a card on the game board.
      *
-     * @param card
-     * @param corner
-     * @param face
+     * @param card  The `PlayableCard` object whose corner is to be drawn.
+     * @param corner The corner of the card to draw (e.g., 0 for top-left, 1 for top-right, etc.).
+     * @param face   A boolean indicating whether to draw the face of the card (`true`) or the back (`false`).
      */
     private void drawCorner(PlayableCard card, int corner, boolean face)
     {
@@ -370,8 +377,9 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Draws a player's hand of resource cards.
      *
-     * @param hand
+     * @param hand The list of resource cards representing the player's hand.
      */
     public void drawHand(ArrayList<ResourceCard> hand) {
         System.out.println("FRONT:         BACK:");
@@ -382,14 +390,15 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Draws the game table with points and resource cards.
      *
-     * @param points
-     * @param topResDeck
-     * @param topGoldDeck
-     * @param tableCard1
-     * @param tableCard2
-     * @param tableCard3
-     * @param tableCard4
+     * @param points      The map of player names to their respective points.
+     * @param topResDeck  The top resource card of the common resource deck.
+     * @param topGoldDeck The top gold resource card of the common resource deck.
+     * @param tableCard1  The first table card on display.
+     * @param tableCard2  The second table card on display.
+     * @param tableCard3  The third table card on display.
+     * @param tableCard4  The fourth table card on display.
      */
     public void drawTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4) {
         System.out.print("\n");
@@ -628,8 +637,9 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Draws the available colors for selection.
      *
-     * @param colors
+     * @param colors The list of colors available for selection.
      */
     public void drawAvailableColors(ArrayList<Color> colors) {
         String ANSI_RESET = "\033[0m";
@@ -656,8 +666,9 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Draws a starting card for display.
      *
-     * @param startCard
+     * @param startCard The starting card to be drawn.
      */
     public void drawStarting(StartingCard startCard){
         System.out.println("FRONT:         BACK:");
@@ -697,8 +708,9 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Draws an objective card for display.
      *
-     * @param obj
+     * @param obj The objective card to be drawn.
      */
     public void drawObjective(ObjectiveCard obj){
         if(obj.getId()==86){
@@ -800,8 +812,9 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Draws the game board for a player.
      *
-     * @param board
+     * @param board The 2D array of playable cards representing the player's board.
      */
     public void drawBoard(PlayableCard[][] board) {
         int firstsx = 81;
@@ -1393,22 +1406,25 @@ public class CliView implements ViewInterface {
     }
 
     /**
-     *
+     * Confirms successful creation of a game.
+     * Prints a message indicating that the game has been created successfully.
      */
     public void confirmCreate(){
         System.out.println("Game created successfully");
     }
 
     /**
-     *
+     * Confirms successful joining of a player.
+     * Prints a message indicating that the player has joined successfully.
      */
     public void confirmJoin(){
         System.out.println("Joined successfully");
     }
 
     /**
+     * Notifies when a player has joined the game.
      *
-     * @param joinedPlayer
+     * @param joinedPlayer The name of the player who has joined the game.
      */
     public  void  notifyJoinedPlayer(String joinedPlayer){
         System.out.println(joinedPlayer + " has joined the game\n");
@@ -1416,8 +1432,10 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Notifies about the winners of the game.
+     * Constructs and prints a message indicating the winners.
      *
-     * @param winners
+     * @param winners The list of names of players who are winners.
      */
     public void notifyWinners(ArrayList<String> winners){
         StringBuilder message = new StringBuilder();
@@ -1431,9 +1449,11 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Notifies about the current turn order of players.
+     * Constructs and prints a message indicating the turn order.
      *
-     * @param order
-     * @param player
+     * @param order  The list of player names indicating the turn order.
+     * @param player The name of the current player.
      */
     public void  notifyTurnOrder(ArrayList<String> order, String player){
         StringBuilder message = new StringBuilder();
@@ -1447,12 +1467,16 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Notifies about the current player's turn and updates their board and hand if applicable.
+     * Prints a message with the current player's name.
+     * If the game state is {@link State#PLAYING} and it's the current player's turn,
+     * updates and displays their board and hand.
      *
-     * @param current
-     * @param boards
-     * @param player
-     * @param hand
-     * @param gamestate
+     * @param current The name of the current player.
+     * @param boards  A map containing the game boards of all players.
+     * @param player  The name of the player whose board and hand should be updated.
+     * @param hand    The current hand of cards of the player.
+     * @param gamestate The current state of the game.
      */
     public void notifyCurrentPlayer(String current, Map<String,PlayableCard[][]> boards, String player, ArrayList<ResourceCard> hand,State gamestate){
         System.out.println("Current player is: " + current);
@@ -1497,52 +1521,40 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Notifies when a player has crashed.
      *
-     * @param username
+     * @param username The username of the player who has crashed.
      */
     public void notifyCrashedPlayer(String username){
         System.out.println(username + " has crashed");
     }
 
     /**
+     * Notifies when the game state has changed and prints the new state.
      *
-     * @param gameState
+     * @param gameState The new state of the game.
      */
     public void notifyChangeState(State gameState){
         System.out.println("Game state has changed, now is: " + gameState.toString());
-    /*    if(gameState.equals(State.DRAWING)){
-            if(current.equals(player)){
-                System.out.println("------DRAW A CARD!------");
-                System.out.println("COMMON TABLE LAYOUT IS: ");
-                System.out.println("┌--------┐ ┌-------┐ ┌-------┐");
-                System.out.println("|Resource| | Table | | Table |");
-                System.out.println("|  deck  | | card 1| | card 2|");
-                System.out.println("└--------┘ └-------┘ └-------┘");
-                System.out.println("┌--------┐ ┌-------┐ ┌-------┐");
-                System.out.println("|  Gold  | | Table | | Table |");
-                System.out.println("|  deck  | | card 3| | card 4|");
-                System.out.println("└--------┘ └-------┘ └-------┘");
-                System.out.println("IN ORDER TO DRAW A CARD FROM THE RESOURCE DECK TYPE: 'DrawResource'");
-                System.out.println("IN ORDER TO DRAW A CARD FROM THE GOLD DECK TYPE: 'DrawGold'");
-                System.out.println("IN ORDER TO DRAW A CARD FROM THE COMMON TABLE TYPE: 'DrawTable 1/2/3/4'");
-            }
-        }*/
-
     }
 
     /**
+     * Notifies when a player has rejoined the game.
      *
-     * @param rejoinedPlayer
+     * @param rejoinedPlayer The name of the player who has rejoined the game.
      */
     public void notifyRejoinedPlayer(String rejoinedPlayer){
         System.out.println(rejoinedPlayer + " has rejoined the game");
     }
 
     /**
+     * Notifies when a player has made a change to their game board and displays the updated board.
+     * If the player's board is updated, prints a success message for the current player ("You") and displays their board.
+     * Otherwise, prints a notification message for other players about the card placement and displays the player's board.
      *
-     * @param player
-     * @param nickname
-     * @param boards
+     * @param player   The player who made the change to their board.
+     * @param nickname The nickname of the current player.
+     * @param boards   A map containing the game boards of all players.
      */
     public void notifyChangePlayerBoard(String player, String nickname, Map<String,PlayableCard[][]>boards){
         if(player.equals(nickname)){
@@ -1553,21 +1565,24 @@ public class CliView implements ViewInterface {
             System.out.println("*************** " + player + " PLACED A CARD! HERE IS HIS/HER BOARD **************+ ");
             this.drawBoard(boards.get(player));
         }
-
     }
 
     /**
+     * Notifies when a player's points have been updated.
+     * Prints a message indicating the player's updated points.
      *
-     * @param player
-     * @param points
+     * @param player The name of the player whose points were updated.
+     * @param points The new points value for the player.
      */
     public void ReceiveUpdateOnPoints(String player, int points){
-        System.out.println("Update on "+player+" points! He/She reached "+ points +" points!");
+        System.out.println("Update on "+player+" points! "+ player+ " reached "+ points +" points!");
     }
 
     /**
+     * Notifies the player about their updated hand of resource cards.
+     * Displays the details of the player's updated hand using the drawHand method.
      *
-     * @param p
+     * @param p The updated list of resource cards in the player's hand.
      */
     public  void NotifyChangePersonalCards(ArrayList<ResourceCard> p){
         System.out.println("------YOUR UPDATED HAND------");
@@ -1576,8 +1591,10 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Notifies the player about their chosen personal objective card.
+     * Displays the details of the player's personal objective using the drawObjective method.
      *
-     * @param o
+     * @param o The personal objective card chosen by the player.
      */
     public void notifyChoiceObjective(ObjectiveCard o){
         System.out.println("------YOUR PERSONAL OBJECTIVE------");
@@ -1586,11 +1603,13 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Notifies the player about their initial game setup including hand, starting card, and personal objectives.
+     * Displays the details of the player's hand, starting card, and two personal objectives using drawHand, drawStarting, and drawObjective methods.
      *
-     * @param hand
-     * @param startingCard
-     * @param o1
-     * @param o2
+     * @param hand The initial hand of resource cards for the player.
+     * @param startingCard The starting card that the player needs to choose a side for.
+     * @param o1 The first personal objective card for the player to choose from.
+     * @param o2 The second personal objective card for the player to choose from.
      */
     public void notifyFirstHand(ArrayList<ResourceCard> hand, StartingCard startingCard, ObjectiveCard o1, ObjectiveCard o2){
         System.out.println("------YOUR PERSONAL HAND------");
@@ -1607,9 +1626,11 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Notifies players about the common objectives and their associated points.
+     * Displays the details of two common objectives using the drawObjective method.
      *
-     * @param objectiveCard1
-     * @param objectiveCard2
+     * @param objectiveCard1 The first common objective card.
+     * @param objectiveCard2 The second common objective card.
      */
     public void notifyCommonObjective(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2){
         System.out.println("------THESE ARE THE COMMON OBJECTIVES, EVERY TIME YOU COMPLETE ONE OF THEM YOU WILL GAIN EXTRA POINTS------");
@@ -1620,14 +1641,15 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Updates the common game table with points and resource cards, and displays the updated table.
      *
-     * @param points
-     * @param topResDeck
-     * @param topGoldDeck
-     * @param tableCard1
-     * @param tableCard2
-     * @param tableCard3
-     * @param tableCard4
+     * @param points A {@code Map} containing player names as keys and their points as values.
+     * @param topResDeck The top resource card from the resource deck.
+     * @param topGoldDeck The top gold card from the gold deck.
+     * @param tableCard1 The first card on the common table.
+     * @param tableCard2 The second card on the common table.
+     * @param tableCard3 The third card on the common table.
+     * @param tableCard4 The fourth card on the common table.
      */
     public void updateCommonTable(Map<String, Integer> points, ResourceCard topResDeck, ResourceCard topGoldDeck, ResourceCard tableCard1, ResourceCard tableCard2, ResourceCard tableCard3, ResourceCard tableCard4){
         System.out.println("------HERE IS THE UPDATED COMMON BOARD WITH EACH PLAYERS' POINTS------");
@@ -1636,35 +1658,38 @@ public class CliView implements ViewInterface {
     }
 
     /**
-     *
+     * Notifies that the required number of players has been reached and the game will start soon.
+     * This method prints a message to the console indicating that there are enough players to start the game.
      */
     public void NotifyNumbersOfPlayersReached(){
         System.out.println("------THERE ARE ENOUGH PLAYERS! THE GAME WILL START IN A FEW MOMENTS------");
     }
 
     /**
-     *
+     * Notifies players that the last round is starting, during which drawing won't be allowed.
+     * This method prints a message to the console indicating the start of the last round.
      */
     public void NotifyLastRound(){
         System.out.println("------LAST ROUND IS STARTING, DURING THIS ROUND DRAWING WON'T BE ALLOWED------");
     }
 
     /**
+     * Notifies and displays the available colors for players to choose from.
      *
-     * @param colors
+     * @param colors An {@code ArrayList} containing the available colors.
      */
     public void notifyAvailableColors(ArrayList<Color> colors){
         System.out.println("------CHOOSE A COLOR FROM THE AVAILABLE ONES------");
         System.out.println("COMMAND: 'Color COLOR'");
         this.drawAvailableColors(colors);
         System.out.println("--------------------------------------------------");
-
     }
 
     /**
+     * Draws the final colors assigned to players in the game.
      *
-     * @param colors
-     * @param players
+     * @param colors A {@code Map} containing player names as keys and their final colors as values.
+     * @param players A list of player names in the game.
      */
     public void drawFinalColors(Map<String,Color> colors, ArrayList<String> players){
         String ANSI_RESET = "\033[0m";
@@ -1691,9 +1716,10 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Notifies and displays the final colors assigned to players in the game.
      *
-     * @param colors
-     * @param players
+     * @param colors A {@code Map} containing player names as keys and their final colors as values.
+     * @param players A list of player names in the game.
      */
     public void notifyFinalColors(Map<String, Color> colors, ArrayList<String> players){
         System.out.println("------FINAL COLORS------");
@@ -1703,18 +1729,19 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Updates the game state after a player has crashed or disconnected.
      *
-     * @param nickname
-     * @param player
-     * @param gameState
-     * @param hand
-     * @param objectiveCard
-     * @param boards
-     * @param points
-     * @param players
-     * @param objectiveCards
-     * @param color
-     * @param table
+     * @param nickname The nickname of the player who crashed or disconnected.
+     * @param player The replacement player's nickname or identifier.
+     * @param gameState The current state of the game after the crash.
+     * @param hand The hand of cards belonging to the replacement player.
+     * @param objectiveCard The objective card assigned to the replacement player.
+     * @param boards The game boards of all players, including the replacement player's board.
+     * @param points A {@code Map} containing updated points for all players, including the replacement player.
+     * @param players A list of all active players in the game.
+     * @param objectiveCards A list of all available objective cards in the game.
+     * @param color The color associated with the replacement player.
+     * @param table The current state of the common resources table.
      */
     public void UpdateCrashedPlayer(String nickname, String player, State gameState, ArrayList<ResourceCard> hand, ObjectiveCard objectiveCard, Map<String, PlayableCard[][]> boards, Map<String, Integer> points, ArrayList<String> players, ArrayList<ObjectiveCard> objectiveCards, Color color, ArrayList<ResourceCard> table){
         System.out.println("---------------------------------------------------------------------");
@@ -1756,27 +1783,30 @@ public class CliView implements ViewInterface {
 
 
     /**
+     * Updates the game table with new points and resources, and redraws the table.
      *
-     * @param points
-     * @param commons
+     * @param points A {@code Map} containing player names as keys and their updated points as values.
+     * @param commons An {@code ArrayList} of {@code ResourceCard} objects representing the common resources.
      */
     public void UpdateFirst(Map<String,Integer> points, ArrayList<ResourceCard> commons){
         this.drawTable(points,commons.get(0),commons.get(1),commons.get(2),commons.get(3),commons.get(4),commons.get(5));
     }
 
     /**
+     * Adds a group text to the chat history for a specific player and redraws the chat.
      *
-     * @param chat
-     * @param player
+     * @param chat The list of {@code Text} objects representing the updated chat history.
+     * @param player The player for whom the chat history is updated.
      */
     public void addGroupText(ArrayList<Text> chat, String player){
         this.drawChat(chat,player);
     }
 
     /**
+     * Draws the chat history for a specific player.
      *
-     * @param chat
-     * @param player
+     * @param chat The list of {@code Text} objects representing the chat history to be drawn.
+     * @param player The player for whom the chat history is to be drawn.
      */
     public void drawChat(ArrayList<Text> chat, String player){
 
@@ -1840,11 +1870,11 @@ public class CliView implements ViewInterface {
         }
     }
 
-
     /**
+     * Finds the number of texts in the chat list that have no recipient.
      *
-     * @param chat
-     * @return
+     * @param chat The list of {@code Text} objects representing the chat history.
+     * @return The number of texts in the chat list that have no recipient.
      */
     private int findNumber(ArrayList<Text> chat){
         int number=0;
@@ -1857,36 +1887,45 @@ public class CliView implements ViewInterface {
     }
 
     /**
+     * Prints a notification message to the console.
      *
-     * @param message
+     * @param message The notification message to be printed.
      */
    public void printNotifications(String message){
        System.out.println(message);
    }
 
     /**
+     * Draws a scene of the specified type.
      *
-     * @param sceneType
+     * @param sceneType The type of scene to be drawn.
      */
     @Override
     public void drawScene(SceneType sceneType) {}
 
     /**
+     * Prints an error message to the console.
      *
-     * @param message
+     * @param message The error message to be printed.
      */
     public void drawError(String message){
         System.out.println(message);
     }
 
     /**
+     * Restores the chat history for a specific player using the provided list of text messages.
      *
-     * @param chat
-     * @param player
+     * @param chat A list of {@code Text} objects representing the chat history to be restored.
+     * @param player The player for whom the chat history is to be restored.
      */
     @Override
     public void restoreChat(ArrayList<Text> chat, String player) {}
 
+    /**
+     * Prints the updated points for each player to the console in green color.
+     *
+     * @param updatedPoints A {@code Map} containing player names as keys and their updated points as values.
+     */
     public void printUpdatedPoints(Map<String, Integer>updatedPoints){
         System.out.println("\033[0;32m");
         System.out.println("UPDATED POINTS\n");

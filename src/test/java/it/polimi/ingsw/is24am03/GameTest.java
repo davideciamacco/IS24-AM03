@@ -448,7 +448,7 @@ class GameTest {
     }
 
 
-    /*@Test
+    @Test
     void placeCard() {
         Game game = new Game(2, "Player1");
         game.addPlayer("Player2");
@@ -465,7 +465,7 @@ class GameTest {
         game.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game.getPlayers().get(1)));
         Player currentPlayer = game.getPlayers().get(game.getCurrentPlayer());
         //currentPlayer.getPlayerBoard().getBoard()[40][40] = currentPlayer.getStartingCard();
-        game.selectStartingFace(currentPlayer.getNickname(), false);
+        game.selectStartingFace(currentPlayer.getNickname(), true);
         assertEquals(currentPlayer.getStartingCard(), currentPlayer.getPlayerBoard().getBoard()[40][40]);
         game.nextTurn();
         assertThrows(Exception.class, ()->game.placeCard(currentPlayer.getNickname(), 0, 10, 10, true));
@@ -486,15 +486,15 @@ class GameTest {
         game1.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game1.getPlayers().get(0)));
         game1.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game1.getPlayers().get(1)));
         Player currentPlayer1 = game.getPlayers().get(game1.getCurrentPlayer());
-        game1.selectStartingFace(currentPlayer1.getNickname(), false);
-        game1.selectStartingFace(currentPlayer1.getNickname(), false);
+        //game1.selectStartingFace(currentPlayer1.getNickname(), false);
+        game1.selectStartingFace(currentPlayer1.getNickname(), true);
         game1.setGameState(State.PLAYING);
         game1.setLastRound();
         assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 41, 41, true));
         assertEquals(State.PLAYING, game1.getGameState());
         assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 41, 41, true));
         assertEquals(State.ENDING, game1.getGameState());
-    }*/
+    }
 
 
     @Test
