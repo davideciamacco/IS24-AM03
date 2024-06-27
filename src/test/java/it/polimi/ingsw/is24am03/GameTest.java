@@ -486,13 +486,16 @@ class GameTest {
         game1.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game1.getPlayers().get(0)));
         game1.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game1.getPlayers().get(1)));
         Player currentPlayer1 = game.getPlayers().get(game1.getCurrentPlayer());
-        //game1.selectStartingFace(currentPlayer1.getNickname(), false);
+        Player currentPlayer2 = game.getPlayers().get(1);
         game1.selectStartingFace(currentPlayer1.getNickname(), true);
+        game1.selectStartingFace(currentPlayer2.getNickname(), true);
+        //game1.nextTurn();
+        //game1.selectStartingFace(currentPlayer1.getNickname(), false);
         game1.setGameState(State.PLAYING);
         game1.setLastRound();
-        assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 41, 41, true));
+        assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 39, 39, false));
         assertEquals(State.PLAYING, game1.getGameState());
-        assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 41, 41, true));
+        assertDoesNotThrow(()->game1.placeCard(currentPlayer2.getNickname(), 0, 41, 41, true));
         assertEquals(State.ENDING, game1.getGameState());
     }
 
