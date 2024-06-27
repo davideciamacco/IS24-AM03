@@ -85,7 +85,6 @@ public class ClientSocket implements Client {
      */
     public void CreateGame(int nPlayers, String nickname) {
         CreateGameMessage requestMessage = new CreateGameMessage(nPlayers, nickname);
-        this.nickname=nickname;
         this.sendMessage(requestMessage);
     }
 
@@ -95,7 +94,6 @@ public class ClientSocket implements Client {
      */
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
-        this.nickname = nickname;
         this.sendMessage(joinMessage);
     }
 
@@ -551,6 +549,7 @@ public class ClientSocket implements Client {
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             hasJoined = true;
+            this.nickname = message.getNickname();
             if (this.clientModel == null) {
                 try {
                     this.clientModel = new ClientModel(message.getNickname(), view);
