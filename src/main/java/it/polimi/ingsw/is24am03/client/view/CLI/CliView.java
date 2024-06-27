@@ -674,8 +674,8 @@ public class CliView implements ViewInterface {
         System.out.println("FRONT:         BACK:");
         System.out.println("\n");
         if (startCard.getId() == 80) {
-            System.out.println("F-------A      O-------P");
-            System.out.println("|       |      |   F   |");
+            System.out.println("F-------P      O-------P");
+            System.out.println("|       |      |   I   |");
             System.out.println("I---S---A      I---S---O");
             System.out.println("\n");
         } else if (startCard.getId() == 81) {
@@ -949,7 +949,48 @@ public class CliView implements ViewInterface {
                                 output1 = output1 + "B ";
                             }
                         } else {
-                            output1 = output1 + "O-------O";
+                            if(board[top][j].getType()==0)
+                            {
+                                if (board[top][j].getBackCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                                    output1 = output1 + "F";
+                                } else if (board[top][j].getBackCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                                    output1 = output1 + "A";
+                                } else if (board[top][j].getBackCorner(0).getItem().equals(CornerItem.INSECT)) {
+                                    output1 = output1 + "I";
+                                } else if (board[top][j].getBackCorner(0).getItem().equals(CornerItem.PLANT)) {
+                                    output1 = output1 + "P";
+                                } else if (board[top][j].getBackCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output1 = output1 + "M";
+                                } else if (board[top][j].getBackCorner(0).getItem().equals(CornerItem.EMPTY)) {
+                                    output1 = output1 + "O";
+                                } else if (board[top][j].getBackCorner(0).getItem().equals(CornerItem.QUILL)) {
+                                    output1 = output1 + "Q";
+                                } else {
+                                    output1 = output1 + "B";
+                                }
+                                output1 = output1 + "-------";
+                                if (board[top][j].getBackCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                                    output1 = output1 + "F";
+                                } else if (board[top][j].getBackCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                                    output1 = output1 + "A";
+                                } else if (board[top][j].getBackCorner(1).getItem().equals(CornerItem.INSECT)) {
+                                    output1 = output1 + "I";
+                                } else if (board[top][j].getBackCorner(1).getItem().equals(CornerItem.PLANT)) {
+                                    output1 = output1 + "P";
+                                } else if (board[top][j].getBackCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output1 = output1 + "M";
+                                } else if (board[top][j].getBackCorner(1).getItem().equals(CornerItem.EMPTY)) {
+                                    output1 = output1 + "O";
+                                } else if (board[top][j].getBackCorner(1).getItem().equals(CornerItem.QUILL)) {
+                                    output1 = output1 + "Q";
+                                } else {
+                                    output1 = output1 + "B";
+                                }
+                            }
+                            else{
+                                output1 = output1 + "O-------O";
+                            }
+
                         }
                     } else {
                         output1 = output1 + "         ";
@@ -1041,7 +1082,27 @@ public class CliView implements ViewInterface {
                                     output3 = output3 + "B";
                                 }
                             } else
-                                output3 = output3 + "O";
+                            {
+                                if (!board[i + 1][j - 1].getBackCorner(1).isVisible()) {
+                                    output3 = output3 + "┐";
+                                } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            }
                         } else
                             output3 = output3 + " ";
                         output3 = output3 + "       ";
@@ -1067,7 +1128,27 @@ public class CliView implements ViewInterface {
                                     output3 = output3 + "B";
                                 }
                             } else
-                                output3 = output3 + "O";
+                            {
+                                if (!board[i + 1][j + 1].getBackCorner(0).isVisible()) {
+                                    output3 = output3 + "┌";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            }
                         } else
                             output3 = output3 + " ";
                     } else {
@@ -1122,8 +1203,27 @@ public class CliView implements ViewInterface {
                                 } else {
                                     output3 = output3 + "B";
                                 }
-                            } else
-                                output3 = output3 + "O";
+                            } else {
+                                if (!board[i][j].getBackCorner(3).isVisible()) {
+                                    output3 = output3 + "└";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i][j].getBackCorner(3).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            }
 
                         } else {
                             if (board[i + 1][j - 1] != null) {
@@ -1147,8 +1247,28 @@ public class CliView implements ViewInterface {
                                     } else {
                                         output3 = output3 + "B";
                                     }
-                                } else
-                                    output3 = output3 + "O";
+                                } else{
+                                    if (!board[i + 1][j - 1].getBackCorner(1).isVisible()) {
+                                        output3 = output3 + "┐";
+                                    } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.FUNGI)) {
+                                        output3 = output3 + "F";
+                                    } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.ANIMAL)) {
+                                        output3 = output3 + "A";
+                                    } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.INSECT)) {
+                                        output3 = output3 + "I";
+                                    } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.PLANT)) {
+                                        output3 = output3 + "P";
+                                    } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                        output3 = output3 + "M";
+                                    } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.EMPTY)) {
+                                        output3 = output3 + "O";
+                                    } else if (board[i + 1][j - 1].getBackCorner(1).getItem().equals(CornerItem.QUILL)) {
+                                        output3 = output3 + "Q";
+                                    } else {
+                                        output3 = output3 + "B";
+                                    }
+                                }
+
                             }
                         }
                         if (board[i][j].getFace() && board[i][j].getType() == -1) {
@@ -1259,8 +1379,28 @@ public class CliView implements ViewInterface {
                                 } else {
                                     output3 = output3 + "B";
                                 }
-                            } else
-                                output3 = output3 + "O";
+                            } else{
+                                if (!board[i][j].getBackCorner(2).isVisible()) {
+                                    output3 = output3 + "┘";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i][j].getBackCorner(2).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            }
+
                         } else {
                             if (board[i+1][j+1]!=null && board[i + 1][j + 1].getFace()) {
                                 if (!board[i + 1][j + 1].getFrontCorner(1).isVisible()) {
@@ -1282,8 +1422,28 @@ public class CliView implements ViewInterface {
                                 } else {
                                     output3 = output3 + "B";
                                 }
-                            } else
-                                output3 = output3 + "O";
+                            } else{
+                                if (!board[i + 1][j + 1].getBackCorner(1).isVisible()) {
+                                    output3 = output3 + "┌";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.FUNGI)) {
+                                    output3 = output3 + "F";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.ANIMAL)) {
+                                    output3 = output3 + "A";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.INSECT)) {
+                                    output3 = output3 + "I";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.PLANT)) {
+                                    output3 = output3 + "P";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.MANUSCRIPT)) {
+                                    output3 = output3 + "M";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.EMPTY)) {
+                                    output3 = output3 + "O";
+                                } else if (board[i + 1][j + 1].getBackCorner(0).getItem().equals(CornerItem.QUILL)) {
+                                    output3 = output3 + "Q";
+                                } else {
+                                    output3 = output3 + "B";
+                                }
+                            }
+
                         }
 
                     }
