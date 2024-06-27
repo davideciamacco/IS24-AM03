@@ -45,6 +45,7 @@ Legend:
 
 
 
+
 ## Installation
 In order to run Codex Naturalis, you can clone this repository
 ```
@@ -66,4 +67,5 @@ The rules of the game can be found on the [deliverables directory]().
 
 ## License
 All rights to **Codex Naturalis** are owned by [Cranio Creations](https://www.craniocreations.it/),  which provided the graphical
+
 resources to be used for educational purposes only.
