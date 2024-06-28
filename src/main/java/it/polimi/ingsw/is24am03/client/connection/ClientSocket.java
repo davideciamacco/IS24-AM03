@@ -33,6 +33,8 @@ public class ClientSocket implements Client {
     private ViewInterface view;
     private String nickname;
 
+    private String nicknameTemp;
+
     /**
      * Constructs a ClientSocket object to connect to the specified server IP and port,
      * using the provided ViewInterface for interaction.
@@ -94,6 +96,7 @@ public class ClientSocket implements Client {
      */
     public void JoinGame(String nickname){
         JoinGameMessage joinMessage = new JoinGameMessage(nickname, hasJoined);
+        this.nicknameTemp=nickname;
         this.sendMessage(joinMessage);
     }
 
@@ -338,7 +341,7 @@ public class ClientSocket implements Client {
     private void parse(NotifyNumPlayersReachedMessage response){
         if(this.clientModel==null) {
             try {
-                clientModel = new ClientModel(this.nickname, view);
+                clientModel = new ClientModel(this.nicknameTemp, view);
                 this.clientModel.NotifyNumbersOfPlayersReached();
             } catch (RemoteException e) {
             }
@@ -549,7 +552,7 @@ public class ClientSocket implements Client {
     private void parse(ConfirmJoinGameMessage message){
         if(message.getConfirmJoin()) {
             hasJoined = true;
-            this.nickname = message.getNickname();
+            this.nickname = nicknameTemp;
             if (this.clientModel == null) {
                 try {
                     this.clientModel = new ClientModel(message.getNickname(), view);
