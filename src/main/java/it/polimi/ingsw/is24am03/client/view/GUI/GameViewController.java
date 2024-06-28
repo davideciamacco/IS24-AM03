@@ -944,8 +944,7 @@ public class GameViewController extends GUIController implements Initializable {
         final double LABEL_GLOBAL_OFFSET_Y = -8.5;
         int centerX = board.length / 2;
         int centerY = board[0].length / 2;
-        //Set<Position> occupiedPositions = new HashSet<>();
-       // Map<Position, Label> positionLabels = new HashMap<>();
+
     int z;
         for (int level = 0; level <= Math.max(centerX, centerY); level++) {
             for (int x = centerX - level; x <= centerX + level; x++) {
@@ -1021,7 +1020,6 @@ public class GameViewController extends GUIController implements Initializable {
                                             this.p4.getChildren().add(label);
                                         }
 
-                                       // positionLabels.put(new Position(x, y), label);
                                     }
                                 }
                             }
@@ -1061,8 +1059,7 @@ public class GameViewController extends GUIController implements Initializable {
                                 this.p4.getChildren().add(imageView);
                             }
 
-                            //Position pos = new Position(x, y);
-                            //occupiedPositions.add(pos);
+
                         }
                     }
                 }
@@ -1072,44 +1069,6 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
 
-    /**
-     * Private class used to keep trace of a card position during the board's drawing
-     */
- /*   private static class Position {
-        int x, y;
-
-        *//**
-         *
-         * @param x
-         * @param y
-         *//*
-        Position(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        *//**
-         *
-         * @param o
-         * @return
-         *//*
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Position position = (Position) o;
-            return x == position.x && y == position.y;
-        }
-
-       *//* *//**//**
-         *
-         * @return
-         *//**//*
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }*//*
-    }*/
 
     /**
      * Shows the board assigned to the player1

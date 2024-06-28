@@ -893,10 +893,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void rejoinedChief(String player){
         System.out.println("Sono in rejoinedChief\n");
         synchronized (gameLock){
-           //int i=0;
+
             System.out.println("la dimensione è"+gameModel.getGameSubs().size());
             for(GameSub gameSub: gameModel.getGameSubs()){
-                //System.out.println(gameSub.getSub());
                 try {
                     if (!gameSub.getSub().equals(player)) {
                         System.out.println("ciao"+gameSub.getSub());
@@ -917,6 +916,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         System.out.println("Fuori da rejoinedChief\n");
     }
 
+    /**
+     *
+     * @return true when just one player is still connected
+     */
     public boolean isTimer(){
         return timer;
     }

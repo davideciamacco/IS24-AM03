@@ -14,6 +14,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Class used for testing purposes which resembles a general subscriber
+ */
 public class GeneralSubscriber implements GameSub, PlayerSub, PlayerBoardSub, ChatSub {
 
     String nickname;

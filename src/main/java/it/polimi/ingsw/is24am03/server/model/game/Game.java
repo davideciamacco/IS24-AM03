@@ -359,15 +359,13 @@ public class Game{
      * @param player represents the player who is drawing
      */
     public void drawResources(String player){
-        //if(resourceDeck.isEmpty())
-          //  throw new EmptyDeckException("There aren't other cards in the selected deck");
+
         Player p=findPlayer(player);
         p.addCard(resourceDeck.drawCard());
         if(p.getConnected()) {
             try {
                 findSub(player).NotifyChangePersonalCards(player, p.getHand());
             } catch (RemoteException ignored) {
-                //System.out.println("Errore 1");
             }
         }
         if(resourceDeck.isEmpty()){
@@ -375,7 +373,6 @@ public class Game{
                 try {
                     gameSub.updateCommonTable(null,0);
                 } catch (RemoteException ignored) {
-                    //System.out.println("Errore 2");
                 }
             }
         }
@@ -384,7 +381,6 @@ public class Game{
                 try {
                     gameSub.updateCommonTable(resourceDeck.getCards().get(0),0);
                 }catch (RemoteException ignored){
-                    //System.out.println("Errore 3");
                 }
             }
         }
@@ -398,11 +394,9 @@ public class Game{
      * @param player represents the player who is drawing
      */
     public void drawGold(String player){
-       // if(goldDeck.isEmpty())
-         //   throw new EmptyDeckException("There aren't other cards in the selected deck");
+
         findPlayer(player).addCard(goldDeck.drawCard());
-        //System.out.println("\nID:"+getPlayers().get(currentPlayer).getHand().getFirst().getId()+"\n");
-        //DOPO PESCA HO NOTIFY_CHANGE_PERSONAL_CARDS CHE MI AGGIORNA LE CARTE DEL GIOCATORE
+
         if(findPlayer(player).getConnected()) {
             try {
                 findSub(player).NotifyChangePersonalCards(player, findPlayer(player).getHand());
@@ -438,9 +432,8 @@ public class Game{
      * @param player represents the player who is drawing
      * @param choice consists of the card chosen among the four cards on the table
      */
-    public void drawTable(String player, int choice) /*throws NullCardSelectedException*/ {
-       // if (tableCards.get(choice) == null)
-         //   throw new NullCardSelectedException();
+    public void drawTable(String player, int choice)  {
+
         Player p = findPlayer(player);
         switch (choice) {
             case 1:
@@ -1073,7 +1066,6 @@ public class Game{
      * @return The PlayerSub object associated with the player's nickname, or null if not found.
      */
     public PlayerSub findSub(String nickname){
-        //cerco nella lista dei giocatori il giocatore corrispondente
         Player x=null;
         for(Player p: players){
             if(p.getNickname().equals(nickname)){

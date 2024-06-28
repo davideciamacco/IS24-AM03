@@ -13,8 +13,14 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class used to check effectiveness of the methods in PlayerBoard class
+ */
 class PlayerBoardTest {
 
+    /**
+     * Testing the placing of a gold cards and if its requirements are correctly satisfied
+     */
     @Test
     void checkRequirements() {
         Player player = new Player("TestPlayer");
@@ -44,14 +50,17 @@ class PlayerBoardTest {
         ResourceCard card2 = new GoldCard(42, "R", 1, empty, empty, empty, empty, null, null, null, null,requirementsList2, 0, CornerItem.INKWELL);
         playerBoard.getAvailableItems().put(CornerItem.INKWELL, 0);
         assertFalse(playerBoard.checkRequirements(card2.getRequirements()));
-        //    playerBoard.placeCard(card2,41,41,true);
-        //     assertEquals(card2,playerBoard.getBoard()[41][41]);
+
         assertThrows(RequirementsNotMetException.class, () -> {
             playerBoard.placeCard(card2,41,41,true);
         });
 
 
     }
+
+    /**
+     * Test the algorithm to retrieve how many times a certain objective is satisfied by the cards in tha player's board
+     */
     @Test
     void checkOb1(){
         Corner animal = new Corner("A");
@@ -80,6 +89,8 @@ class PlayerBoardTest {
         PlayerBoard playerBoard = new PlayerBoard(player);
         assertEquals(player,playerBoard.getPlayer());
     }
+
+
     @Test
     void UpdateItem2(){
         Player player = new Player("TestPlayer");
@@ -104,6 +115,10 @@ class PlayerBoardTest {
         ResourceCard card0 = new ResourceCard(0,"R",3,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
         playerBoard.placeCard(card0, 39, 39, true);
     }
+
+    /**
+     * Testing if the points of a card are correctly assigned
+     */
     @Test
     void testgiveCardPointsAndPlaceCard() {
         Player player = new Player("TestPlayer");
@@ -151,6 +166,9 @@ class PlayerBoardTest {
         assertFalse(playerBoard.getBoard()[41][43].equals(card41));
     }
 
+    /**
+     * Testing if the algorithm used to check if an objective is satified works correctly
+     */
     @Test
     void testcheckObjective() {
         Corner animal = new Corner("A");
@@ -211,6 +229,9 @@ class PlayerBoardTest {
 
     }
 
+    /**
+     * Testing if the algorithm used to check if an objective type L is satified works correctly
+     */
 
     @Test
     void testPatternL() {
@@ -248,6 +269,9 @@ class PlayerBoardTest {
 
 
     }
+    /**
+     * Testing if the algorithm used to check if an objective type L is satified works correctly
+     */
     @Test
     void testPatternL2() {
         Corner animal = new Corner("A");
@@ -284,6 +308,9 @@ class PlayerBoardTest {
 
 
     }
+    /**
+     * Testing if the algorithm used to check if an objective type L is satified works correctly
+     */
     @Test
     void testPatternL3() {
         Corner animal = new Corner("A");
@@ -320,6 +347,9 @@ class PlayerBoardTest {
 
 
     }
+    /**
+     * Testing if the algorithm used to check if an objective type L is satified works correctly
+     */
     @Test
     void testPatternL4() {
         Corner animal = new Corner("A");
@@ -356,6 +386,9 @@ class PlayerBoardTest {
 
 
     }
+    /**
+     * Testing if the algorithm used to check if an objective type ITEM is satified works correctly
+     */
     @Test
     void testcheckObjectiveITEM() {
         Corner animal = new Corner("A");
@@ -417,6 +450,10 @@ class PlayerBoardTest {
         assertEquals(card_40,playerBoard.getBoard()[41][41]);
         list.clear();
     }
+
+    /**
+     * Testing if the list which contains the items in the player's board is correctly updated
+     */
     @Test
     void testUpdateItem(){
         Corner animal = new Corner("A");
@@ -450,6 +487,9 @@ class PlayerBoardTest {
         //    playerBoard.placeCard(card_1,42,42,false);
 
     }
+    /**
+     * Testing if the algorithm used to check if an objective type DIAGONAL is satified works correctly
+     */
     @Test
     void testDiagonal(){
         Corner animal = new Corner("A");
@@ -481,6 +521,9 @@ class PlayerBoardTest {
         assertEquals(card_8,playerBoard.getBoard()[37][43]);
         assertEquals(2,playerBoard.checkObjective(card_87));
     }
+    /**
+     * Testing if the algorithm used to check if an objective type DIAGONAL is satified works correctly
+     */
     @Test
     void testSingleandDoubleDiagonal(){
         Corner animal = new Corner("A");
@@ -562,6 +605,10 @@ class PlayerBoardTest {
         assertEquals(card_43,playerBoard.getBoard()[41][41]);
         assertEquals(4,player.getPoints());
     }
+
+    /**
+     * Testing the placing of a card with a not visible corner is correctly made
+     */
     @Test
     void testCornerNotVisible(){
         Corner animal = new Corner("A");
@@ -582,7 +629,6 @@ class PlayerBoardTest {
         playerBoard.placeStartingCard(card_80,false);
         ResourceCard card_6 = new ResourceCard(6,"G",0,fungi, insect, empty, manuscript,empty,empty,empty,empty);
         assertThrows(CornerNotVisibleException.class, () -> {
-            // Qui chiamiamo la funzione che dovrebbe lanciare l'eccezione
             playerBoard.placeCard(card_6,39,41,false);
         });
     }

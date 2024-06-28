@@ -36,7 +36,7 @@ public class GUIView extends Application implements ViewInterface {
     private Stage stage;
 
     /**
-     * sets the correct client
+     * Sets the client
      * @param client client connected
      */
     public static void setClient(Client client) {
@@ -177,7 +177,7 @@ public class GUIView extends Application implements ViewInterface {
     }
 
     /**
-     * Draws an obejctive card
+     * Draws an objective card
      * @param o the ObjectiveCard to draw.
      */
     @Override
@@ -654,7 +654,7 @@ public class GUIView extends Application implements ViewInterface {
      * Shows a confirmation message when a player correctly creates a game
      */
     public void confirmCreate(){
-
+        //IMPLEMENTED IN CLI VIEW
     }
 
     /**

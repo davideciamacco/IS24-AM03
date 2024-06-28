@@ -9,8 +9,14 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test for Chat class
+ */
 public class ChatTest {
 
+    /**
+     * Constructor's test
+     */
 
     @Test
     void testConstructor(){
@@ -20,6 +26,9 @@ public class ChatTest {
     }
 
 
+    /**
+     * Testing method NotifyChat
+     */
     @Test
     void NotifyChat(){
         Chat chat = new Chat();
@@ -38,6 +47,9 @@ public class ChatTest {
         assertTrue(chat.getTexts().contains(t2));
     }
 
+    /**
+     * Testing methog getAll which retrieves all text messages from and to a player
+     */
 
     @Test
     void getAll(){

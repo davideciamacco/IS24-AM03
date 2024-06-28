@@ -19,8 +19,14 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class used to check the methods in Game class
+ */
 class GameTest {
 
+    /**
+     * Constructor's test
+     */
     @Test
     void testConstructor()
     {
@@ -48,6 +54,9 @@ class GameTest {
     }
 
 
+    /**
+     * Testing if winners are retrieved correctly
+     */
     @Test
     void checkWinner() {
         boolean result;
@@ -97,6 +106,9 @@ class GameTest {
         assertTrue(result);
     }
 
+    /**
+     * Testing round manager during the game
+     */
     @Test
     void nextTurn() {
 
@@ -173,11 +185,13 @@ class GameTest {
         assertEquals(State.PLAYING, game1.getGameState());
     }
 
+    /**
+     * Testing method used to start the game
+     */
     @Test
     void startGame() {
         Game game4 = new Game(2, "Giorgio");
 
-        //assertThrows(NotAllPlayersHaveJoinedException.class, ()->{game4.startGame();});
 
         Player p2 = new Player("Marco");
         game4.getPlayers().add(p2);
@@ -199,7 +213,6 @@ class GameTest {
         assertEquals(game4.getGameState(), State.STARTING);
         for(Player player: game4.getPlayers()) {
             assertEquals(3, player.getHand().size());
-            //assertNotNull(player.getObjectiveCard());
         }
         assertEquals(4, game4.getTableCards().size());
         assertEquals(34, game4.getResourceDeck().getCards().size());
@@ -211,6 +224,9 @@ class GameTest {
     }
 
 
+    /**
+     * Testing if the game is ended correctly
+     */
     @Test
     void endGame() {
         Game game = new Game(2, "Player1");
@@ -252,6 +268,9 @@ class GameTest {
     }
 
 
+    /**
+     * Testing method used to calculate the final score of each player
+     */
     @Test
     void giveObjectivePoints() {
         Game game = new Game(2, "Player1");
@@ -277,6 +296,9 @@ class GameTest {
         assertEquals(0, game.getPlayers().get(1).getNumObj());
     }
 
+    /**
+     * Testing effectiveness of the drawing resource method
+     */
     @Test
     void drawResources() {
         Corner animal = new Corner("A");
@@ -315,6 +337,9 @@ class GameTest {
 
     }
 
+    /**
+     * Testing effectiveness of the draw gold method
+     */
     @Test
     void drawGold() {
         Corner inkwell =new Corner("K");
@@ -353,6 +378,9 @@ class GameTest {
         //assertThrows(EmptyDeckException.class, () -> game5.drawGold(game5.getPlayers().get(1).getNickname()));
     }
 
+    /**
+     * Testing effectiveness of the method used to draw a card from the common table
+     */
     @Test
     void drawTable() {
         Game game6 = new Game(2, "Giorgio");
@@ -448,6 +476,9 @@ class GameTest {
     }
 
 
+    /**
+     * Testing if a card is placed correctly
+     */
     @Test
     void placeCard() {
         Game game = new Game(2, "Player1");
@@ -464,7 +495,6 @@ class GameTest {
         game.getPlayers().get(0).setPlayerBoard(new PlayerBoard(game.getPlayers().get(0)));
         game.getPlayers().get(1).setPlayerBoard(new PlayerBoard(game.getPlayers().get(1)));
         Player currentPlayer = game.getPlayers().get(game.getCurrentPlayer());
-        //currentPlayer.getPlayerBoard().getBoard()[40][40] = currentPlayer.getStartingCard();
         game.selectStartingFace(currentPlayer.getNickname(), true);
         assertEquals(currentPlayer.getStartingCard(), currentPlayer.getPlayerBoard().getBoard()[40][40]);
         game.nextTurn();
@@ -489,8 +519,7 @@ class GameTest {
         Player currentPlayer2 = game.getPlayers().get(1);
         game1.selectStartingFace(currentPlayer1.getNickname(), true);
         game1.selectStartingFace(currentPlayer2.getNickname(), true);
-        //game1.nextTurn();
-        //game1.selectStartingFace(currentPlayer1.getNickname(), false);
+
         game1.setGameState(State.PLAYING);
         game1.setLastRound();
         assertDoesNotThrow(()->game1.placeCard(currentPlayer1.getNickname(), 0, 39, 39, false));
@@ -500,6 +529,9 @@ class GameTest {
     }
 
 
+    /**
+     * Testing if a side of the starting card is assigned correctly
+     */
     @Test
     void selectStartingFace() {
         Game game = new Game(2, "Player1");
@@ -525,6 +557,9 @@ class GameTest {
         assertNotEquals(currentPlayer, game.getPlayers().get(game.getCurrentPlayer()));
     }
 
+    /**
+     * Testing if the color is assigned correctly
+     */
     @Test
     void setColor(){
         Game game = new Game(2, "Player1");
@@ -543,6 +578,9 @@ class GameTest {
         assertFalse(game.getAvailableColors().contains(Color.RED));
     }
 
+    /**
+     * Testing if the chosen secret objective is assigned correctly
+     */
     @Test
     void setObjectiveCard() {
         Game game = new Game(2, "Player1");
@@ -571,6 +609,9 @@ class GameTest {
         assertEquals(currentPlayer.getObjective2(), currentPlayer.getObjectiveCard());
     }
 
+    /**
+     * Testing if the nicknames of the players are correctly stored
+     */
     @Test
     void extractNicknames(){
         Game game = new Game(2, "Player1");

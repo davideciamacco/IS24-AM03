@@ -7,16 +7,23 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class used to check the correct cretion of a cards' corners
+ * Test class used to check the correct creation of a cards' corners
  */
 class CornerTest {
 
+    /**
+     * Testing that a corner can't be built with a parameter different from A,F,I,P,M,K,Q,E,X
+     */
     @Test
     public void checkValues(){
         IllegalArgumentException e=
                 assertThrows(IllegalArgumentException.class, () -> new Corner("o"), "Expected thrown, but it didn't");
         assertEquals(e.getMessage(), "Opzione non valida: " + "o");
     }
+
+    /**
+     * Testing if the corner is built correctly
+     */
     @Test
     public void checkCornerItem(){
         assertEquals(new Corner("A").getItem(),CornerItem.ANIMAL);

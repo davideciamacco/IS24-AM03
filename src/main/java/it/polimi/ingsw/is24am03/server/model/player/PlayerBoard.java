@@ -74,7 +74,6 @@ public class PlayerBoard {
             }
         }else{
             CornerItem item = card.getKingdomsType();
-            //in playable card getkingdom type
             availableItems.put(item, availableItems.get(item) + 1);
         }
     }
@@ -91,7 +90,6 @@ public class PlayerBoard {
                     if(!board[i+1][j+1].getFrontCorner(0).isEmpty()){
                         CornerItem item = board[i+1][j+1].getFrontCorner(0).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
-           //             board[i + 1][j + 1].setCornerCoverage(0, true);
                     }
                 }
             }
@@ -102,7 +100,6 @@ public class PlayerBoard {
                     if(!board[i-1][j-1].getFrontCorner(2).isEmpty()){
                         CornerItem item = board[i-1][j-1].getFrontCorner(2).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
-         //               board[i - 1][j - 1].setCornerCoverage(2, true);
                     }
                 }
             }
@@ -113,7 +110,6 @@ public class PlayerBoard {
                     if(!board[i-1][j+1].getFrontCorner(3).isEmpty()){
                         CornerItem item = board[i-1][j+1].getFrontCorner(3).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
-          //              board[i - 1][j + 1].setCornerCoverage(3, true);
                     }
                 }
             }
@@ -124,7 +120,6 @@ public class PlayerBoard {
                     if(!board[i+1][j-1].getFrontCorner(1).isEmpty()){
                         CornerItem item = board[i+1][j-1].getFrontCorner(1).getItem();
                         availableItems.put(item, availableItems.get(item) -1);
-          //              board[i + 1][j - 1].setCornerCoverage(1, true);
                     }
                 }
             }
@@ -392,12 +387,7 @@ public class PlayerBoard {
         if (i < 0 || i >= MAX_ROWS || j < 0 || j >= MAX_COLS) {
             throw new CoordinatesOutOfBoundsException();
         }
-    /*    if(board[i][j] != null ||board[i+1][j]!=null || board[i-1][j]!=null || board[i][j+1]!=null || board[i][j-1]!=null){
-            throw new PositionOccupiedException();
 
-        }
-
-     */
         if(board[i][j] != null){
             throw new PositionOccupiedException();
         }
@@ -422,9 +412,7 @@ public class PlayerBoard {
             c.rotate();
         }
         int check=0;
-        //    if((board[i+1][j+1]==null && board[i+1][j-1]==null && board[i-1][j+1]==null && board[i-1][j-1]==null ){
-        //        throw new NoCardsAvailableException();
-        //    }
+
         if(i+1<MAX_ROWS && j+1<MAX_COLS){
             checkCornerVisibility(i + 1, j + 1,0);
             if(board[i+1][j+1]!=null){
@@ -534,7 +522,6 @@ public class PlayerBoard {
             try {
                 playerBoardSub.notifyChangePlayerBoard(player, p, i, j);
             } catch (RemoteException ignored) {
-                // Handle RemoteException if subscriber is unreachable
             }
         }
     }

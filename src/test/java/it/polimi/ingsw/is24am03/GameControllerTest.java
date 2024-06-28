@@ -15,7 +15,9 @@ import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Test class used to check the methods implemented in Game Controller class
+ */
 
 class GameControllerTest {
 
@@ -220,7 +222,7 @@ class GameControllerTest {
 
     /**
      * Testing the correct adding of a player in the game
-     * @throws RemoteException
+     * @throws RemoteException RMI Exception
      */
     @Test
     void addPlayer() throws RemoteException {

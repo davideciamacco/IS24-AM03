@@ -18,6 +18,9 @@ class GoldDeckTest {
         assertEquals(p,s.drawCard());
     }
 
+    /**
+     * Checking size after drawing a card
+     */
     @Test
     public void checkSize(){
         GoldDeck s= new GoldDeck();
@@ -26,6 +29,9 @@ class GoldDeckTest {
         assertEquals(s.getCards().size(), old_size-1) ;
     }
 
+    /**
+     * Checking emptiness of a deck after drawing every card
+     */
     @Test
     public void isEmptyCheck(){
         GoldDeck s= new GoldDeck();
@@ -34,6 +40,10 @@ class GoldDeckTest {
         }
         assertTrue(s.isEmpty());
     }
+
+    /**
+     * Checking random function
+     */
     @Test
     public void checkRnd(){
         GoldDeck s= new GoldDeck();

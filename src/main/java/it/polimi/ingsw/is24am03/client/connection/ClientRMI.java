@@ -55,9 +55,7 @@ public class ClientRMI implements Client{
                 temp = (RemoteGameController) registry.lookup(remoteObjectName);
                 connected = true;
             } catch (RemoteException e) {
-                // Handle RemoteException
             } catch (NotBoundException e) {
-                // Handle NotBoundException
             }
         }
         this.gameController = temp;
@@ -173,7 +171,6 @@ public class ClientRMI implements Client{
         } catch (ArgumentException e) {
             view.drawError(e.getMessage());
         } catch (RemoteException e) {
-            // Handle RemoteException
         } catch (UnknownPlayerException e) {
             clientModel.printNotifications(e.getMessage());
         }
@@ -282,7 +279,6 @@ public class ClientRMI implements Client{
         } catch (UnknownPlayerException e) {
             view.drawError(e.getMessage());
         } catch (RemoteException e) {
-            // Handle RemoteException
         }
         System.out.flush();
     }
@@ -336,7 +332,6 @@ public class ClientRMI implements Client{
         } catch (IllegalArgumentException e) {
             clientModel.printNotifications("Invalid arguments");
         } catch (RemoteException e) {
-            // Handle RemoteException
         }
     }
     /**
@@ -377,7 +372,6 @@ public class ClientRMI implements Client{
         } catch (BadTextException | InvalidStateException e) {
             clientModel.printNotifications(e.getMessage());
         } catch (RemoteException e) {
-            // Handle RemoteException
         } catch (UnknownPlayerException e) {
             view.drawError(e.getMessage());
         } catch (GameNotExistingException e) {
@@ -398,7 +392,6 @@ public class ClientRMI implements Client{
         } catch (BadTextException | InvalidStateException | PlayerAbsentException | ParametersException e) {
             clientModel.printNotifications(e.getMessage());
         } catch (RemoteException e) {
-            // Handle RemoteException
         } catch (UnknownPlayerException e) {
             view.drawError(e.getMessage());
         } catch (GameNotExistingException e) {
@@ -416,7 +409,6 @@ public class ClientRMI implements Client{
             gameController.addToObserver((PlayerSub) clientModel);
             gameController.addToObserver((PlayerBoardSub) clientModel);
         } catch (RemoteException ignored) {
-            // Handle RemoteException
         }
     }
 
@@ -425,7 +417,7 @@ public class ClientRMI implements Client{
      * This ensures the client remains connected and active.
      */
     private void startHeartbeatSender() {
-        long heartbeatInterval = 5000; // 5 seconds interval
+        long heartbeatInterval = 5000;
         heartbeatScheduler.scheduleAtFixedRate(this::sendHeartbeat, 0, heartbeatInterval, TimeUnit.MILLISECONDS);
     }
 
