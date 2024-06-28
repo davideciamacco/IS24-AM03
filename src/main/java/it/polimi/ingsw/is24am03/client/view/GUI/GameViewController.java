@@ -747,23 +747,23 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param s
+     * Draws the current player
+     * @param s nickname of the current player
      */
     public void drawCurrent(String s){
         this.current.setText("Current player is:" + s);
     }
 
     /**
-     *
-     * @param s
+     * Draws a notification
+     * @param s notification
      */
     public void drawNotifications(String s){
         this.notifications.setText(s);
     }
 
     /**
-     *
+     * Sets to not visible the colors' buttons after a player chose his color
      */
     private void setInvisible(){
         this.blue.setVisible(false);
@@ -773,8 +773,8 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param mouseEvent
+     * Handles the click on a red button, which means that a player chose the red color
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickRed(MouseEvent mouseEvent){
@@ -785,8 +785,8 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param mouseEvent
+     * Handles the click on a blue button, which means that a player chose the blue color
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickBlue(MouseEvent mouseEvent){
@@ -796,8 +796,8 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param mouseEvent
+     * Handles the click on a green button, which means that a player chose the green color
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickGreen(MouseEvent mouseEvent){
@@ -806,8 +806,8 @@ public class GameViewController extends GUIController implements Initializable {
         this.notifications.clear();
     }
     /**
-     *
-     * @param mouseEvent
+     * Handles the click on a yellow button, which means that a player chose the yellow color
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickYellow(MouseEvent mouseEvent){
@@ -816,8 +816,9 @@ public class GameViewController extends GUIController implements Initializable {
         this.notifications.clear();
     }
     /**
-     *
-     * @param mouseEvent
+     * Handles the click on go back button, which is located in the pane that contains a board of a certain player.
+     * When the button is clicked the standard game scene is restored
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickGoBack(MouseEvent mouseEvent){
@@ -840,8 +841,8 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param colors
+     * Draws the colors from which a player can choose
+     * @param colors available colors
      */
     public void drawAvailableColors(ArrayList<Color> colors){
         this.color.setText("Pick a color");
@@ -867,9 +868,9 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param colors
-     * @param players
+     * Draws final colors chosen by each player
+     * @param colors maps each player to his chosen color
+     * @param players turn order of the game
      */
     public void drawFinalColors(Map<String,Color> colors, ArrayList<String> players){
         this.color.setText("Final colors");
@@ -914,9 +915,9 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param player
-     * @param points
+     * Moves the player's pawn in the correct position on the score board
+     * @param player nickname of a player who scored those points
+     * @param points updated points of the player
      */
     public void drawPoints(String player, int points){
         this.points.put(player, points);
@@ -927,9 +928,9 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param board
-     * @param player
+     * Draws the updated board of a certain player
+     * @param board matrix which contains the card already placed
+     * @param player nickname of the player who placed a card
      */
     public void drawBoard(PlayableCard[][] board, String player) {
         double startX = 960;
@@ -938,13 +939,13 @@ public class GameViewController extends GUIController implements Initializable {
         final double CARD_HEIGHT = 38.5;
         final double PADDING_X = 39.25;
         final double PADDING_Y = 22;
-        final double LABEL_OFFSET_DIAGONAL = 12; // Offset diagonale per i label
-        final double LABEL_GLOBAL_OFFSET_X = -8.5; // Offset globale per x
-        final double LABEL_GLOBAL_OFFSET_Y = -8.5; // Offset globale per y
+        final double LABEL_OFFSET_DIAGONAL = 12;
+        final double LABEL_GLOBAL_OFFSET_X = -8.5;
+        final double LABEL_GLOBAL_OFFSET_Y = -8.5;
         int centerX = board.length / 2;
         int centerY = board[0].length / 2;
-        Set<Position> occupiedPositions = new HashSet<>();
-        Map<Position, Label> positionLabels = new HashMap<>();
+        //Set<Position> occupiedPositions = new HashSet<>();
+       // Map<Position, Label> positionLabels = new HashMap<>();
     int z;
         for (int level = 0; level <= Math.max(centerX, centerY); level++) {
             for (int x = centerX - level; x <= centerX + level; x++) {
@@ -985,7 +986,6 @@ public class GameViewController extends GUIController implements Initializable {
                                         labelY--;
                                     }
 
-                                    // Verifica se l'angolo è visibile prima di aggiungere il label
                                     if (labelX >= 0 && labelX < board.length && labelY >= 0 && labelY < board[0].length) {
                                         String cornerLabel = "(" + labelX + ", " + labelY + ")";
                                         Label label = new Label(cornerLabel);
@@ -994,17 +994,16 @@ public class GameViewController extends GUIController implements Initializable {
                                         double labelPosX = posX + LABEL_GLOBAL_OFFSET_X;
                                         double labelPosY = posY + LABEL_GLOBAL_OFFSET_Y;
 
-                                        // Calcola l'offset per posizionare il label vicino all'angolo
                                         if (z == 0) {
                                             labelPosX -= CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
                                             labelPosY -= CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
                                         } else if (z == 1) {
                                             labelPosX += CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
                                             labelPosY -= CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
-                                        } else if (z == 2) { // Angolo in basso a DX
+                                        } else if (z == 2) {
                                             labelPosX += CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
                                             labelPosY += CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
-                                        } else if (z == 3) { // Angolo in basso a sx
+                                        } else if (z == 3) {
                                             labelPosX -= CARD_WIDTH / 2 + LABEL_OFFSET_DIAGONAL;
                                             labelPosY += CARD_HEIGHT / 2 + LABEL_OFFSET_DIAGONAL;
                                         }
@@ -1012,7 +1011,6 @@ public class GameViewController extends GUIController implements Initializable {
                                         label.setLayoutX(labelPosX);
                                         label.setLayoutY(labelPosY);
 
-                                        // Aggiungi il label alla giusta area giocatore
                                         if (player.equals(player1.getText())) {
                                             this.p1.getChildren().add(label);
                                         } else if (player.equals(player2.getText())) {
@@ -1023,7 +1021,7 @@ public class GameViewController extends GUIController implements Initializable {
                                             this.p4.getChildren().add(label);
                                         }
 
-                                        positionLabels.put(new Position(x, y), label);
+                                       // positionLabels.put(new Position(x, y), label);
                                     }
                                 }
                             }
@@ -1053,7 +1051,6 @@ public class GameViewController extends GUIController implements Initializable {
                             imageView.setFitHeight(CARD_HEIGHT);
                             imageView.setFitWidth(CARD_WIDTH);
 
-                            // Aggiungi l'immagine alla giusta area giocatore
                             if (player.equals(player1.getText())) {
                                 this.p1.getChildren().add(imageView);
                             } else if (player.equals(player2.getText())) {
@@ -1064,8 +1061,8 @@ public class GameViewController extends GUIController implements Initializable {
                                 this.p4.getChildren().add(imageView);
                             }
 
-                            Position pos = new Position(x, y);
-                            occupiedPositions.add(pos);
+                            //Position pos = new Position(x, y);
+                            //occupiedPositions.add(pos);
                         }
                     }
                 }
@@ -1076,26 +1073,26 @@ public class GameViewController extends GUIController implements Initializable {
 
 
     /**
-     *
+     * Private class used to keep trace of a card position during the board's drawing
      */
-    private static class Position {
+ /*   private static class Position {
         int x, y;
 
-        /**
+        *//**
          *
          * @param x
          * @param y
-         */
+         *//*
         Position(int x, int y) {
             this.x = x;
             this.y = y;
         }
 
-        /**
+        *//**
          *
          * @param o
          * @return
-         */
+         *//*
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -1104,19 +1101,19 @@ public class GameViewController extends GUIController implements Initializable {
             return x == position.x && y == position.y;
         }
 
-        /**
+       *//* *//**//**
          *
          * @return
-         */
+         *//**//*
         @Override
         public int hashCode() {
             return Objects.hash(x, y);
-        }
-    }
+        }*//*
+    }*/
 
     /**
-     *
-     * @param mouseEvent
+     * Shows the board assigned to the player1
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickPlayer1(MouseEvent mouseEvent){
@@ -1129,8 +1126,8 @@ public class GameViewController extends GUIController implements Initializable {
     }
 
     /**
-     *
-     * @param mouseEvent
+     * Shows the board assigned to the player 2
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickPlayer2(MouseEvent mouseEvent){
@@ -1142,8 +1139,8 @@ public class GameViewController extends GUIController implements Initializable {
         this.goBack2.setVisible(true);
     }
     /**
-     *
-     * @param mouseEvent
+     * Shows the board of the player 3
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickPlayer3(MouseEvent mouseEvent){
@@ -1155,7 +1152,7 @@ public class GameViewController extends GUIController implements Initializable {
         this.goBack3.setVisible(true);
     }
     /**
-     *
+     * Shows the board of the player 4
      * @param mouseEvent
      */
     @FXML
@@ -1168,8 +1165,8 @@ public class GameViewController extends GUIController implements Initializable {
         this.goBack4.setVisible(true);
     }
     /**
-     *
-     * @param mouseEvent
+     * Shows the text messages of the group chat
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickShowGroupChat(MouseEvent mouseEvent){
@@ -1178,8 +1175,8 @@ public class GameViewController extends GUIController implements Initializable {
         this.closeGroupChat.setVisible(true);
     }
     /**
-     *
-     * @param mouseEvent
+     * Hides the group chat
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickCloseGroupChat(MouseEvent mouseEvent){
@@ -1188,8 +1185,8 @@ public class GameViewController extends GUIController implements Initializable {
         this.closeGroupChat.setVisible(false);
     }
     /**
-     *
-     * @param mouseEvent
+     * Opens a private chat
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickOpenPrivateChat(MouseEvent mouseEvent){
@@ -1204,8 +1201,8 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
     /**
-     *
-     * @param mouseEvent
+     * Closes a private chat
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickClosePrivateChat(MouseEvent mouseEvent){
@@ -1220,8 +1217,8 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
     /**
-     *
-     * @param mouseEvent
+     * Handles the sending of a group text message
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickSendGroupText(MouseEvent mouseEvent){
@@ -1233,8 +1230,8 @@ public class GameViewController extends GUIController implements Initializable {
         }
     }
     /**
-     *
-     * @param mouseEvent
+     * Handles the sending of a private text message
+     * @param mouseEvent click event
      */
     @FXML
     private void onClickSendPrivateChat(MouseEvent mouseEvent){

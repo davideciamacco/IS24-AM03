@@ -192,7 +192,8 @@ public class ClientSocket implements Client {
      */
     public void RejoinGame(String player_name){
         RejoinGameMessage rejoinGameMessage = new RejoinGameMessage(player_name);
-        this.nickname = player_name;
+        this.nickname=player_name;
+        //this.nicknameTemp = player_name;
         this.sendMessage(rejoinGameMessage);
     }
 
@@ -658,6 +659,14 @@ public class ClientSocket implements Client {
      */
     private void parse(UpdateCrashedPlayerMessage updateCrashedPlayerMessage){
         try{
+            //ho i colori ordinati come i players
+            /*int i=0;
+            for(int j=0; j<updateCrashedPlayerMessage.getColors().size();j++){
+                if(updateCrashedPlayerMessage.getColors().get(j).equals(updateCrashedPlayerMessage.getColor())){
+                    i=j;
+                }
+            }
+            this.nickname=updateCrashedPlayerMessage.getPlayers().get(i);*/
             clientModel = new ClientModel(this.nickname, view);
             this.clientModel.UpdateCrashedPlayer(updateCrashedPlayerMessage.getNickname(), updateCrashedPlayerMessage.getChat(), updateCrashedPlayerMessage.getGameState(), updateCrashedPlayerMessage.getHand(), updateCrashedPlayerMessage.getObjectiveCard(), updateCrashedPlayerMessage.getBoards(), updateCrashedPlayerMessage.getPoints(), updateCrashedPlayerMessage.getPlayers(), updateCrashedPlayerMessage.getObjectiveCards(), updateCrashedPlayerMessage.getColor(), updateCrashedPlayerMessage.getTable(), updateCrashedPlayerMessage.getColors());
         }

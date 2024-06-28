@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class used to check the correct cretion of a cards' corners
+ */
 class CornerTest {
-    //testo il fatto che mi venga lanciata un eccezione se metto un valore che non è tra quelli A,F,I,P,M,K,Q,E,X
 
     @Test
     public void checkValues(){
@@ -15,10 +17,9 @@ class CornerTest {
                 assertThrows(IllegalArgumentException.class, () -> new Corner("o"), "Expected thrown, but it didn't");
         assertEquals(e.getMessage(), "Opzione non valida: " + "o");
     }
-    //Faccio check che per ogni valore corretto mi venga effettivamente restituito un angolo che abbia quel corner item
     @Test
     public void checkCornerItem(){
-        assertEquals(new Corner("A").getItem(), CornerItem.ANIMAL);
+        assertEquals(new Corner("A").getItem(),CornerItem.ANIMAL);
         assertEquals(new Corner("F").getItem(),CornerItem.FUNGI);
         assertEquals(new Corner("I").getItem(),CornerItem.INSECT);
         assertEquals(new Corner("P").getItem(),CornerItem.PLANT);
@@ -28,11 +29,9 @@ class CornerTest {
         assertEquals(new Corner("E").getItem(),CornerItem.EMPTY);
         assertEquals(new Corner("X").getItem(),CornerItem.EMPTY);
     }
-//per ogni corner faccio in modo che check visibilità sia effettivamente quella richiesta
 
     @Test
     void isVisible() {
-        //per A,F,I,P,M,K,Q,E is visible è true
         assertTrue(new Corner("A").isVisible());
         assertTrue(new Corner("F").isVisible());
         assertTrue(new Corner("I").isVisible());

@@ -19,6 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameControllerTest {
 
+    /**
+     * Checking the correct creation of a game
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void createGame() throws RemoteException {
         GameController gc1 = new GameController();
@@ -40,6 +44,10 @@ class GameControllerTest {
         assertNull(gc2.getGameModel());
     }
 
+    /**
+     * Testing the correct selection of the starting card side
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void selectStartingFace() throws RemoteException {
         GameController gc5 = new GameController();
@@ -74,6 +82,10 @@ class GameControllerTest {
         assertThrows(UnknownPlayerException.class, ()->gc5.canSelectStartingFace("Player1", "FRONT"));
     }
 
+    /**
+     * Testing the correct setting of the objective card for a certain player
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void setObjectiveCard() throws RemoteException {
         GameController gc5 = new GameController();
@@ -103,6 +115,10 @@ class GameControllerTest {
 
     }
 
+    /**
+     * Testing the correct drawing from the resource deck
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void drawResources() throws RemoteException {
         GameController gc4 = new GameController();
@@ -135,6 +151,10 @@ class GameControllerTest {
         assertThrows(EmptyDeckException.class, () -> gc4.canDrawResources(currentPlayer2));
     }
 
+    /**
+     * Testing the correct drawing from the gold deck
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void drawGold() throws RemoteException {
         GameController gc4 = new GameController();
@@ -153,22 +173,21 @@ class GameControllerTest {
         gc4.getGameModel().setGameState(State.DRAWING);
         assertThrows(UnknownPlayerException.class, () -> gc4.canDrawGold("Player3"));
         String currentPlayer1 = gc4.getGameModel().getPlayers().get(gc4.getGameModel().getCurrentPlayer()).getNickname();
-
         assertDoesNotThrow(() -> gc4.canDrawGold(currentPlayer1));
         gc4.drawGold(currentPlayer1);
         assertEquals(4, gc4.getGameModel().getPlayers().get(0).getHand().size());
-
         assertThrows(PlayerNotInTurnException.class, () -> gc4.canDrawGold(currentPlayer1));
         String currentPlayer2 = gc4.getGameModel().getPlayers().get(gc4.getGameModel().getCurrentPlayer()).getNickname();
-
-        //State s = gc4.getGameModel().getGameState();
-
         assertThrows(InvalidStateException.class, () -> gc4.canDrawGold(currentPlayer2));
         gc4.getGameModel().setGameState(State.DRAWING);
         gc4.getGameModel().getGoldDeck().setEmpty();
         assertThrows(EmptyDeckException.class, () -> gc4.canDrawGold(currentPlayer2));
     }
 
+    /**
+     * Testing the correct drawing from the cards on the common table
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void drawTable() throws RemoteException {
         GameController gc7 = new GameController();
@@ -187,24 +206,22 @@ class GameControllerTest {
         gc7.getGameModel().setGameState(State.DRAWING);
         assertThrows(UnknownPlayerException.class, () -> gc7.canDrawTable("Player3", 0));
         String currentPlayer1 = gc7.getGameModel().getPlayers().get(gc7.getGameModel().getCurrentPlayer()).getNickname();
-
         assertThrows(IllegalArgumentException.class, () -> gc7.canDrawTable(currentPlayer1, 0));
-
         assertDoesNotThrow(() -> gc7.canDrawTable(currentPlayer1, 1));
         gc7.drawTable(currentPlayer1, 1);
         assertEquals(4, gc7.getGameModel().getPlayers().get(0).getHand().size());
-
         assertThrows(PlayerNotInTurnException.class, () -> gc7.canDrawTable(currentPlayer1, 1));
-
         String currentPlayer2 = gc7.getGameModel().getPlayers().get(gc7.getGameModel().getCurrentPlayer()).getNickname();
-        //State s = gc7.getGameModel().getGameState();
         assertThrows(InvalidStateException.class, () -> gc7.canDrawTable(currentPlayer2, 1));
-
         gc7.getGameModel().setGameState(State.DRAWING);
         gc7.getGameModel().getTableCards().set(0, null);
         assertThrows(NullCardSelectedException.class, () -> gc7.canDrawTable(currentPlayer2, 1));
     }
 
+    /**
+     * Testing the correct adding of a player in the game
+     * @throws RemoteException
+     */
     @Test
     void addPlayer() throws RemoteException {
         GameController gc3 = new GameController();
@@ -225,6 +242,10 @@ class GameControllerTest {
     }
 
 
+    /**
+     * Testing the correct placing of a card for a certain player
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void placeCard() throws RemoteException {
         GameController gc6 = new GameController();
@@ -266,6 +287,10 @@ class GameControllerTest {
         assertDoesNotThrow(() -> gc6.placeCard(currentPlayer2.getNickname(), 1, 41, 41, "BACK"));
     }
 
+    /**
+     * Testing the correct picking color for a certain player
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void pickColor() throws RemoteException {
         GameController gc = new GameController();
@@ -293,6 +318,11 @@ class GameControllerTest {
 
     }
 
+    /**
+     * Testing methods used to handle disconnection of a player during the game
+     * @throws RemoteException RMI Exception
+     * @throws InterruptedException
+     */
     @Test
     void handleCrashedPlayer() throws RemoteException, InterruptedException{
         GameController gc = new GameController();
@@ -396,6 +426,10 @@ class GameControllerTest {
         assertTrue(gc2.getGameModel().getPlayers().get(0).getConnected());
     }
 
+    /**
+     * Testing the correct sending of a private chat text
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void canSendPrivateChat() throws RemoteException{
         GameController gc = new GameController();
@@ -421,6 +455,10 @@ class GameControllerTest {
         gc.sendPrivateText("Player1", "Player2","Ciao");
     }
 
+    /**
+     * Testing the correct sending of a group chat text
+     * @throws RemoteException RMI Exception
+     */
     @Test
     void canSendGroupChat() throws RemoteException{
         GameController gc = new GameController();

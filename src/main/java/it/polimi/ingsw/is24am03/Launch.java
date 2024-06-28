@@ -19,8 +19,8 @@ public class Launch {
      * command-line arguments.
      *
      * @param args Command-line arguments:
-     *             For server: <IP Address> <TCP port> <RMI port>
-     *             For client: --<CLI/GUI> <IP Address> <port> --<TCP/RMI>
+     *             For server: IP Address TCP port RMI port
+     *             For client: --CLI/GUI IP Address port --TCP/RMI
      */
     public static void main(String[] args) {
         Client client = null;
