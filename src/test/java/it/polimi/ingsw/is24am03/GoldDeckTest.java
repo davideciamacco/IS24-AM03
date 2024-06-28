@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GoldDeckTest {
+
+    /**
+     * Checking remove method used to draw a card from the Gold Deck
+     */
     @Test
     public void removeTest(){
-        // controllo che la prima carta sia quella che è effettivamente la prima
         GoldDeck s= new GoldDeck();
         PlayableCard p =s.getCards().get(0);
         assertEquals(p,s.drawCard());
@@ -17,24 +20,20 @@ class GoldDeckTest {
 
     @Test
     public void checkSize(){
-        //controllo che dopo remove la size sia diminuita di 1
         GoldDeck s= new GoldDeck();
         int old_size= s.getCards().size();
-        PlayableCard sc= s.drawCard();
+        PlayableCard sc = s.drawCard();
         assertEquals(s.getCards().size(), old_size-1) ;
     }
 
-    // controllo che mi dica correttamente se il deck è empty
     @Test
     public void isEmptyCheck(){
-        //controllo che dopo 6 estrazioni ho il deck effettivamente vuoto
         GoldDeck s= new GoldDeck();
         for(int i=0; i<40; i++) {
             s.drawCard();
         }
         assertTrue(s.isEmpty());
     }
-    //mi assicuro che dopo il random tutte le carte contenute prima siano le stesse contenute ora
     @Test
     public void checkRnd(){
         GoldDeck s= new GoldDeck();

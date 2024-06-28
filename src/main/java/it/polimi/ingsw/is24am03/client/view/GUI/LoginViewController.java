@@ -5,7 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 /**
- *
+ *GUIController that handles the first scene shown when a player connects to the game
  */
 public class LoginViewController extends GUIController {
 
@@ -50,7 +50,7 @@ public class LoginViewController extends GUIController {
 
 
     /**
-     *
+     * Handles the creation of a game
      */
     @FXML
     private void onCreateButtonClick() {
@@ -73,7 +73,7 @@ public class LoginViewController extends GUIController {
     }
 
     /**
-     *
+     * Handles the joining of the game
      */
     @FXML
     private void onJoinButtonClick() {
@@ -86,7 +86,7 @@ public class LoginViewController extends GUIController {
     }
 
     /**
-     *
+     * Handles the rejoin in the game
      */
     @FXML
     private void onRejoinButtonClick() {
@@ -98,15 +98,7 @@ public class LoginViewController extends GUIController {
     }
 
     /**
-     *
-     * @param title
-     * @param desc
-     */
-/*    @Override
-    public void postNotification(String title, String desc) {}*/
-
-    /**
-     *
+     * Initializes the scene and assigns each button to a specific action
      */
     public void initialize() {
         CreateGame.setOnAction(event -> handleToggleSelection(CreateGame));
@@ -130,8 +122,8 @@ public class LoginViewController extends GUIController {
     }
 
     /**
-     *
-     * @param selectedToggle
+     * Handles the selection on a certain button
+     * @param selectedToggle refers to the button pressed
      */
     private void handleToggleSelection(ToggleButton selectedToggle) {
         CreateBox.setVisible(selectedToggle == CreateGame);

@@ -169,7 +169,7 @@ public abstract class PlayableCard extends Card {
     /**
      * For testing purposes only: Retrieves the list of back corners with their coverage states.
      *
-     * @return ArrayList of Pair<Corner, Boolean> representing back corners and their coverage states.
+     * @return ArrayList of Pair -Corner, Boolean- representing back corners and their coverage states.
      */
     public ArrayList<Pair<Corner, Boolean>> getBack() {
         return backCorners;
@@ -194,7 +194,7 @@ public abstract class PlayableCard extends Card {
     /**
      * For testing purposes only: Retrieves the list of front corners with their coverage states.
      *
-     * @return ArrayList of Pair<Corner, Boolean> representing front corners and their coverage states.
+     * @return ArrayList of Pair -Corner, Boolean- representing front corners and their coverage states.
      */
     public ArrayList<Pair<Corner, Boolean>> getFront() {
         return frontCorners;

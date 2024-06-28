@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ChatTest {
+
+
     @Test
     void testConstructor(){
         Chat chat = new Chat();
         assertEquals(0, chat.getTexts().size());
         assertEquals(0, chat.getChatSubs().size());
     }
+
 
     @Test
     void NotifyChat(){
@@ -34,6 +37,7 @@ public class ChatTest {
         assertEquals(2, chat.getTexts().size());
         assertTrue(chat.getTexts().contains(t2));
     }
+
 
     @Test
     void getAll(){

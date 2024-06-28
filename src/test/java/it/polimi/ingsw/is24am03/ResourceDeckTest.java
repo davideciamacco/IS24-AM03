@@ -10,11 +10,14 @@ import it.polimi.ingsw.is24am03.server.model.enums.CornerItem;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Test class used to check if the resource deck is configured correctly
+ */
 class ResourceDeckTest {
 
     @Test
     public void removeTest() {
-        // controllo che la prima carta sia quella che è effettivamente la prima
         ResourceDeck s = new ResourceDeck();
         PlayableCard p = s.getCards().get(0);
         assertEquals(p, s.drawCard());
@@ -22,17 +25,14 @@ class ResourceDeckTest {
 
     @Test
     public void checkSize() {
-        //controllo che dopo remove la size sia diminuita di 1
         ResourceDeck s = new ResourceDeck();
         int old_size = s.getCards().size();
         PlayableCard sc = s.drawCard();
         assertEquals(s.getCards().size(), old_size - 1);
     }
 
-    // controllo che mi dica correttamente se il deck è empty
     @Test
     public void isEmptyCheck() {
-        //controllo che dopo 6 estrazioni ho il deck effettivamente vuoto
         ResourceDeck s = new ResourceDeck();
         for (int i = 0; i < 40; i++) {
             s.drawCard();
@@ -40,7 +40,6 @@ class ResourceDeckTest {
         assertTrue(s.isEmpty());
     }
 
-    //mi assicuro che dopo il random tutte le carte contenute prima siano le stesse contenute ora
     @Test
     public void checkRnd() {
         ResourceDeck s = new ResourceDeck();
@@ -68,7 +67,6 @@ class ResourceDeckTest {
 
     }
 
-    //faccio check del tipo di risorsa
     @Test
     public void checkRes() {
         ResourceDeck s = new ResourceDeck();
@@ -92,7 +90,6 @@ class ResourceDeckTest {
         }
 
     }
-    //check exception on default
     @Test
     public void checkException(){
         Corner fungi =new Corner("F");
@@ -101,7 +98,7 @@ class ResourceDeckTest {
         IllegalArgumentException e= assertThrows(IllegalArgumentException.class, () -> new ResourceCard(0,"K",0,fungi, empty, notVisible, fungi,empty,empty,empty,empty), "Expected thrown, but it didn't");
         assertEquals(e.getMessage(), "Opzione non valida: " + "K");
     }
-    //check sui getter dei front/back corners
+
     @Test
     public void checkGetterCorners(){
         Corner animal = new Corner("A");
@@ -127,10 +124,8 @@ class ResourceDeckTest {
         Corner fungi =new Corner("F");
         Corner empty =new Corner("E");
         Corner notVisible =new Corner("X");
-
         PlayableCard card_0 = new ResourceCard(0,"R",0,fungi, empty, notVisible, fungi,empty,empty,empty,empty);
-        //face =true
-        card_0.setCoverage(0); //ho settato la coverage del corner davanti zero a true
+        card_0.setCoverage(0);
         assertTrue(card_0.getFront().get(0).getValue());
         card_0.rotate();
         card_0.setCoverage(0);

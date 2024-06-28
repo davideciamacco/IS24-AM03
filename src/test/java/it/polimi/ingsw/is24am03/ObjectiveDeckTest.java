@@ -11,7 +11,6 @@ class ObjectiveDeckTest {
 
     @Test
     public void removeTest(){
-        // controllo che la prima carta sia quella che è effettivamente la prima
         ObjectiveDeck s= new ObjectiveDeck();
         ObjectiveCard p =s.getCards().get(0);
         assertEquals(p,s.drawCard());
@@ -19,24 +18,20 @@ class ObjectiveDeckTest {
 
     @Test
     public void checkSize(){
-        //controllo che dopo remove la size sia diminuita di 1
         ObjectiveDeck s= new ObjectiveDeck();
         int old_size= s.getCards().size();
         ObjectiveCard sc= s.drawCard();
         assertEquals(s.getCards().size(), old_size-1) ;
     }
 
-    // controllo che mi dica correttamente se il deck è empty
     @Test
     public void isEmptyCheck(){
-        //controllo che dopo 6 estrazioni ho il deck effettivamente vuoto
         ObjectiveDeck s= new ObjectiveDeck();
         for(int i=0; i<16; i++) {
             s.drawCard();
         }
         assertTrue(s.isEmpty());
     }
-    //mi assicuro che dopo il random tutte le carte contenute prima siano le stesse contenute ora
     @Test
     public void checkRnd(){
         ObjectiveDeck s= new ObjectiveDeck();
@@ -66,7 +61,6 @@ class ObjectiveDeckTest {
         ObjectiveDeck o= new ObjectiveDeck();
         assertEquals(o.getCards().get(8).getTypeList(),3);
     }
-    //check Lshaped getcorner
 
     @Test
     public void checkgetCorner(){
@@ -75,7 +69,6 @@ class ObjectiveDeckTest {
     }
 
 
-    //checkgetsecondcolor for Lshaped
     @Test
     public void check_SecondColor_Points_Id(){
         ObjectiveDeck o= new ObjectiveDeck();

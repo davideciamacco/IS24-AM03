@@ -19,7 +19,7 @@ public abstract class Message implements Serializable {
     }
 
     /**
-     *
+     * Getter for the message type
      * @return the type of the message
      */
     public MessageType getMessageType() {

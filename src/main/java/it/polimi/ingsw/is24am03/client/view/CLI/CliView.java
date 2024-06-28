@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- *
+ * Classes that manages the game in command line
  */
 public class CliView implements ViewInterface {
     private final ExecutorService inputReader;

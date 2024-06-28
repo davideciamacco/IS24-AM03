@@ -225,14 +225,7 @@ public class Game{
     }
 
 
-    /**
-     * Method used to return the available colors
-     * @return the list of color that can be picked
-     */
-    /*
-    public ArrayList<Color> getAvailableColors() {
-        return availableColors;
-    }*/
+
 
     /**
      * This method set the two common cards of the game
@@ -977,11 +970,7 @@ public class Game{
             }
 
         }
-        /*else{
-            for(Player p: players){
-                p.getPlayerSubs().add(playerSub);
-            }
-        }*/
+
     }
     /**
      * Removes a PlayerSub subscriber from all players in the game.
@@ -1024,13 +1013,10 @@ public class Game{
                 PlayerBoardSub first = players.get(i).getPlayerBoard().getPlayerBoardSubs().get(0);
                 players.get(players.size()-1).getPlayerBoard().getPlayerBoardSubs().add(first);
             }
-        }/*
-        else{
-            for(Player p: players){
-                p.getPlayerBoard().getPlayerBoardSubs().add(playerBoardSub);
-            }
-        }*/
+        }
+
     }
+
     /**
      * Removes a PlayerBoardSub subscriber from all player boards in the game.
      *
