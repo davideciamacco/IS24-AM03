@@ -6,9 +6,7 @@
 3. [Development State](#Development-State)
 4. [Installation](#Installation)
 5. [Running the game](#Running-the-game)
-6. [Rules](#Rules)
-7. [Requirements](#Requirements)
-8. [License](#License)
+6. [License](#License)
 
 ## Overview
 This repository contains the digital java implementation of the game **Codex Naturalis**, published by **Cranio Games**.
@@ -56,11 +54,15 @@ git clone https://github.com/davideciamacco/IS24-AM03.git
 
 ### Run as a Server
 ```
-java -jar IS24-AM03.jar 127.0.0.1 123456 1099
+java -jar IS24-AM03.jar <IP_Address> <TCP_Port> <RMI_Port>
 ```
 ### Run as a Client
 ```
-java -jar IS24-AM03.jar --CLI 127.0.0.1 123456 --TCP
+java -jar IS24-AM03.jar --<CLI/GUI> <IP_Address> <TCP_Port> --TCP
+```
+or
+```
+java -jar IS24-AM03.jar --<CLI/GUI> <IP_Address> <RMI_Port> --RMI
 ```
 
 ## License
